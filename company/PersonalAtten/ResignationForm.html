@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>离职申请</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+                <div class="layui-form" lay-filter="component-form-depar">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">离职人：</label>
+                                <div class="layui-input-inline cateID sqname">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">离职部门：</label>
+                                <div class="layui-input-inline cateID bumen">
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">离职岗位：</label>
+                                <div class="layui-input-inline cateID workTitle">
+                                    <span></span>
+                                    <!-- <input id="workTitle" name="workTitle" lay-verify="required" placeholder="请输入内容" class="layui-input"> -->
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label"><span class="red">*</span>最后工作日期：</label>
+                                <div class="layui-input-inline">
+                                    <input id="EndTime" name="lastWorkTime" lay-verify="required" placeholder="请选择时间" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="red">*</span>离职原因：</label>
+                            <div class="layui-input-block" id="demission">
+                                <input lay-skin="primary" type="checkbox" value="1" lay-filter="demission" title="工资不符个人期望">
+                                <input lay-skin="primary" type="checkbox" value="2" lay-filter="demission" title="福利不好">
+                                <input lay-skin="primary" type="checkbox" value="3" lay-filter="demission" title="工作辛苦">
+                                <input lay-skin="primary" type="checkbox" value="4" lay-filter="demission" title="工作压力大">
+                                <input lay-skin="primary" type="checkbox" value="5" lay-filter="demission" title="工作缺乏挑战">
+                                <input lay-skin="primary" type="checkbox" value="6" lay-filter="demission" title="工作环境不好">
+                                <input lay-skin="primary" type="checkbox" value="7" lay-filter="demission" title="没有发展空间">
+                                <input lay-skin="primary" type="checkbox" value="8" lay-filter="demission" title="同事关系不融洽">
+                                <input lay-skin="primary" type="checkbox" value="9" lay-filter="demission" title="公司文化不适">
+                                <input lay-skin="primary" type="checkbox" value="10" lay-filter="demission" title="自寻创业">
+                                <input lay-skin="primary" type="checkbox" value="11" lay-filter="demission" title="另谋职业">
+                                <input lay-skin="primary" type="checkbox" value="12" lay-filter="demission" title="读书进修">
+                                <input lay-skin="primary" type="checkbox" value="13" lay-filter="demission" title="个人健康">
+                                <input lay-skin="primary" type="checkbox" value="14" lay-filter="demission" title="家庭原因">
+                                <input lay-skin="primary" type="checkbox" value="0" lay-filter="demission" title="其他">
+                                <div class="ResignInput">
+                                    <input type="text" name="" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">您对工作单位有何建议/意见：</label>
+                            <div class="layui-input-block">
+                                <textarea style="max-height: 300px;min-height: 200px" id="subject" placeholder="请输入内容" class="layui-textarea" name="subject"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="red">*</span>工作交接清单：</label>
+                            <div class="layui-input-block">
+                                <div class="mb-5">
+                                    <label>办公用品</label>
+                                    <textarea style="max-height: 300px;min-height: 200px" id="officeList" placeholder="请输入内容" class="layui-textarea" name="officeList" lay-verify="required"></textarea>
+                                </div>
+                                <div class="mt-5">
+                                    <label>资料文档</label>
+                                    <textarea style="max-height: 300px;min-height: 200px" id="documentList" placeholder="请输入内容" class="layui-textarea" name="documentList" lay-verify="required"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">附件：</label>
+                                <button type="button" class="layui-btn" id="feedAttach"  style="float:left">
+                                    <i class="layui-icon">&#xe67c;</i>上传
+                                </button>
+                                <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                            <div id="feedFiles" class="UploadNames-box"></div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">审批人：</label>
+                                <div class="layui-input-block">
+                                    <select name="approvalUserId" lay-filter="approvalUserId" id="approvalUserId">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-layout-admin">
+                            <div class="layui-input-block">
+                                <div class="layui-footer" style="left: 0;">
+                                    <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn ">提交</button>
+                                    <button id="backFeek" class="layui-btn layui-btn-primary">关闭</button>
+                                </div>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+        </div>
+    </div>
+</body>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'laydate', 'table', 'form','upload'], function () {
+        var $ = layui.$,
+            admin = layui.admin
+        var laydate = layui.laydate,
+            form = layui.form,
+            upload = layui.upload,
+            table = layui.table;
+            $(".bumen span").html(window.userInfo.dapartName) 
+            $(".sqname span").html(window.userInfo.userName) 
+            var listInput = [];   
+                    // 审核人
+                    $.fetch({
+                        url:'/gateway/demission/managerList',
+                        type: 'post',
+                        data:{
+                            step:1,
+                            departmentId:window.userInfo.dapartId,
+                            applyuserId:window.userInfo.userId,
+                            userType: 6
+                            // itemId:
+                            // approvalType:
+                        },
+                        cb:function(rs){
+                            $("#subFeek").attr('data-step',rs.step);
+                            var opan =''
+                            for(var i=0; i<rs.userList.length;i++){
+                                opan+='<option value="'+rs.userList[i].id+'">'+rs.userList[i].name+'</option>'
+                            }
+
+                            $("#approvalUserId").html(opan);
+                            form.render('select','component-form-depar'); 
+                            if(window.changeData!=undefined){
+                                $("#approvalUserId").val(window.changeData.approvalHistory[0].approval_userid)
+                            }
+                        }
+                    })
+                    
+                    // 最后工作时间
+                    var tiemCont = laydate.render({ 
+                        elem: '#EndTime', //指定元素
+                        type: 'datetime'
+                    });
+
+                     // 需求时间
+                    var tiemCont = laydate.render({ 
+                        elem: '#demandTime', //指定元素
+                        type: 'datetime',
+                        range: '~'
+                    });
+                    
+                    // 离职岗位
+                    var htmlS
+                    $.fetch({
+                        url:'/gateway/archives/detail',
+                        type: 'post',
+                        data:{
+                            userId: window.userInfo.userId
+                        },
+                        cb:function(rs){
+                            $(".workTitle span").html(rs.title_name)
+                        }
+                    })
+                    
+
+
+                    var attachIds=[];
+                    var uploadInst = upload.render({
+                        elem: '#feedAttach' //绑定元素
+                        ,url: urls+'/gateway/demissionAttach/add' //上传接口
+                        ,accept:"file"
+                        ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                            layer.load('上传中'); //上传loading
+                        }
+                        ,done: function (res) {
+                            //上传完毕回调
+                            layer.closeAll('loading'); //关闭loading
+                            $("#feedFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                            attachIds.push(res.data.attachId);
+
+                        }
+                        ,error: function () {
+                            //请求异常回调
+                        }
+                    });
+                    $("#feedFiles").on("click",'i.del',function(){//删除附件
+                        var delId =$(this).attr("data-file");
+                        var elem = $(this).parent("a");
+                        if(window.changeData==undefined){
+                            var  prama={
+                                attachId:delId
+                            }
+                        }else{
+                            var  prama={
+                                attachId:delId,
+                                demissionId:window.changeData.id
+                            }
+                        }
+                        $.fetch({
+                            url: '/gateway/demissionAttach/del',
+                            type: 'post',
+                            data:prama,
+                            cb:function(rs){
+                                attachIds.splice($.inArray(delId,attachIds),1);
+                                elem.remove();
+                            } 
+                        });
+                    })
+                    
+                    //其他离职原因
+                    $("#demission .ResignInput").hide();
+                    
+                    form.on('checkbox(demission)', function(data){
+                        // console.log(data.elem); //得到checkbox原始DOM对象
+                        // console.log(data.elem.checked); //是否被选中，true或者false
+                        // console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+                        // console.log(data.othis); //得到美化后的DOM对象
+
+                        if(data.elem.checked==true){
+                            listInput.push(data.value)
+                        }else if(data.elem.checked==false){
+                            listInput=listInput.filter(item=>item!=data.value)
+                        }
+                        
+                        if(data.value==0 && data.elem.checked==true){
+                             $("#demission .ResignInput").show();
+                        }else if(data.value==0 && data.elem.checked==false){
+                             $("#demission .ResignInput").hide();
+                        }
+                    });  
+
+                    form.render();
+                    if(window.changeData==undefined){
+                    // 提交按钮
+                        form.on('submit(subFeek)', function(data){
+                            // console.log(data,'123123');
+                            
+                            var text = $(".ResignInput input").val();
+                            var demissionReason = listInput.join(",");
+                            var attachIdsStr = attachIds.toString();
+                            var trueStep = $("#subFeek").attr("data-step")
+                            var spr = $("#approvalUserId").val();
+                            // for (var i=0;i<demissionReason.length;i++){
+                            //     if(demissionReason[i]==0){
+                            //         if(text==''){
+                            //             layer.msg("请填写离职-其他的具体原因！");
+                            //             return false
+                            //         }
+                            //     }
+                            // }
+                            // console.log( typeof listInput)
+                            if(listInput.includes('0')==true){
+                                if(text==''){
+                                    layer.msg("请填写离职-其他的具体原因！");
+                                    return false
+                                }
+                            }
+                            // console.log(demissionReason)
+                            // if(demissionReason==0){
+                            //     if(text==''){
+                            //         layer.msg("请填写离职-其他的具体原因！");
+                            //         return false
+                            //     }
+                            // }
+                            if(spr==null){
+                                layer.msg("请先设置审核人！");
+                                return false
+                            }
+                            if(demissionReason==''){
+                                layer.msg("必填内容未填写！");
+                                return false
+                            }
+                            if(trueStep==''){
+                                layer.msg("必填内容未填写！");
+                                return false
+                            }
+                            $.fetch({
+                                url:'/gateway/demission/add',
+                                type: 'post',
+                                data:{
+                                // workTitle:data.field.workTitle,
+                                lastWorkTime:data.field.lastWorkTime,
+                                demissionReason:demissionReason,
+                                officeList:data.field.officeList,
+                                documentList:data.field.documentList,
+                                subject:data.field.subject,
+                                otherReason:text,
+                                attachIds:attachIdsStr,
+                                approvalUserId:data.field.approvalUserId,
+                                trueStep:trueStep
+                                },
+                                cb:function(rs){
+                                    layer.msg("申请成功");
+                                    parent.layui.table.reload('ResigTable')
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭 
+                                }
+                            })
+                        })
+                        
+                    }else{
+                            $("#workTitle").val(window.changeData.work_title);
+                            $("#EndTime").val(window.changeData.last_work_time);
+
+                            $("#subject").val(window.changeData.subject);
+                            $("#officeList").val(window.changeData.office_list);
+                            $("#documentList").val(window.changeData.document_list);
+
+                            var rea =  window.changeData.demission_reason.split(',');
+                            $("#demission").find('input[type="checkbox"]').each(function(){
+                                // rea.includes($(this).val());
+                                if(rea.includes($(this).val())){
+                                    listInput.push($(this).val())
+                                    $(this).attr('checked','checked');
+                                    if($(this).val()==0){
+                                        $("#demission .ResignInput").show();
+                                        $("#demission .ResignInput input").val(window.changeData.other_reason)
+                                        
+                                    }
+                                }
+                            })
+                            
+                            for(var i = 0;i<window.changeData.attach.length;i++){
+                                attachIds.push(window.changeData.attach[0].id);
+                                $("#feedFiles").append('<a><span class="currentName">'+window.changeData.attach[i].original_name+'</span><i data-file="'+window.changeData.attach[i].id+'" class="del iconfont icon-guanbi"></i></a>')
+                            }
+                            form.render();
+                            form.on('submit(subFeek)', function(data){
+                                var text = $(".ResignInput input").val();
+                                var demissionReason = listInput.join(",");
+                                var attachIdsStr = attachIds.toString();
+                                var trueStep = $("#subFeek").attr("data-step")
+                                var spr = $("#approvalUserId").val();
+                                // for (var i=0;i<demissionReason.length;i++){
+                                //     if(demissionReason[i]==0){
+                                //         if(text==''){
+                                //             layer.msg("请填写离职-其他的具体原因！");
+                                //             return false
+                                //         }
+                                //     }
+                                // }
+                                if(listInput.includes('0')==true){
+                                    if(text==''){
+                                        layer.msg("请填写离职-其他的具体原因！");
+                                        return false
+                                    }
+                                }
+                                if(spr==null){
+                                    layer.msg("请先设置审核人！");
+                                    return false
+                                }
+                                if(demissionReason==''){
+                                    layer.msg("必填内容未填写！");
+                                    return false
+                                }
+                                if(trueStep==''){
+                                    layer.msg("必填内容未填写！");
+                                    return false
+                                }
+                                $.fetch({
+                                    url:'/gateway/demission/edit',
+                                    type: 'post',
+                                    data:{
+                                        demissionId:window.changeData.id,
+                                        workTitle:data.field.workTitle,
+                                        lastWorkTime:data.field.lastWorkTime,
+                                        demissionReason:demissionReason,
+                                        officeList:data.field.officeList,
+                                        documentList:data.field.documentList,
+                                        subject:data.field.subject,
+                                        otherReason:text,
+                                        attachIds:attachIdsStr,
+                                        approvalUserId:data.field.approvalUserId,
+                                        trueStep:trueStep
+                                     
+                                    },
+                                    cb:function(rs){
+                                        layer.msg("修改成功");
+                                        parent.layui.table.reload('ResigTable')
+                                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                        parent.layer.close(index); //再执行关闭 
+                                    }
+                                })
+                            })
+                    }
+                    $("#backFeek").on("click",function(){
+                        parent.layui.table.reload('ResigTable')
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭   
+                    })
+        // 离职申请
+        
+        
+    })
+</script>
+
+</html>

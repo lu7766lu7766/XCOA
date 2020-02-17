@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>岗位审核</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css"> 
+    <link rel="stylesheet" type="text/css" href="../../layui/css/fonts/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/jquery.orgchart.css?v=20181218">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-row layui-col-space10">
+                <div lay-filter="companystructure">
+                    <div class="layui-col-xs12 layui-col-sm2 layui-col-md2"  id="dpttree"></div>                
+                    <div class="layui-col-xs12 layui-col-sm10 layui-col-md10" id="chart-container"></div>
+
+                    <div  class="layui-form layui-col-xs12 layui-col-sm12 layui-col-md12" id="apprCartForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-layui-label">审批意见</label>
+                            <div class="layui-input-block">
+                                <textarea  name="apprContent" id="apprContent" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button id="apprCompanystructure" class="layui-btn">同意</button>
+                                <button id="backcompanystructure" class="layui-btn layui-btn-primary">不同意</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+        .orgchart{width: 90%;}
+        #deprUser{
+            height: 100%;
+        }
+        #deprUser .head{
+            background-color: rgba(217, 83, 79, 0.8);
+            text-align: center;
+            height: 24px;
+            line-height: 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 4px 4px 0 0;
+        }
+    </style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script src="../../layui/extend/jorgchart.js?112" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','dtree'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            dtree=layui.dtree,
+            form = layui.form,
+            element = layui.element,
+            router = layui.router();
+            
+            var companystructureFun=function(NodeID){
+                // var params = dtree.getNowParam('dpttree');
+                // console.log(params)
+                $.fetch({
+                    url:"/gateway/companystructure/dptstruct",
+                    type: 'post',
+                    data:{
+                        NodeID:NodeID,
+                    },
+                    cb:function(rs){
+                        $('#chart-container').html('');
+                        if(rs!=null){
+                            $("#apprCompanystructure").parent('div').attr('data-node',rs.structure_id);
+                            if(rs.structure_tree.length>0){
+                                var oc =  $('#chart-container').orgchart({
+                                    'data': rs.structure_tree[0],
+                                    'nodeContent': 'content',
+                                    'nodeID': 'id',
+                                    'pan':true,
+                                    'zoom':true,
+                                    "toggleSiblingsResp":true,
+                                    'createNode': function($node, data) {
+                                        var cartdata= data;
+                                        // var secondMenuIcon = $( {
+                                        // });
+                                        var userIcon=$('<div class="title hide-event">部门成员('+cartdata.user_count+'人)</div>');
+                                        $node.append(userIcon);
+                                        // $node.append(secondMenuIcon);
+                                            var cols='',isLast=true;
+                                            if(data.children&&data.children.length>0){
+                                                cols=data.children.length;
+                                                isLast=false;
+                                            }else{
+                                                isLast=true;
+                                            }
+                                            $.fetch({
+                                                url:'/gateway/companystructure/showtreeusers',
+                                                type: 'post',
+                                                data:{
+                                                    TreeID:cartdata.id
+                                                },
+                                                cb:function(rs){
+                                                    if(rs.length>0){
+                                                        var html="";
+                                                        for(var i=0;i<rs.length;i++){
+                                                            if(i==0){
+                                                                html+='<tr class="lines">'
+                                                            }
+                                                            if((i+1)%2 ==1){
+                                                                html+='<td style="width:50%;text-align:right;" class="right"><span>'+rs[i].name+';</span></td>'
+                                                            }else{
+                                                                 html+='<td style="width:50%;text-align:left;" class="left"><span>'+rs[i].name+';</span></td></tr><tr class="lines">'
+                                                            }
+                                                            if(i==rs.length-1){
+                                                                if(rs.length%2==1){
+                                                                    html+='<td class="left"><span></span></td>'
+                                                                }
+                                                                html+='</tr>'
+                                                            }
+                                                        }
+                                                    }else{
+                                                        var html='暂无用户'
+                                                    }
+                                                   
+                                                    // $(userIcon).find('.avatar').html(html);3
+                                                     $(userIcon).parent('div').after('<div class="userList" style="'+(isLast?'display:block':'display:none')+'"><table style="width:100%;margin-left: -1px;margin-bottom: -1px;">'+html+'</table></div>')
+                                                }
+                                            })
+                                            $node.on('click','.hide-event', function(){
+                                                $(this).parent('div').siblings('div.userList').toggle('hidden');
+                                            });
+                                 
+                                    }
+                                })
+                            }else if(rs.structure_tree.length==0 ||rs.structure_tree==undefined ){
+                                $("#chart-container").html('<div class="layui-form-item"><label class="layui-form-label">暂无架构图 : </label><div class="layui-input-inline"><a class="layui-btn" id="addOneCart">添加</a></div></div>');
+                                $("#chartStuShow").hide();
+                                $("#companystructure").hide();
+                            }  
+                        }   
+                    }
+                });
+            }
+            dtree.render({
+                elem: "#dpttree",
+                url:urls+'/gateway/companystructure/dptapprovaltree',
+                response : {
+                    statusName:'status_code',
+                    statusCode: 200,
+                    message: "message",
+                    rootName: "data",
+                    parentId: "parent_id",
+                    childName: "children",
+                    nodeId: "id", 
+                    treeId: "id",//节点ID
+                    title: "name", 
+                    basicData:"data"
+                },
+                done:function(data, obj){
+                    if(data.data.length==0){
+                        layer.close('load');
+                        $("#chart-container").html('<div style="font-size:16px;padding:20px 50px;">暂无待审批.</div>');
+                        $("#apprCompanystructure").attr('disabled','disabled').addClass("layui-btn-disabled");
+                        $("#backcompanystructure").attr('disabled','disabled').addClass("layui-btn-disabled");
+                        $("#apprContent").prop('readonly',true).addClass('layui-disabled');
+                    }else{
+                        var nowid= data.data[0].id;
+                        var mId =data.data[0].data.dpt_root_node_id;
+                        dtree.dataInit("dpttree", ''+nowid+'');
+                        companystructureFun(mId);
+                        $.fetch({//获取审批人列表
+                            url:"/gateway/companyrule/getuser",
+                            type: 'post',
+                            cb:function(rs){
+                                var opHtml='';
+                                for(var i=0;i<rs.length;i++){
+                                    opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                }
+                                $("#ApprovalUserId").html(opHtml);
+                                form.render();
+                            }
+                        });
+                    }
+                },
+                firstIconArray: {
+                    "0": {
+                        "open": "icon-set-sm1",
+                        "close": "icon-favor"
+                    }
+                }, //用户自定义一级图标集合，node
+                nodeIconArray: {
+                    "0": {
+                        "open": "icon-shuye1",
+                        "close": "icon-wenjianjiazhankai"
+                    }
+                }, //用户自定义二级级图标集合，node
+                dataStyle:"layuiStyle",
+            });
+
+            dtree.on("node('dpttree')" ,function(param){
+                var mId =JSON.parse(param.basicData).dpt_root_node_id;
+                companystructureFun(mId);
+                // $("#dpttree").attr("data-id",param.node_id);
+                // seeDuitFun(param)
+            });
+         
+                   
+                        // console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                        // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                        // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                    $("#apprCompanystructure").on("click",function(){
+                        var cont = $("#apprContent").val();
+                        var NodeID = $(this).parent().attr('data-node');
+                        if(cont){
+                            $.fetch({
+                                url:"/gateway/companystructure/approval ",
+                                type: 'post',
+                                data:{
+                                    ItemID:NodeID,
+                                    Content:cont,
+                                    IsAgree:2
+                                },
+                                cb:function(rs){
+                                    layer.msg("提交成功");
+                                    setTimeout(function(){
+                                        location.reload();
+                                    }, 500 )
+                                }
+                            });
+                        }else{
+                            $("#apprContent").focus().addClass('layui-form-danger');
+                            layer.msg('意见不能为空');
+                            return false
+                        }
+                    })
+                    $("#backcompanystructure").on("click",function(){
+                        var cont = $("#apprContent").val();
+                        var NodeID = $(this).parent().attr('data-node');
+                        if(cont){
+                            $.fetch({
+                                url:"/gateway/companystructure/approval ",
+                                type: 'post',
+                                data:{
+                                    ItemID:NodeID,                            
+                                    Content:cont,
+                                    IsAgree:1
+                                },
+                                cb:function(rs){
+                                    layer.msg("提交成功");
+                                    setTimeout(function(){
+                                        location.reload();
+                                    }, 500 )
+                                }
+                            });
+                        }else{
+                            $("#apprContent").focus().addClass('layui-form-danger');
+                            layer.msg('意见不能为空');
+                            return false
+                        }
+                        
+                    })
+           
+
+            
+    });
+</script>
+
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>任务列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <!-- <li class="layui-this">所有</li> -->
+                    <li class="layui-this">指派给我</li>
+                    <li>由我完成</li>
+                    <li>由我关闭</li>
+                    <li>由我取消</li>
+                    <li>由我创建</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <table id="listTab" lay-filter="listTab"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/wangEdit.js?v=20181201"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['element', 'index', 'table','layedit','form','upload'], function () {
+        var $ = layui.$,
+            layedit = layui.layedit,
+            form = layui.form,
+            table = layui.table,
+            upload = layui.upload,
+            element = layui.element;
+            var E = window.wangEditor;
+            var editor = new E('#editor');
+        //监听Tab切换，以改变地址hash值
+        element.on('tab(docDemoTabBrief)', function(data){
+            let index = data.index;
+            // index= index==0?5:index;
+            index= index+1;
+            tabFun(index)
+        });
+        var listTab;
+        var tabFun  = function(id){
+          listTab = table.render({
+                elem: '#listTab',
+                url: urls + '/gateway/task/list',
+                page: true //开启分页
+                ,method: 'post'
+                ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                ,contentType: 'application/json'
+                ,where:{
+                    myStatus:id,
+                }
+                ,text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [{
+                        field: 'id',
+                        width: 80,
+                        title: 'ID',
+                        sort: true
+                    }, {
+                        field: 'task_priority_level',
+                        title: '优先级',
+                        minWidth:80,
+                        templet: function (d) {
+                            var len = d.task_priority_level;
+                            var status = ["","低","中","高"][d.task_priority_level]
+                            return status
+                        }
+                    }, {
+                        field: 'project_name',
+                        minWidth:100,
+                        title: '所属项目'
+                    }, {
+                        field: 'task_name',
+                        minWidth:100,
+                        title: '任务名称'
+                    }, {
+                        field: 'cate_name',
+                        minWidth:100,
+                        title: '任务类型'
+                    }, {
+                        field: 'created_by_name',
+                        minWidth:100,
+                        title: '由谁创建'
+                    }, {
+                        field: 'assigned_to_name',
+                        minWidth:100,
+                        title: '指派给谁'
+                    }, {
+                        field: 'finished_by_name',
+                        minWidth:100,
+                        title: '由谁完成'
+                    }, {
+                        field: 'estimate_endtime',
+                        width:160,
+                        title: '截止日期'
+                    }, {
+                        field: '',
+                        minWidth:120,
+                        title: '进度状态',
+                        templet:function(d){
+                            var str = d.progress_rate.toFixed(2)+"%";
+                            var html = 
+                            // "<div class=\"layui-progress layui-progress-big\" lay-filter=\"Schedule\" lay-showPercent=\"true\"><div class=\"layui-progress-bar layui-bg-red\" lay-percent=\""+str+"\"></div></div>";
+                            
+                            '<div class="layui-progress" lay-showpercent="yes" style="top: 16px;"> <div class="layui-progress-bar" lay-percent="'+str+'" style="width: '+str+';"><span class="layui-progress-text">'+str+'</span></div></div>'
+                            return html;
+                        }
+                    },  {
+                        field: 'task_status',
+                        title: '任务状态',
+                        minWidth:150,
+                        templet: function (d) {
+                            var lenTask = d.task_status;
+                            var htmlBtn = '<button class="'+["layui-btn layui-btn-primary layui-btn-xs","layui-btn layui-btn-primary layui-btn-xs","layui-btn layui-btn-normal  layui-btn-xs","layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled","layui-btn layui-btn-warm  layui-btn-xs"][d.task_status]+'">'+["未开始","已取消","已完成","已关闭","进行中"][d.task_status]+'</button>'
+                            if(d.progress_overtime == 1){
+                                htmlBtn+='<button class="layui-btn layui-btn-danger layui-btn-xs">已超时</button>'
+                            }
+                            // var statusTask = ["未开始","已取消","已完成","已关闭","进行中"][d.task_status]
+                            return htmlBtn
+                        }
+                    }, {
+                        field: 'action_type',
+                        fixed: 'right',
+                        width: 220,
+                        title: '操作',
+                        templet: function (d) {
+                            var lenTask = d.action_type;
+                            var statusTask = ["创建","已取消","已完成","已关闭","指派","备注","激活","开始"][d.action_type]
+                             var lenList = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="Assign">指派</a><a class="layui-btn layui-btn-xs" lay-event="Start">开始</a><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="CarryOut">完成</a><a class="layui-btn layui-btn-primary layui-btn-xs" id="showData" lay-event="showData">详情</a>'
+                            return lenList
+                        },
+                    }]
+                ]
+                ,request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                        "status_code":res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr":res.data.page_index
+                    };
+                }
+                ,done:function(res, page, count){
+                    var that = this.elem.next();
+                    res.data.forEach(function (item, index) {
+                        console.log(item)
+                        if (item.progress_overtime == 1) {
+                            var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#FF572298").css("color", "#FFf");
+                            that.find(".layui-table-box tbody tr[data-index='" + index + "']").find(".layui-progress-text").css("color", "#FFf");
+                        } 
+                    });
+                    element.init();
+                }
+            });
+        }
+        tabFun(1);
+        // var RemarksText = layedit.build("RemarksText", {
+        //         tool: [
+        //         'strong' //加粗
+        //         , 'italic' //斜体
+        //         , 'underline' //下划线
+        //         , 'del' //删除线
+        //         , '|' //分割线
+        //         , 'left' //左对齐
+        //         , 'center' //居中对齐
+        //         , 'right' //右对齐
+        //         , 'link' //超链接
+        //         , 'unlink' //清除链接
+        //         // , 'face' //表情
+        //         // , 'image' //插入图片
+        //         // ,'help' //帮助
+        //         ]
+        // });
+        var AssignFun =function(opt={},type){
+            var attachIdArr =[];            
+            // var RemarksText =layedit.build("RemarksText", {
+            //     tool: [
+            //         'strong' //加粗
+            //         , 'italic' //斜体
+            //         , 'underline' //下划线
+            //         , 'del' //删除线
+            //         , '|' //分割线
+            //         , 'left' //左对齐
+            //         , 'center' //居中对齐
+            //         , 'right' //右对齐
+            //         , 'link' //超链接
+            //         , 'unlink' //清除链接
+            //     ]
+            // });
+            var content = '',layerHeight="580px";
+            content+= '<div class="layui-card-body layui-form">'
+                    if(type==4){
+                        layerHeight="580px"
+                        content+= '<div class="layui-form-item">'
+                            +'<label class="layui-form-label">指派给</label>'
+                            +'<div class="layui-input-inline">'
+                                +'<select lay-filter="AssignSelect" id="AssignSelect"></select>'
+                            +'</div>'
+                        +'</div>'
+                    }
+                    content+= '<div class="layui-form-item">'
+                            +'<label class="layui-form-label">备注</label>'
+                            // +'<div class="layui-input-block">'
+                                // +'<textarea name="RemarksText" id="RemarksText" style="display: none;"></textarea>'
+                        
+                                +'<div  class="layui-input-block" id="editor"></div>'
+                            // +'</div>'
+                        +'</div>' 
+                        +'<div class="layui-form-item">'
+                            +'<label class="layui-form-label">附件</label>'
+                            +'<div class="layui-input-block">'
+                                +'<button type="button" class="layui-btn" id="workFeild">'
+                                    +'<i class="layui-icon">&#xe67c;</i>上传附件'
+                                +'</button>'
+                                +'<div id="taskFiles" class="UploadNames-box"></div>'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>';
+                layer.open({
+                    title:''+opt.id+' '+opt.task_name+' > '+["创建","已取消","已完成","已关闭","指派","备注","激活","开始"][type]+'',
+                    type: 1, 
+                    content:content,
+                    area:['80%', layerHeight],
+                    btn:['确定','取消'],
+                    success: function(index,layero){
+                        if(type==4){
+                            $.fetch({
+                                url:"/gateway/projectManage/users",
+                                type: 'post',
+                                data: {projectId:opt.project_id},  //传项目ID
+                                cb:function(rs){
+                                    var selectList = '';
+                                    for(var i = 0; i<rs.length; i++){
+                                        selectList += '<option value="'+ rs[i].users_id+'">'+ rs[i].name+' ('+rs[i].title_name+')</option>'
+                                    }
+                                    $("#AssignSelect").html(selectList);
+                                    form.render();
+                                }
+                            })
+                        }
+                        // RemarksText =layedit.build("RemarksText", {
+                        //     tool: [
+                        //         'strong' //加粗
+                        //         , 'italic' //斜体
+                        //         , 'underline' //下划线
+                        //         , 'del' //删除线
+                        //         , '|' //分割线
+                        //         , 'left' //左对齐
+                        //         , 'center' //居中对齐
+                        //         , 'right' //右对齐
+                        //         , 'link' //超链接
+                        //         , 'unlink' //清除链接
+                        //     ]
+                        // });
+                        var uploadInst = upload.render({
+                            elem: '#workFeild' //绑定元素
+                                
+                            ,url: urls+'/gateway/taskAttach/add' //上传接口
+                            ,accept:"file"
+                            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                                layer.load('上传中'); //上传loading
+                            }
+                            ,done: function (res) {
+                                //上传完毕回调
+                                console.log(res);
+                                layer.closeAll('loading'); //关闭loading
+                                $("#taskFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                                attachIdArr.push(res.data.attachId);
+
+                            }
+                            ,error: function () {
+                                //请求异常回调
+                            }
+                        });
+                            // 或者 var editor = new E( document.getElementById('editor') )
+                        editor.customConfig.uploadImgShowBase64 = true ;
+                        editor.customConfig.zIndex = 0;
+                        editor.create()
+                    },
+                    yes: function(index, layero){
+                        // var SelectId = $("#AssignSelect").val();
+                        // var SelectCont = $("#AssignSelect").find("option[value='"+SelectId+"']").text();
+                        var SelectId = $("#AssignSelect").val();
+                        var SelectCont = $("#AssignSelect").find("option[value='"+SelectId+"']").text();
+                        // layedit.sync(RemarksText);
+                             // var templateCont = layedit.getContent(RemarksText);
+                        // var  val = 
+                        var fildId=attachIdArr.toString();
+                        var templateCont=editor.txt.html();
+                        var  param ={
+                            taskId:opt.id,
+                            actionType:type,
+                            actionRemark: templateCont, //备注
+                            assignedUid: SelectId, //指派人ID
+                            assignedUname: SelectCont, //指派人name 
+                            attachIds:fildId,
+                        }
+                        $.fetch({
+                            url:"/gateway/task/action",
+                            type: 'post',
+                            data: param,
+                            cb:function(rs){
+                                layer.msg(''+["创建成功","已取消","已完成","已关闭","指派成功","备注添加成功","激活成功","已开始"][type]+'',{time:800});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                listTab.reload({
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                            },
+                        })
+                    }
+                })
+        }
+        table.on('tool(listTab)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var tdata = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            if (layEvent === 'showData') { //详情
+                $.fetch({
+                    url:"/gateway/task/detail",
+                    type: 'post',
+                    data:{
+                        taskId:obj.data.id
+                    },
+                    cb:function(rs){
+                        layer.open({
+                            type: 2,
+                            title: '任务详情',
+                            area: ['90%','90%'],
+                            content: 'ShowWorkflow.html',
+                            success: function (layero, index) {
+                                var body = layer.getChildFrame('body', index);
+                                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                iframeWin.window.dataList = rs;
+                            }
+                        });
+
+                    
+                    }
+                });
+            }else if(layEvent === 'Assign'){ //指派
+                AssignFun(obj.data,4);
+            }else if(layEvent === 'Start'){ //开始
+                AssignFun(obj.data,7);
+            }else if(layEvent === 'CarryOut'){ //完成
+                AssignFun(obj.data,2);
+            }
+        })
+    });
+</script>
+
+</html>

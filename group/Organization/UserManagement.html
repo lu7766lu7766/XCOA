@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户管理</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+	<link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script src="../../js/sub/userMent.js?v=20190925" type="text/javascript"></script>
+</head>
+	
+<body layadmin-themealias="default">
+	<div class="layui-fluid depart">
+		<div class="layui-card-header">
+			<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+			用户管理
+		</div>
+		<div class="layui-row layui-col-space10">
+			<div class="layui-col-sm2 layui-col-md2 layui-col-lg2 departMenu">
+				<!-- <div id="main">
+					<ul id="browser" class="filetree grop-brow">
+				
+					</ul>
+				</div> -->
+				<div class="departMenu"  style="height: 610px;overflow: auto;" id="toolbarDiv">
+					<div id="main1">
+						<ul id="browser1" class="dtree" data-id="0"></ul>
+					</div>
+				</div>
+			</div>
+			<!-- 新建用户/管理用户 -->
+			<div class="layui-col-sm10 layui-col-md10 layui-col-lg10 NewUser">
+				<div class="layui-card">
+					<div class="layui-card-header">
+						<div class="layui-inline">
+							<i class="iconfont icon-Group"></i>
+							管理用户 -- <span id="partUsers">全部用户</span><span id="partUsersNum"></span>
+						</div>
+					</div>
+					<div class="layui-card-body">
+						<!-- <div style="padding-bottom: 10px;">
+							<button id="delSleUser" class="layui-btn layuiadmin-btn-role" data-type="batchdel">删除</button>
+							<button id="newPareUser" class="layui-btn layuiadmin-btn-role" data-type="add">新建用户</button>
+							<div class="layui-inline ml-5" id="searchUser">
+								<input type="text" class="layui-input layui-input-search layui-input-75" placeholder="请输入用户名进行搜索" />
+								<i class="iconfont icon-sousuo layui-btn" style="vertical-align: initial;"></i>
+							</div>
+						</div> -->
+						<div class="layui-table-box layui-form">
+							<div class="layui-form-item"> 
+								<div class="layui-inline" style="min-width:48%">
+									<label class="layui-form-label">
+										部门
+									</label>
+									<div class="layui-input-block">
+										<select type="text" xm-select="departmentId"  id="departmentId" name="departmentId" placeholder="请选择部门" autocomplete="off" class="xm-input xm-select" xm-select-search="" ><option value="">请选择部门</option></select>
+									</div>
+								</div>
+								<div class="layui-inline" style="min-width:48%">
+									<label class="layui-form-label">
+										角色
+									</label>
+									<div class="layui-input-block">
+										<select type="text" xm-select="roleId"  id="roleId" name="roleId" placeholder="请选择角色" autocomplete="off" class="xm-input xm-select" xm-select-search="" ><option value="">请选择角色</option></select>
+									</div>
+								</div>
+							</div>
+							<!-- <div class="layui-form-item"> 
+							</div> -->
+							<div class="layui-form-item" id="searchUser"> 
+							
+								<div class="layui-inline ">
+									<label class="layui-form-label">
+											用户名
+									</label>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input layui-input-search " placeholder="请输入用户名进行搜索" />
+									</div>
+								</div>
+								<i class="iconfont icon-sousuo layui-btn" style="vertical-align: initial;"></i>
+								<button id="backUser" class="layui-btn layui-btn-primary" data-type="batchdel" lay-event="backUser" style="display:none">返回</button>
+							</div>
+									
+							<table class="layui-table tableUser"  id="allUserTb" lay-filter="allUserTb">
+							</table>
+							<!-- <div id="userTablePag"></div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<style>
+
+</style>
+<script src="../../layui/layui.js"></script>
+<script type="text/html" id="allUserTbTool">
+	{{#  
+		var isCompny=$(".depart").attr("data-iscomp")=="1"?true:false; 
+	}}
+    {{#  if((!isCompny&&d.company_id&&d.company_id==1)||isCompny) { }}
+				<a class="layui-btn layui-btn-xs" lay-event="editUserClick">编辑</a>
+				<a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUserPass">重设密码</a>
+	{{#  }else { }}
+			<a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUserPass">重设密码</a>
+	{{#  } }} 
+
+</script>
+</html>

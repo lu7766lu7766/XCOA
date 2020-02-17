@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绩效评分</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" demo-list layui-card">
+            <div class="layui-card-header">
+                绩效评分设置
+            </div>
+         
+            <div class="layui-card-body layui-row layui-col-space10">
+                <div  class="layui-form layui-col-sm12 layui-col-md12 layui-col-lg12">
+                    <div class="layui-inline mb-5">
+                        <label class="layui-form-label">选择公司</label>
+                        <div class="layui-input-inline">
+                            <select class="slct"  name="companyId" lay-filter="companyId"  id="companyId"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm4 layui-col-md3 layui-col-lg3">
+                    <div class="departMenu">
+                        <div id="main">
+                           
+                            <div id="performanceTree" class="mt-5"></div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="layui-col-sm8 layui-col-md9 layui-col-lg9">
+                        <table class="layui-table" id="performance" lay-filter="performance"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190218"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','laydate','table','upload','dtree'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        ,dtree=layui.dtree
+        ,form = layui.form
+        ,upload = layui.upload
+        ,layer = layui.layer
+        ,table=layui.table;
+        //var paramTree;//记录树节点
+        
+           
+        var cateTreeTableFun=function(param){//1 2级右侧列表
+                     var companyId=$("#companyId").val();
+            
+                    $.fetch({
+                        url:"/gateway/performance/cateTree",
+                        type: 'post',
+                        data:{
+                            level:3,
+                            companyId:companyId,
+                        },
+                        cb:function(rs){
+                            var levesData=[];
+                            // ////console.log(rs,param.node_id)
+                            if(param.level==1){
+                                 
+                                for(var i=0;i<rs.length;i++){
+                                    if(param.node_id==rs[i].id){
+                                        levesData=rs[i].children;
+                                        var toolbar='<div>类型列表 ('+rs[i].cate_name+')</div>';
+                                    }
+                                }
+                            }else if(param.level==2){
+                                for(var i=0;i<rs.length;i++){
+                                    if(rs[i].children&&rs[i].children.length>0){
+                                        for(var k=0;k<rs[i].children.length;k++){
+                                            if(param.node_id==rs[i].children[k].id){
+                                                levesData=rs[i].children[k].children;
+                                                var toolbar='<div>考核主题列表 ('+rs[i].children[k].cate_name+')</div>';
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            levesData=!levesData?[]:levesData;
+                            var performance = table.render({
+                                elem: '#performance',
+                                // url: urls+'/gateway/performance/cateTree', //数据接口
+                                page: false, //开启分页
+                                // method: 'post',
+                                // where:{
+                                //     level:parseFloat(param.level)+1,
+                                // },
+                                toolbar:toolbar,
+                                defaultToolbar:'',
+                                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                                // contentType: 'application/json',
+                                text: {
+                                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                },
+                                data:levesData,
+                                cols: [
+                                    [ //表头
+                                    {
+                                            field: 'cate_name',
+                                            title: '名称',
+                                            minWidth:100,
+                                        },{
+                                            field: 'created_at',
+                                            title: '填写日期',
+                                            minWidth:160,
+                                        }
+                                    ]
+                                ],
+                                // request: {
+                                //     pageName: 'currentIndex' //页码的参数名称，默认：page
+                                //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                                // },
+                                // parseData: function (res) { //res 即为原始返回的数据
+                                //     return {
+                                //         "status_code": res.status_code, //解析接口状态
+                                //         "message": res.message, //解析提示文本
+                                //         "count": res.data.total_count, //解析数据长度
+                                //         "data": res.data, //解析数据列表
+                                //         "curr": res.data.page_index
+                                //     };
+                                    
+                                // },
+                                done: function (res) {
+                                    // ////console.log(res)
+                                }
+                            });
+                        }
+                    });
+        }
+
+        
+        
+        $.fetch({//集团获取公司列表
+            url:"/gateway/company/tree",
+            type: 'post',
+           
+            cb:function(rs){
+                var comp=rs[0].children,op='';
+                for(var i=0;i<comp.length;i++){
+                    op+='<option value="'+comp[i].id+'">'+comp[i].name+'</option>'
+                }
+                $("#companyId").html(op);
+                form.render();
+                form.on('select(companyId)', function(data){
+                    var performanceTree='';
+                    dtreeFun({
+                            level:3,
+                            companyId:data.value
+                        })
+                    // $("#performanceTree").html('');
+                    // //console.log(data.elem); //得到select原始DOM对象
+                    //console.log(data.value); //得到被选中的值
+                    // //console.log(data.othis); //得到美化后的DOM对象
+                    // dtree.reload(performanceTree, {
+                    //     // url: urls+'/gateway/performance/cateTree',
+                    //     request:{
+                    //         level:3,
+                    //         companyId:data.value
+                    //     },
+                    //     // response : {
+                    //     //     statusName:'status_code',
+                    //     //     statusCode: 200,
+                    //     //     message: "message",
+                    //     //     rootName: "data",
+                    //     //     parentId: "parent_id",
+                    //     //     childName: "children",
+                    //     //     nodeId: "id", 
+                    //     //     treeId: "id",//节点ID
+                    //     //     title: "cate_name", 
+                    //     //     basicData:"data"
+                    //     // },
+                    //     // firstIconArray: {
+                    //     //     "0": {
+                    //     //         "open": "icon-set-sm1",
+                    //     //         "close": "icon-favor"
+                    //     //     }
+                    //     // }, //用户自定义一级图标集合，node
+                    //     // nodeIconArray: {
+                    //     //     "0": {
+                    //     //         // "open": "icon-shuye1",
+                    //     //         // "close": "icon-wenjianjiazhankai"
+                    //     //         "open": "icon-",
+                    //     //         "close": "icon-"
+                    //     //     }
+                    //     // }, //用户自定义二级级图标集合，node
+                    //     // leafIconArray:{"8":"1"},// 自定义扩展的二级最后一级图标，从8开始
+                    //     // icon: ["0","8"],
+                    //     // dataStyle:"layuiStyle",
+                    // });
+                });    
+                var companyId=$("#companyId").val()
+                dtreeFun({
+                    level:3,
+                    companyId:companyId
+                })
+                function dtreeFun(data){
+                    $("#performanceTree").html('');
+                    $.fetch({//集团获取公司列表
+                        url:"/gateway/performance/cateTree",
+                        type: 'post',
+                        data:data,
+                        cb:function(rs){
+
+                            var performanceTree = dtree.render({
+                                elem: "#performanceTree",
+                                // url:urls+"/gateway/performance/cateTree",
+                                // request:data,
+                                data:rs,
+                                response : {
+                                    statusName:'status_code',
+                                    statusCode: 200,
+                                    message: "message",
+                                    rootName: "data",
+                                    parentId: "parent_id",
+                                    childName: "children",
+                                    nodeId: "id", 
+                                    treeId: "id",//节点ID
+                                    title: "cate_name", 
+                                    basicData:"data"
+                                },
+                                firstIconArray: {
+                                    "0": {
+                                        "open": "icon-set-sm1",
+                                        "close": "icon-favor"
+                                    }
+                                }, //用户自定义一级图标集合，node
+                                nodeIconArray: {
+                                    "0": {
+                                        // "open": "icon-shuye1",
+                                        // "close": "icon-wenjianjiazhankai"
+                                        "open": "icon-",
+                                        "close": "icon-"
+                                    }
+                                }, //用户自定义二级级图标集合，node
+                                leafIconArray:{"8":"1"},// 自定义扩展的二级最后一级图标，从8开始
+                                icon: ["0","8"],
+                                dataStyle:"layuiStyle",
+                                success:function(data, obj){
+                                    // ////console.log(data, obj)
+                                },
+                                done:''
+                            })
+                            
+                            var dtreeDoneFun= function(data, obj){
+                                var companyId=$("#companyId").val();
+                                if(data.data==null||data.data.length==0){
+                                    $("#performanceTree").html('暂无数据');
+                                    $("#performance").parent("div").hide();
+                                }else if(data.data&&data.data.length>0){
+                                    $("#performance").parent("div").show();
+                                    var nowid= data.data[0].id;
+                                    dtree.dataInit("performanceTree", ''+nowid+'');
+                                    var rs=data.data
+                                    var levesData=[];
+                                    for(var i=0;i<rs.length;i++){
+                                        levesData=rs[0].children;
+                                    }
+                                    levesData=!levesData?[]:levesData;
+                                    var performance = table.render({
+                                        elem: '#performance',
+                                        page: false, //开启分页
+                                        toolbar:'<div>类型列表 ('+data.data[0].cate_name+')</div>',
+                                        defaultToolbar:'',
+                                        limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                                        text: {
+                                            none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                        },
+                                        data:levesData,
+                                        cols: [
+                                            [ //表头
+                                            {
+                                                    field: 'cate_name',
+                                                    title: '名称',
+                                                    minWidth:100,
+                                                },{
+                                                    field: 'created_at',
+                                                    title: '填写日期',
+                                                    minWidth:160,
+                                                }
+                                            ]
+                                        ],
+                                    });
+                                }
+
+                            }
+                            dtreeDoneFun({data:rs})
+                            
+                            dtree.on("node('performanceTree')",function(param){
+                                //paramTree=param;     // 回调刷新表格
+                                if(param.level==3){
+                                        var companyId=$("#companyId").val();
+                                        var performance = table.render({
+                                            elem: '#performance',
+                                            url: urls+'/gateway/performance/listScore',
+                                            page: true, //开启分页
+                                            method: 'post',
+                                            where:{
+                                                cateId:param.node_id,
+                                                companyId:companyId
+                                            },
+                                            toolbar:'<div>绩效评分标准列表 ('+param.context+')</div>',
+                                            defaultToolbar:'',
+                                            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                                            contentType: 'application/json',
+                                            text: {
+                                                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                            },
+                                            cols: [
+                                                [ //表头
+                                                {
+                                                        field: 'title',
+                                                        title: '评分事项',
+                                                        minWidth:480,
+                                                    },{
+                                                        field: 'score',
+                                                        title: '分数',
+                                                        minWidth:80,
+                                                    },{
+                                                        field: 'created_at',
+                                                        title: '填写日期',
+                                                        minWidth:160,
+                                                    }
+                                                ]
+                                            ],
+                                            request: {
+                                                pageName: 'currentIndex' //页码的参数名称，默认：page
+                                                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                                            },
+                                            parseData: function (res) { //res 即为原始返回的数据
+                                                return {
+                                                    "status_code": res.status_code, //解析接口状态
+                                                    "message": res.message, //解析提示文本
+                                                    "count": res.data.total_count, //解析数据长度
+                                                    "data": res.data.data_list, //解析数据列表
+                                                    "curr": res.data.page_index
+                                                };
+                                            },
+                                            done: function () {
+                                                
+                                            }
+                                        });  
+
+                                    }else{
+                                    cateTreeTableFun(param);
+                                }
+                            })
+
+                            
+                        }
+                    })
+            
+                }
+            }
+        })
+                
+    })
+</script>
+
+</html>

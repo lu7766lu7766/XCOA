@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人考勤</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+<style>
+	tr:hover .layui-table-col-special{background-color: #f2f2f2;}
+	.layui-table-col-special{
+		background-color: #fff;
+	}
+	.layui-table th{
+		background-color:#f2f2f2;
+	}
+	.layui-table-view .layui-table{
+		height: 100%;
+	}
+</style>
+</head>
+	
+<body layadmin-themealias="fashion-red">
+	<div class="layui-fluid">
+
+			<!-- 上下班记录查询 -->
+		<div class="layui-row layui-col-space15">
+			<div class="layui-card" style="min-width: 935px;">
+				<div class="layui-tab layui-tab-brief" lay-filter="component-tabs-brief">
+					<ul class="layui-tab-title">
+						<li   lay-id="0" class="layui-this">
+							<i class="iconfont icon-shezhishangxiabanshijian"></i>上下班记录
+						</li>
+						<li  lay-id="1">
+							<i class="iconfont icon-jb02"></i>请假登记
+						</li>
+						<li  lay-id="2">
+							<i class="iconfont icon-waichuchucha"></i>外出登记
+						</li>
+						<li  lay-id="3">
+							<i class="iconfont icon-jiaban"></i>加班登记
+						</li>
+					</ul>
+					<div  class="layui-tab-content">
+						<div class="layui-tab-item layui-show" id="xxbjl">
+							<div class="test-table-reload-btn">
+								<label class="layui-form-label">
+									按月查询
+								</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input" id="test-laydate-type-month" placeholder="yyyy-MM" lay-key="7">
+								</div>
+							</div>
+							<div class="tableList"  id="commuteList">
+								
+								<table class="layui-table" lay-size="sm">
+									<thead></thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+						<!-- 请假登记 -->
+						<div class="layui-tab-item" id="regLeave">
+							<div class="LeaveCont layui-card">
+								<div class="layui-card-header" data-lang="string_lang28">
+									<div id="LeaveHistory" class="LeaveHistory">
+										<button  class="layui-btn layui-btn-sm fr" data-type="test47">请假申请历史记录</button>
+									</div>
+								</div>
+								<div class="layui-card-body">
+									<form class="layui-form" action="" lay-filter="component-form-leave">
+										<div class="layui-form-item">
+											<label  for="" class="layui-form-label">请假类型：</label>
+											<div class="layui-input-block"  id="leaveTypes"></div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">请假时间：</label>
+											<div class="layui-input-block">
+												<input lay-verify="date2" name="LeavaTime"  type="text" class="layui-input" id="test-laydate-format-leave" placeholder="开始时间 ~ 结束时间" lay-key="18">
+												<span class="red" id="hidden">*请选择时分秒</span>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">请假天数：</label>
+											<div class="layui-input-inline">
+												<input class="layui-input layui-disabled" name="leavaDays" placeholder="选择起始时间自动计算" type="text" lay-verify="dayZ" disabled>
+											</div>
+											<div  id="leaveDaystest"  class="layui-form-mid layui-word-aux"></div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">请假原因：</label>
+											<div class="layui-input-block">
+												<textarea lay-verify="desc" name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">附件：</label>
+											<div class="layui-input-block">
+												<button type="button" class="layui-btn" id="finaAttach" style="float: left;margin-right: 15px;">
+													<i class="layui-icon">&#xe67c;</i>上传
+												</button>
+												<div class="layui-form-mid layui-word-aux">（注：再次点击，可多次上传）</div>
+												<div id="finaFiles" class="UploadNames-box"></div>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">审批人：</label>
+											<div class="layui-input-inline">
+											<select class="dacApprover" id="dacLeveAp" name="dacLeveAp" lay-filter="dacLeveAp">
+											</select>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<div class="layui-input-block">
+											<button class="layui-btn" lay-submit lay-filter="form-leave">提交</button>
+											<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<!-- 外出登记 -->
+						<div class="layui-tab-item" id="regOutgo">
+							<div class="LeaveCont layui-card">
+								<div class="layui-card-header" data-lang="string_lang28">
+									<div id="outgoHistory" class="LeaveHistory">
+										<button  class="layui-btn layui-btn-sm fr" data-type="test47">外出申请历史记录</button>
+									</div>
+								</div>
+								<div class="layui-card-body">
+									<form class="layui-form" action="" lay-filter="component-form-outgo">
+										<div class="layui-form-item">
+											<label class="layui-form-label">外出时间：</label>
+											<div class="layui-input-block">
+												<input lay-verify="date2" name="outgoTime"  type="text" class="layui-input" id="test-laydate-format-outgo" placeholder="开始时间 ~ 结束时间" lay-key="19">
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label  for="" class="layui-form-label">外出类型：</label>
+											<div class="layui-input-block"   id="outgoTypes">
+													<input lay-filter="outgoTypes" type="radio" name="outgoTypes" value="1" title="外出" checked="">
+													<input lay-filter="outgoTypes" type="radio" name="outgoTypes" value="2" title="出差" checked="">
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">外出地点：</label>
+											<div class="layui-input-block">
+												<textarea lay-verify="desc" name="descwhere" placeholder="请输入内容" class="layui-textarea"></textarea>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">外出原因：</label>
+											<div class="layui-input-block">
+												<textarea lay-verify="desc" name="descwhy" placeholder="请输入内容" class="layui-textarea"></textarea>
+											</div>
+										</div>
+
+										<div class="layui-form-item">
+											<label class="layui-form-label">审批人：</label>
+											<div class="layui-input-inline">
+											<select class="dacApprover" id="dacoutgoAp" name="dacoutgoAp" lay-filter="dacLeveAp">
+											</select>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<div class="layui-input-block">
+											<button class="layui-btn" lay-submit lay-filter="form-outgo">立即提交</button>
+											<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						
+						</div>
+						<!-- 加班登记 -->
+						<div class="layui-tab-item" id="regOvertime">
+							<div class="LeaveCont layui-card">
+								<div class="layui-card-header" data-lang="string_lang28">
+									<div id="regOverHistory" class="LeaveHistory">
+										<button   class="layui-btn layui-btn-sm fr" data-type="test47">加班申请历史记录</button>
+									</div>
+								</div>
+								<div class="layui-card-body">
+									<form class="layui-form" action="" lay-filter="component-form-Overtime">
+										<div class="layui-form-item">
+											<label class="layui-form-label">加班时间：</label>
+											<div class="layui-input-block">
+												<input lay-verify="date2" name="OvertimeTime"  type="text" class="layui-input" id="test-laydate-format-Overtime" placeholder="开始时间 ~ 结束时间" lay-key="20">
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">加班原因：</label>
+											<div class="layui-input-block">
+												<textarea lay-verify="desc" name="descwhy" placeholder="请输入内容" class="layui-textarea"></textarea>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">加班类型：</label>
+											<div class="layui-input-inline">
+											<select  id="dacOvertimeType" name="dacOvertimeType" lay-filter="dacOvertimeType">
+											</select>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<label class="layui-form-label">审批人：</label>
+											<div class="layui-input-inline">
+											<select class="dacApprover" id="dacOvertimeAp" name="dacOvertimeAp" lay-filter="dacLeveAp">
+											</select>
+											</div>
+										</div>
+										<div class="layui-form-item">
+											<div class="layui-input-block">
+											<button class="layui-btn" lay-submit lay-filter="form-Overtime">立即提交</button>
+											<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../../layui/layui.js"></script>
+	<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+	<script  type="text/javascript">
+	
+	$(function(){//获取一个时间对象
+		var now= new Date();  
+		var year = now.getFullYear(),
+			month = now.getMonth() + 1;
+		
+		layui.config({
+			base: '../../../layui/' //静态资源所在路径
+		}).extend({
+			index: 'index' //主入口模块
+		}).use(['index','form','laydate','laypage','table','upload'], function(){
+			var $ = layui.$
+			,admin = layui.admin
+			,element = layui.element
+			,upload = layui.upload
+			,router = layui.router()
+			element.render();
+			var leaveTypesDay =function(data){
+				var html ="";
+				//console.log(data)
+				if(data.value==19){
+					$.fetch({
+						url:"/gateway/holiday/remaind/",//年假
+							type: 'get',
+							data:{id:data.value},
+							cb:function(rs){
+								if(rs==null){
+									layer.msg('您还未设置排班或假期天数,无法进行请假操作,</br>请联系管理员添加.',{shade:0.3},function(){
+										element.tabChange('component-tabs-brief',0);
+									})
+								}else{
+								// //console.log(rs)
+									
+									// var html ="";
+									// leaveTypesDay({
+									// 	value:19,
+									// });
+									html+='(年假共'+Number(rs.year_holiday)+'天,已用'+Number((rs.year_holiday-rs.remaining_year_holiday))+'天,剩余'+Number(rs.remaining_year_holiday)+'天)';
+									$("#leaveDaystest").html(html);
+									
+								}
+						}
+					})
+				}else if(data.value==1){
+					$.fetch({
+						url:"/gateway/holiday/remaind/",
+						type: 'get',
+						data:{id:data.value},
+						cb:function(rs){
+							html+='(特休假共'+Number(rs.special_holiday)+'天,已用'+Number((rs.special_holiday-rs.remaining_special_holiday))+'天,剩余'+Number(rs.remaining_special_holiday)+'天)';
+							$("#leaveDaystest").html(html);
+						}
+					}) 
+				}else if(data.value==2){
+					$.fetch({
+						url:"/gateway/holiday/remaind/",
+						type: 'get',
+						data:{id:data.value},
+						cb:function(rs){
+							html+='(病假共'+Number(rs.sick_holiday)+'天,已用'+Number((rs.sick_holiday-rs.remaining_sick_holiday))+'天,剩余'+Number(rs.remaining_sick_holiday)+'天)';
+							$("#leaveDaystest").html(html);
+						}
+					}) 
+				}else if(data.value==3){
+					$.fetch({
+						url:"/gateway/holiday/remaind/",
+						type: 'get',
+						data:{id:data.value},
+						cb:function(rs){
+							html+='(生理假共'+Number(rs.shengli_jia_holiday)+'天,已用'+Number((rs.shengli_jia_holiday-rs.remaining_shengli_jia_holiday))+'天,剩余'+Number(rs.remaining_shengli_jia_holiday)+'天)';
+							$("#leaveDaystest").html(html);
+						}
+					}) 
+				}else if(data.value==23){
+					$.fetch({
+						url:"/gateway/holiday/remaind/",
+						type: 'get',
+						data:{id:data.value},
+						cb:function(rs){
+							html+='(住院假共'+Number(rs.in_hospital_jia_holiday)+'天,已用'+Number((rs.in_hospital_jia_holiday-rs.remaining_in_hospital_jia_holiday))+'天,剩余'+Number(rs.remaining_in_hospital_jia_holiday)+'天)';
+							$("#leaveDaystest").html(html);
+						}
+					}) 
+				}else{
+					html='';
+					$("#leaveDaystest").html(html);
+				}
+			}
+			element.on('tab(component-tabs-brief)', function(obj){
+				var index =obj.index;
+				//请假登记
+					//渲染请假类型
+					if(index==1){
+						//console.log(index)
+						$.fetch({
+							url:"/gateway/userleave/leavetypes",//请假
+							type: 'post',
+							cb:function(rs){
+								var radHtml =typesRadio(rs);
+								$("#leaveTypes").html(radHtml);  
+								// $.fetch({
+								// 	url:"/gateway/holiday/remaind/",
+								// 	type: 'get',
+								// 	data:{id:19},
+								// 	cb:function(rs){
+								// 		//console.log(rs)
+										
+								// 	}
+								// }) 
+								leaveTypesDay({
+										value:19,
+									});
+								form.render('radio','component-form-leave');
+								form.on('radio(leaveTypes)', function(data){
+									leaveTypesDay(data);
+								});
+							}
+						})
+					}else if(index==3){
+						$.fetch({
+							url:"/gateway/overtime/types",//请假dacOvertimeType
+							type: 'post',
+							cb:function(rs){
+								var oplhtml ='';
+								for(key in rs){
+									oplhtml+='<option value="'+key+'">'+rs[key]+'</option>'
+								}
+								$("#dacOvertimeType").html(oplhtml);
+								form.render('select');
+							}
+						})
+					}
+					$.managerFun({//当前审批人
+						step:1,
+						fun:function(rs,forw,steps){
+							var oplhtml ='';
+							for(var i=0;i<rs.length;i++){
+								oplhtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+							}
+							$(".dacApprover").html(oplhtml); 
+							$(".dacApprover").attr("data-step",steps);   
+							form.render('select','component-form-leave');     
+							form.render('select','component-form-outgo');
+							form.render('select','component-form-Overtime'); 
+						}
+					});
+			// }
+			});
+
+			var laydate = layui.laydate  
+				,form = layui.form
+				,layer = layui.layer
+				,laypage = layui.laypage
+				,table=layui.table;
+			laydate.render({
+				elem: '#test-laydate-type-month'
+				,type: 'month'
+				,value:''+year+'-'+month+''
+				,change: function(value, date){
+					getCommuteTable(date.year,date.month);
+				}
+			});
+			$.fetch({
+				url:"/gateway/overtime/types",//请假dacOvertimeType
+				type: 'post',
+				cb:function(rs){
+					var oplhtml ='';
+					for(key in rs){
+						oplhtml+='<option value="'+key+'">'+rs[key]+'</option>'
+					}
+					$("#dacOvertimeType").html(oplhtml);
+					form.render('select');
+				}
+			})
+			laydate.render({
+				elem: '#test-laydate-format-leave'
+				,type: 'datetime'
+				,range: '~'
+				,format: 'yyyy-MM-dd HH:mm:ss'
+				,change: function(value, date){
+					var times = value.toString();
+					var timesArr= times.split(" ~ ");
+					// //console.log(timesArr[1].slice(11))
+					if(value){
+						$("#hidden").hide();
+					}
+					// hidden
+					$.fetch({
+						url:"/gateway/userleave/leaveday",
+						type: 'post',
+						data:{
+							StartTime:timesArr[0],
+							EndTime:timesArr[1]                   
+						},
+						cb:function(rs){
+							$('input[name="leavaDays"]').val(rs);
+						}
+					})
+				}
+				,done:function(value, date){
+					if(value==""){
+						$("#hidden").show();
+					}
+					// 
+				}
+			});
+			laydate.render({
+				elem: '#test-laydate-format-outgo'
+				,type: 'datetime'
+				,range: '~'
+				,format: 'yyyy-MM-dd HH:mm:ss'
+				,done: function(value, date, endDate){
+					if(value.split(' ~ ')[0]==value.split(' ~ ')[1]){
+						//console.log(111)
+						layer.msg('起始时间不能相同',function(){
+							$("#test-laydate-format-outgo").val('');
+						})
+					}
+				}
+			});
+			laydate.render({
+				elem: '#test-laydate-format-Overtime'
+				,type: 'datetime'
+				,range: '~'
+				,format: 'yyyy-MM-dd HH:mm:ss'
+				,done: function(value, date, endDate){
+					if(value.split(' ~ ')[0]==value.split(' ~ ')[1]){
+						//console.log(111)
+						layer.msg('起始时间不能相同',function(){
+							$("#test-laydate-format-Overtime").val('');
+						})
+					}
+				}
+			});
+			form.verify({
+				date2:function(value){
+					if(!value.match(/\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}/)){
+						return '请选择日期';
+					};
+				},
+				desc:function(value){
+					if(value==""){
+						return '请假原因不能为空';
+					};
+				},
+				dayZ:function(value){
+					if(value==""||value=='0'){
+						return '请假天数不能为空或0';
+					};
+				},
+			
+			})
+			var finaFiles=[];
+			var uploadInst = upload.render({//上传
+				elem: '#finaAttach' //绑定元素
+				,url: window.urls+"/gateway/userleave/addattach" //上传接口
+				,accept:'file'
+				,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+					layer.load(); //上传loading
+				}
+				,done: function(res){
+					//上传完毕回调
+					layer.closeAll('loading'); //关闭loading
+					$("#finaFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+					finaFiles.push(res.data.attachId);
+				}
+				,error: function(){
+					layer.closeAll('loading'); //关闭loading
+					//请求异常回调
+				}
+			});
+			$("#finaFiles").on("click",'i.del',function(){//删除
+                var delId =$(this).attr("data-file");
+                var elem = $(this).parent("a");
+                //layer.load();
+                $.fetch({
+                    url: '/gateway/finagroupapply/delattach',
+                    type: 'post',
+                    data:{AttachID:delId},
+                    cb:function(rs){
+                        finaFiles.splice($.inArray(delId,finaFiles),1);
+                        elem.remove();
+                    } 
+                });
+            })
+			form.on('submit(form-leave)', function(data){//请假提交
+				var times = data.field.LeavaTime.toString();
+				var timesArr= times.split(" ~ ");
+				var nexspet =$("#dacLeveAp").attr("data-step");  
+				var AttachIDs = finaFiles.join(',');
+				var prama={
+					LeaveType: data.field.leaveTypes, 
+					Content: data.field.desc,
+					StartTime: timesArr[0],
+					EndTime: timesArr[1],
+					AttachIDs:AttachIDs,
+					DayCount: data.field.leavaDays,
+					NextApprovalUserID: data.field.dacLeveAp,
+					NextApprovalStep:nexspet,
+				}
+		
+				$.fetch({
+					url:"/gateway/userleave/add",
+					type: 'post',
+					data:prama,
+					cb:function(rs){
+						layer.msg('申请成功!');
+						form.val("component-form-leave", {
+							"leaveTypes": "20" // "name": "value"
+							,"desc": ""
+							,"LeavaTime": ""
+							,"leavaDays": ""
+							,"dacLeveAp": ""
+						})
+						finaFiles=[];
+                        $("#finaFiles").html('');
+					}
+				})
+				return false;
+			});
+			form.on('submit(form-outgo)', function(data){//外出提交
+				var times = data.field.outgoTime.toString();
+				var timesArr= times.split(" ~ ");
+				var nexspet =$("#dacoutgoAp").attr("data-step");  
+				var prama={
+					GoOutType: data.field.outgoTypes, 
+					Content: data.field.descwhy,
+					StartTime: timesArr[0],
+					EndTime: timesArr[1],
+					Location:  data.field.descwhere,
+					NextApprovalUserID: data.field.dacoutgoAp,
+					NextApprovalStep:nexspet,
+				}
+				$.fetch({
+					url:"/gateway/goout/add ",
+					type: 'post',
+					data:prama,
+					cb:function(rs){
+						layer.msg('申请成功!');
+						form.val("component-form-outgo", {
+							"outgoTypes": "2" // "name": "value"
+							,"descwhere": ""
+							,"descwhy": ""
+							,"outgoTime": ""
+							,"dacoutgoAp": ""
+						})
+					}
+				})
+				return false;
+			}); 
+			form.on('submit(form-Overtime)', function(data){//加班提交
+				var times = data.field.OvertimeTime.toString();
+				var timesArr= times.split(" ~ ");
+				var nexspet =$("#dacOvertimeAp").attr("data-step");  
+				var OvertimeType =$("#dacOvertimeType").val();
+				var prama={ 
+					Content: data.field.descwhy,
+					StartTime: timesArr[0],
+					EndTime: timesArr[1],
+					OvertimeType:OvertimeType,
+					NextApprovalUserID:  data.field.dacOvertimeAp,
+					NextApprovalStep:nexspet,
+				}
+				$.fetch({
+					url:"/gateway/overtime/add",//加班
+					type: 'post',
+					data:prama,
+					cb:function(rs){
+						layer.msg('申请成功!');
+						form.val("component-form-Overtime", {
+							"descwhy": "" // "name": "value"
+							,"dacOvertimeType":''
+							,"OvertimeTime": ""
+							,"dacOvertimeAp": ""
+						})
+					}
+				})
+				return false;
+			});
+			$('#LeaveHistory  .layui-btn').on('click', function(){//历史记录跳转的按钮  
+				var index = layer.open({ //设置弹窗的相关属性
+					title: '<i class="iconfont icon-icon-test"></i>请假历史记录',
+					type: 1,
+					content: '<div class="layui-card"><div class="layui-card-body layui-form modify-table-cell"><div style="padding-bottom: 10px;">'
+											+'<div class="layui-inline">'
+												+'<label class="layui-form-label">选择状态</label>'
+												+'<div class="layui-input-inline">'
+													+'<select name="" class="slct" lay-filter="leaveDescSel" id="leaveDescSel"><option value="">全部</option><option value="0">待审批</option><option value="1">未通过</option><option value="2">已通过</option></select>'
+												+'</div>'
+											+'</div>'
+											+'<div class="layui-inline">'
+												+'<label class="layui-form-label">申请日期</label>'
+												+'<div class="layui-input-inline">'
+													+'<input type="text" placeholder="请选择开始日期" class="layui-input itemData" id="startTime" name="itemData_1" data-item="1" lay-verify="startTime"  lay-filter="startTime" >'
+												+'</div>' 
+												+'<span class="layui-inline" style="margin: 0 5px; line-height: 38px;"> ~ </span> '
+												+'<div class="layui-input-inline">'
+													+'<input type="text" placeholder="请选择结束日期" class="layui-input itemData" id="endTime" name="itemData_1" data-item="1" lay-verify="endTime"  lay-filter="endTime" >'
+												+'</div>'
+											+'</div>'
+											+'<div class="layui-inline ml-10">'
+												+'<button id="HistoryUserFile" class="layui-btn">'
+													+'<i class="iconfont icon-sousuo"></i>'
+												+'</button>'
+											+'</div>'
+										+'</div><table lay-filter="leava-History-table" class="layui-table" id="leava-History-table"></table></div></div>',
+					area: ['100%', '100%'],
+					// maxmin: true,
+					id: 'leavaTabl', //设置表格的id
+					success: function () {
+
+						// 修正浮动栏高度
+						// @param tableElem 表格显示div
+						function autoFixed(tableElem) {
+							var $tableView = tableElem || $(".layui-table-view");
+							var dataIndex ,trHeight;
+							$tableView.each(function() {
+								// 获取两侧浮动栏
+								var $fixed = $(this).find(".layui-table-fixed");
+								// 同步表头高度
+								$fixed.find(".layui-table-header tr").height($(this).find(".layui-table-header tr").eq(0).height());
+								// 遍历tr 修正浮动栏行高
+								$(this).find(".layui-table-main tr").each(function() {
+									dataIndex = $(this).attr("data-index");
+									trHeight = $(this).css("height");
+									$fixed.find("tr[data-index=" + dataIndex + "]").css("height", trHeight);
+								})
+							});
+						}
+						// 监听浏览器窗口大小变化
+						var resizeTimer;
+						$(window).resize(function() {
+							if (resizeTimer) {
+								clearTimeout(resizeTimer);
+							}
+							resizeTimer = setTimeout(function() {
+								resizeTimer = null;
+								autoFixed();
+							},
+							200);
+						});
+
+						// 监听表头鼠标按下事件
+						$(document).on('mousedown', 'thead',
+						function(e) {
+							var that = $(this);
+							$(document).one('mouseup',
+							function() {
+								autoFixed(that.parents('.layui-table-view'));
+							})
+						});
+
+						var table_leava = table.render({
+								elem: '#leava-History-table',
+								url: window.urls + '/gateway/userleave/myapply',
+								limit: 10,
+								// where: {
+								// 	ApplyResult: 0,
+								// },
+								method: 'post',
+								contentType: 'application/json',
+								page: true,
+								loading: true,
+								toolbar: true,
+								defaultToolbar: ['filter', 'print', 'exports'],
+								limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+								cols: [
+									[{
+										field: 'name',
+										// fixed: 'left',
+										title: '请假人',
+										unresize: true,
+										minWidth: 100
+									}, {
+										field: 'leave_type_desc',
+										unresize: true,
+										title: '请假类型',
+										minWidth: 100
+									}, {
+										field: 'day_count',
+										unresize: true,
+										title: '请假天数',
+										minWidth: 100
+									},{
+										field: 'apply_time',
+										unresize: true,
+										title: '申请时间',
+										minWidth: 160
+									},  {
+										field: 'content',
+										unresize: true,
+										title: '请假原因',
+										minWidth: 100
+									}, {
+										field: 'start_time',
+										title: '请假开始时间',
+										minWidth: 160,
+										unresize: true,
+									},  {
+										field: 'end_time',
+										title: '请假结束时间',
+										minWidth: 160,
+										unresize: true,
+									
+									}, {
+										field: '',
+										title: '审核人/审核意见',
+										minWidth: 310,
+										unresize: true,
+										templet: function (d) {
+											var histry = '';
+											if (d.approval_history.length > 0) {
+												for (var k = 0; k < d.approval_history.length; k++) {
+													var res = '';
+													var classList = '';
+													if (d.approval_history[k].is_forward == 1) { //是转发的
+														res = '--转发-->';
+
+														histry += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '' //名字
+															//意见
+
+															+
+															'<em class=' + classList + '> ' +
+															d.approval_history[k].approval_time + '</em>】：<span class="list" title=' + d.approval_history[k].content + '>' //时间
+															+
+															d.approval_history[k].content + '</p>' //意见内容
+
+													} else { //是审批的
+
+														if (d.approval_history[k].approval_result == 1) {
+															res = '未通过';
+															classList = "red";
+														} else if (d.approval_history[k].approval_result == 2) {
+															res = '已通过';
+															classList = "green";
+														}
+
+														histry += '<p>【' + d.approval_history[k].username + '<em class=' + classList + '>' //名字
+															+
+															res + '' //意见
+															+
+															d.approval_history[k].approval_time + '</em>】：<span class="list" title=' + d.approval_history[k].content + '>' //时间
+															+
+															d.approval_history[k].content + '</p>' //意见内容
+													}
+												}
+											} else {
+												histry = "暂无审批记录"
+											}
+											return histry
+										}
+									}, {
+										field: 'current_approval_user_name',
+										unresize: true,
+										title: '当前审批人',
+										minWidth: 100
+									}, {
+										field: 'apply_result_desc',
+										title: '状态',
+										unresize: true,
+										minWidth: 100,
+										templet: function (d) {
+											return lenList = ''+d.apply_result_desc +' '+(d.is_cancel==1?'<span class="green">(取消请假申请)</span>':'')
+
+										}
+										
+									}, {
+										field: '',
+										fixed: 'right',
+										title: '操作',
+										width: 160,
+										unresize: false,
+										templet: function (d) {
+											var len = d.approval_history.length;
+											if(d.apply_result==2){
+												var disabled= d.is_cancel!=0?'disabled':'';
+												var  lenList='<div data-aid="'+ d.id +'"><a class="cancel layui-btn layui-btn-sm layui-btn-'+disabled+'" '+disabled+'  '+(d.is_cancel!=0?"":"lay-event=\"cancel\"")+'>取消申请</a><a class="layui-btn layui-btn-sm" lay-event="Detai">详情</a></div>'
+											}else{
+												var lenList = (len > 0 ? '<div data-aid="' + d.id + '"></div>' : '<div data-aid="' + d.id + '"><a class="delTr layui-btn layui-btn-danger layui-btn-sm" lay-event="delTr">删除</a><a class="layui-btn layui-btn-sm" lay-event="Detai">详情</a></div>')
+											}
+											return lenList
+										},
+									}]
+								]
+								,request: {
+									pageName: 'currentIndex' //页码的参数名称，默认：page
+									,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								}
+								,parseData: function (res) { //res 即为原始返回的数据
+									return {
+										"status_code": res.status_code, //解析接口状态
+										"message": res.message, //解析提示文本
+										"count": res.data.total_count, //解析数据长度
+										"data": res.data.data_list, //解析数据列表
+										"curr": res.data.page_index
+									};
+								}
+								,done:function(){
+									autoFixed($(this.elem[0]).next());
+								}
+						})
+						table.on('tool(leava-History-table)', function (obj) {
+							//console.log(obj)
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							if (layEvent === 'delTr') { //删除
+								layer.confirm('确认删除?',{title:' '},function(index){
+									$.fetch({ //默认打开显示未审批
+										url: "/gateway/userleave/del",
+										type: 'post',
+										data: {
+											ItemID: data.id,
+										},
+										cb: function (rs) {
+											table_leava.reload({
+												page: {
+													curr: 1 //重新从第 1 页开始
+												}
+											});
+											layer.close(index);
+										}
+									})
+								})
+							}else if (layEvent === 'Detai') { //删除
+									$.fetch({ //默认打开显示未审批
+										url: "/gateway/userleave/attachlist",
+										type: 'post',
+										data: {
+											LeaveApplyID: data.id,
+										},
+										cb: function (rs) {
+											//console.log(rs);
+											var attach='暂无附件';
+											if(rs&&rs.length>0){
+												attach='';
+												for(var i=0;i<rs.length;i++){
+													attach+='<a title="点击下载" class="seeXqOutIn" target="_blank" href="/gateway/userleave/download/'+rs[i].id+'" >'+rs[i].original_name+'</a>'
+												}
+											}
+											var histry = '';
+											if (data.approval_history.length > 0) {
+												for (var k = 0; k < data.approval_history.length; k++) {
+													var res = '';
+													var classList = '';
+													if (data.approval_history[k].is_forward == 1) { //是转发的
+														res = '--转发-->';
+
+														histry += '<p>【' + data.approval_history[k].username + '' + res + '' + data.approval_history[k].forward_username + '' //名字
+															//意见
+
+															+
+															'<em class=' + classList + '> ' +
+															data.approval_history[k].approval_time + '</em>】：<span class="list" title=' + data.approval_history[k].content + '>' //时间
+															+
+															data.approval_history[k].content + '</p>' //意见内容
+
+													} else { //是审批的
+
+														if (data.approval_history[k].approval_result == 1) {
+															res = '未通过';
+															classList = "red";
+														} else if (data.approval_history[k].approval_result == 2) {
+															res = '已通过';
+															classList = "green";
+														}
+
+														histry += '<p>【' + data.approval_history[k].username + '<em class=' + classList + '>' //名字
+															+
+															res + '' //意见
+															+
+															data.approval_history[k].approval_time + '</em>】：<span class="list" title=' + data.approval_history[k].content + '>' //时间
+															+
+															data.approval_history[k].content + '</p>' //意见内容
+													}
+												}
+											} else {
+												histry = "暂无审批记录"
+											}
+											var htmls ='<div class="layui-card" style="min-height:300px">'
+												+'<div class="layui-card-body">'
+														+'<div class="reviewCont layui-card-body layui-form">'
+															+'<div class="layui-form-item">'
+																+'<div class="layui-inline">'
+																	+'<label class="layui-form-label">申请人：</label>'
+																	+'<div class="layui-input-inline cateID">'
+																		+'<span>'+data.name+'</span>'
+																	+'</div>'
+																+'</div>'
+																+'<div class="layui-inline">'
+																	+'<label class="layui-form-label">申请时间：</label>'
+																	+'<div class="layui-input-inline cateID">'
+																		+'<span>'+data.apply_time+'</span>'
+																	+'</div>'
+																+'</div>'
+
+																+'<div class="layui-inline">'
+																	+'<label class="layui-form-label">请假类型：</label>'
+																	+'<div class="layui-input-inline cateID">'
+																		+'<span>'+data.leave_type_desc+'</span>'
+																	+'</div>'
+																+'</div>'
+																
+															+'</div>'
+															+'<div class="layui-form-item">'
+																+'<label class="layui-form-label">请假天数：</label>'
+																+'<div class="layui-input-block cateID ">'
+																	+'<span>'+data.day_count+' (天)</span>'
+																+'</div>'
+															+'</div>'
+															+'<div class="layui-form-item">'
+																+'<label class="layui-form-label">请假时间：</label>'
+																+'<div class="layui-input-block cateID ">'
+																	+'<span>'+data.start_time+'~'+data.end_time+'</span>'
+																+'</div>'
+															+'</div>'
+															+'<div class="layui-form-item">'
+																+'<label class="layui-form-label">请假原因：</label>'
+																+'<div class="layui-input-block cateID">'
+																	+'<span>'+data.content+'</span>'
+																+'</div>'
+															+'</div>'
+															+'<div class="layui-form-item">'
+																+'<label class="layui-form-label">状态：</label>'
+																+'<div class="layui-input-block cateID">'
+																	+'<span>'+data.apply_result_desc +' '+(data.is_cancel==1?'<span class="green">(取消请假申请)</span>':'')+'</span>'
+																+'</div>'
+															+'</div>'
+														+'</div>'
+														+'<fieldset class="layui-elem-field">'
+															+'<legend>附件</legend>'
+															+'<div class="layui-field-box">'+attach+'</div>'
+														+'</fieldset>'
+														+'<fieldset class="layui-elem-field">'
+															+'<legend>审批历史</legend>'
+															+'<div class="layui-field-box">'+histry+'</div>'
+														+'</fieldset>'
+													+'</div>'
+													+'</div>'
+											layer.open({
+												type: 1,
+												title: "请假详情",
+												area: ['auto'],
+												content: htmls,
+												success:function(layero,index){
+
+												}
+											})
+
+										}
+									})
+								
+							}else if(layEvent === 'cancel'){
+								var htmls ='<div class="layui-card">'
+								+'<div class="reviewCont layui-card-body">'
+								+    '<div class="layui-form" action="">'
+								+        '<div class="layui-form-item">'
+								+            '<label class="layui-form-label modify-layui-label">取消原因：</label>'
+								+            '<div class="layui-input-block">'
+								+                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+								+            '</div>'
+								+        '</div>'
+								+        '<div class="layui-form-item">'
+								+            '<label class="layui-form-label modify-layui-label">审批人：</label>'
+								+            '<div class="layui-input-block">'
+								+                '<div class="layui-input-inline">'
+								+                    '<select name="nextDacApp" lay-verify="required" id="nextDacApp"></select>'
+								+                '</div>'
+								+            '</div>'
+								+        '</div>'
+								+        '<div class="layui-form-item">'
+								+            '<div class="layui-input-block">'
+								+               ' <button class="appCancel layui-btn" >确认</button>'
+								+            '</div>'
+								+        '</div>'
+								+    '</div>'
+								+'</div>'
+								+'</div>'
+								layer.open({
+									type: 1,
+									title: "取消请假申请",
+									shade: false,
+									area: ['450px', 'auto'],
+									content: htmls,
+									success:function(layero,index){
+										$.managerFun({//当前审批人
+											step:1,
+											fun:function(rs,forw,steps){
+												var oplhtml ='';
+												for(var i=0;i<rs.length;i++){
+													oplhtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+												}
+												$("#nextDacApp").html(oplhtml); 
+												// $(".appCancel").attr("data-step",steps);   
+												form.render('select');   
+												// var nexspet =$(this).attr("data-step"); 
+												$(".appCancel").on("click",function(){
+												
+													var Content=  $("#appDacText").val();
+													var NextApprovalUserID=  $("#nextDacApp").val();
+													
+													$.fetch({ //默认打开显示未审批
+														url: "/gateway/userleave/cancel",
+														type: 'post',
+														data: {
+															ApplyID: data.id,
+															Content:Content,
+															NextApprovalUserID:NextApprovalUserID,
+															NextApprovalStep:steps,
+														},
+														cb: function (rs) {
+															layer.msg("提交成功")
+															layer.close(index);
+															table_leava.reload();
+														}
+													})
+												})
+											}
+										}); 
+									}
+								})
+							}
+						})
+						// $("#leaveDescSel").val(this.where.ApplyResult);
+						laydate.render({
+							elem: '#startTime',
+							type:'datetime'
+						});
+						laydate.render({
+							elem: '#endTime',
+							type:'datetime'
+						});
+						form.render();
+						
+						$("#HistoryUserFile").on('click',function(){
+							var ApplyResult = $("#leaveDescSel").val();
+							var StartTime = $("#startTime").val();
+							var EndTime = $("#endTime").val();
+							if(EndTime<StartTime){
+								layer.msg("结束日期要大于开始日期!请重新选择");
+							}else{
+								table_leava.reload({
+									where: {
+										ApplyResult:ApplyResult,
+										StartTime:StartTime,
+										EndTime:EndTime
+									},
+									page: {
+										curr: 1 //重新从第 1 页开始
+									}
+								});
+							}
+						})
+					}
+				}); 
+			});
+			$('#outgoHistory  .layui-btn').on('click', function(){//历史记录跳转的按钮
+				var index = layer.open({ //设置弹窗的相关属性
+					title: '<i class="iconfont icon-icon-test"></i>外出历史记录',
+					type: 1,
+					content: '<div class="layui-card"><div class="layui-card-body layui-form modify-table-cell"><div style="padding-bottom: 10px;">'
+											+'<div class="layui-inline">'
+												+'<label class="layui-form-label">选择状态</label>'
+												+'<div class="layui-input-inline">'
+													+'<select name="" class="slct" lay-filter="leaveDescSel" id="leaveDescSel"><option value="">全部</option><option value="0">待审批</option><option value="1">未通过</option><option value="2">已通过</option></select>'
+												+'</div>'
+											+'</div>'
+											+'<div class="layui-inline">'
+												+'<label class="layui-form-label">申请日期</label>'
+												+'<div class="layui-input-inline">'
+													+'<input type="text" placeholder="请选择开始日期" class="layui-input itemData" id="startTime" name="itemData_1" data-item="1" lay-verify="startTime"  lay-filter="startTime" >'
+												+'</div>'
+												+'<span class="layui-inline" style="margin: 0 5px; line-height: 38px;"> ~ </span> '
+												+'<div class="layui-input-inline">'
+													+'<input type="text" placeholder="请选择结束日期" class="layui-input itemData" id="endTime" name="itemData_1" data-item="1" lay-verify="endTime"  lay-filter="endTime" >'
+												+'</div>'
+											+'</div>'
+											+'<div class="layui-inline ml-10">'
+												+'<button id="HistoryUserFile" class="layui-btn">'
+													+'<i class="iconfont icon-sousuo"></i>'
+												+'</button>'
+											+'</div>'
+										+'</div><table lay-filter="outgo-History-table" class="layui-table" id="outgo-History-table"></table></div></div>',
+					area: ['100%', '100%'],
+					// maxmin: true,
+					id: 'leavaTabl', //设置表格的id
+					success: function () {
+
+						// 修正浮动栏高度
+						// @param tableElem 表格显示div
+						function autoFixed(tableElem) {
+							var $tableView = tableElem || $(".layui-table-view");
+							var dataIndex ,trHeight;
+							$tableView.each(function() {
+								// 获取两侧浮动栏
+								var $fixed = $(this).find(".layui-table-fixed");
+								// 同步表头高度
+								$fixed.find(".layui-table-header tr").height($(this).find(".layui-table-header tr").eq(0).height());
+								// 遍历tr 修正浮动栏行高
+								$(this).find(".layui-table-main tr").each(function() {
+									dataIndex = $(this).attr("data-index");
+									trHeight = $(this).css("height");
+									$fixed.find("tr[data-index=" + dataIndex + "]").css("height", trHeight);
+								})
+							});
+						}
+						// 监听浏览器窗口大小变化
+						var resizeTimer;
+						$(window).resize(function() {
+							if (resizeTimer) {
+								clearTimeout(resizeTimer);
+							}
+							resizeTimer = setTimeout(function() {
+								resizeTimer = null;
+								autoFixed();
+							},
+							200);
+						});
+
+						// 监听表头鼠标按下事件
+						$(document).on('mousedown', 'thead',
+						function(e) {
+							var that = $(this);
+							$(document).one('mouseup',
+							function() {
+								autoFixed(that.parents('.layui-table-view'));
+							})
+						});
+						var table_leava = table.render({
+								elem: '#outgo-History-table',
+								url: window.urls + '/gateway/goout/myapply',
+								limit: 10,
+								// where: {
+								// 	ApplyResult: 0,
+								// },
+								method: 'post',
+								contentType: 'application/json',
+								page: true,
+								loading: true,
+								toolbar: true,
+								defaultToolbar: ['filter', 'print', 'exports'],
+								limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+								cols: [
+									[{
+										field: 'name',
+										unresize: true,
+										title: '外出人',
+										minWidth: 100
+									}, {
+										field: 'go_out_type_desc',
+										unresize: true,
+										title: '外出类型',
+										minWidth: 100
+									},{
+										field: 'apply_time',
+										unresize: true,
+										title: '申请时间',
+										minWidth: 160
+									},  {
+										field: 'location',
+										unresize: true,
+										title: '外出地点',
+										minWidth: 100
+									}, {
+										field: 'start_time',
+										title: '外出开始时间',
+										minWidth: 160,
+										unresize: true,
+									}, {
+										field: 'end_time',
+										title: '外出结束时间',
+										minWidth: 160,
+										unresize: true,
+									}, {
+										field: 'content',
+										unresize: true,
+										title: '外出原因',
+										minWidth: 100
+									}, {
+										field: '',
+										title: '审核人/审核意见',
+										minWidth: 310,
+										unresize: true,
+										templet: function (d) {
+											var histry = '';
+											if (d.approval_history.length > 0) {
+												for (var k = 0; k < d.approval_history.length; k++) {
+													var res = '';
+													var classList = '';
+													if (d.approval_history[k].is_forward == 1) { //是转发的
+														res = '--转发-->';
+
+														histry += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '' //名字
+															//意见
+
+															+
+															'<em class=' + classList + '> ' +
+															d.approval_history[k].approval_time + '</em>】：<span class="list" title=' + d.approval_history[k].content + '>' //时间
+															+
+															d.approval_history[k].content + '</p>' //意见内容
+
+													} else { //是审批的
+
+														if (d.approval_history[k].approval_result == 1) {
+															res = '未通过';
+															classList = "red";
+														} else if (d.approval_history[k].approval_result == 2) {
+															res = '已通过';
+															classList = "green";
+														}
+
+														histry += '<p>【' + d.approval_history[k].username + '<em class=' + classList + '>' //名字
+															+
+															res + '' //意见
+															+
+															d.approval_history[k].approval_time + '</em>】：<span class="list" title=' + d.approval_history[k].content + '>' //时间
+															+
+															d.approval_history[k].content + '</p>' //意见内容
+													}
+												}
+											} else {
+												histry = "暂无审批记录"
+											}
+											return histry
+										}
+									}, {
+										field: 'current_approval_user_name',
+										unresize: true,
+										title: '当前审批人',
+										minWidth: 100
+									}, {
+										field: 'apply_result_desc',
+										title: '状态',
+										unresize: true,
+										minWidth: 120,
+										templet: function (d) {
+											return lenList = ''+d.apply_result_desc +' '+(d.is_cancel==1?'<span class="green">(取消中)</span>':d.is_cancel==2?'<span class="green">(已取消)</span>':'')
+
+										}
+									}, {
+										field: '',
+										fixed: 'right',
+										title: '操作',
+										minWidth: 140,
+										unresize: true,
+										templet: function (d) {
+											var len = d.approval_history.length;
+											if(d.apply_result==2){
+												var disabled= d.is_cancel!=0?'disabled':'';
+												var  lenList='<div data-aid="'+ d.id +'"><a class="cancel layui-btn layui-btn-sm layui-btn-'+disabled+'" '+disabled+'  '+(d.is_cancel!=0?"":"lay-event=\"cancel\"")+'>取消申请</a></div>'
+											}else{
+												var lenList = (len > 0 ? '<div data-aid="' + d.id + '"></div>' : '<div data-aid="' + d.id + '"><a class="delTr layui-btn layui-btn-danger layui-btn-sm" lay-event="delTr">删除</a></div>')
+											}
+											return lenList
+										},
+									}]
+								]
+								, request: {
+									pageName: 'currentIndex' //页码的参数名称，默认：page
+										,
+									limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								}, parseData: function (res) { //res 即为原始返回的数据
+									return {
+										"status_code": res.status_code, //解析接口状态
+										"message": res.message, //解析提示文本
+										"count": res.data.total_count, //解析数据长度
+										"data": res.data.data_list, //解析数据列表
+										"curr": res.data.page_index
+									};
+								}
+								,done:function(){
+									autoFixed($(this.elem[0]).next());
+									// $("#leaveDescSel").val(this.where.ApplyResult);
+									// form.render();
+									// form.on('select(leaveDescSel)', function (data) {
+									// 	table_leava.reload({
+									// 		where: {
+									// 			ApplyResult: data.value,
+									// 		},
+									// 		page: {
+									// 			curr: 1 //重新从第 1 页开始
+									// 		}
+									// 	});
+									// });
+								}
+
+						})
+						table.on('tool(outgo-History-table)', function (obj) {
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							if (layEvent === 'delTr') { //删除
+								layer.confirm('确认删除?',{title:' '},function(index){
+									$.fetch({ //默认打开显示未审批
+										url: "/gateway/goout/del",
+										type: 'post',
+										data: {
+											ItemID: data.id,
+										},
+										cb: function (rs) {
+											table_leava.reload({
+												page: {
+													curr: 1 //重新从第 1 页开始
+												}
+											});
+											layer.close(index);
+										}
+									})
+								})
+							}else if(layEvent === 'cancel'){
+								var htmls ='<div class="layui-card">'
+								+'<div class="reviewCont layui-card-body">'
+								+    '<div class="layui-form" action="">'
+								+        '<div class="layui-form-item">'
+								+            '<label class="layui-form-label modify-layui-label">取消原因：</label>'
+								+            '<div class="layui-input-block">'
+								+                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+								+            '</div>'
+								+        '</div>'
+								+        '<div class="layui-form-item">'
+								+            '<label class="layui-form-label modify-layui-label">审批人：</label>'
+								+            '<div class="layui-input-block">'
+								+                '<div class="layui-input-inline">'
+								+                    '<select name="nextDacApp" lay-verify="required" id="nextDacApp"></select>'
+								+                '</div>'
+								+            '</div>'
+								+        '</div>'
+								+        '<div class="layui-form-item">'
+								+            '<div class="layui-input-block">'
+								+               ' <button class="appCancel layui-btn" >确认</button>'
+								+            '</div>'
+								+        '</div>'
+								+    '</div>'
+								+'</div>'
+								+'</div>'
+								layer.open({
+									type: 1,
+									title: "取消外出申请",
+									shade: false,
+									area: ['450px', 'auto'],
+									content: htmls,
+									success:function(layero,index){
+										$.managerFun({//当前审批人
+											step:1,
+											fun:function(rs,forw,steps){
+												var oplhtml ='';
+												for(var i=0;i<rs.length;i++){
+													oplhtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+												}
+												$("#nextDacApp").html(oplhtml); 
+												// $(".appCancel").attr("data-step",steps);   
+												form.render('select');   
+												// var nexspet =$(this).attr("data-step"); 
+												$(".appCancel").on("click",function(){
+												
+													var Content=  $("#appDacText").val();
+													var NextApprovalUserID=  $("#nextDacApp").val();
+													
+													$.fetch({ //默认打开显示未审批
+														url: "/gateway/goout/cancel",
+														type: 'post',
+														data: {
+															ApplyID: data.id,
+															Content:Content,
+															NextApprovalUserID:NextApprovalUserID,
+															NextApprovalStep:steps,
+														},
+														cb: function (rs) {
+															layer.msg("提交成功")
+															layer.close(index);
+															table_leava.reload();
+														}
+													})
+												})
+											}
+										}); 
+									}
+								})
+							}
+						})
+						laydate.render({
+							elem: '#startTime',
+							type:'datetime'
+						});
+						laydate.render({
+							elem: '#endTime',
+							type:'datetime'
+						});
+						form.render();
+						
+						$("#HistoryUserFile").on('click',function(){
+							var ApplyResult = $("#leaveDescSel").val();
+							var StartTime = $("#startTime").val();
+							var EndTime = $("#endTime").val();
+							if(EndTime<StartTime){
+								layer.msg("结束日期要大于开始日期!请重新选择");
+							}else{
+								table_leava.reload({
+									where: {
+										ApplyResult:ApplyResult,
+										StartTime:StartTime,
+										EndTime:EndTime
+									},
+									page: {
+										curr: 1 //重新从第 1 页开始
+									}
+								});
+							}
+						})
+					}
+				});
+			});
+			$('#regOverHistory  .layui-btn').on('click', function(){//历史记录跳转的按钮
+				var index = layer.open({ //设置弹窗的相关属性
+					title: '<i class="iconfont icon-icon-test"></i>加班历史记录',
+					type: 1,
+					content: '<div class="layui-card"><div class="layui-card-body layui-form modify-table-cell"><div style="padding-bottom: 10px;">'
+											+'<div class="layui-inline">'
+												+'<label class="layui-form-label">选择状态</label>'
+												+'<div class="layui-input-inline">'
+													+'<select name="" class="slct" lay-filter="leaveDescSel" id="leaveDescSel"><option value="">全部</option><option value="0">待审批</option><option value="1">未通过</option><option value="2">已通过</option></select>'
+												+'</div>'
+											+'</div>'
+											+'<div class="layui-inline">'
+												+'<label class="layui-form-label">申请日期</label>'
+												+'<div class="layui-input-inline">'
+													+'<input type="text" placeholder="请选择开始日期" class="layui-input itemData" id="startTime" name="itemData_1" data-item="1" lay-verify="startTime"  lay-filter="startTime" >'
+												+'</div>'
+												+'<span class="layui-inline" style="margin: 0 5px; line-height: 38px;"> ~ </span> '
+												+'<div class="layui-input-inline">'
+													+'<input type="text" placeholder="请选择结束日期" class="layui-input itemData" id="endTime" name="itemData_1" data-item="1" lay-verify="endTime"  lay-filter="endTime" >'
+												+'</div>'
+											+'</div>'
+											+'<div class="layui-inline ml-10">'
+												+'<button id="HistoryUserFile" class="layui-btn">'
+													+'<i class="iconfont icon-sousuo"></i>'
+												+'</button>'
+											+'</div>'
+										+'</div><table lay-filter="overtime-History-table" class="layui-table" id="overtime-History-table"></table></div></div>',
+					area: ['100%', '100%'],
+					// maxmin: true,
+					id: 'leavaTabl', //设置表格的id
+					success: function () {
+						// 修正浮动栏高度
+						// @param tableElem 表格显示div
+						function autoFixed(tableElem) {
+							var $tableView = tableElem || $(".layui-table-view");
+							var dataIndex ,trHeight;
+							$tableView.each(function() {
+								// 获取两侧浮动栏
+								var $fixed = $(this).find(".layui-table-fixed");
+								// 同步表头高度
+								$fixed.find(".layui-table-header tr").height($(this).find(".layui-table-header tr").eq(0).height());
+								// 遍历tr 修正浮动栏行高
+								$(this).find(".layui-table-main tr").each(function() {
+									dataIndex = $(this).attr("data-index");
+									trHeight = $(this).css("height");
+									$fixed.find("tr[data-index=" + dataIndex + "]").css("height", trHeight);
+								})
+							});
+						}
+						// 监听浏览器窗口大小变化
+						var resizeTimer;
+						$(window).resize(function() {
+							if (resizeTimer) {
+								clearTimeout(resizeTimer);
+							}
+							resizeTimer = setTimeout(function() {
+								resizeTimer = null;
+								autoFixed();
+							},
+							200);
+						});
+
+						// 监听表头鼠标按下事件
+						$(document).on('mousedown', 'thead',
+						function(e) {
+							var that = $(this);
+							$(document).one('mouseup',
+							function() {
+								autoFixed(that.parents('.layui-table-view'));
+							})
+						});
+
+						var table_leava = table.render({
+								elem: '#overtime-History-table',
+								url: window.urls + '/gateway/overtime/myapply',
+								limit: 10,
+								// where: {
+								// 	ApplyResult: 0,
+								// },
+								method: 'post',
+								contentType: 'application/json',
+								page: true,
+								loading: true,
+								toolbar: true,
+								defaultToolbar: ['filter', 'print', 'exports'],
+								limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+								cols: [
+									[{
+										field: 'apply_time',
+										title: '申请时间',
+										unresize: true,
+										minWidth: 160
+									}, {
+										field: 'content',
+										unresize: true,
+										title: '加班原因',
+										minWidth: 100
+									}, {
+										field: 'overtime_type_desc',
+										// unresize: true,
+										title: '加班类型',
+										minWidth: 100
+									}, {
+										field: 'apply_time',
+										unresize: true,
+										title: '申请时间',
+										minWidth: 160
+									}, {
+										field: 'start_time',
+										title: '加班开始时间',
+										minWidth: 160,
+										unresize: true,
+									},{
+										field: 'end_time',
+										title: '加班结束时间',
+										minWidth: 160,
+										unresize: true,
+									},{
+										field: '',
+										title: '审核人/审核意见',
+										minWidth: 310,
+										unresize: true,
+										templet: function (d) {
+											var histry = '';
+											if (d.approval_history.length > 0) {
+												for (var k = 0; k < d.approval_history.length; k++) {
+													var res = '';
+													var classList = '';
+													if (d.approval_history[k].is_forward == 1) { //是转发的
+														res = '--转发-->';
+
+														histry += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '' //名字
+															//意见
+
+															+
+															'<em class=' + classList + '> ' +
+															d.approval_history[k].approval_time + '</em>】：<span class="list" title=' + d.approval_history[k].content + '>' //时间
+															+
+															d.approval_history[k].content + '</p>' //意见内容
+
+													} else { //是审批的
+
+														if (d.approval_history[k].approval_result == 1) {
+															res = '未通过';
+															classList = "red";
+														} else if (d.approval_history[k].approval_result == 2) {
+															res = '已通过';
+															classList = "green";
+														}
+
+														histry += '<p>【' + d.approval_history[k].username + '<em class=' + classList + '>' //名字
+															+
+															res + '' //意见
+															+
+															d.approval_history[k].approval_time + '</em>】：<span class="list" title=' + d.approval_history[k].content + '>' //时间
+															+
+															d.approval_history[k].content + '</p>' //意见内容
+													}
+												}
+											} else {
+												histry = "暂无审批记录"
+											}
+											return histry
+										}
+									}, {
+										field: 'current_approval_user_name',
+										unresize: true,
+										title: '当前审批人',
+										minWidth: 100
+									}, {
+										field: 'apply_result_desc',
+										title: '状态',
+										minWidth: 140,
+										unresize: true,
+										templet: function (d) {
+											return lenList = ''+d.apply_result_desc +' '+(d.is_cancel==1?'<span class="green">(取消中)</span>':d.is_cancel==2?'<span class="green">(已取消)</span>':'')
+
+										}
+									}, {
+										field: '',
+										fixed: 'right',
+										title: '操作',
+										minWidth: 120,
+										unresize: true,
+										templet: function (d) {
+											var len = d.approval_history.length;
+											if(d.apply_result==2){
+												var disabled= d.is_cancel!=0?'disabled':'';
+												var  lenList='<div data-aid="'+ d.id +'"><a class="cancel layui-btn layui-btn-sm layui-btn-'+disabled+'" '+disabled+'  '+(d.is_cancel!=0?"":"lay-event=\"cancel\"")+'>取消申请</a></div>'
+											}else{
+												var lenList = (len > 0 ? '<div data-aid="' + d.id + '"></div>' : '<div data-aid="' + d.id + '"><a class="delTr layui-btn layui-btn-danger layui-btn-sm" lay-event="delTr">删除</a></div>')
+											}
+											return lenList
+
+											// var len = d.approval_history.length;
+											// var lenList = (len > 0 ? '<div data-aid="' + d.id + '"></div>' : '<div data-aid="' + d.id + '"><a class="delTr layui-btn layui-btn-danger layui-btn-sm" lay-event="delTr">删除</a></div>')
+											// return lenList
+										},
+									}]
+								]
+								, request: {
+									pageName: 'currentIndex' //页码的参数名称，默认：page
+										,
+									limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								}, parseData: function (res) { //res 即为原始返回的数据
+									return {
+										"status_code": res.status_code, //解析接口状态
+										"message": res.message, //解析提示文本
+										"count": res.data.total_count, //解析数据长度
+										"data": res.data.data_list, //解析数据列表
+										"curr": res.data.page_index
+									};
+								}
+								,done:function(){
+									autoFixed($(this.elem[0]).next());
+									// $("#leaveDescSel").val(this.where.ApplyResult);
+									// form.render();
+									// form.on('select(leaveDescSel)', function (data) {
+									// 	table_leava.reload({
+									// 		where: {
+									// 			ApplyResult: data.value,
+									// 		},
+									// 		page: {
+									// 			curr: 1 //重新从第 1 页开始
+									// 		}
+									// 	});
+									// });
+								}
+
+						})
+						table.on('tool(overtime-History-table)', function (obj) {
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							if (layEvent === 'delTr') { //删除
+								layer.confirm('确认删除?',{title:' '},function(index){
+									$.fetch({ //默认打开显示未审批
+										url: "/gateway/overtime/del",
+										type: 'post',
+										data: {
+											ItemID: data.id,
+										},
+										cb: function (rs) {
+											table_leava.reload({
+												page: {
+													curr: 1 //重新从第 1 页开始
+												}
+											});
+											layer.close(index);
+										}
+									})
+								})
+							}else if(layEvent === 'cancel'){
+								var htmls ='<div class="layui-card">'
+								+'<div class="reviewCont layui-card-body">'
+								+    '<div class="layui-form" action="">'
+								+        '<div class="layui-form-item">'
+								+            '<label class="layui-form-label modify-layui-label">取消原因：</label>'
+								+            '<div class="layui-input-block">'
+								+                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+								+            '</div>'
+								+        '</div>'
+								+        '<div class="layui-form-item">'
+								+            '<label class="layui-form-label modify-layui-label">审批人：</label>'
+								+            '<div class="layui-input-block">'
+								+                '<div class="layui-input-inline">'
+								+                    '<select name="nextDacApp" lay-verify="required" id="nextDacApp"></select>'
+								+                '</div>'
+								+            '</div>'
+								+        '</div>'
+								+        '<div class="layui-form-item">'
+								+            '<div class="layui-input-block">'
+								+               ' <button class="appCancel layui-btn" >确认</button>'
+								+            '</div>'
+								+        '</div>'
+								+    '</div>'
+								+'</div>'
+								+'</div>'
+								layer.open({
+									type: 1,
+									title: "取消加班申请",
+									shade: false,
+									area: ['450px', 'auto'],
+									content: htmls,
+									success:function(layero,index){
+										$.managerFun({//当前审批人
+											step:1,
+											fun:function(rs,forw,steps){
+												var oplhtml ='';
+												for(var i=0;i<rs.length;i++){
+													oplhtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+												}
+												$("#nextDacApp").html(oplhtml); 
+												// $(".appCancel").attr("data-step",steps);   
+												form.render('select');   
+												// var nexspet =$(this).attr("data-step"); 
+												$(".appCancel").on("click",function(){
+												
+													var Content=  $("#appDacText").val();
+													var NextApprovalUserID=  $("#nextDacApp").val();
+													
+													$.fetch({ //默认打开显示未审批
+														url: "/gateway/overtime/cancel",
+														type: 'post',
+														data: {
+															ApplyID: data.id,
+															Content:Content,
+															NextApprovalUserID:NextApprovalUserID,
+															NextApprovalStep:steps,
+														},
+														cb: function (rs) {
+															layer.msg("提交成功")
+															layer.close(index);
+															table_leava.reload();
+														}
+													})
+												})
+											}
+										}); 
+									}
+								})
+							}
+
+						})
+						laydate.render({
+							elem: '#startTime',
+							type:'datetime'
+						});
+						laydate.render({
+							elem: '#endTime',
+							type: 'datetime'
+						});
+						form.render();
+						
+						$("#HistoryUserFile").on('click',function(){
+							var ApplyResult = $("#leaveDescSel").val();
+							var StartTime = $("#startTime").val();
+							var EndTime = $("#endTime").val();
+							if(EndTime<StartTime){
+								layer.msg("结束日期要大于开始日期!请重新选择");
+							}else{
+								table_leava.reload({
+									where: {
+										ApplyResult:ApplyResult,
+										StartTime:StartTime,
+										EndTime:EndTime
+									},
+									page: {
+										curr: 1 //重新从第 1 页开始
+									}
+								});
+							}
+						})
+					}
+				});
+			});
+		});
+		getCommuteTable(year,month);
+
+		function getCommuteTable(y,m,d){//上下班
+			var param = {
+				Year:y,
+				Month:m,
+			}
+			$.fetch({
+				url: "/gateway/checkinout/index",
+				type: 'post',
+				data: param,
+				cb:function(rs){
+					forHtmlTable(rs,$("#commuteList"));
+				}
+			})
+		}
+		function getWorkDayTable(y,m,d){//打卡详情
+			var param = {
+				Year:y,
+				Month:m,
+				Date:d,
+			}
+			$.fetch({
+				url: "/gateway/checkinout/detail",
+				type: 'post',
+				data: param,
+				cb:function(rs){
+					var q ='',c='';
+					var checkHtml ="<ul>"
+
+					$.each(rs,function(key,val){
+						if(rs[key].list.length>0){
+							for(var i =0;i<rs[key].list.length;i++){
+								q = rs[key].list[i].source==0?'同步':'补录';
+								c = rs[key].list[i].desc == '正常'?'':'class="red"';
+								if(rs[key].is_holiday){
+									rs[key].list[i].desc='(公休日)'
+								}
+								checkHtml+='<li '+c+'>'+rs[key].list[i].check_time+'（'+q+'/'+rs[key].list[i].desc+'）</li>'
+							}
+						}else if(rs[key].list.length == 0){
+							if(rs[key].is_holiday){
+								var desc='(公休日)'
+							}else{
+								var desc=' '
+								
+							}
+							checkHtml +="<li><div>无打卡记录 "+desc+"</div></li>"
+						};
+					});
+					checkHtml +="</ul>"
+					layer.open({
+						title:"打卡详情",
+						content: checkHtml
+					})
+				}
+			})
+		}
+		// 添加星期几
+		function isNull(object){    
+			if(object == null || typeof object == "undefined"){    
+				return true;    
+			}    
+			return false;    
+		};   
+		function getWeek(dateString){  
+			var date;  
+			if(isNull(dateString)){  
+				date = new Date();  
+			}else{  
+				var dateArray = dateString.split("-");  
+				date = new Date(dateArray[0], parseInt(dateArray[1] - 1), dateArray[2]);  
+			}  
+			return "星期" + "日一二三四五六".charAt(date.getDay());  
+		}; 
+
+		function forHtmlTable(o,elem){//上下班记录表格
+			if(o==null||o.data_list==null){
+				elem.find("table tbody").html('<tr><td class="tc">暂无本月数据</td></tr>')
+			}else{
+				var thHtml= "",tbHtml="";
+				for(var i = 0;i<o.data_list.length;i++){ //列表拼接
+					if(o.data_list[i].table_header){
+						tbHtml+=
+						'<tr class="thead" style="background:#f2f2f2"><td><div class="layui-table-cell">'+o.data_list[i].datetime + '<span class="ml-5">' 
+						+'</span></div></td>'
+						+'<td><div class="layui-table-cell">'+o.data_list[i].time1 + '<span class="ml-5"></span></div></td>'
+						+'<td><div class="layui-table-cell">'+o.data_list[i].time2 + '<span class="ml-5"></span></div></td>'
+						+'<td><div class="layui-table-cell">'+o.data_list[i].time3 + '<span class="ml-5"></span></div></td>'
+						+'<td><div class="layui-table-cell">'+o.data_list[i].time4+ '<span class="ml-5"></span></div></td>'
+						+'<td></td></tr>'
+					}else{
+						var sunday = "公休日";
+						var redTwo = "",redleave='';
+						if( o.data_list[i].holiday) {
+							redTwo = "TableContent";
+						}
+						if( o.data_list[i].isleave) {
+							redleave = "redleave";
+						}
+						var ntime1,ntime2,ntime3,ntime4,descs; 
+						var tc1 = o.data_list[i].time1.desc=="未登记"?'class="wdj"':'class="strong"';
+						var tc2 = o.data_list[i].time2.desc=="未登记"?'class="wdj"':'class="strong"';
+						var tc3 = o.data_list[i].time3.desc=="未登记"?'class="wdj"':'class="strong"';
+						var tc4 = o.data_list[i].time4.desc=="未登记"?'class="wdj"':'class="strong"';
+
+						ntime1= o.data_list[i].time1.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time1.time+'</div></td>' 
+						:'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time1.time+' ('+o.data_list[i].time1.desc+')</div></td>';
+						
+						ntime2= o.data_list[i].time2.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time2.time+'</div></td>' 
+						:'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time2.time+' ('+o.data_list[i].time2.desc+')</div></td>';
+						
+						ntime3= o.data_list[i].time3.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time3.time+'</div></td>' 
+						:'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time3.time+' ('+o.data_list[i].time3.desc+')</div></td>';
+						
+						ntime4= o.data_list[i].time4.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time4.time+'</div></td>' 
+						:'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time4.time+' ('+o.data_list[i].time4.desc+')</div></td>';
+						
+						tbHtml+=
+						'<tr class="'+redTwo+' '+(redTwo==''?redleave:'')+'"><td><div class="layui-table-cell">'+o.data_list[i].datetime + '<span class="ml-5">'+ getWeek(o.data_list[i].datetime) +
+						'</span></div></td>'+ntime1+''+ntime2+''+ntime3+''+ntime4+
+						'<td><div class="layui-table-cell"><span class="DayDetail" data-days="'+o.data_list[i].datetime+'">查看详情</span></div></td></tr>'
+					}
+
+				}   
+				elem.find("table tbody").html(tbHtml);
+				//绑定点击事件
+			}
+		}
+		$('#commuteList').off("click").on("click","span.DayDetail",function(){
+			var dayArr= $(this).attr("data-days").split("-");
+			var  thY=dayArr[0];
+			var  thM=dayArr[1];
+			var  thD=dayArr[2];   
+			getWorkDayTable(thY,thM,thD);            
+		})
+		$("#inq").click(function(){//查询按钮点击事件
+			var r=$("#test-laydate-type-month").val().match(/^(\d{1,4})(-|\/)(\d{1,2})/); 
+			if(r==null){
+				layer.msg("请输入正确日期")
+			}else{
+				var y = $("#test-laydate-type-month").val().split("-");
+				getCommuteTable(y[0],y[1].replace(/\b(0+)/gi,""));//查询某月打卡记录
+			}
+		})
+		
+		// getWorkDayTable(y,m,d)
+		//初始化页面
+		/**请假登记**/
+		var typesRadio=function(o){
+			var html ='';
+			$.each(o,function(k,v){
+				if(k =="is_crossday"){
+					var stDay = o[k];
+					$('input[name="leavaDays"]').prop("disabled",true).addClass("layui-disabled");
+					// if(!stDay){
+					//     
+					// }else{
+					//     $('input[name="leavaDays"]').prop("disabled",false).removeClass("layui-disabled");
+					// }
+				}else if(k==19){
+					html +='<input lay-filter="leaveTypes" type="radio" name="leaveTypes" value="'+k+'" title="'+o[k]+'" checked="">'
+				}else{
+					html +='<input lay-filter="leaveTypes" type="radio" name="leaveTypes" value="'+k+'" title="'+o[k]+'">'
+				}
+			})
+			return html
+		}
+	})
+	</script>
+</body>
+</html>

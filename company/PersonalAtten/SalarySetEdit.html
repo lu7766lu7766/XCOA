@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/math.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="user_name" name="user_name" class="layui-input user_name layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">部门</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="dpt_name" name="dpt_name" class="layui-input dpt_name layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">岗位</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="title_name" name="title_name" class="layui-input title_name layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">阶段</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="salary_times" name="salary_times" class="layui-input salary_times layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <!-- <div class="layui-inline">
+                            <label class="layui-form-label">设置月份</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="month" name="month" class="layui-input month layui-disabled" readonly>
+                            </div>
+                        </div> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">显示在工资列表</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="IsShowPH" name="IsShowPH" class="layui-input IsShowPH layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">创建人</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="creator" name="creator" class="layui-input creator layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">编辑人</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="modifier" name="modifier" class="layui-input modifier layui-disabled" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Daily Wages</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="DailyWages" name="DailyWages" placeholder="" lay-verify="data" class="layui-input receiptCount2x daily_wages">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Allowance</label>
+                            <div class="layui-input-block">
+                                <input  type="text" id="Allowance" name="Allowance" class="layui-input receiptCount2x allowance">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Total Daily Wages</label>
+                            <div class="layui-input-block">
+                                <input  type="text" id="TotalDailyWagesD" name="TotalDailyWagesD" class="layui-input total_daily_wagesD layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Currency</label>
+                            <div class="layui-input-block">
+                                <input  type="text" value="PHP" id="Currency" name="Currency" class="layui-input basic_currency_namePH layui-disabled" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Calender Days</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="CalenderDays" name="CalenderDays" class="layui-input calendar_daycount layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Total Allowance</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="TotalAllowance" name="TotalAllowance" class="layui-input layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Total Wages</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="TotalWages" name="TotalWages" class="layui-input layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Total Daily Wages</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="TotalDailyWages" name="TotalDailyWages" class="layui-input layui-disabled total_daily_wages">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Actual Working Days</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="ActualWorkingDays" name="ActualWorkingDays" class="layui-input  work_days">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab layui-tab-card" style="box-shadow: none;" id="setbasicsalaryPH">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">Ordinary Overtime</li>
+                            <li>Night Differential Overtime</li>
+                            <li>Night Differential NSD</li>
+                            <li>Add Items - Others</li>
+                            <li>Payback - Others</li>
+                            <!-- <li>Employee's Mandatory Contribution</li> -->
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div id="TotalOrdinaryOTHRs" class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtOrdinary" name="AddOtOrdinary"  class="layui-input boder-btm add_ot_ordinary">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Ordinary</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtRestDay" name="AddOtRestDay"  class="layui-input boder-btm receiptCount2x add_ot_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtSpecialDay" name="AddOtSpecialDay"  class="layui-input boder-btm receiptCount2x add_ot_special_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Special Day </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtSpecialDayFallingOnRestDay" name="AddOtSpecialDayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_ot_special_day_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Special Day Falling on Rest Day</div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtRegularHoliday" name="AddOtRegularHoliday"  class="layui-input boder-btm receiptCount2x add_ot_regular_holiday">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Regular Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtRegularHolidayFallingOnRestDay" name="AddOtRegularHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_ot_regular_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Regular Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtDoubleHoliday" name="AddOtDoubleHoliday"  class="layui-input boder-btm receiptCount2x add_ot_double_holiday">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Double Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtDoubleHolidayFallingOnRestDay" name="AddOtDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_ot_double_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Double Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="NightDifferentialOvertime" class="layui-tab-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtOrdinary" name="AddNsdOtOrdinary"  class="layui-input boder-btm receiptCount2x add_nsd_ot_ordinary">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Ordinary</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtRestDay" name="AddNsdOtRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_ot_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtSpecialDay" name="AddNsdOtSpecialDay"  class="layui-input boder-btm receiptCount2x add_nsd_ot_special_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Special Day </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtSpecialDayFallingOnRestDay" name="AddNsdOtSpecialDayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_ot_special_day_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Special Day Falling on Rest Day</div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtRegularHoliday" name="AddNsdOtRegularHoliday"  class="layui-input boder-btm receiptCount2x add_nsd_ot_regular_holiday">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Regular Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtRegularHolidayFallingOnRestDay" name="AddNsdOtRegularHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_ot_regular_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Regular Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtDoubleHoliday" name="AddNsdOtDoubleHoliday"  class="layui-input boder-btm receiptCount2x add_nsd_ot_double_holiday">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Double Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOtDoubleHolidayFallingOnRestDay" name="AddNsdOtDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_ot_double_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Double Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="NightDifferentialNSD" class="layui-tab-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdOrdinary" name="AddNsdOrdinary"  class="layui-input boder-btm receiptCount2x add_nsd_ordinary">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Ordinary</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdRestDay" name="AddNsdRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdSpecialDay" name="AddNsdSpecialDay"  class="layui-input boder-btm receiptCount2x add_nsd_special_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Special Day </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdSpecialDayFallingOnRestDay" name="AddNsdSpecialDayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_special_day_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Special Day Falling on Rest Day</div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdRegularHoliday" name="AddNsdRegularHoliday"  class="layui-input boder-btm receiptCount2x add_nsd_regular_holiday">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Regular Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdRegularHolidayFallingOnRestDay" name="AddNsdRegularHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_regular_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Regular Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdDoubleHoliday" name="AddNsdDoubleHoliday"  class="layui-input boder-btm receiptCount2x add_nsd_double_holiday">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Double Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_nsd_double_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">HRs</div>
+										<div class="layui-form-mid">● Double Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="AddItemsOthers" class="layui-tab-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherOrdinary" name="AddOtherOrdinary"  class="layui-input boder-btm receiptCount2x add_other_ordinary">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Ordinary</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherRestDay" name="AddOtherRestDay"  class="layui-input boder-btm receiptCount2x add_other_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherSpecialDay" name="AddOtherSpecialDay"  class="layui-input boder-btm receiptCount2x add_other_special_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Special Day </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherSpecialDayFallingOnRestDay" name="AddOtherSpecialDayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_other_special_day_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Special Day Falling on Rest Day</div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherRegularHoliday" name="AddOtherRegularHoliday"  class="layui-input boder-btm receiptCount2x add_other_regular_holiday">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Regular Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherRegularHolidayFallingOnRestDay" name="AddOtherRegularHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_other_regular_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Regular Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherDoubleHoliday" name="AddOtherDoubleHoliday"  class="layui-input boder-btm receiptCount2x add_other_double_holiday">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Double Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="AddOtherDoubleHolidayFallingOnRestDay" name="AddOtherDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x add_other_double_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Double Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="PaybackOthers" class="layui-tab-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherOrdinary" name="PbOtherOrdinary"  class="layui-input boder-btm receiptCount2x pb_other_ordinary">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Ordinary</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherRestDay" name="PbOtherRestDay"  class="layui-input boder-btm receiptCount2x pb_other_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherSpecialDay" name="PbOtherSpecialDay"  class="layui-input boder-btm receiptCount2x pb_other_special_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Special Day </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherSpecialDayFallingOnRestDay" name="PbOtherSpecialDayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x pb_other_special_day_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Special Day Falling on Rest Day</div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherRegularHoliday" name="PbOtherRegularHoliday"  class="layui-input boder-btm receiptCount2x pb_other_regular_holiday">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Regular Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherRegularHolidayFallingOnRestDay" name="PbOtherRegularHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x pb_other_regular_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Regular Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherDoubleHoliday" name="PbOtherDoubleHoliday"  class="layui-input boder-btm receiptCount2x pb_other_double_holiday">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Double Holiday</div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-block">
+                                        <div class="layui-input-inline" style="width:90px">
+                                            <input type="text" id="PbOtherDoubleHolidayFallingOnRestDay" name="PbOtherDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm receiptCount2x pb_other_double_holiday_falling_on_rest_day">
+                                        </div>
+										<div class="layui-form-mid">Day(s)</div>
+										<div class="layui-form-mid">● Double Holiday Falling on Rest Day</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="layui-tab-item">
+                               
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <!-- Ordinary Overtime -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Ordinary OT</label>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="TotalOrdinaryOTHRsAdd" name="TotalOrdinaryOTHRsAdd"  class="layui-input  layui-disabled  boder-btm">
+                            </div>
+							<div class="layui-form-mid">HRs</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Ordinary OT</label>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="TotalOrdinaryOTPesoAdd" name="TotalOrdinaryOTPesoAdd"  class="layui-input  layui-disabled  boder-btm">
+                            </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+                        <!-- Night Differential Overtime -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total NSD OT</label>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="NightDifferentialOvertimeHRsAdd" name="NightDifferentialOvertimeHRsAdd"  class="layui-input  layui-disabled  boder-btm">
+                            </div>
+                            <div class="layui-form-mid">HRs</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total NSD OT</label>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="NightDifferentialOvertimePesoAdd" name="NightDifferentialOvertimePesoAdd"  class="layui-input  layui-disabled  boder-btm">
+                            </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 106px;">Total OT</label>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="TotalOTallPesoAdd" name="TotalOTallPesoAdd"  class="layui-input  layui-disabled  boder-btm">
+                             </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+                        <!-- Night Differential NSD -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 106px;">Total NSD</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="NightDifferentialNSDHRsAdd" name="NightDifferentialNSDHRsAdd"  class="layui-input  layui-disabled  boder-btm">
+                             </div>
+                            <div class="layui-form-mid">HRs</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total NSD</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="NightDifferentialNSDPesoAdd" name="NightDifferentialNSDPesoAdd"  class="layui-input  layui-disabled  boder-btm">
+                             </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 106;">Undertime</label>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text"  id="UndertimeHRs" name="DeUndertime"  class="layui-input    boder-btm de_undertime">
+                            </div>
+                            <div class="layui-form-mid">HRs </div>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" readonly id="UndertimePeso" name="UndertimePeso"  class="layui-input  layui-disabled  boder-btm">
+                            </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+                    </div>                    
+                    <!-- <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Ordinary</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Special </label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Regular Holiday</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Double Holiday</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Rest</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Special Day Failing on Rest Day</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div lass="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Total Regular Holiday Falling on Rest Day</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Total Total Double Holiday Falling on Rest Day</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">SSS</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="user_name" name="user_name" class="layui-input layui-disabled mc_sss">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">PAG-IBIG</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="user_name" name="user_name" class="layui-input layui-disabled mc_pag_ibig">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">PhilHealth</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="user_name" name="user_name" class="layui-input layui-disabled mc_philhealth">
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Pay Leave</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">Day (s)</div>
+                            <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 120px;">Birthday Gift</label>
+                             <div class="layui-input-inline" style="width:90px">
+                                <input type="text" id="AddNsdDoubleHolidayFallingOnRestDay" name="AddNsdDoubleHolidayFallingOnRestDay"  class="layui-input boder-btm">
+                             </div>
+                            <div class="layui-form-mid">PESO</div>
+                        </div>
+                    </div>   -->
+         
+                    <div class="layui-form-item">
+                        <div class="layui-inline">'
+							<label class="layui-form-label">审批人</label> 
+                            <div class="layui-input-inline">
+                                <select id="ApprovalUserID" name="ApprovalUserID"></select>
+                            </div>
+						</div>
+                    </div> 
+
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button id="subFinanForm"  lay-submit class="layui-btn" lay-filter="subFinanForm" style="display:none;">提交审批</button>
+                                <button id="resetFinanForm" class="layui-btn layui-btn-primary" style="display:none;">重置</button>
+                                <button id="closeFinanForm" class="layui-btn layui-btn-primary">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        /* input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        } */
+        .layui-input.boder-btm{
+            border:1px solid #fff !important;
+            border-bottom:1px solid #D2D2D2 !important;
+        }
+        #setbasicsalaryPH .layui-form-item{
+            float: left;
+            width: 46%;
+            clear: none;
+        }
+        #setbasicsalaryPH .layui-tab-content{
+            overflow: hidden;
+            
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190212"></script>
+<script>
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','laydate','form','upload'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,router = layui.router();
+    element.render();
+    var laydate = layui.laydate
+    ,form = layui.form
+    ,layer = layui.layer
+    ,table=layui.table
+    ,upload = layui.upload;
+    //获取审批人
+    $.fetch({
+		url: "/gateway/usersalary/mnl/getapprovaluser",
+		type: 'post',
+		data: {
+		    IsApprovalUser: 1
+		},
+		cb: function (rs) {
+			var op=''
+			if(rs&&rs.length>0){
+				for(var i=0;i<rs.length;i++){
+					op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+				}
+			}else{
+				$("#subuserbasicsalary").attr('disabled','disabled').addClass('layui-btn-disabled');
+				layer.msg('未设置审批人,无法提交.');
+			}
+			$("#ApprovalUserID").html(op);
+			form.render();
+		}
+    })
+    // console.log(window.res)
+    function strip(num, precision = 12) {//解决计算精度
+        var evalNum=math.eval(num);
+        return +parseFloat(evalNum.toPrecision(precision)).toFixed(2);
+    }
+    function NumberCheckten2x(obj,n){
+        obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+        obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+        obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+    }
+    // var math = require('mathjs');
+    // var bignumber = math.bignumber();
+    $("body").on('keyup','.receiptCount2x',function () {
+        NumberCheckten2x(this)
+    }).on("paste", '.receiptCount2x',function (e) {  //CTR+V事件处理
+        NumberCheckten2x(this)
+    }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+    var o=window.res;
+    for(key in o){//回显页面
+        $('.'+key).val(o[key]);
+    }
+    // $("#CalenderDays").val(['','1st','2nd'][window.SalaryTimes]);
+    $("#IsShowPH").val(['否','是'][o.is_show]);
+    if(window.isDiate){
+        $("body input").addClass("layui-disabled").attr("disabled",'disabled');
+        //$("#creator").parents("div.layui-inline").remove();
+        //$("#modifier").parents("div.layui-inline").remove();
+        // if( window.SalaryTimes==-1){
+        //     $("#CalenderDays").val("1st + 2nd");
+        // }
+    }else{
+        $("#subFinanForm").show();
+        $("#resetFinanForm").show();
+    }
+   
+    //初始值
+    // Calculation :
+    // 1. Undertime = Total Hr of Work - Actual working Hr ActualWorkingDays
+    //     不足时数=共工作时数- 实际工作时间
+    // 2. Total Daily Wages ÷ 8 Hrs x Undertime
+    //     日工资÷8小时x不足时数
+    // $("#UndertimeHRs").val(strip(Number(o.work_days)*Number(o.allowance)));
+    // $("#UndertimePeso").val(strip(Number(o.work_days)*Number(o.daily_wages)));
+    $("#UndertimePeso").val(strip(Number(o.daily_wages)/8*Number(o.de_undertime)));
+
+    $("#TotalAllowance").val(strip(Number(o.work_days)*Number(o.allowance)));
+    $("#TotalWages").val(strip(Number(o.work_days)*Number(o.daily_wages)));
+    $("#TotalDailyWagesD").val(strip(Number(o.daily_wages)+Number(o.allowance)));
+    $("#TotalDailyWages").val(strip((Number(o.daily_wages)+Number(o.allowance))*Number(o.work_days)));
+    
+
+    function valInputPro(a,b,c){
+        // console.log(a,b)
+        $("#TotalDailyWagesD").val(strip(Number(a)+Number(b)));
+        $("#TotalWages").val(strip(Number(c)*Number(a))) 
+        $("#TotalAllowance").val(strip(Number(c)*Number(b)))
+        $("#TotalDailyWages").val(strip((Number(a)+Number(b))*Number(c)));
+        
+    }
+    //动态监听输入
+    $("#DailyWages").bind("input propertychange",function(event){
+        if(!isNaN($(this).val())&&$(this).val()!=''){
+            valInputPro($(this).val(),$("#Allowance").val(),$("#ActualWorkingDays").val());
+        }
+    });
+    $("#Allowance").bind("input propertychange",function(event){
+        if(!isNaN($(this).val())&&$(this).val()!=''){
+            valInputPro($("#DailyWages").val(),$(this).val(),$("#ActualWorkingDays").val());
+       }
+    });
+    $("#ActualWorkingDays").bind("input propertychange",function(event){
+        if(!isNaN($(this).val())&&$(this).val()!=''){
+            valInputPro($("#DailyWages").val(),$("#Allowance").val(),$(this).val());
+       }
+    });
+
+    $("#UndertimeHRs").bind("input propertychange",function(event){
+        // 2. Total Daily Wages ÷ 8 Hrs x Undertime
+        //     日工资÷8小时x不足时数
+        if(!isNaN($(this).val())&&$(this).val()!=''){
+            $("#UndertimePeso").val(strip(Number($("#DailyWages").val())/8*Number($(this).val())));
+        }
+    });
+
+    // $("#TotalOrdinaryOTHRs").bind("input propertychange",function(event){
+    //         console.log($(this).val())
+    //     //    valInputPro($(this).val(),$("#Allowance").val());
+    //     });
+
+
+    $("#TotalOrdinaryOTHRs").find("input.layui-input").each(function(){
+        $(this).bind("input propertychange",function(event){
+            var sum=0;
+            $("#TotalOrdinaryOTHRs").find("input.layui-input").each(function(){
+                if($(this).val() !=''){
+            //         sum+=parseInt($(this).val());
+                    sum= strip(sum+Number($(this).val()))
+                }
+            })
+            $("#TotalOrdinaryOTHRsAdd").val(sum)
+        });
+    })
+
+    //各Tab 小时数求和 peso计算() 
+    // 加班工资（OT/NSD OT/NSD） = 日工资(Daily Wages)/8 * 加班小时数*加班系数.
+    function OtNsdPesoFun(a,b){//a加班小时数 b加班系数 
+        var dws=$("#DailyWages").val();
+        var sum=strip(dws/8*Number(a)*Number(b));
+        return sum
+    }
+    // 加项目/回补- 其它工资= 日工资(Daily Wages) * 加班天数*加班系数
+
+    // $("#CalenderDays").val()  
+    // TotalAllowance 共津贴=津贴 x 实际工作天数  Allowance*Actual Working Days
+    $.fetch({
+		url:"/gateway/usersalary/ph/overtimetypes",
+		type:'post',
+		cb:function(rs){
+            for(i=0;i<rs.length;i++){
+                $("."+rs[i].field_name+"").attr("data-rate",rs[i].rate)
+            }
+            var sum=0,pesoSum=0;
+            $("#TotalOrdinaryOTHRs").find("input.layui-input").each(function(){
+                if($(this).val() !=''){
+                    sum= strip(sum+Number($(this).val()));
+                    var rate =$(this).attr("data-rate");
+                    pesoSum=strip(pesoSum+ OtNsdPesoFun($(this).val(),rate));
+                }
+            })
+            $("#TotalOrdinaryOTHRsAdd").val(sum);
+            $("#TotalOrdinaryOTPesoAdd").val(pesoSum);
+            $("#TotalOTallPesoAdd").val(strip(Number(pesoSum)+Number($("#NightDifferentialOvertimePesoAdd").val())));
+
+            sum=0;pesoSum=0;
+            $("#NightDifferentialOvertime").find("input.layui-input").each(function(){
+                if($(this).val() !=''){
+                    sum= strip(sum+Number($(this).val()));
+                    var rate =$(this).attr("data-rate");
+                    pesoSum=strip(pesoSum+ OtNsdPesoFun($(this).val(),rate));
+                }
+            })
+            $("#NightDifferentialOvertimeHRsAdd").val(sum);
+            $("#NightDifferentialOvertimePesoAdd").val(pesoSum);
+            $("#TotalOTallPesoAdd").val(strip(Number(pesoSum)+Number($("#TotalOrdinaryOTPesoAdd").val())))
+
+            sum=0;pesoSum=0;
+            $("#NightDifferentialNSD").find("input.layui-input").each(function(){
+                if($(this).val() !=''){
+                    sum= strip(sum+Number($(this).val()));
+                    var rate =$(this).attr("data-rate");
+                    pesoSum=strip(pesoSum+ OtNsdPesoFun($(this).val(),rate));
+                }
+            })
+            // console.log(pesoSum);
+            $("#NightDifferentialNSDHRsAdd").val(sum);
+            $("#NightDifferentialNSDPesoAdd").val(pesoSum);
+
+
+            $("#TotalOrdinaryOTHRs").find("input.layui-input").each(function(){
+                $(this).bind("input propertychange",function(event){
+                    var sum=0,pesoSum=0;
+                    $("#TotalOrdinaryOTHRs").find("input.layui-input").each(function(){
+                        if($(this).val() !=''){
+                            sum= strip(sum+Number($(this).val()));
+                            var rate =$(this).attr("data-rate");
+                            pesoSum=strip(pesoSum+ OtNsdPesoFun($(this).val(),rate));
+                        }
+                    })
+                    // console.log(pesoSum);
+                    $("#TotalOrdinaryOTHRsAdd").val(sum);
+                    $("#TotalOrdinaryOTPesoAdd").val(pesoSum);
+                    $("#TotalOTallPesoAdd").val(strip(Number(pesoSum)+Number($("#NightDifferentialOvertimePesoAdd").val())));
+                });
+            })
+
+            $("#NightDifferentialOvertime").find("input.layui-input").each(function(){
+                $(this).bind("input propertychange",function(event){
+                    var sum=0,pesoSum=0;
+                    $("#NightDifferentialOvertime").find("input.layui-input").each(function(){
+                        if($(this).val() !=''){
+                            sum= strip(sum+Number($(this).val()));
+                            var rate =$(this).attr("data-rate");
+                            pesoSum=strip(pesoSum+ OtNsdPesoFun($(this).val(),rate));
+                        }
+                    })
+                    // console.log(pesoSum);
+                    $("#NightDifferentialOvertimeHRsAdd").val(sum);
+                    $("#NightDifferentialOvertimePesoAdd").val(pesoSum);
+                    $("#TotalOTallPesoAdd").val(strip(Number(pesoSum)+Number($("#TotalOrdinaryOTPesoAdd").val())))
+                    
+                });
+            })
+
+             $("#NightDifferentialNSD").find("input.layui-input").each(function(){
+                $(this).bind("input propertychange",function(event){
+                    var sum=0,pesoSum=0;
+                    $("#NightDifferentialNSD").find("input.layui-input").each(function(){
+                        if($(this).val() !=''){
+                            sum= strip(sum+Number($(this).val()));
+                            var rate =$(this).attr("data-rate");
+                            pesoSum=strip(pesoSum+ OtNsdPesoFun($(this).val(),rate));
+                        }
+                    })
+                    // console.log(pesoSum);
+                    $("#NightDifferentialNSDHRsAdd").val(sum);
+                    $("#NightDifferentialNSDPesoAdd").val(pesoSum);
+                });
+            })
+        }
+    })
+    $("#subFinanForm").on("click",function(){
+        var UserID=o.uid;
+        var DailyWages=$("#DailyWages").val();
+        var Allowance=$("#Allowance").val();
+        var Month=window.MonthPH;
+        var SalaryTimes=window.SalaryTimes;
+        var ApprovalUserID=$("#ApprovalUserID").val();
+        var DeUndertime=$("#UndertimeHRs").val();
+        var subData={
+            UserID:o.uid,
+            DailyWages:$("#DailyWages").val(),
+            Allowance:$("#Allowance").val(),
+            Month:window.MonthPH,
+            DeUndertime:DeUndertime,
+            ApprovalUserID:ApprovalUserID,
+            SalaryTimes:o.salary_times,
+            WorkDays:$("#ActualWorkingDays").val()
+        }
+        // console.log(subData)
+        $("#setbasicsalaryPH").find("input").each(function(){
+            var nmkey=$(this).attr("name");
+            subData[""+nmkey+""]=$(this).val();
+        })
+        // console.log(subData)
+        $.fetch({
+            url:"/gateway/usersalary/ph/setbasicsalary",
+            type:'post',
+			data:subData,            
+            cb:function(rs){
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.userbasicsalaryFunPH({
+                    UserName: window.UserNamePH
+					,DepartmentID: window.DepartmentIDPH==""?'-1':window.DepartmentIDPH
+					,JobTitleID:  window.JobTitleIDPH==""?'-1':window.JobTitleIDPH
+					,Month:window.MonthPH
+					,SalaryTimes:window.SalaryTimes
+                },"ph") 
+                parent.layer.close(index); //再执行关闭 
+            }
+        })
+        
+    })
+    $("#resetFinanForm").on("click",function(){
+        window.location.reload()
+    })
+    $("#closeFinanForm").on("click",function(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭  
+    })
+    
+    
+})
+
+
+</script> 
+</html>

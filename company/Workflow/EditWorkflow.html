@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> 编辑任务</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <span>当前任务ID</span>
+                <a href="">任务名称</a>
+                <div class="fr">
+                    <button class="layui-btn layui-btn-xs layui-btn-normal">保存</button>
+                </div>
+            </div>
+            <div class="layui-card-body layui-row layui-col-space10">
+                <div class="layui-col-sm7 layui-col-md8 layui-col-lg9">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"></label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" type="text" placeholder="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">任务描述</label>
+                            <div class="layui-input-block">
+                                <textarea name="description" id="description" style="display: none;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <textarea name="remarks" id="remarks" style="display: none;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">附件</label>
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn" id="test1">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn">保存</button>
+                                <button class="layui-btn layui-btn-primary">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field">
+                        <legend>历史记录</legend>
+                        <div class="layui-field-box">
+                            <ol>
+                                <li>2017-03-20 08:23:12, 由 <b>oliver</b> 创建</li>
+                            </ol>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="layui-col-sm5 layui-col-md4 layui-col-lg3">
+                    <fieldset class="layui-elem-field">
+                        <legend>基本信息</legend>
+                        <div class="layui-field-box">
+                            <div class="layui-form">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">所属项目</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required" lay-search>
+                                            <option value="">带搜索的选择框</option>
+                                            <option value="0">获取任务名称</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">所属模块</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required" lay-search>
+                                            <option value="">带搜索的选择框</option>
+                                            <option value="0">获取任务名称</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">指派给</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required" lay-search>
+                                            <option value="">带搜索的选择框</option>
+                                            <option value="0">获取任务名称</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">任务类型</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required">
+                                            <option value="">带搜索的选择框</option>
+                                            <option value="0">获取任务名称</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">任务状态</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required">
+                                            <option value="">未开始</option>
+                                            <option value="">进行中</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">优先级</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required">
+                                            <option value="">未开始</option>
+                                            <option value="">进行中</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">抄送给</label>
+                                    <div class="layui-input-block">
+                                        <select name="city" lay-verify="required">
+                                            <option value="">未开始</option>
+                                            <option value="">进行中</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="layui-elem-field">
+                        <legend>工时信息</legend>
+                        <div class="layui-field-box">
+                            <div class="layui-form">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">预计时间</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input" id="yjItem">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">实际开始</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input" id="sjItem">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">截止日期</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input" id="jzItem">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">最初预计</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">总消耗</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">预计剩余</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="layui-elem-field">
+                        <legend>任务的一生</legend>
+                        <div class="layui-field-box">
+                            <div class="layui-form">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">由谁创建</label>
+                                    <div class="layui-input-block">
+                                        <span>创建人</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">由谁完成</label>
+                                    <div class="layui-input-block">
+                                        <span>由谁完成</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">由谁取消</label>
+                                    <div class="layui-input-block">
+                                        <span>完成时间</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">取消时间</label>
+                                    <div class="layui-input-block">
+                                        <span>取消时间</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">由谁关闭</label>
+                                    <div class="layui-input-block">
+                                        <span>由谁关闭</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">关闭原因</label>
+                                    <div class="layui-input-block">
+                                        <span>关闭原因</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">关闭时间</label>
+                                    <div class="layui-input-block">
+                                        <span>关闭时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'upload', 'layedit', 'laydate'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            upload = layui.upload,
+            form = layui.form;
+        var layedit = layui.layedit;
+
+        form.render(null, 'component-form-group');
+
+        laydate.render({
+            elem: '#jzItem',
+            type: 'date',
+            // range: '~'
+        });
+        laydate.render({
+            elem: '#sjItem',
+            type: 'date',
+            // range: '~'
+        });
+        laydate.render({
+            elem: '#yjItem',
+            type: 'date',
+            // range: '~'
+        });
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+                ,
+            url: '/upload/' //上传接口
+                ,
+            done: function (res) {
+                //上传完毕回调
+            },
+            error: function () {
+                //请求异常回调
+            }
+        });
+
+        var description = layedit.build("description", {
+            tool: [
+                'strong' //加粗
+                , 'italic' //斜体
+                , 'underline' //下划线
+                , 'del' //删除线
+                , '|' //分割线
+                , 'left' //左对齐
+                , 'center' //居中对齐
+                , 'right' //右对齐
+                , 'link' //超链接
+                , 'unlink' //清除链接
+                , 'face' //表情
+                , 'image' //插入图片
+                // ,'help' //帮助
+            ]
+        });
+        var remarks = layedit.build("remarks", {
+            tool: [
+                'strong' //加粗
+                , 'italic' //斜体
+                , 'underline' //下划线
+                , 'del' //删除线
+                , '|' //分割线
+                , 'left' //左对齐
+                , 'center' //居中对齐
+                , 'right' //右对齐
+                , 'link' //超链接
+                , 'unlink' //清除链接
+                , 'face' //表情
+                , 'image' //插入图片
+                // ,'help' //帮助
+            ]
+        })
+    });
+</script>
+
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>排班日程表</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+<style>
+    p.isDay{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        cursor:initial;
+        color: #666;
+    }
+    p.isDay.ish{
+        color: #218ae0;
+        cursor: pointer;
+    }
+    .scheduleusers{
+        cursor: pointer;
+    }
+</style>
+</head>
+    
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card layui-form">
+            <div class="layui-card-header">排班日程表</div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-form-inline">
+                        <label class="layui-form-label">
+                                按月查询
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="workMonth" placeholder="yyyy-MM">
+                        </div>
+                    </div>
+                </div>
+                <table id="calendar" class="layui-table">
+                        <colgroup>
+                            <col width=""></col>
+                            <col width=""></col>
+                            <col width=""></col>
+                            <col width=""></col>
+                            <col width=""></col>
+                            <col width=""></col>
+                            <col width=""></col>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>星期一</th>
+                                <th>星期二</th>
+                                <th>星期三</th>
+                                <th>星期四</th>
+                                <th>星期五</th>
+                                <th>星期六</th>
+                                <th>星期日</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+     layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','form','laydate'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var layer = layui.layer
+        ,form=layui.form
+        ,laydate=layui.laydate
+        ,table=layui.table;
+        var now= new Date();
+        var year = now.getFullYear(),
+        month = now.getMonth() + 1,
+        zmonth ='';
+        if(month<10){
+            zmonth = "0"+month;
+        }else{
+            zmonth = month;
+        };
+        
+        var nowMonth =function(y,m){
+            var  month = parseInt(m-1, 10);
+            //当前月的第一天的日期
+            var firstDay = new Date(y,month,01);
+            //第一天是星期几
+            var weekday = firstDay.getDay();
+            if(weekday==0){
+                weekday=7;
+            }
+            //求当前月一共有多少天
+            //new Date(year,month+1,0) ： month+1是下一个月，day为0代表的是上一个月的最后一天，即我们所需的当前月的最后一天。
+            //getDate（）则返回这个日期对象是一个月中的第几天，我们由最后一天得知这个月一共有多少天
+            var days =new Date(y, month+1, 0).getDate();
+            var res = "<tr>";
+            //输出第一天之前的空格
+            for(var i=1;i<weekday;i++){
+                res+="<td> </td>";
+            }
+            
+
+            for(var j=1;j<=days ;j++){
+
+                var dayname= j<10? ''+y+'-'+m+'-0'+j+'':''+y+'-'+m+'-'+j+''
+                var classT= 't-'+dayname+'';
+                res += '<td style="height: 92px; padding-top: 22px;"><p class="isDay '+classT+'">'+dayname+'</p><div class="layui-table-name  scheduleusers '+classT+'"></div></td>';
+                
+                //如果是周日则换行
+                if(weekday%7 == 0){
+                    weekday = 0;
+                    res += '</tr><tr>';
+                }
+                weekday++;
+            }
+            $("#calendar  tbody").html(res);
+            $.fetch({
+                url: "/gateway/worktimetypeuser/schedule",
+                type: 'post',
+                data:{
+                    Month:''+y+'-'+m+'',
+                },
+                cb:function(rs){
+                    for(key in rs){
+                        var userArr =rs[key].work_time_type,ish='';
+                        
+                        if(rs[key].is_holiday){
+                            ish='(公休日)'
+                            $("#calendar tbody").find('p.t-'+key+'').append(ish).addClass('ish');  
+                            
+                        }           
+                        var htp='';           
+                        if(userArr&&userArr.length>0){
+                            for(var i = 0;i<userArr.length;i++){
+                                htp+='<p style="padding:0 5px;" data-TypeID="'+userArr[i].work_time_type_id+'" data-time="'+key+'" data-et="'+userArr[i].end_date+'" data-st="'+userArr[i].start_date+'">'+userArr[i].name+'</p>'
+                            }
+                        }else{
+                            htp+='<span>本日无排班</span>'
+                        }
+                        $("#calendar tbody").find('div.t-'+key+'').html(htp);
+                    }
+                    $("#calendar tbody").off("click").on('click','.scheduleusers>p',function(){
+                        var WorkTimeTypeID = $(this).attr('data-TypeID');
+                        var Dates = $(this).attr('data-time');
+                        var s = $(this).attr('data-st');
+                        var e = $(this).attr('data-et');
+                        var wname = $(this).text();
+                        $.fetch({
+                            url: "/gateway/worktimetypeuser/scheduleusers",
+                            type: 'post',
+                            data:{
+                                Date:Dates,
+                                WorkTimeTypeID:WorkTimeTypeID,
+                                Type:1,
+                            },
+                            cb:function(rs){ 
+                                var users='';
+                                    if(rs&&rs.length>0){
+                                        for(var i=0;i<rs.length;i++){
+                                            users+='<tr>'
+                                                +'<td>'+rs[i].name+'</td>'
+                                                +'<td>'+rs[i].dept_name+'</td>'
+                                                // +'<td>'+rs[i].created_at+'</td>'
+                                                // +'<td>'+rs[i].updated_at+'</td>'
+                                            
+                                            +'</tr>'
+                                        }
+                                    }else{
+                                        users='当前班次未添加人员'
+                                    }
+                                    var htmls='<div class="layui-card-body">'
+                                                +'<div class="title">开始时间:'+s+' ~ 结束时间:'+e+'</div>'
+                                                +'<div class="tableLimit">'
+                                                    +'<table class="layui-table">'
+                                                        + '<colgroup>'
+                                                            +'<col width="150">'
+                                                            +'<col width="200">'
+                                                            +'<col>'
+                                                        +'</colgroup>'
+                                                        +'<thead>'
+                                                            +'<tr>'
+                                                                +'<th>姓名</th>'
+                                                                +'<th>部门</th>'
+                                                                // +'<th>创建时间</th>'
+                                                                // +'<th>修改时间</th>'
+                                                            +'</tr> '
+                                                        +'</thead>'
+                                                                        
+                                                        +'<tbody>'
+                                                            +users
+                                                        +'</tbody>'
+                                                    +'</table>'
+                                                +'</div>'
+                                                +'<div class="tr"><button id="close" class="layui-btn layui-btn-primary">关闭</button></div>'
+                                            +'</div>' 
+                                    
+                                
+                                    layer.open({
+                                        type: 1,
+                                        title: ""+Dates+"("+wname+")",
+                                        shade: false,
+                                        area: ['50%', 'auto'],
+                                        content: htmls,
+                                        success:function(layero,index){
+                                            $("#close").on("click",function(){
+                                                layer.close(index)
+                                            })
+                                        }
+                                    })
+                               
+                            }
+                        });
+                    });
+                    $("#calendar").off("click").on('click','p.ish',function(){
+                        var WorkTimeTypeID = $(this).siblings('div.scheduleusers').find('p').attr('data-TypeID');
+                        var Dates = $(this).siblings('div.scheduleusers').find('p').attr('data-time');
+                        $.fetch({
+                            url: "/gateway/worktimetypeuser/scheduleusers",
+                            type: 'post',
+                            data:{
+                                Date:Dates,
+                                // WorkTimeTypeID:WorkTimeTypeID,
+                                Type:2,
+                            },
+                            cb:function(rs){ 
+                                var users='';
+                                    if(rs&&rs.length>0){
+                                        for(var i=0;i<rs.length;i++){
+                                            users+='<tr>'
+                                                +'<td>'+rs[i].name+'</td>'
+                                                +'<td>'+rs[i].dept_name+'</td>'
+                                                // +'<td>'+rs[i].created_at+'</td>'
+                                                // +'<td>'+rs[i].updated_at+'</td>'
+                                            
+                                            +'</tr>'
+                                        }
+                                    }else{
+                                        users='当前班次未添加人员'
+                                    }
+                                        var htmls='<div class="layui-card-body">'
+                                                    +'<div class="tableLimit">'
+                                                        +'<table class="layui-table">'
+                                                        + '<colgroup>'
+                                                                +'<col width="150">'
+                                                                +'<col width="200">'
+                                                                +'<col>'
+                                                            +'</colgroup>'
+                                                            +'<thead>'
+                                                                +'<tr>'
+                                                                    +'<th>姓名</th>'
+                                                                    +'<th>部门</th>'
+                                                                    // +'<th>创建时间</th>'
+                                                                    // +'<th>修改时间</th>'
+                                                                +'</tr> '
+                                                            +'</thead>'
+                                                                            
+                                                            +'<tbody>'
+                                                                +users
+                                                            +'</tbody>'
+                                                        +'</table>'
+                                                    +'</div>'
+                                                    +'<div class="tr"><button id="close" class="layui-btn layui-btn-primary">关闭</button></div>'
+                                                +'</div>' 
+                                    
+                                
+                                    layer.open({
+                                        type: 1,
+                                        title: "公休人员("+Dates+")",
+                                        shade: false,
+                                        area: ['50%', 'auto'],
+                                        content: htmls,
+                                        success:function(layero,index){
+                                            $("#close").on("click",function(){
+                                                layer.close(index)
+                                            })
+                                        }
+                                    })
+                                }    
+                        })
+                    });
+            
+                }
+            })
+        }
+        nowMonth(year,zmonth);
+        laydate.render({
+            elem: '#workMonth'
+            ,type: 'month'
+            ,value:''+year+'-'+zmonth+''
+            ,change: function(value, date, endDate){
+                var zrmon;
+                if(date.month<10){
+                    zrmon = "0"+date.month;
+                }else{
+                    zrmon = date.month;
+                };
+                nowMonth(date.year,zrmon); //得到日期生成的值，如：2017-08-18
+              
+            }
+        });
+    })
+</script>
+</html>

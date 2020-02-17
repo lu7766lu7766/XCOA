@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>问卷详情页</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header tc" style="height:auto;" id="modify-title">
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form" id="filln-form">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+  layui.config({
+		base: '../../layui/' //静态资源所在路径
+  }).extend({
+		index: 'index'//主入口模块
+  }).use(['index', 'form', 'laydate','util','rate'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,layer = layui.layer
+    ,laydate = layui.laydate
+    ,util=layui.util
+    ,rate=layui.rate
+    ,form = layui.form;
+    var noStarQtion=[];//用来保存非评分类问题的id
+    var starsObj={
+       
+    };
+    var questionsFun =function(op){
+        var opHtml =''
+        for(var i=0;i<op.length;i++){
+            if(op[i].question_type != 4){
+                noStarQtion.push(op[i].id);
+            }
+            var isreq='',isreqVf='';
+            if(op[i].has_subquestion==1){
+                var add_sub_QtOp=''
+                if(op[i].subquestion_show_type===0){
+                    add_sub_QtOp='add_sub_QtOp';
+                }
+                opHtml+='<div class="layui-form-item has_subquestion '+add_sub_QtOp+'" data-qid="'+op[i].id+'">'
+                starsObj[op[i].id]={
+                    questionId:''+op[i].id,
+                    subQuestion:[],
+                };
+            }else{
+                opHtml+='<div class="layui-form-item no_subquestion" data-qid="'+op[i].id+'">'
+                starsObj[op[i].id]={
+                    questionId:''+op[i].id,
+                };
+            }
+                    
+            if(op[i].is_required==1){
+                isreq ='<b class="red">*</b>'
+                isreqVf='required'// 文本必答题验证
+            }else{
+                isreqVf='noRequired'// 文本非必答题验证
+            }
+            if(op[i].has_subquestion==1&&op[i].subquestion_show_type===0){//加选
+                //console.log(op[i].has_subquestion)
+                opHtml+='<label class=""><span class="ptitnum">'+isreq+' '+op[i].question_no+'. </span>'+op[i].topic+' <div class="layui-inline"><select name="" lay-verify="">'  
+                for(var k=0;k<op[i].subQuestion.length;k++){
+                //console.log(op[i].subQuestion[k]);
+                    opHtml+='<option value="'+op[i].subQuestion[k].subquestion_id+'">'+op[i].subQuestion[k].subquestion_topic+'</option>'
+                }
+                opHtml+='</select></div>'+ (op[i].remarks!=null? '<span> (备注：'+op[i].remarks+')</span>':'')+'</label><a class="delQtOp fr layui-btn layui-btn-xs ml-5" style="display:none;">删除</a><a class="addQtOp fr layui-btn layui-btn-xs">加选</a>'          
+
+            }else{
+                opHtml+='<label class=""><span class="ptitnum">'+isreq+' '+op[i].question_no+'. </span>'+op[i].topic+ ''+ (op[i].remarks!=null? '<span> (备注：'+op[i].remarks+')</span>':'')+'</label>'   
+            }
+
+            if(op[i].has_subquestion==1&&op[i].subquestion_show_type===1){
+                if(op[i].question_type==3){
+                    if(op[i].subQuestion.length>0){
+                        for(var m=0;m<op[i].subQuestion.length;m++){
+                            opHtml+= '<div class="Subtitle"><label>('+op[i].subQuestion[m].subquestion_no+'). '+op[i].subQuestion[m].subquestion_topic+':</label>'
+                            opHtml+='<textarea data-subq="'+op[i].subQuestion[m].subquestion_id+'" class="layui-textarea '+isreqVf+'"></textarea>'
+                            opHtml+= '</div>'
+                        }
+                    }
+                    
+                }else if(op[i].question_type ==2){
+                    if(op[i].subQuestion.length>0){
+                        opHtml+= '(多选题)'
+                        for(var m=0;m<op[i].subQuestion.length;m++){
+                            opHtml+= '<div class="Indentation"><label>('+op[i].subQuestion[m].subquestion_no+'). '+op[i].subQuestion[m].subquestion_topic+'</label>'
+                                if(op[i].option&&op[i].option.length>0){
+                                    opHtml+='<div class="'+isreqVf+' isCheckbox"  data-subq="'+op[i].subQuestion[m].subquestion_id+'">'
+                                    for(var k=0;k<op[i].option.length;k++){
+                                        opHtml+='<input lay-skin="primary" value="'+op[i].option[k].option_id+'" type="checkbox" name="optionD_'+op[i].id+'" title="'+op[i].option[k].option_no+' '
+                                        +op[i].option[k].option_content+'">'
+                                    }
+                                    opHtml+='</div>'
+                                } 
+                            opHtml+='</div>'
+                        }
+                    }
+                }else if(op[i].question_type ==1){
+                    if(op[i].subQuestion.length>0){
+                        opHtml+= '(单选题)'
+                        for(var m=0;m<op[i].subQuestion.length;m++){
+                            opHtml+= '<div class="Indentation"><label>('+op[i].subQuestion[m].subquestion_no+'). '+op[i].subQuestion[m].subquestion_topic+':</label>'
+                            
+                            if(op[i].option&&op[i].option.length>0){
+                                opHtml+='<div  class="'+isreqVf+' isRadio"  data-subq="'+op[i].subQuestion[m].subquestion_id+'">'
+                                for(var k=0;k<op[i].option.length;k++){
+                                    opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'_'+op[i].subQuestion[m].subquestion_id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'">'
+                                }
+                                opHtml+='</div>'
+                            }
+                            opHtml+='</div>'
+                        }
+                    }
+                    
+
+                }else if(op[i].question_type ==4){
+                    var scoreRep=op[i].is_score_repeat===0?'noScore':'';
+                    opHtml+='(评分题)<div  class="'+isreqVf+' isStar'+scoreRep+'">'
+                        // starsObj[op[i].id][subQuestion]=subQuestion;
+                    for(var j=0;j<op[i].subQuestion.length;j++){
+                        starsObj[op[i].id].subQuestion.push({ //插入子问题
+                            subQuestionId:op[i].subQuestion[j].subquestion_id,//子问题ID
+                            scoreAnswer:[]//子问题答案
+                        })
+                        opHtml+='<div data-subq="'+op[i].subQuestion[j].subquestion_id+'"><label class="redleaveLabel">('+op[i].subQuestion[j].subquestion_no+'). '+op[i].subQuestion[j].subquestion_topic+':</label>'
+                        for(var k=0;k<op[i].option.length;k++){
+                            if(op[i].option&&op[i].option.length>0){
+                                opHtml+='<label>'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'：</label><div class="option_star2" data-opid="'+op[i].option[k].option_id+'"></div>'
+                            }
+                        }
+                        opHtml+='</div>'
+                    }
+                    opHtml+='</div>' 
+                    
+                    if(op[i].option&&op[i].option.length>0){
+                        for(var k=0;k<op[i].option.length;k++){
+                            for(var s=0;s<starsObj[op[i].id].subQuestion.length;s++){//对每个子问题插入初始化选项id和对应答案
+                                starsObj[op[i].id].subQuestion[s].scoreAnswer.push({
+                                    optionAnswerId:op[i].option[k].option_id//选项对应
+                                    ,score:0//答案评分
+                                }) 
+                            }
+                        }
+                    }
+                }
+            }else{
+                if(op[i].question_type==3){
+                    opHtml+='<textarea class="layui-textarea '+isreqVf+'"></textarea>'
+                }else if(op[i].question_type ==2){
+                    opHtml+='(多选题)<div class="'+isreqVf+' isCheckbox">'
+                    if(op[i].option&&op[i].option.length>0){
+                        for(var k=0;k<op[i].option.length;k++){
+                            opHtml+='<input lay-skin="primary" value="'+op[i].option[k].option_id+'" type="checkbox" name="optionD_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'">'
+                        }
+                    }
+                    opHtml+='</div>'
+                }else if(op[i].question_type ==1){
+                    opHtml+='(单选题)<div  class="'+isreqVf+' isRadio">'
+                    if(op[i].option&&op[i].option.length>0){
+                        for(var k=0;k<op[i].option.length;k++){
+                            opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'">'
+                        }
+                    }
+                    opHtml+='</div>'
+                }else if(op[i].question_type ==4){
+                    
+                    var scoreRep=op[i].is_score_repeat===0?'noScore':'';
+                    opHtml+='(评分题)<div  class="'+isreqVf+' isStar '+scoreRep+'">'
+                    if(op[i].has_subquestion==1&&op[i].subquestion_show_type==0){//加选
+                        // starsObj[op[i].id][subQuestion]=subQuestion;
+                        for(var j=0;j<op[i].subQuestion.length;j++){
+                            starsObj[op[i].id].subQuestion.push({ //插入子问题
+                                subQuestionId:op[i].subQuestion[j].subquestion_id,//子问题ID
+                                scoreAnswer:[]//子问题答案
+                            })
+                        }
+                        if(op[i].option&&op[i].option.length>0){
+                            for(var k=0;k<op[i].option.length;k++){
+                                for(var s=0;s<starsObj[op[i].id].subQuestion.length;s++){//对每个子问题插入初始化选项id和对应答案
+                                    starsObj[op[i].id].subQuestion[s].scoreAnswer.push({
+                                        optionAnswerId:op[i].option[k].option_id//选项对应
+                                        ,score:0//答案评分
+                                    })
+                                }
+                                opHtml+='<label>'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'：</label><div class="option_star" data-opid="'+op[i].option[k].option_id+'"></div>'
+                            }
+                        }
+                        //console.log(starsObj);
+                    } else{
+                        starsObj[op[i].id]={
+                            questionId:''+op[i].id,
+                            scoreAnswer:[]
+                        };
+                        for(var k=0;k<op[i].option.length;k++){
+                            if(op[i].option&&op[i].option.length>0){
+                                starsObj[op[i].id].scoreAnswer.push({
+                                optionAnswerId:op[i].option[k].option_id,
+                                score:0//答案
+                            })
+                                opHtml+='<label class="">'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'：</label><div class="option_star1" data-opid="'+op[i].option[k].option_id+'"></div>'
+                            }
+                        }
+
+                    }
+                    opHtml+='</div>'
+                }
+            }
+            
+            //console.log(starsObj)//默认第一个复选框的值为0 
+            if(op[i].has_feedback===1){
+                opHtml+='<div class="feedbackDiv"><label  class="layui-form-label">其他反馈:</label><div class="layui-input-block "><input type="text"  name="" class="feedbackAnswer layui-input"></div></div>'
+            }
+            opHtml+='</div>'
+        }
+        opHtml+='<div class="layui-form-item layui-layout-admin" >'
+                    +'<div class="layui-input-block">'
+                        +'<div class="layui-footer" style="left: 0;">'
+                            +'<button class="layui-btn" id="sub-filln-form">确定</button>'
+                            +'<button class="layui-btn layui-btn-primary" id="back-filln-form">返回</button>'
+                        +'</div></div></div>'
+        $("#filln-form").html(opHtml);
+        form.render();
+        layui.each($('.option_star1'),function(index,elem){
+            //console.log(this,index)
+            rate.render({
+                elem:elem
+                ,length:5
+                // ,half:true
+                ,text:true
+                ,setText:function(value){
+                    this.span.text( value + "分");
+                }
+                ,choose: function(value){
+                    var tStar =this;
+                    var isScoreRepeat=  $(this.elem).parent('div.isStar').hasClass('noScore');//true 不能重复
+                    var opid = $(this.elem).attr('data-opid');//选项ID
+                    var qtid = $(this.elem).parent('div.isStar').parent('div.layui-form-item').attr('data-qid');//问题id
+                    var subQid =$(this.elem).parent('div.isStar').parent('div.layui-form-item').find("select").val()//子问题id
+                    //if(isScoreRepeat){
+                        for(var i=0;i<starsObj[qtid].scoreAnswer.length;i++){//遍历大问题下的子问题
+                           // if(starsObj[qtid].scoreAnswer[i].optionAnswerId== opid){//找到当前子问题答案数组
+                            if(isScoreRepeat){
+                                if(starsObj[qtid].scoreAnswer[i].score == value){//
+                                    for(var jj =0;jj<starsObj[qtid].scoreAnswer.length;jj++){
+                                        if(starsObj[qtid].scoreAnswer[jj].optionAnswerId==opid){
+                                            starsObj[qtid].scoreAnswer[jj].score =0;
+                                        }
+                                    }
+                                    $(tStar.elem).find("li.layui-inline").html('<i class="layui-icon layui-icon-rate"></i>');
+                                    tStar.value=0;
+                                    tStar.span.text( 0 + "分");
+                                    rate.render();
+                                    layer.msg('评分不能与其他项相同',{time:1000},function(){});
+                                    // return false
+                                }else{
+                                    if(starsObj[qtid].scoreAnswer[i].optionAnswerId==opid){
+                                        starsObj[qtid].scoreAnswer[i].score =value;
+                                    }
+                                }
+                            }else{
+                                if(starsObj[qtid].scoreAnswer[i].optionAnswerId==opid){
+                                    starsObj[qtid].scoreAnswer[i].score =value;
+                                }
+                            }
+                            //}
+                        }
+                        //console.log(starsObj)
+                }
+            })
+        })
+        layui.each($('.option_star'),function(index,elem){
+            //console.log(this,index)
+            rate.render({
+                elem:elem
+                ,length:5
+                // ,half:true
+                ,text:true
+                ,setText:function(value){
+                    this.span.text( value + "分");
+                }
+                ,choose: function(value){
+                    var tStar =this;
+                    var isScoreRepeat=  $(this.elem).parent('div.isStar').hasClass('noScore');//true 不能重复
+                    var opid = $(this.elem).attr('data-opid');//选项ID
+                    var qtid = $(this.elem).parent('div.isStar').parent('div.layui-form-item').attr('data-qid');//问题id
+                    var subQid =$(this.elem).parent('div.isStar').parent('div.layui-form-item').find("select").val()//子问题id
+                    //if(isScoreRepeat){
+                        for(var i=0;i<starsObj[qtid].subQuestion.length;i++){//遍历大问题下的子问题
+                            if(starsObj[qtid].subQuestion[i].subQuestionId == subQid){//找到当前子问题答案数组
+                                for(var j=0;j<starsObj[qtid].subQuestion[i].scoreAnswer.length;j++){
+                                    if(isScoreRepeat){
+                                        if(starsObj[qtid].subQuestion[i].scoreAnswer[j].score == value){//
+                                            for(var jj =0;jj<starsObj[qtid].subQuestion[i].scoreAnswer.length;jj++){
+                                                if(starsObj[qtid].subQuestion[i].scoreAnswer[jj].optionAnswerId==opid){
+                                                    starsObj[qtid].subQuestion[i].scoreAnswer[jj].score =0;
+                                                }
+                                            }
+                                            $(tStar.elem).find("li.layui-inline").html('<i class="layui-icon layui-icon-rate"></i>');
+                                            tStar.value=0;
+                                            tStar.span.text( 0 + "分");
+                                            rate.render();
+                                            layer.msg('评分不能与其他项相同',{time:1000},function(){});
+                                            // return false
+                                        }else{
+                                            if(starsObj[qtid].subQuestion[i].scoreAnswer[j].optionAnswerId==opid){
+                                                starsObj[qtid].subQuestion[i].scoreAnswer[j].score =value;
+                                            }
+                                        }
+                                    }else{
+                                        if(starsObj[qtid].subQuestion[i].scoreAnswer[j].optionAnswerId==opid){
+                                            starsObj[qtid].subQuestion[i].scoreAnswer[j].score =value;
+                                           // return false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //console.log(starsObj)
+                }
+            })
+        })
+        layui.each($('.option_star2'),function(index,elem){
+            //console.log(this,index)
+            rate.render({
+                elem:elem
+                ,length:5
+                // ,half:true
+                ,text:true
+                ,setText:function(value){
+                    this.span.text( value + "分");
+                }
+                ,choose: function(value){
+                    var tStar =this;
+                    var isScoreRepeat=  $(this.elem).parents('div.isStar').hasClass('noScore');//true 不能重复
+                    var opid = $(this.elem).attr('data-opid');//选项ID
+                    var qtid = $(this.elem).parents('div.isStar').parent('div.layui-form-item').attr('data-qid');//问题id
+                    var subQid =$(this.elem).parent('div').attr('data-subq')//子问题id
+                   
+                    //if(isScoreRepeat){
+                        for(var i=0;i<starsObj[qtid].subQuestion.length;i++){//遍历大问题下的子问题
+                            if(starsObj[qtid].subQuestion[i].subQuestionId == subQid){//找到当前子问题答案数组
+                                for(var j=0;j<starsObj[qtid].subQuestion[i].scoreAnswer.length;j++){
+                                    if(isScoreRepeat){
+                                        if(starsObj[qtid].subQuestion[i].scoreAnswer[j].score == value){//
+                                            for(var jj =0;jj<starsObj[qtid].subQuestion[i].scoreAnswer.length;jj++){
+                                                if(starsObj[qtid].subQuestion[i].scoreAnswer[jj].optionAnswerId==opid){
+                                                    starsObj[qtid].subQuestion[i].scoreAnswer[jj].score =0;
+                                                }
+                                            }
+                                            $(tStar.elem).find("li.layui-inline").html('<i class="layui-icon layui-icon-rate"></i>');
+                                            tStar.value=0;
+                                            tStar.span.text( 0 + "分");
+                                            rate.render();
+                                            layer.msg('评分不能与其他项相同',{time:1000},function(){});
+                                            // return false
+                                        }else{
+                                            if(starsObj[qtid].subQuestion[i].scoreAnswer[j].optionAnswerId==opid){
+                                                starsObj[qtid].subQuestion[i].scoreAnswer[j].score =value;
+                                            }
+                                        }
+                                    }else{
+                                        if(starsObj[qtid].subQuestion[i].scoreAnswer[j].optionAnswerId==opid){
+                                            starsObj[qtid].subQuestion[i].scoreAnswer[j].score =value;
+                                           // return false
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
+                        //console.log(starsObj)
+                }
+            })
+        })
+        //提交问卷
+        $("#sub-filln-form").on("click",function(){
+            //先获取文本
+            var canSub1 = true;
+            var canSub=[];
+            var prama ={
+                survey:{
+                    surveyId:surveyId,
+                },
+                userAnswer:{},
+            }
+            $(".no_subquestion .layui-textarea").each(
+                function (){
+                    var textVal = $(this).val();
+                    var isRequired =$(this).hasClass("required");
+                    //获取当前问题id
+                    var qid =$(this).parent("div").attr("data-qid");
+
+                    if(textVal==''&&isRequired){
+                         $(this).prev("label").addClass("red");
+                        // var qCanSub ={};
+                        // qCanSub[qid]=false;
+                        // canSub.push(qCanSub);//把必填未答的保存起来
+                        canSub1=false;
+                        //console.log($(this),'kkkkkkkk');
+                    }else{
+                        if(isRequired){             
+                            $(this).prev("label").removeClass("red");
+                        }
+                        $(this).prev("label").removeClass("red");
+                        starsObj[qid]={
+                            questionId:qid,
+                            textAnswer:textVal
+                        }
+                    }
+                }
+            )
+
+            $(".no_subquestion div.isRadio").each(
+                function (){
+                    var checkVal = $(this).find('input[type="radio"]:checked').val();
+                    // var checkrVal = $(this).find('input[type="checkbox"]:checked').val();
+                    var isRequired =$(this).hasClass("required");
+                    var qid =$(this).parent("div").attr("data-qid");
+                    if((checkVal==''||checkVal==undefined)&&isRequired){
+                        $(this).prev("label").addClass("red");
+                        // var qCanSub ={};
+                        // qCanSub[qid]=false;
+                        // canSub.push(qCanSub);//把必填未答的保存起来
+                        canSub1=false;
+                        //console.log($(this),'kkkkkkkk');
+                    }else{
+                        if(isRequired){                      
+                            $(this).prev("label").removeClass("red");
+                        }
+                        starsObj[qid]={
+                            questionId:qid,
+                            optionAnswerId:checkVal
+                        }
+                    }
+                }
+            )
+            $(".no_subquestion div.isCheckbox").each(
+                function (){
+                    var checkVal = '';
+                    $(this).find('input[type="checkbox"]:checked').each(function(){
+                        checkVal+= ''+$(this).val()+',';
+                    })
+                    var qid =$(this).parent("div").attr("data-qid");
+                    var isRequired =$(this).hasClass("required");
+                    if((checkVal==''||checkVal==undefined)&&isRequired){
+                        $(this).prev("label").addClass("red");
+                        // var qCanSub ={};
+                        // qCanSub[qid]=false;
+                        // canSub.push(qCanSub);//把必填未答的保存起来
+                        canSub1=false;
+                        //console.log($(this),'kkkkkkkk');
+                    }else{
+                        if(isRequired){                      
+                            $(this).prev("label").removeClass("red");
+                        }  
+                        $(this).prev("label").removeClass("red");
+                        checkVal = checkVal.substring(0,checkVal.length-1)
+                        starsObj[qid]={
+                            questionId:qid,
+                            optionAnswerId:checkVal
+                        }
+                    }
+                }
+            )
+            $("div.has_subquestion").each(
+                function(){
+                    
+                    var pthis = this;
+                    $(this).find(".layui-textarea").each(function(){
+                        var qid =$(this).parents("div.layui-form-item").attr("data-qid");
+                        console.log(starsObj[qid].subQuestion);
+                        //starsObj[qid].subQuestion=[];
+                        var isRequired =$(this).hasClass("required");
+
+                        if($(pthis).hasClass("add_sub_QtOp")){
+                            var subId=$(pthis).find("select").val()
+                        }else{
+                            var subId =$(this).attr("data-subq");
+                        }
+
+                        var subVal =$(this).val();
+                        if(subVal==''&&isRequired){
+                            $(this).prev("label").addClass("red");
+                            // $(this).parent("div").prev("label").addClass("red");                            
+                            // var qCanSub ={};
+                            // qCanSub[qid]=false;
+                            // canSub.push(qCanSub);//把必填未答的保存起来
+                            
+                            canSub1=false;
+                            //console.log($(this),'kkkkkkkk');
+                        }else{
+                            if(isRequired){             
+                                $(this).prev("label").removeClass("red");
+                                // $(this).parent("div").prev("label").removeClass("red");                                  
+                            }
+                            //插入前判断 当前subID是否存在
+                            // console.log(starsObj[qid].subQuestion.subQuestionId);
+                            // if(starsObj[qid].subQuestion.length>0){
+                            //     for(var v =0;v< starsObj[qid].subQuestion.length;v++){
+                            //         if(starsObj[qid].subQuestion[v].subQuestionId==subId){//
+                            //             starsObj[qid].subQuestion[v]={
+                            //                 subQuestionId:subId,
+                            //                 textAnswer:subVal,//答案
+                            //             }
+                            //         }else if(v == starsObj[qid].subQuestion.length-1){
+                            //             starsObj[qid].subQuestion.push({
+                            //                 subQuestionId:subId,
+                            //                 textAnswer:subVal,//答案
+                            //             })
+                            //         }
+                            //     }
+                            // }
+                            starsObj[qid].subQuestion.push({
+                                subQuestionId:subId,
+                                textAnswer:subVal,//答案
+                            })
+                        }
+                    })
+                    $(this).find("div.isRadio").each(function(){
+                        var qid =$(this).parents("div.layui-form-item").attr("data-qid");
+                        console.log(starsObj[qid].subQuestion);
+                       // starsObj[qid].subQuestion=[];
+                        var isRequired =$(this).hasClass("required");
+                        if($(pthis).hasClass("add_sub_QtOp")){
+                            var subId=$(pthis).find("select").val()
+                        }else{
+                            var subId =$(this).attr("data-subq");
+                        }
+                        var subVal =$(this).find('input[type="radio"]:checked').val();
+                        if((subVal==''||subVal==undefined)&&isRequired){
+                            $(this).prev("label").addClass("red");
+                            // var qCanSub ={};
+                            // qCanSub[qid]=false;
+                            // canSub.push(qCanSub);//把必填未答的保存起来
+                            canSub1=false;
+                            //console.log($(this),'kkkkkkkk');
+                        }else{
+                            if(isRequired){             
+                                $(this).prev("label").removeClass("red");
+                                // $(this).parent("div").prev("label").removeClass("red");                                  
+                            }
+                            starsObj[qid].subQuestion.push({
+                                subQuestionId:subId,
+                                optionAnswerId:subVal,//答案
+                            })
+                        }
+                    })
+                    $(this).find("div.isCheckbox").each(function(){
+                        var qid =$(this).parents("div.layui-form-item").attr("data-qid");
+                        //starsObj[qid].subQuestion=[];
+                        var isRequired =$(this).hasClass("required");
+                        
+                        if($(pthis).hasClass("add_sub_QtOp")){
+                            var subId=$(pthis).find("select").val()
+                        }else{
+                            var subId =$(this).attr("data-subq");
+                        }
+                        var subVal ='';
+                        $(this).find('input[type="checkbox"]:checked').each(function(){
+                            subVal+= ''+$(this).val()+',';
+                        })
+                        if((subVal==''||subVal==undefined)&&isRequired){
+                            $(this).prev("label").addClass("red");
+                            // var qCanSub ={};
+                            // qCanSub[qid]=false;
+                            // canSub.push(qCanSub);//把必填未答的保存起来
+                            canSub1=false;
+                            //console.log($(this),'kkkkkkkk');
+                        }else{
+                            if(isRequired){                      
+                                $(this).prev("label").removeClass("red");
+                            } 
+                            starsObj[qid].subQuestion.push({
+                                subQuestionId:subId,
+                                optionAnswerId:subVal,//答案
+                            })
+                        }
+                    })
+                }
+            );
+            //评分必填校验
+            $("#filln-form").find(".required.isStar .layui-rate").each(
+                function(){
+                   var starNum = $(this).find("i.layui-icon.layui-icon-rate").length;
+                   if(starNum==5){
+                        //console.log($(this),canSub1,"0000000000")                     
+                       
+                       $(this).parent("div").prev("label").addClass("red");
+                       canSub1=false;  
+                       //console.log($(this),canSub1,"0000000000")                     
+                   }else{
+                        $(this).prev("label").removeClass("red");
+                       $(this).parent("div").prev("label").removeClass("red");
+                        
+                   }
+                }
+            )
+            $(".feedbackAnswer").each(function(){
+                var qid=$(this).parents("div.layui-form-item").attr("data-qid");
+                var feedbackVal=$(this).val();
+                starsObj[qid].feedbackAnswer=feedbackVal;
+                // //console.log(prama,qid,starsObj[qid],{feedbackAnswer:feedbackVal})
+                // starsObj[qid]=$.extend(prama.userAnswer[qid],{feedbackAnswer:feedbackVal});
+            });
+            prama.userAnswer=starsObj;
+            console.log(prama);
+            if(canSub1==false){
+                // console.log(noStarQtion);
+                for(var v=0;v<noStarQtion.length;v++){//清空非评分类问题的答案
+                    console.log(prama)
+                    starsObj[noStarQtion[v]].subQuestion=[];
+                }
+                layer.msg("请完成问卷调查中的必答题");
+                return false
+            }else{
+                $.fetch({
+                    url: "/gateway/mySurvey/commit",
+                    type: 'post',
+                    data:prama,
+                    cb:function(rs){
+                        layer.msg('提交成功',{time:800},function(){
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭 
+                        })
+                    }
+                }) 
+
+            }
+        })
+        $("#back-filln-form").on("click",function(){
+            layer.confirm('返回后不会保存已填写的答案',{title:'提示'},function(index){
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭 
+            })
+        })
+    }
+    var anwsdaitFun =function(op){
+        
+        for(var i=0;i<op.length;i++){
+            var isreq='',isreqVf='';
+            if(op[i].is_required==1){
+                isreq ='<span class="red">*</span>'
+                isreqVf='required'// 文本必答题验证
+            }else{
+                isreqVf='noRequired'// 文本非必答题验证
+            }
+           
+            var opHtml ='';
+            //没有子问题
+            if(op[i].has_subquestion==0){
+                opHtml+='<div class="layui-form-item  no_subquestion" data-qid="'+op[i].id+'">'
+                    opHtml+='<label class=""><span class="ptitnum">'+isreq+''+op[i].question_no+'.</span>'+op[i].topic+''+ (op[i].remarks!=null? '<span> (备注：'+op[i].remarks+')</span>':'')+'</label>'
+                        //文本
+                        if(op[i].question_type==3){
+                            var text_answer='';
+                            if(op[i].my_answer!=null&&op[i].my_answer[0]!=null&&op[i].my_answer[0].text_answer!=null){
+                                var text_answer =op[i].my_answer[0].text_answer;
+                            }
+                            opHtml+='<textarea class="layui-textarea '+isreqVf+'" readonly="readonly">'+text_answer+'</textarea>'
+                        }
+                        //多选
+                        if(op[i].question_type==2){
+                            opHtml+='(多选题)<div class="'+isreqVf+' isCheckbox">'
+                            if(op[i].option&&op[i].option.length>0){
+                                var answerIdArr=[];
+                                if(op[i].my_answer!=null&&op[i].my_answer[0]!=null&&op[i].my_answer[0].option_answer_id!=null){
+                                    var answerIdArr = op[i].my_answer[0].option_answer_id.split(",");
+                                }
+                                for(var k=0;k<op[i].option.length;k++){
+                                        var isCheckess ='disabled';
+                                    if(op[i].my_answer!=null&&op[i].my_answer[0]!=null&&op[i].my_answer[0].option_answer_id!=null){
+                                        if( answerIdArr.indexOf(op[i].option[k].option_id+'')!= -1){
+                                            isCheckess ='checked disabled';
+                                        }
+                                    }
+                                    opHtml+='<input lay-skin="primary" value="'+op[i].option[k].option_id+'" type="checkbox" name="optionD_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                }
+                            }
+                            opHtml+='</div>'
+                        }
+                        //单选
+                        if(op[i].question_type==1){
+                            opHtml+='(单选题)<div  class="'+isreqVf+' isRadio">'
+                            if(op[i].option&&op[i].option.length>0){
+                                for(var k=0;k<op[i].option.length;k++){
+                                    var isCheckess ='disabled';
+                                    if(op[i].my_answer!=null&&op[i].my_answer[0]!=null&&op[i].my_answer[0].option_answer_id!=null){
+                                        if(op[i].option[k].option_id == op[i].my_answer[0].option_answer_id){
+                                            isCheckess ='checked ';
+                                        }
+                                    }
+                                    opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                }
+                            }
+                            opHtml+='</div>'
+                        }
+                        //评分
+                        if(op[i].question_type==4){
+                            var scoreRep=op[i].is_score_repeat===0?'noScore':'';
+                             opHtml+='(评分题)<div  class="'+isreqVf+' isStar '+scoreRep+'">'
+                            if(op[i].option&&op[i].option.length>0){
+                                for(var k=0;k<op[i].option.length;k++){
+                                    // var isVal =0;
+                                    // if(op[i].my_answer!=null&&op[i].my_answer[0]!=null&&op[i].my_answer[0].option_answer_id!=null){
+                                    //     if(op[i].option[k].option_id == op[i].my_answer[0].option_answer_id){
+                                    //         isVal =op[i].my_answer[0].score_answer/2;
+                                    //     }
+                                    // }
+                                    opHtml+='<label class="">'+op[i].option[k].option_no+' '+op[i].option[k].option_content+
+                                        '：</label><div class="option_star1 layui-inline option_star1_'+op[i].id+'_'+op[i].option[k].option_id+'" data-opid="'+op[i].option[k].option_id+'"></div>'
+                                    
+                                   // opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                }
+                            }
+                            opHtml+='</div>'
+                        }
+                if(op[i].has_feedback===1){
+                    opHtml+='<div class="feedbackDiv"><label  class="layui-form-label">其他反馈:</label><div class="layui-input-block "><input  value="'+(op[i].feedback_answer==null?'':op[i].feedback_answer)+'"  readonly="readonly" type="text"  name="" class="feedbackAnswer layui-input"></div></div>';
+                }
+                opHtml+='</div>'
+                $("#filln-form").append(opHtml);
+                if(op[i].question_type==4){
+                    if(op[i].option&&op[i].option.length>0){
+                        for(var k=0;k<op[i].option.length;k++){
+                            var isVal =0;
+                            if(op[i].my_answer!=null){
+                                for(var j=0;j<op[i].my_answer.length;j++){
+                                    if(op[i].option[k].option_id == op[i].my_answer[j].option_answer_id){
+                                        isVal =parseFloat(op[i].my_answer[j].score_answer);
+                                        rate.render({
+                                            elem:'div.option_star1_'+op[i].id+'_'+op[i].option[k].option_id+''
+                                            ,length:5
+                                            // ,half:true
+                                            ,text:true
+                                            ,value:isVal
+                                            ,readonly:true
+                                            ,setText:function(value){
+                                                this.span.text( value + "分");
+                                            }
+                                        }); 
+                                    }
+                                }
+                            }
+                           // opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                        }
+                    }
+                }
+            }
+            //有子问题 全部展示
+            if(op[i].has_subquestion==1&&op[i].subquestion_show_type==1){
+                opHtml+='<div class="layui-form-item  has_subquestion" data-qid="'+op[i].id+'">'
+                    opHtml+='<label class=""><span class="ptitnum">'+isreq+''+op[i].question_no+'.</span>'+op[i].topic+''+ (op[i].remarks!=null? '<span> (备注：'+op[i].remarks+')</span>':'')+'</label>'
+                    
+                    if(op[i].question_type==2){
+                        opHtml+='(多选题)'
+                    }
+                    if(op[i].question_type==4){
+                        opHtml+='(评分题)<div class="required isStar">'
+                    }
+                    if(op[i].question_type==1){
+                        opHtml+='(单选题)'
+                    }
+                    if(op[i].subQuestion!=null&&op[i].subQuestion.length>0){
+                        for(var j=0;j<op[i].subQuestion.length;j++){
+                            //文本
+                            if(op[i].question_type==3){
+                                opHtml+='<div class="Subtitle">'
+                                opHtml+='<label>('+op[i].subQuestion[j].subquestion_no+'). '+op[i].subQuestion[j].subquestion_topic+':</label><textarea class="layui-textarea '+isreqVf+'" readonly="readonly">'
+                                if(op[i].my_answer!=null){
+                                    for(var k=0;k<op[i].my_answer.length;k++){
+                                        var text_answer='';
+                                        if(op[i].my_answer[k].subquestion_id==op[i].subQuestion[j].subquestion_id){
+                                            if(op[i].my_answer[k]!=null&&op[i].my_answer[k].text_answer!=null){
+                                                var text_answer =op[i].my_answer[k].text_answer;
+                                            }
+                                            opHtml+=''+text_answer+''  
+                                        }  
+                                    }
+                                }
+                                opHtml+='</textarea>'
+                                opHtml+='</div>'
+                            }
+                            //多选
+                            if(op[i].question_type==2){
+                                opHtml+= '<div class="Indentation"><label>('+op[i].subQuestion[j].subquestion_no+'). '+op[i].subQuestion[j].subquestion_topic+':</label>'
+                                if(op[i].option&&op[i].option.length>0){
+                                    var answerIdArr=[];
+                                    if(op[i].my_answer!=null){
+                                        for(var k=0;k<op[i].my_answer.length;k++){
+                                            var text_answer='';
+                                            if(op[i].my_answer[k].subquestion_id==op[i].subQuestion[j].subquestion_id){//拿到当前子问题的答案
+                                                if(op[i].my_answer[k]!=null&&op[i].my_answer[k].option_answer_id!=null){
+                                                    var answerIdArr = op[i].my_answer[k].option_answer_id.split(",");
+                                                }
+                                            }
+                                        }
+                                    }
+                                    for(var k=0;k<op[i].option.length;k++){//遍历当前子问题选项
+                                        var isCheckess ='disabled';
+                                        if( answerIdArr.indexOf(op[i].option[k].option_id+'')!= -1){//与当前子问题的答案对比
+                                            isCheckess ='checked disabled';
+                                        }
+                                         //生成当前子问题的选项dom
+                                        opHtml+='<input lay-skin="primary" value="'+op[i].option[k].option_id+'" type="checkbox" name="optionD_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                }
+                                opHtml+='</div>'
+                            }
+                            //单选
+                            if(op[i].question_type==1){
+                                opHtml+='<div class="Indentation"><label>('+op[i].subQuestion[j].subquestion_no+'). '+op[i].subQuestion[j].subquestion_topic+':</label>'
+                                opHtml+='<div  class="'+isreqVf+' isRadio" data-subq="'+op[i].subQuestion[j].subquestion_id+'">'
+                                if(op[i].option&&op[i].option.length>0){
+                                    for(var k=0;k<op[i].option.length;k++){//遍历选项
+                                        var isCheckess ='disabled';
+                                        if(op[i].my_answer!=null){
+                                            for(var m=0;m<op[i].my_answer.length;m++){
+                                                if(op[i].my_answer[m].subquestion_id===op[i].subQuestion[j].subquestion_id){
+                                                    if(op[i].my_answer[m]!=null&&op[i].my_answer[m].option_answer_id!=null){
+                                                        if(op[i].option[k].option_id == op[i].my_answer[m].option_answer_id){
+                                                            isCheckess ='checked';
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                        opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'_'+op[i].subQuestion[j].subquestion_id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                }
+                                opHtml+='</div>'
+                                opHtml+='</div>'
+                            }
+                            //评分
+                            if(op[i].question_type==4){
+                                opHtml+= '<div data-subq="'+op[i].subQuestion[j].subquestion_id+'"><label class="redleaveLabel">('+op[i].subQuestion[j].subquestion_no+'). '+op[i].subQuestion[j].subquestion_topic+':</label>'
+                                if(op[i].option&&op[i].option.length>0){
+                                    for(var k=0;k<op[i].option.length;k++){//遍历选项
+                                        opHtml+='<label>'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'：</label>'
+                                        +'<div class="option_star2 layui-inline option_star2_'
+                                        +op[i].id+'_'+op[i].subQuestion[j].subquestion_id+'_'+op[i].option[k].option_id+'" data-opid="'+op[i].option[k].option_id+'"></div>'
+                                        // opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                }
+                                opHtml+='</div>'
+                            }
+                        }
+                    }
+                    if(op[i].question_type==4){
+                        opHtml+='</div>'
+                    }
+                if(op[i].has_feedback==1){
+                    opHtml+='<div class="feedbackDiv"><label  class="layui-form-label">其他反馈:</label><div class="layui-input-block "><input readonly="readonly" type="text"  value="'+(op[i].feedback_answer==null?'':op[i].feedback_answer)+'"  name="" class="feedbackAnswer layui-input"></div></div>';
+                }
+                opHtml+='</div>'
+                $("#filln-form").append(opHtml);
+                if(op[i].question_type==4){
+                    if(op[i].subQuestion!=null&&op[i].subQuestion.length>0){
+                        for(var j=0;j<op[i].subQuestion.length;j++){
+                            if(op[i].option&&op[i].option.length>0){
+                                for(var k=0;k<op[i].option.length;k++){
+                                    var isVal =0;
+                                    if(op[i].my_answer!=null){
+                                        for(var m=0;m<op[i].my_answer.length;m++){
+                                            if(op[i].option[k].option_id == op[i].my_answer[m].option_answer_id&&op[i].my_answer[m].subquestion_id==op[i].subQuestion[j].subquestion_id){
+                                                // isVal =op[i].my_answer[m].score_answer;
+                                                isVal =parseFloat(op[i].my_answer[m].score_answer);
+                                                
+                                            }
+                                        }
+                                    }
+                                    rate.render({
+                                        elem:'div.option_star2_'+op[i].id+'_'+op[i].subQuestion[j].subquestion_id+'_'+op[i].option[k].option_id+''
+                                        ,length:5
+                                        // ,half:true
+                                        ,text:true
+                                        ,value:isVal
+                                        ,readonly:true
+                                        ,setText:function(value){
+                                            this.span.text( value + "分");
+                                        }
+                                    }); 
+                                // opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                }
+                            } 
+                        }
+                    }
+                }
+            }
+            //有子问题 加选
+            if(op[i].has_subquestion==1&&op[i].subquestion_show_type==0){
+                
+                    if(op[i].subQuestion!=null&&op[i].subQuestion.length>0){
+       
+                        for(var j=0;j<op[i].subQuestion.length;j++){//遍历子问题 （必答题 只显示有答案的）
+                            opHtml='';
+                            if(j==0){
+                                opHtml+='<div class="layui-form-item  has_subquestion add_sub_QtOp" data-qid="'+op[i].id+'">'
+                                opHtml+='<label class="">'
+                                opHtml+='<span class="ptitnum">'+isreq+''+op[i].question_no+'.</span>'
+                            }else{
+                                opHtml+='<div class="layui-form-item  has_subquestion add_sub_QtOp AddLabel" data-qid="'+op[i].id+'">'
+                                opHtml+='<label class="">'
+                                opHtml+='<span class="ptitnum"></span>'
+                            }
+                            opHtml+=''+op[i].topic+'<div class="layui-inline"><select name="" lay-verify="" disabled><option value="47">'+op[i].subQuestion[j].subquestion_topic+'</option></select></div>'
+                            opHtml+=''+ (op[i].remarks!=null? '<span> (备注：'+op[i].remarks+')</span>':'')+'</label>'
+
+                            //文本
+                            if(op[i].question_type==3){
+                                opHtml+='<div>'
+                                if(op[i].my_answer!=null){
+                                    for(var k=0;k<op[i].my_answer.length;k++){
+                                        var text_answer='';
+                                        if(op[i].my_answer[k].subquestion_id==op[i].subQuestion[j].subquestion_id){
+                                            if(op[i].my_answer[k]!=null&&op[i].my_answer[k].text_answer!=null){
+                                                var text_answer =op[i].my_answer[k].text_answer;
+                                            }
+                                        } 
+                                    }
+                                    opHtml+='<textarea class="layui-textarea '+isreqVf+'" readonly="readonly">'+text_answer+'</textarea>'  
+                                }
+                                opHtml+='</div>'
+                            }
+                            //多选
+                            if(op[i].question_type==2){
+                                opHtml+= '(多选题)<div class=" '+isreqVf+' isCheckbox">'
+                                if(op[i].option&&op[i].option.length>0){
+                                    var answerIdArr=[];
+                                    if(op[i].my_answer!=null){
+                                        for(var k=0;k<op[i].my_answer.length;k++){
+                                            var text_answer='';
+                                            if(op[i].my_answer[k].subquestion_id==op[i].subQuestion[j].subquestion_id){
+                                                if(op[i].my_answer[k]!=null&&op[i].my_answer[k].option_answer_id!=null){
+                                                    var answerIdArr = op[i].my_answer[k].option_answer_id.split(",");
+                                                }
+                                            }
+                                        }
+                                    }
+                                    for(var k=0;k<op[i].option.length;k++){//遍历当前选项
+                                        var isCheckess ='disabled';
+                                        if( answerIdArr.indexOf(op[i].option[k].option_id+'')!= -1){
+                                            isCheckess ='checked disabled';
+                                        }
+                                        opHtml+='<input lay-skin="primary" value="'+op[i].option[k].option_id+'" type="checkbox" name="optionD_'+op[i].id+'_'+op[i].subQuestion[j].subquestion_id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                }
+                                opHtml+='</div>'
+                            }
+                            //单选
+                            if(op[i].question_type==1){
+                                
+                                opHtml+='<div  class="'+isreqVf+' isRadio" data-subq="'+op[i].subQuestion[j].subquestion_id+'">'
+                                if(op[i].option&&op[i].option.length>0){
+                                    for(var k=0;k<op[i].option.length;k++){//遍历选项
+                                        var isCheckess ='disabled';
+                                        if(op[i].my_answer!=null){
+                                            for(var m=0;m<op[i].my_answer.length;m++){
+                                                if(op[i].my_answer[m].subquestion_id===op[i].subQuestion[j].subquestion_id){
+                                                    if(op[i].my_answer[m]!=null&&op[i].my_answer[m].option_answer_id!=null){
+                                                        if(op[i].option[k].option_id == op[i].my_answer[m].option_answer_id){
+                                                            isCheckess ='checked';
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                        opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                }
+                                // opHtml+='</div>'
+                                opHtml+='</div>'
+                            }
+                            //评分
+                            if(op[i].question_type==4){
+                                opHtml+= '(评分题)<div class="'+isreqVf+' isStar " data-subq="'+op[i].subQuestion[j].subquestion_id+'">'
+                                if(op[i].option&&op[i].option.length>0){
+                                    for(var k=0;k<op[i].option.length;k++){//遍历选项
+                                        opHtml+='<label>'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'：</label>'
+                                        +'<div class="option_star layui-inline option_star_'
+                                        +op[i].id+'_'+op[i].subQuestion[j].subquestion_id+'_'+op[i].option[k].option_id+'" data-opid="'+op[i].option[k].option_id+'"></div>'
+                                        // opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                }
+                                opHtml+='</div>'
+                            }
+                            
+                            console.log(j,op[i].subQuestion.length,op[i].question_no,op[i].subQuestion[j].subquestion_no);
+                            if(op[i].has_feedback==1 && j==(op[i].subQuestion.length -1)){
+                                opHtml+='<div class="feedbackDiv"><label  class="layui-form-label">其他反馈:</label><div class="layui-input-block "><input readonly="readonly" type="text" value="'+(op[i].feedback_answer==null?'':op[i].feedback_answer)+'"  name="" class="feedbackAnswer layui-input"></div></div>';
+                            }
+
+                            opHtml+='</div>'
+                            $("#filln-form").append(opHtml);
+
+                        }
+                    // if(op[i].question_type==4){
+                    //     opHtml+='</div>'
+                    // }
+                    if(op[i].question_type==4){
+                        if(op[i].subQuestion!=null&&op[i].subQuestion.length>0){
+                            for(var j=0;j<op[i].subQuestion.length;j++){
+                                if(op[i].option&&op[i].option.length>0){
+                                    for(var k=0;k<op[i].option.length;k++){
+                                        var isVal =0;
+                                        if(op[i].my_answer!=null){
+                                            for(var m=0;m<op[i].my_answer.length;m++){
+                                                if(op[i].option[k].option_id == op[i].my_answer[m].option_answer_id&&op[i].my_answer[m].subquestion_id==op[i].subQuestion[j].subquestion_id){
+                                                    // isVal =op[i].my_answer[m].score_answer;
+                                                 isVal =parseFloat(op[i].my_answer[m].score_answer);
+                                                    
+                                                }
+                                            }
+                                        }
+                                        rate.render({
+                                            elem:'div.option_star_'+op[i].id+'_'+op[i].subQuestion[j].subquestion_id+'_'+op[i].option[k].option_id+''
+                                            ,length:5
+                                            // ,half:true
+                                            ,text:true
+                                            ,value:isVal
+                                            ,readonly:true
+                                            ,setText:function(value){
+                                                this.span.text( value + "分");
+                                            }
+                                        }); 
+                                    // opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+                                    }
+                                } 
+                            }
+                        }
+                    }
+
+                }
+            }
+            // if(op[i].has_subquestion==0){
+            //     if(op[i].question_type==3){
+            //         var text_answer='';
+            //         if(op[i].my_answer!=null&&op[i].my_answer.text_answer!=null){
+            //             var text_answer =op[i].my_answer.text_answer;
+            //         }
+            //         opHtml+='<textarea class="layui-textarea '+isreqVf+'" readonly="readonly">'+text_answer+'</textarea>'
+            //     }else if(op[i].question_type ==2){
+            //         opHtml+='(多选题)<div class="'+isreqVf+' isCheckbox">'
+            //         if(op[i].option&&op[i].option.length>0){
+            //             var answerIdArr=[];
+            //             if(op[i].my_answer!=null&&op[i].my_answer.option_answer_id!=null){
+            //                 var answerIdArr = op[i].my_answer.option_answer_id.split(",");
+            //             }
+            //             for(var k=0;k<op[i].option.length;k++){
+            //                     var isCheckess ='disabled';
+            //                 if(op[i].my_answer!=null&&op[i].my_answer.option_answer_id!=null){
+            //                     if( answerIdArr.indexOf(op[i].option[k].option_id+'')!= -1){
+            //                         isCheckess ='checked disabled';
+            //                     }
+            //                 }
+            //                 opHtml+='<input lay-skin="primary" value="'+op[i].option[k].option_id+'" type="checkbox" name="optionD_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+            //             }
+            //         }
+            //         opHtml+='</div>'
+                    
+            //     }else if(op[i].question_type ==1){
+            //         opHtml+='(单选题)<div  class="'+isreqVf+' isRadio">'
+            //         if(op[i].option&&op[i].option.length>0){
+            //             for(var k=0;k<op[i].option.length;k++){
+            //                     var isCheckess ='disabled';
+                            
+            //                 if(op[i].my_answer!=null&&op[i].my_answer.option_answer_id!=null){
+            //                     if(op[i].option[k].option_id == op[i].my_answer.option_answer_id){
+            //                         isCheckess ='checked ';
+            //                     }
+            //                 }
+            //                 opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+            //             }
+            //         }
+            //         opHtml+='</div>'
+            //     }else if(op[i].question_type ==4){
+            //         opHtml+='(评分题)<div  class="'+isreqVf+' isRadio">'
+            //         if(op[i].option&&op[i].option.length>0){
+            //             for(var k=0;k<op[i].option.length;k++){
+            //                     var isCheckess ='disabled';
+            //                 if(op[i].my_answer!=null&&op[i].my_answer.option_answer_id!=null){
+            //                     if(op[i].option[k].option_id == op[i].my_answer.option_answer_id){
+            //                         isCheckess ='checked ';
+            //                     }
+            //                 }
+            //                 opHtml+='<input  value="'+op[i].option[k].option_id+'" type="radio" name="optionO_'+op[i].id+'" title="'+op[i].option[k].option_no+' '+op[i].option[k].option_content+'" '+isCheckess+'>'
+            //             }
+            //         }
+            //         opHtml+='</div>'
+            //     }
+
+        }
+            //opHtml+='</div>'
+        
+
+        $("#filln-form").append('<div class="layui-form-item layui-layout-admin" >'
+                    +'<div class="layui-input-block">'
+                        +'<div class="layui-footer" style="left: 0;">'
+                            // +'<button class="layui-btn" id="sub-filln-form">确定</button>'
+                            +'<button class="layui-btn layui-btn-normal" id="back-filln-form">返回</button>'
+                +'</div></div></div>');
+        form.render();
+        $("#back-filln-form").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭 
+        });
+    }
+
+    if(window.isWrit){
+        $.fetch({
+            url: "/gateway/mySurvey/detail",
+            type: 'post',
+            data:{
+                surveyId:surveyId,
+            },
+            cb:function(rs){
+                var titHtml ='<div class="layui-modify-title">'
+                                +rs.survey_title+
+                                '<p>调查时间：'+rs.survey_starttime+' ~ '+rs.survey_endtime+'</p>'
+                            +'</div>'
+                            +'<div class="layui-modify-cont">'+(rs.survey_desc==null?'':rs.survey_desc)+'</div>';
+                $("#modify-title").html(titHtml);
+                questionsFun(rs.questions);
+            }
+        }) 
+    }
+    if(window.isSee){
+        $.fetch({
+            url: "/gateway/answerManage/detail",
+            type: 'post',
+            data:{
+                surveyId:surveyId,
+                userId:ansUserId,
+                companyId:companyId
+            },
+            cb:function(rs){
+                var titHtml ='<div class="layui-modify-title">'
+                                +rs.survey_title+
+                                '<p>调查时间：'+rs.survey_starttime+' ~ '+rs.survey_endtime+'</p>'
+                            +'</div>'
+                            +'<div class="layui-modify-cont">'+(rs.survey_desc==null?'':rs.survey_desc)+'</div>';
+                $("#modify-title").html(titHtml);
+                anwsdaitFun(rs.questions)
+
+            }
+        })
+    }
+    if(window.isSee2){
+        $.fetch({
+            url: "/gateway/answerManage/detail",
+            type: 'post',
+            data:{
+                surveyId:surveyId,
+                userId:ansUserId,
+                companyId:companyId
+            },
+            cb:function(rs){
+                var titHtml ='<div class="layui-modify-title">'
+                                +rs.survey_title+
+                                '<p>调查时间：'+rs.survey_starttime+' ~ '+rs.survey_endtime+'</p>'
+                            +'</div>'
+                            +'<div class="layui-modify-cont">'+(rs.survey_desc==null?'':rs.survey_desc)+'</div>';
+                $("#modify-title").html(titHtml);
+                anwsdaitFun(rs.questions)
+
+            }
+        })
+    }
+    util.fixbar({})//返回顶部
+
+    //存在子问题
+    $("#filln-form").on("click","a.addQtOp",function(){//加选
+        if($(this).parent().find('option').length==$(this).parent().find('option[disabled]').length+1){
+            layer.msg('已无可加问题选项');
+        }else{
+            var newSelect = $(this).parent().clone(true);
+            $(newSelect).addClass("AddLabel");
+            var selVal = $(this).parent().find("select").val();
+            $(this).parent().find("select").prop("disabled",true);
+            $(this).parent().find(".feedbackDiv").remove();
+            //处理单选加选
+            $(newSelect).find('div.isRadio input').each(function(){
+                $(this).attr("name",$(this).attr('name')+'_'+selVal);
+            })
+            
+            $(newSelect).find('div.isCheckbox input').each(function(){
+                $(this).attr("name",$(this).attr('name')+'_'+selVal);
+            })
+           
+            $(this).parent().after(newSelect);
+            form.render('radio');
+            form.render('checkbox');
+            $(this).hide();
+            // $(this).siblings("a.delQtOp").show();
+
+            $(newSelect).find('a.addQtOp').show();         
+            $(newSelect).find('a.delQtOp').show();         
+            
+            $(newSelect).find('option[value="'+selVal+'"]').prop('disabled',true);
+            $(newSelect).find("span.ptitnum").text('');
+            
+            $(newSelect).find('option').each(function(){//设置默认选项
+                if($(this).attr("disabled")!='disabled'){
+                    $(this).attr("selected","selected");
+                    return false;
+                }
+            })
+            form.render("select");
+            //处理评分加选
+            var newElem = $(newSelect).find('.option_star');
+            layui.each(newElem,function(index,elem){
+                rate.render({
+                    elem:elem
+                    ,length:5
+                    // ,half:true
+                    ,text:true
+                    ,setText:function(value){
+                        this.span.text( value + "分");
+                    }
+                    ,choose: function(value){
+                        var tStar =this;
+                        var isScoreRepeat=  $(this.elem).parent('div.isStar').hasClass('noScore');//true 不能重复
+                        var opid = $(this.elem).attr('data-opid');//选项ID
+                        var qtid = $(this.elem).parent('div.isStar').parent('div.layui-form-item').attr('data-qid');//问题id
+                        var subQid =$(this.elem).parent('div.isStar').parent('div.layui-form-item').find("select").val()//子问题id
+                        //console.log(isScoreRepeat,starsObj)
+                        //if(isScoreRepeat){
+                        for(var i=0;i<starsObj[qtid].subQuestion.length;i++){//遍历大问题下的子问题
+                            if(starsObj[qtid].subQuestion[i].subQuestionId == subQid){//找到当前子问题答案数组
+                                for(var j=0;j<starsObj[qtid].subQuestion[i].scoreAnswer.length;j++){
+                                    if(isScoreRepeat){
+                                        if(starsObj[qtid].subQuestion[i].scoreAnswer[j].score == value){//
+                                            for(var jj =0;jj<starsObj[qtid].subQuestion[i].scoreAnswer.length;jj++){
+                                                if(starsObj[qtid].subQuestion[i].scoreAnswer[jj].optionAnswerId==opid){
+                                                    starsObj[qtid].subQuestion[i].scoreAnswer[jj].score =0;
+                                                }
+                                            }
+                                            $(tStar.elem).find("li.layui-inline").html('<i class="layui-icon layui-icon-rate"></i>');
+                                            tStar.value=0;
+                                            tStar.span.text( 0 + "分");
+                                            rate.render();
+                                            layer.msg('评分不能与其他项相同',{time:1000},function(){});
+                                            // return false
+                                        }else{
+                                            if(starsObj[qtid].subQuestion[i].scoreAnswer[j].optionAnswerId==opid){
+                                                starsObj[qtid].subQuestion[i].scoreAnswer[j].score =value;
+                                            }
+                                        }
+                                    }else{
+                                        if(starsObj[qtid].subQuestion[i].scoreAnswer[j].optionAnswerId==opid){
+                                            starsObj[qtid].subQuestion[i].scoreAnswer[j].score =value;
+                                           // return false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                            //console.log(starsObj)
+                    }
+                });
+                //console.log(selVal)
+            })
+        }
+    })
+    $("#filln-form").on("click","a.delQtOp",function(){//删除加选
+        var pid = $(this).parent(".layui-form-item").attr("data-qid");//问题id
+        var nowL = $(".layui-form-item[data-qid='"+pid+"']").length;
+        var elem =$(this);
+        //console.log($(this).parent(".layui-form-item").find(".feedbackDiv"))
+        var feedbackDiv = $(this).parent(".layui-form-item").find(".feedbackDiv").clone(true);
+        //console.log(feedbackDiv)
+        
+        //获取当前个数
+        layer.confirm('确定删除吗？', function(index){
+            
+            elem.parent(".layui-form-item").prev(".layui-form-item").find("select").prop('disabled',false);
+            elem.parent(".layui-form-item").prev(".layui-form-item").append(feedbackDiv);
+            form.render();
+            if(nowL==2){//如果只剩一个
+                elem.parent(".layui-form-item").prev(".layui-form-item").find('a.addQtOp').show();
+            }else{//删除后前一个 显示两个按钮
+                elem.parent(".layui-form-item").prev(".layui-form-item").find('a.addQtOp').show();
+                elem.parent(".layui-form-item").prev(".layui-form-item").find('a.delQtOp').show();
+            }
+            //移除当前dom 如果是评分 当前对应数据清0
+            var subId = elem.parent(".layui-form-item").find("select").val();//子问题id
+            //遍历当前子问题所有选项清0
+            elem.parent(".layui-form-item").find(".option_star").each(
+                function(){
+                    var opId = elem.attr("data-opid");
+                    for(var i=0;i<starsObj[pid].subQuestion.length;i++){
+                        if(starsObj[pid].subQuestion[i].subQuestionId==subId){
+                            for(var j=0;j<starsObj[pid].subQuestion[i].scoreAnswer.length;j++){
+                                starsObj[pid].subQuestion[i].scoreAnswer[j].score=0;
+                            }
+                        }
+                    }
+                }
+            )
+            elem.parent("div.layui-form-item").detach();
+            layer.close(index);
+        });
+        
+
+        
+    })
+  });
+</script>
+</html>

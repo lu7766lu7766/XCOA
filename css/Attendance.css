@@ -1,0 +1,2866 @@
+
+
+
+
+html, body, div, span, iframe,
+h1, h2, h3, h4, h5, h6, p,a, img, q,
+b, u, i, ul, li, form, label,
+table,  tbody, thead, tr, th, td{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+body {
+    line-height: 1;
+    background-color: rgba(255, 255, 255, 0) !important;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+a,a:hover{
+    text-decoration: none !important;
+}
+a:hover{
+    transition: .5s all;
+    color: rgba(51, 122, 183, 0.8);
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+svg.icon{
+    display: none;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th,.table-bordered{
+     border: 1px solid #e6e6e6 !important;
+    border-top: 1px solid #e6e6e6 !important;
+}
+/* button{
+    background: #337ab7;
+}
+button:hover{
+    transition: .5s all;
+    background: rgba(51, 123, 182, 0.8);
+} */
+.c-datepicker-picker__shortcut:hover {
+    background: inherit;
+}
+.c-datepicker-picker {
+    margin: 2px 0 !important;
+}
+/*下拉列表的宽度*/
+select{
+    width: 150px;
+}
+button:hvoer,.NewUser .UserBottom .SmallButtonW:hover{
+    background: rgba(255, 255, 255, .4);
+    color: #ccc;
+}
+.tableUser tr:hover{
+    background: #f5f5f5;
+}
+.tc{
+    text-align: center;
+}
+.red{
+    color: #FF5722;
+}
+.green{
+    color: green;
+}
+/*背景白色*/
+.tab-content>.active,.NewUser,.stati,.CloneNew{
+    background-color: #fff;
+}
+.tab-content>.active{
+    padding: 15px;
+}
+.NewUser,.CloneNew,.stati{
+    margin: 15px;
+}
+.CloneNew,.userModify,.stati,.NewUser{
+    padding: 15px;
+}
+.NewUser.col-md-11,.stati.col-md-11,.CloneNew.col-md-11{
+   width: 98%; 
+}
+.NewUser.col-sm-9{
+    width: 72%;
+    margin-right: 0;
+}
+
+.CompanyManag .table tr td:nth-child(1),
+.departCont .table tr td:nth-child(1)
+{
+    width: 155px;
+}
+.blue-cocey{
+    color: #337ab7;
+}
+.Attendance{
+    width: 100%;
+    height: 100%;
+    margin-left:0 !important;
+    margin-right: 0 !important; 
+    /* overflow: hidden; */
+    padding:15px; 
+}
+.Attendance .left{
+    padding-right: 0;
+    padding-left: 0;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+.Attendance .left a{
+    color: #275175;
+    font-size: 14px;
+}
+.Attendance .left .title{
+    display: block;
+    width: 100%;
+    height:30px;
+    line-height: 30px;
+    padding: 0 8px;
+    /*border-bottom: 1px solid #85b6df;*/
+}
+.Attendance .left ul {
+    margin-bottom: 0;
+    background-color: #fff;
+}
+.Attendance .left ul li {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 30px;
+    border-top: 1px solid #ddd;
+}
+.Attendance .left ul li a{
+    display: block;
+    width: 100%;
+}
+.Attendance .left ul li a i{
+    margin-right: 5px;
+}
+.Attendance .left ul li.active,.Attendance .left ul li:hover{
+    background: #f4f4f5;
+}
+.Attendance .right{
+    text-align: left;
+    display: none;
+    background: #fff;
+    margin: 0 0 0 15px;
+    width: 81%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    position: relative;
+}
+.Attendance .right.active{
+    display: block;
+}
+.Attendance .right .LeaveCont>.title{
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #666;
+}
+.Attendance .right .LeaveCont .title i{
+    font-weight: 500;
+}
+
+.Attendance .right .item select{
+    display: block;
+    height: 28px;
+    padding: 3px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 10px 0;
+    margin-left: 15px;
+}
+.Attendance .right .item #inq{
+    border: none;
+    outline: none;
+    padding: 4px 14px;
+    margin: 10px 0;
+    margin-left: 10px;
+    color: #fff;
+}
+/*个人考勤->加班记录*/
+.Attendance .right .Registration{
+    width: 300px;
+    margin: 0 auto;
+    text-align: center
+}
+/* 请假登记 */
+.Attendance .right .title .LeaveHistory{
+    float: right;
+}
+.Attendance .right .title .LeaveHistory button {
+    padding: 0px 10px;
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+}
+.Attendance .right .LeaveCont{
+    margin-bottom: 0;
+}
+.Attendance .right .LeaveCont .table{
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+.Attendance .right .LeaveCont .table tr td:nth-child(1){
+    width: 110px;
+}
+.Attendance .right .LeaveCont .table tr td{
+    display: table-cell;
+    vertical-align: middle;
+}
+.Attendance .right .LeaveCont .table input.c-datepicker-data-input {
+    border: none;
+}
+.Attendance .right .LeaveCont .table input{
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 3px;
+    padding-left: 5px;
+} 
+.Attendance .right .LeaveCont .table input.leaveTimeSta{
+    width: 300px;
+    height: 30px;
+    line-height: 30px;
+}
+.Attendance .right .LeaveCont .table span.red{
+    font-size: 12px;
+    margin-left: 5px;
+}
+.Attendance .right .LeaveCont .table textarea {
+    resize:none;
+    height: 66px;
+    width: 445px;
+}
+.Attendance .right .LeaveCont .table select {
+    height: 30px;
+    line-height: 30px;
+    outline: none;
+}
+.Attendance .right .LeaveCont .table button,.NewUser .SuppCont table button{
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+}
+.Attendance .right .radio-container input[type="radio"]{
+      display: none;
+}
+.radio-beauty-container {
+    font-size: 0;
+    width: 100%;
+}
+.radio-beauty-container>label{
+    margin: 5px 10px;
+}
+.radio-beauty-container input[type="radio"]:checked + .radio-beauty {
+    padding: 2px;
+    background-color: #337ab7;
+    background-clip: content-box;
+}
+.radio-beauty-container .radio-name {
+    vertical-align: middle;
+    font-size: 14px;
+    cursor: pointer;
+}
+.radio-beauty-container .radio-beauty {
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid #337ab7;
+    vertical-align: middle;
+    margin-right: 3PX;
+    margin-bottom: 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.radio-beauty-container .radio-beauty:hover {
+    box-shadow: 0 0 7px #337ab7;
+}
+
+/* 请假历史记录 */
+.Attendance .right .History{
+    width: 100%;
+    background: #fff;
+    display: none;
+    padding-right: 0;
+    padding-left: 0;
+}
+.Attendance .right .History .HistoryCont>.title{
+    height: 28px;
+    line-height: 28px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    /* display: flex; */
+}
+.Attendance .right .History .HistoryCont>.title .status{
+    float: right;
+    margin-left: 5px;
+}
+.Attendance .right .History .HistoryCont>.title .status button{
+    padding: 0px 20px;
+    height: 28px;
+    line-height: 28px;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+}
+.Attendance .right .History .HistoryCont>.title .status span.active{
+    background: #337ab7;
+    border-color:#337ab7;
+    color: #fff; 
+}
+.Attendance .right .History .title i {
+    font-weight: 500;
+}
+.Attendance .right .History .HistoryCont{
+    margin-top: 10px;
+}
+.Attendance .right .History .HistoryCont table{
+    margin-bottom: 5px;
+}
+ .Attendance .right .History .HistoryCont table thead th,
+.Attendance .right .History .HistoryCont table tbody td{
+    vertical-align: middle;
+}
+.Attendance .right .History .HistoryCont table thead th:nth-child(7),
+.Attendance .right .History .HistoryCont table tbody td:nth-child(7){
+    width: 120px;
+}
+.Attendance .right .History .HistoryCont table thead th select {
+    /* float: right; */
+    height: 25px;
+    line-height: 25px;
+    width: 60px;
+    font-size: 12px;
+}
+.Attendance .right .History .HistoryCont table tbody td p{
+    margin-bottom: 3px;
+    display: flex;
+    flex-wrap:wrap;
+}
+.Attendance .right .History .HistoryCont table tbody td p em {
+    font-style: normal;
+    font-weight: bold;
+}
+.Attendance .right .History .HistoryCont table tbody td p span.list{
+    display: inline-block;
+    width: 95px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+@media only screen and (max-width: 1100px){
+    .Attendance .right .History .HistoryCont table tbody td p span:first-child{
+        flex: 0 0 100%;
+    }
+}
+@media only screen and (max-width: 1400px){
+    .Attendance .right .History .HistoryCont table thead th,
+    .Attendance .right .History .HistoryCont table tbody td{
+       font-size: 12px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:nth-child(1),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(1),
+    .Attendance .right .History .HistoryCont table thead th:nth-child(2),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(2),
+    .Attendance .right .History .HistoryCont table thead th:nth-child(3),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(3){
+        min-width: 78px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:nth-child(4),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(4){
+        min-width: 92px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:nth-child(5),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(5){
+        min-width: 78px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:nth-child(6),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(6){
+        min-width: 105px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:nth-last-child(2),
+    .Attendance .right .History .HistoryCont table tbody td:nth-last-child(2){
+        min-width: 109px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:last-child,
+    .Attendance .right .History .HistoryCont table tbody td:last-child{
+        min-width: 77px;
+    }
+    .Attendance .right .History .HistoryCont table thead th:nth-child(7),
+    .Attendance .right .History .HistoryCont table tbody td:nth-child(7){
+        min-width: 77px;
+    }
+}
+
+/*上下班记录查询*/
+.Attendance .right .tableList .DayDetail {
+    color: #337ab7;
+    cursor: pointer;
+}
+.Attendance .right .PunchData{
+    width: 300px;
+    height: auto;
+    min-height: 30px;
+    max-height: 300px;
+    margin-top: -150px;
+    margin-left: -150px; 
+}
+.Attendance .right .PunchData .checkBox {
+    overflow: auto;
+    min-height: 30px;
+    max-height: 270px;
+}
+.Attendance .right .PunchData .checkBox ul {
+    margin-bottom: 0;
+    padding: 5px 10px;
+    overflow: hidden;
+}
+.Attendance .right .PunchData .checkBox ul  li {
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+.Attendance .right .PunchData .checkBox div{
+    padding: 10px;
+    text-align: center;
+    font-size: 24px;
+    color: #b9b9b9;
+}
+/*考勤补录*/
+.Attendance .right .formGroup {
+   float: left;
+   margin-top: 15px;
+}
+.Attendance .right .formGroup .groupTitle{
+    position: relative;
+    float: left;
+    /*width: 129px;*/
+    height: 30px;
+}
+.Attendance .right .formGroup .groupTitle select{
+    /*position: absolute;
+    left: 0px;
+    top: 0px;*/
+    height: 30px;
+    margin: 0;
+}
+.Attendance .right .formGroup .groupTitle .combo-dropdown{
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    max-width: 300px;
+    max-height: 120px;
+    margin: 0;
+    padding: 0;
+    display: none;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #999999;
+    border-radius: 0;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    box-sizing: border-box;
+}
+.Attendance .right .formGroup .groupTitle .combo-open .combo-dropdown{
+    display: block;
+}
+.Attendance .right .formGroup .groupTitle .combo-dropdown li {
+    list-style: none;
+    padding: 8px 1em;
+    margin: 0;
+    border-bottom: 1px #e3e3e3 solid;
+    cursor: pointer;
+}
+.Attendance .right .formGroup .groupTitle input{
+    width: 130px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    padding-left: 5px;
+}
+.Attendance .right .formGroup .item {
+    float: left;
+    margin-left: 15px;
+}
+.Attendance .right .formGroup .item input{
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    padding-left: 5px;
+}
+.formGroup .formAdd{
+ float: left;
+ margin-left: 15px;
+}
+.formGroup .formAdd button {
+    border: none;
+    padding: 5px 12px;
+    color: #fff;
+}
+
+/* 考勤补录 */
+.NewUser .SuppCont {
+    margin-top: 10px;
+}
+.NewUser .SuppCont table {
+    margin-bottom: 0;
+}
+.NewUser .SuppCont table tr td{
+    vertical-align: middle;
+}
+.NewUser .SuppCont table tr td:nth-child(1){
+    min-width: 110px;
+}
+.NewUser .SuppCont table tr td .item{
+    /* position: relative; */
+    width: 100%;
+}
+.NewUser .SuppCont table tr td .item .itemAdd{
+    position: relative;
+    margin-bottom: 5px;
+}
+.NewUser .SuppCont table tr td .item input{
+    width: 174px;
+    height: 30px;
+    line-height: 30px;
+    outline: none;
+}
+.NewUser .SuppCont table tr td .item i{
+    position: absolute;
+    bottom: 3px;
+    left: 182px;
+    cursor: pointer;
+}
+.NewUser .SuppCont table textarea {
+    resize: none;
+    height: 66px;
+    width: 445px;
+}
+.NewUser .SuppCont table select{
+    padding: 5px 10px;
+    outline: none;
+}
+/* 考勤补录记录 */
+.SuppData.col-md-11{
+    width: 98%;
+    margin: 15px;
+    padding: 15px;
+    background: #fff;
+    display: none;
+}
+.SuppData .title{
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 30px;
+    color: #666;
+    margin-bottom: 5px;
+}
+.SuppData .title i{
+    font-weight: 500;
+}
+.SuppData .title .Button{
+    float: right;
+    padding: 0px 20px;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+}
+.SuppDataCont table{
+    margin-bottom: 5px;
+}
+.SuppDataCont table thead th #dacDescSel {
+    width: 76px;
+}
+.SuppDataCont table thead th #dacDescSel,.SuppDataCont table thead tr th{
+    height: 30px;
+    line-height: 30px;
+    outline: none;
+}
+.SuppDataCont .pagTop {
+    float: right;
+}
+/*公司管理*/
+.CompanyManag{
+    width: 98%;
+    height:100%;
+    padding: 15px;
+    margin: 15px;
+    background-color: #fff;
+}
+.CompanyManag .title{
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #666;
+}
+.CompanyManag .title i{
+    font-size: 16px;
+}
+.CompanyManag .table {
+    width: 100%;
+    margin: 0 auto;
+}
+.CompanyManag .table select{
+    width: 120px;
+    height: 34px;
+    border-radius: 3px; 
+}
+.CompanyManag .table span{
+    color: red;
+    font-size: 12px;
+    margin-left: 5px;
+    float: left;
+    width: 100%;
+}
+.CompanyManag .table span.red{
+    width: auto;
+}
+
+.CompanyManag .table input{
+    width: 35%;
+    float: left;
+}
+.CompanyManag .table label{
+    float: left;
+    width: 14%;
+    height: 34px;
+    line-height: 34px;
+    margin-bottom: 0;
+    color: #666;
+}
+.CompanyManag .table button{
+    background: #1989d3;
+    border-radius: 0;
+    border:none;
+    outline: none;
+    padding: 8px;
+    color: #fff;
+}
+.CompanyManag .table button:hover{
+    background: #6FB3E0;
+}
+.CompanyManag .table p{
+    font-size: 12px;
+    color: #999;
+    float: left;
+}
+
+/*部门成员管理*/
+.depart{
+    height:100%;
+    padding: 15px;
+    margin-left: 15px;
+}
+.departTop{
+
+}
+.departTop .title{
+    height: 34px;
+    line-height: 34px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+}
+.departTop .title i{
+    font-weight: 500;
+}
+.buttonDIV{
+    text-align: right;
+    vertical-align: top;
+}
+.buttonDIV button{
+    height: 34px;
+    line-height: 34px;
+    padding: 0 10px;
+    margin-right: 10px;
+    border-radius: 0;
+    outline: none;
+    float: right;
+}
+.buttonDIV input{
+    height: 34px;
+    line-height: 34px;
+    padding: 0 10px;
+    background: #fff;
+    border:1px solid #ccc;
+    outline: none;
+    margin: 0 15px;
+    float: right;
+}
+.departTable {
+    padding: 15px;
+    overflow: hidden;
+}
+.departTable .title{
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 10px;
+}
+.departTable .title i{
+    font-size: 16px;
+    font-weight: 400;
+}
+.departTable>.table{
+    margin-bottom: 0;
+}
+.departTable>.table tr td {
+    vertical-align: middle;
+}
+.departTable> table .SmallStatic{
+    margin-bottom: 0;
+    width: 260px;
+    height: 80px;
+    border: 1px solid #ddd;
+    float: left;
+}
+.departTable> table .SmallStatic li {
+    float: left;
+    padding: 3px;
+}
+.departTable table tr td{
+    vertical-align: middle;
+}
+.departTable table .list{
+    position: relative;
+}
+.departTable table .list .listSlet{
+    position: absolute;
+    top: 34px;
+    left: 8px;
+    width: 230px;
+    background: #fff;
+    margin-bottom: 0;
+    border: 1px solid #ccc;
+    min-height: 30px;
+    max-height: 120px;
+    overflow: auto;
+    display: none;
+}
+.departTable table .list .listSlet li span{
+    display: block;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+.departTable table .list .listSlet li span{
+    padding-left: 10px;
+}
+.departTable table .list .listSlet li ul li span{
+    padding-left: 20px;
+}
+.departTable table .list .listSlet li ul li ul li span{
+    padding-left: 30px;
+}
+.departTable table tr td>span {
+    float: left;
+    margin-right: 12px;
+    margin-top: 6px;
+    color: #999;
+}
+/* .departTable table input{
+    width: 31%;
+    float: left;
+    margin-right: 15px;
+    border-radius: 0;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+} */
+.departTable table>span{
+    font-size: 12px;
+    float: left;
+    margin-top: 5px;
+}
+.departTable table span form{
+    float: left;
+}
+.departTable table select {
+    padding: 5px 10px;
+}
+.departTable table textarea {
+    width: 230px;
+    height: 34px;
+}
+/* .departTable table a{
+    font-size: 14px;
+    margin-left: 10px;
+    float: left;
+    margin-top: 25px;
+} */
+.departTable table a:hover{
+    text-decoration: none;;
+}
+.departTable table a i{
+    margin-right: 5px;
+}
+/* .departTable table button {
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+} */
+#changeGroupData{
+    float: left;
+    margin-right: 10px;
+}
+.departCont .departMenu {
+    padding-left: 20px;
+    padding-right: 0px;
+}
+.departMenu ul>li .bclick {
+    display: none;
+}
+.departMenu .filetree ul>li .bclick {
+    display: inline-block;
+}
+.departMenu .filetree > li > span a,.departCont .filetree > li > span{
+    font-size: 16px;
+    color: #0072ff !important;
+}
+.departMenu .filetree .folder i,.departMenu .filetree .file i{
+    margin-right: 3px;
+}
+.departMenu .filetree .file i.null{
+    width: 16px;
+    height: 16px;
+    display: block;
+    float: left;
+}
+/*.departMenu .filetree .folder i:nth-child(1),.departMenu .filetree .file i:nth-child(1){
+    margin-left: 5px;
+}*/
+.departMenu .filetree .folder,.departMenu .filetree .file{
+    cursor: pointer;
+}
+.departMenu .filetree .folder a,.departMenu .filetree .file a{
+    color: #333;
+}
+.departMenu .filetree .folder.on,.departMenu .filetree .folder.on a ,.departMenu .filetree .file.on,.departMenu .filetree .file.on a{
+    color: #409eff;
+}
+.departMenu .filetree li>ul li ul.active .noChid::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: -9px;
+    height: 1px;
+    width: calc(11%);
+    border-top: 1px dotted #000;
+}
+.departMenu .filetree>li>ul>li>ul .isChid::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: -9px;
+    height: 1px;
+    width: calc(3%);
+    border-top: 1px dotted #000;
+}
+.departMenu .filetree .Shrink {
+    margin-left: 1px;
+}
+.departMenu .filetree .Shrink i {
+   margin-right: 3px;
+}
+/*.departMenu .filetree .Shrink i:nth-child(1) {
+    margin-left: 5px;
+}*/
+.departMenu .filetree ul {
+    padding-left: 18px !important;
+}
+.departMenu .filetree ul  li {
+    padding: 3px 0;
+    position: relative;
+}
+.departMenu .filetree li ul li ul.active::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 22px;
+    left: 8px;
+    height: calc(100% - 37px);
+    width: 1px;
+    border-left: 1px dotted #000;
+}
+.departMenu .filetree li ul li ul {
+    display: none;
+}
+.departMenu .filetree li ul li ul.active{
+    display: block;
+}
+/*用户管理底部*/
+.departTable .prompt{
+    width: 420px;
+    overflow: hidden;
+    border: 1px dashed #919191;
+    text-align: center;
+    color: red;
+    padding: 32px 0; 
+}
+.departTable .prompt i {
+    font-size: 38px;
+    float: left;
+    margin-left: 60px;
+    margin-right: 15px;
+}
+.departTable .prompt span {
+    font-size: 16px;
+    display: block;
+    overflow: hidden;
+    width: 60%;
+    float: left;
+    text-align: left;
+}
+.departTable .prompt span p{
+   color: #333;
+   font-size: 18px;
+   font-weight: bold;
+   line-height: 28px;
+   border-bottom: 1px dashed #919191;
+}
+
+.departTable .small {
+    text-align: center;
+}
+/*导入数据*/
+.ImportDome .title{
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    color: #666;
+}
+.ImportDome .title i{
+    font-weight: 500;
+}
+.ImportDome .cont{
+    text-align: center;
+}
+.ImportDome .cont .contInput{
+    overflow: hidden;
+    width: 300px;
+}
+.ImportDome .cont .contInput input{
+    float: left;
+    width: 230px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+}
+.ImportDome .cont .contInput button {
+    float: left;
+    width: 48px;
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    color: #fff;
+    border-radius: 0;
+}
+/*导入用户*/
+.ImportDome .prompt {
+    width: 500px;
+    overflow: hidden;
+    border: 1px dashed #919191;
+    text-align: center;
+    color: red;
+    padding: 32px 0; 
+    margin-top: 50px;
+}
+.ImportDome .prompt i {
+    font-size: 38px;
+    float: left;
+    margin-left: 60px;
+    margin-right: 15px;
+}
+.ImportDome .prompt span {
+    font-size: 16px;
+    display: block;
+    overflow: hidden;
+    width: 60%;
+    float: left;
+    text-align: left;
+}
+.ImportDome .prompt span p{
+   color: #333;
+   font-size: 18px;
+   font-weight: bold;
+   line-height: 28px;
+   border-bottom: 1px dashed #919191;
+}
+
+/*点击添加弹出框*/
+/* .popUpsTop{
+    position: fixed;
+    max-width: 85%;
+    min-width: 800px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: #fff;
+    border-radius: 5px;
+    box-shadow:0 0 5px #000;
+    display: none;
+    z-index: 9;
+}
+.popUpsTop >.title{
+    overflow: hidden;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 15px;
+    background: #fff;
+    color: #4476A7;
+    border-radius: 5px 5px 0 0;
+}
+.popUpsTop .title span{
+    float: left;
+}
+.popUpsTop .title i{
+    float: right;
+    cursor: pointer;
+}
+.popUps .popUpsCont{
+    height: 320px;
+    overflow: auto;
+    margin: 0;
+    padding: 0 15px;
+}
+.popUps .popUpsCont .left,
+.popUps .popUpsCont .right{
+    padding: 10px;
+    float: left;
+    width: 50%;
+}
+.popUps .popUpsCont #main1{
+    border: 1px solid #ccc;
+}
+.popUps .popUpsCont .limit{
+    height: 320px;
+    overflow: auto;
+}
+
+.popUps .popUpsCont .limitCont ul {
+    margin-bottom: 0;
+    height: 255px;
+}
+.popUps .popUpsCont .limitCont ul li {
+    padding: 0 8px;
+    line-height: 26px;
+}
+.popUps .popUpsCont .limitCont ul li:hover{
+    background: rgba(51, 124, 183, 0.2);
+}
+
+.popUps .popUpsCont .limitCont #userPage{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+.popUps .popUpsCont .limitCont #userPage p{
+    float: left;
+    margin-bottom: 0;
+    cursor: pointer;
+    margin-right: 5px;
+    padding: 2px 0;
+}
+.popUpsCont .limitCont #userPage p.nextPage,.popUpsCont .limitCont #userPage p.prevPage{
+    border: 1px solid #ccc;
+    padding:0px 6px;
+    border-radius: 5px;
+}
+.popUpsCont .limitCont #userPage p.disable{
+ color: #ccc;
+ cursor: no-drop;
+}
+.popUpsCont .limitCont button{
+    position: absolute;
+    bottom: 0px;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    display: none;
+}
+.popUps .popUpsCont .limitCont .dbl{
+    cursor: pointer;
+}
+.popUps .popUpsCont .limitCont .pick {
+    cursor: no-drop;
+    color: #ccc;
+}
+.popUps .popUpsCont #main1 .browserTab {
+    overflow: hidden;
+}
+.popUps .popUpsCont #main1 .browserTab a{
+    height: 30px;
+    line-height: 30px;
+    width: 50%;
+    display: block;
+    float: left;
+    text-align: center;
+    background-color: #e6e6e6;
+}
+.popUps .popUpsCont #main1 .browserTab a.active{
+    color: #000;
+    cursor: no-drop;
+    background-color: #fff;
+}
+.popUps .popUpsCont #main1 .filetree{
+    margin-bottom: 0;
+    display: none;
+}
+.popUps .popUpsCont #main1 #browser1{
+    display: block;
+}
+.popUps .popUpsCont #main1 .filetree >li {
+    padding:3px 15px;
+}
+.popUps .popUpsCont #main1 .filetree>li>span:hover,
+.popUps .popUpsCont #main1 .filetree>li>span:hover a{
+    color: rgba(64, 160, 255, 0.9);
+}
+.popUps .popUpsCont #main1 .filetree>li>.active>li>span:hover,
+.popUps .popUpsCont #main1 .filetree>li>.active>li>span:hover a{
+    color: rgba(64, 160, 255, 0.9);
+}
+.popUps .popUpsCont #main1 .filetree>li>.active>li>ul li span:hover,
+.popUps .popUpsCont #main1 .filetree>li>.active>li>ul li span:hover a{
+    color: rgba(64, 160, 255, 0.9);
+}
+.popUps .popUpsCont #main1 .filetree >li span{
+    cursor: pointer;
+}
+.popUps .popUpsCont #main1 .filetree >li span.on,.popUps .popUpsCont #main1 .filetree >li span.on a{
+    color: #409eff;
+}
+.popUps .popUpsCont #main1 .filetree >li span a{
+    color: #333;
+}
+.popUps .popUpsCont #main1 .filetree >li ul {
+    display: none;
+    padding-left: 18px;
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active{
+    display: block;
+}
+.popUps .popUpsCont #main1 .filetree li {
+    position: relative;
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    height: calc(100% - 35px);
+    width: 1px;
+    border-left: 1px dotted #000;
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active li ul.active::before {
+    left: 8px;
+    top: 20px;
+    height: calc(100% - 30px);
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active li>span.isChid::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: -9px;
+    height: 1px;
+    width: calc(3%);
+    border-top: 1px dotted #000;
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active li>span.noChid::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: -9px;
+    height: 1px;
+    width: calc(7%);
+    border-top: 1px dotted #000;
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active li span.noChid{
+    padding-left: 15px;
+}
+.popUps .popUpsCont #main1 .filetree >li ul.active li ul li span {
+    padding-left:25px; 
+}
+.popUps .popUpsCont #main1 .filetree .head ul li {
+    padding-left: 15px;
+    /* background: none repeat scroll 0 0 #C0EFFF; */
+}
+.popUps .popUpsCont .right{
+    padding-top: 10px;
+    padding-right: 10px;
+    float: right;
+    width: 220px;
+    margin-left: 0px;
+    text-align: center;
+    font-size: 12px;
+}
+.popUps .popUpsCont .right .box{
+    border: 1px solid #ccc;
+    padding: 10px;
+} */
+
+/*删除信息*/
+.Delete{
+    width: 280px;
+    height: auto;
+    padding-bottom: 10px;
+}
+.Delete .DeleteCont span{
+     padding: 20px;
+     display: block;
+     font-size: 14px;
+}
+.Delete .DeleteCont p{
+    text-align: right;
+    padding: 0 10px;
+}
+.Delete .bottomBtn{
+     text-align: center;
+}
+.Delete .bottomBtn button{
+    margin: 0 10px;
+}
+
+
+/*用户管理->新建用户*/
+.popUps .UserName{
+    height: 36px;
+}
+.popUps .UserName span{
+    margin: 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+}
+.popUps .UserName span i{
+    font-weight: 500;
+}
+.popUps .UserName button {
+    padding: 5px 10px;
+    margin: 5px;
+    color: #fff;
+    border: none;
+}
+/* 弹窗第二种类型*/
+.popUpsList {
+    width: 800px;
+    height: auto;
+    max-height: 500px;
+    padding-bottom: 10px;
+}
+.popUpsList .ListTable{
+    margin-top: 15px;
+    min-height:75px;
+    max-height: 440px;
+    overflow: auto; 
+}
+.popUpsList .ListTable .table{
+    width: 98%;
+    margin: 0 auto;
+}
+
+
+.right .box .title{
+    background: #F7F7F7;
+    color: #337ab7;
+    font-weight: bold;
+    height: 32px;
+    line-height: 24px;
+    padding: 5px 10px;
+}
+.right .box .AddDel{
+    padding: 10px 0;
+}
+.right .box .AddDel button{
+    transition: background-color .15s, border-color .15s, opacity .15s;
+    vertical-align: middle;
+    margin: 0;
+    position: relative;
+    padding: 8px 10px;
+    color: #fff;
+    border-radius: 0;
+}
+.right .box ul {
+    text-align: left;
+    margin-bottom:0px;
+}
+.right .box ul li {
+    border-top: 1px solid #ccc;
+    padding: 0 15px;
+    height: 22px;
+    line-height: 22px;
+}
+.right .box ul li span {
+    color: red;
+}
+.right .box .UpDown span{
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    color: #337ab7;
+    font-size: 12px;
+    cursor: pointer;
+}
+.right .box .UpDown span.disabled{
+    cursor: no-drop;
+    color: #ccc;
+}
+.popUps .popUpsBottom{
+    text-align: center;
+    padding:5px 15px;
+}
+.popUps .popUpsBottom .search{
+    padding: 10px 0;
+    width: 210px;
+    overflow: hidden;
+    margin: 0 auto;
+    display: none;
+}
+.popUps .popUpsBottom .search input{
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    padding-left: 5px;
+}
+.popUps .popUpsBottom .search a{
+    display:block;
+    width: 26px;
+    padding: 2px 0;
+    background: #337ab7;
+    color: #fff;
+    text-decoration: none;
+    float: left;
+}
+.popUps .popUpsBottom button{
+    padding: 5px 20px;
+    border-radius: 0;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+/*新建公共用户组*/
+.createUser,
+.userModify,
+.Character{
+    background-color: #fff;
+}
+.NewUser .title,.createUser .title,.userModify .title,.Character .title{
+     font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    color: #666;
+}
+.NewUser .title i ,.createUser .title i,.userModify .title i,.Character .title i{
+    font-size: 16px;
+    font-weight: 500;
+}
+.NewUser .title select{
+    padding:2px 8px;
+    border-radius: 5px;
+    outline: none;
+}
+.NewUser .cont{
+    float: right;
+}
+.NewUser .cont button{
+    color: #fff;
+    border-radius: 0;
+    border: none;
+}
+.NewUser .cont .contNull{
+    width: 280px;
+    height: 127px;
+    line-height: 127px;
+    border: 1px dashed #919191;
+    font-size: 18px;
+    color: red;
+}
+.NewUser .cont .contNull i{
+    font-size: 18px;
+}
+
+/*管理用户*/
+.NewUser {
+    position: relative;
+    overflow: hidden;
+}
+.NewUser .tableTitle{
+    margin-bottom: 0;
+    margin-top: 10px;
+    border-bottom: none !important;
+    background-color: #eee !important;
+}
+/* .NewUser .tableUser tr:nth-child(1) td{
+    border-top: none;
+} */
+.NewUser .tableTitle tr td{
+    border-bottom: none !important;
+}
+.NewUser .tableTitle tr td:nth-child(1) {
+    width: 8%;
+}
+.NewUser .tableTitle tr td:nth-child(2) {
+    width: 10%;
+}
+.NewUser .tableTitle tr td:nth-child(3) {
+    width: 15%;
+}
+.NewUser .tableTitle tr td:nth-child(4) {
+    width: 16%;
+}
+.NewUser .tableTitle tr td:nth-child(5) {
+    width: 15%;
+}
+.NewUser .tableTitle tr td:nth-child(6) {
+    width: 15%;
+}
+@media (min-width: 768px){
+    .col-sm-9 .tableTitle tr td:nth-child(5)  {
+        width: 15.1% !important;
+    }
+}
+/*上下班记录*/
+.Attendance .right .tableList .header{
+    margin-bottom: 0;
+    background-color: #eee !important;
+}
+.Attendance .right .tableList .header tr td:nth-child(1){
+   width: 15%; 
+}
+.Attendance .right .tableList .header tr td:nth-child(2),
+.Attendance .right .tableList .header tr td:nth-child(3),
+.Attendance .right .tableList .header tr td:nth-child(4),
+.Attendance .right .tableList .header tr td:nth-child(5){
+    width: 18%;
+}
+.tableList .header,.tableList .header tr td{
+    border-bottom: none !important;
+}
+.tableList .tableUser table tr td:nth-child(1){
+     width: 15%; 
+}
+.tableList .tableUser table tr td:nth-child(2),
+.tableList .tableUser table tr td:nth-child(3),
+.tableList .tableUser table tr td:nth-child(4),
+.tableList .tableUser table tr td:nth-child(5){
+    width: 18%;
+}
+
+.NewUser .tableUser{
+    margin-bottom: 0; 
+    width: 100%;
+    /*min-height: 37px;
+    max-height: 400px;
+    overflow: auto;*/
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+.NewUser .tableUser::-webkit-scrollbar,.Attendance .right .tableList .tableUser::-webkit-scrollbar { width: 0 !important }
+.NewUser .tableUser table{
+    margin-bottom: 0;
+    border-top: none;
+}
+.NewUser .tableUser .table #allUserTb tr td:nth-child(1) {
+     width:8%;
+}
+.NewUser .tableUser .table #allUserTb tr td:nth-child(2) {
+     width:10%;
+}
+.NewUser .tableUser .table #allUserTb tr td:nth-child(3) {
+    width: 15%;
+} 
+.NewUser .tableUser .table #allUserTb tr td:nth-child(4) {
+    width: 16%;
+} 
+.NewUser .tableUser .table #allUserTb tr td:nth-child(5) {
+    width: 15%;
+} 
+.NewUser .tableUser .table #allUserTb tr td:nth-child(6) {
+    width: 15%;
+} 
+.NewUser .tableUser tbody .editUserClick{
+    cursor: pointer;
+    margin-right: 10px;
+}
+.NewUser .tableUser tbody .editUserPass{
+    cursor: pointer;
+    /* margin-left: 10px; */
+}
+.NewUser .tableUser a{
+    color: #337ab7;
+    display: block;
+}
+.NewUser .UserBottom{
+    overflow: hidden;
+    /*background: #d9edf7;*/
+    padding: 5px 8px;
+}
+.NewUser .UserBottom div{
+    float: left;
+    margin: 0 4px;
+}
+.NewUser .UserBottom div label {
+    cursor: pointer;
+}
+.NewUser .UserBottom .SmallButtonW{
+    background: #337ab7;
+    border: none;
+    padding: 7px 14px;
+    color: #fff;
+}
+/*考核设置->排版*/
+.NewUser .settingCont {
+    margin-top: 10px;
+}
+.NewUser .settingCont>.table{
+    margin-bottom: 0px;
+    background-color: #eee !important;
+    border-bottom: none !important;
+}
+.NewUser .settingCont #workSetList{
+    border-top: none;
+}
+.NewUser .settingCont #workSetList tr td a{
+    float: left;
+}
+.NewUser .settingCont .table tr td {
+    font-size: 12px;
+}
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(1){
+    width: 5%;
+}
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(2){
+    width: 15%;
+}
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(3),
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(4),
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(5),
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(6){
+    width: 10%;
+}
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(7),
+.NewUser .settingCont .table tr:nth-child(1) td:nth-child(8){
+    width: 11%;
+}
+.NewUser .settingCont .table tr:nth-child(1) td{
+    border-top: none !important;
+}
+.NewUser .settingCont .table tr td a{
+    margin-right: 5px;
+}
+
+/*新建分组*/
+.createUser table {
+    width: 500px;
+    margin: 0 auto;
+}
+.createUser table tr .TableContent{
+    background: #d9edf7;
+}
+.createUser table tr .TableControl {
+    background: #fdfff0;
+    text-align: center;
+}
+.TableControl button{
+    width: 40%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+    color: #fff;
+    border: none;
+}
+/*用户管理*/
+.NewUser .UserTitle{
+    /* margin-top: 50px; */
+    height: auto;
+    line-height:30px;
+    display: flex;
+}
+.NewUser .UserTitle .input-holder{
+    border: 1px solid #ddd;
+    height: 31px;
+    line-height: 31px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-left: 10px;
+}
+.NewUser .UserTitle .input-holder input{
+    width: 85%;
+    height: 28px;
+    line-height: 30px;
+    border: none;
+    padding-left: 5px;
+    border-radius: 5px;
+    outline: none;
+    float: left;
+}
+.NewUser .UserTitle .input-holder .search-icon{
+    width: 15%;
+    height: 30px;
+    line-height: 28px;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    background: #fe5722;
+    color: #fff;
+}
+.NewUser .UserTitle .newPareUser{
+    flex: 1;
+    text-align: right;
+}
+.NewUser .UserTitle .newPareUser .Button{
+    border: none;
+    color: #fff;
+    padding: 0px 10px;
+}
+.TextColor3{
+    font-size: 12px;
+    color: #808080;
+}
+/*用户编辑/修改*/
+/* .userModify .title button{
+    border: none;
+    color: #fff;
+    margin-left: 10px;
+} */
+.userModify .UserModifyTable{
+    height: auto;
+}
+.userModify .nav-tabs{
+    margin-top: 10px;
+}
+/*tab切换*/
+.nav-tabs{
+    padding: 3px;
+    border-bottom: 1px solid #DDD;
+    background: linear-gradient(to bottom,#FFF 0,#EEE 100%);
+}
+.nav>li {
+    margin-left: 10px;
+}
+.nav>li>a {
+    padding: 9px 10px  !important;
+}
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:focus,.nav-tabs>li.active>a:hover {
+    border:none !important;
+    background-color: #337ab7 !important;
+    color: #fff !important;
+    padding: 9px 10px !important;
+}
+.tab-content{
+    float: left;
+    width: 100%;
+    height: 315px;
+    /* overflow: auto; */
+    padding: 10px 15px;
+}
+.tab-content .tab-pane tr td{
+    padding: 5px;
+    font-size: 14px;
+    position: relative;
+}
+.tab-content .tab-pane tr td > input{
+    width: 210px;
+    padding-left: 3px;
+    float: left;
+}
+.tab-content .tab-pane tr td > input::-webkit-input-placeholder{
+    font-size: 12px;
+}
+.tab-content .tab-pane tr td #Perm_select {
+    /* position: absolute;
+    /* width: 230px; */
+    /* top: 36px;
+    border: 1px solid #ccc; */
+    /* height: 100%; */
+    /* min-height: 110px; */
+    background: #fff;
+    /* overflow-x: hidden;
+    overflow-y: scroll; */
+    /* margin-bottom: 0;
+    z-index: 9; */ 
+}
+#Perm_select>li {
+    line-height: 30px;
+    padding: 0 10px;
+}
+#Perm_select>li ul {
+    padding-left: 0 !important;
+ }
+#Perm_select>li span{
+    display: block;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+#Perm_select li ul li>span {
+    padding-left: 15px;
+}
+#Perm_select li ul li ul span{
+    padding-left: 30px;
+}
+#Perm_select>li>span:hover,#Perm_select li ul li span:hover{
+    background: #eee;
+}
+#Perm_select ul li ul li{
+    line-height: 30px;
+}
+.tab-content .tab-pane tr td span{
+    margin: 0 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.tab-content .tab-pane tr td span.prompt{
+    color: #757575;
+}
+.roleSet,.roleDel,.rolecName{
+    color: #337ab7;
+}
+.tab-content .tab-pane tr td .SmallStatic{
+    width: 175px;
+    height: 62px;
+    vertical-align: middle;
+}
+.tab-content .tab-pane tr td p {
+    margin-bottom: 0;
+    font-size: 12px;
+}
+.tab-content .tab-pane tr td select {
+    padding: 5px 8px;
+}
+.tab-content .tab-pane tr td .Option{
+    float: left;
+    margin-left: 5px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.tab-content .tab-pane tr td .Option label {
+    font-weight: 100;
+}
+.tab-content .tab-pane tr .TableData p{
+    font-size: 12px;
+}
+.tab-content .tab-pane tr .TableData .Mobile{
+    cursor: pointer;
+}
+.tab-content .tab-pane tr .TableData .icon-zhengque{
+    color: #8de216;
+    font-weight: bold;
+    font-size: 18px;
+}
+/*tab切换*/
+.cont .total {
+    float: left;
+    line-height: 26px;
+    font-size: 12px;
+    position: relative;
+}
+.cont .total::after {
+    content: "|";
+    position: absolute;
+    top: 0px;
+    right: -6px;
+}
+.cont .Pagination{
+    float: left;
+    margin-left: 10px;
+    position: relative;
+}
+.cont .Pagination::after {
+    content: "|";
+    position: absolute;
+    top: 2px;
+    right: -8px;
+}
+.cont .Pagination .jump{
+    border: 1px solid #ccc;
+    padding: 4px 10px;
+    font-size: 12px;
+}
+.disabled{
+    cursor: pointer;
+}
+.cont .Pagination .jumpinp{
+    height: 24px;
+    line-height: 24px;
+}
+.cont .Pagination .jumpinp input{
+    width: 60px;
+    height: 23px;
+    margin-right:5px;
+}
+.cont .Pagination .jumpinp input::-webkit-outer-spin-button,
+.cont .Pagination .jumpinp input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+.cont .Pagination .jumpinp input[type="number"]{
+    -moz-appearance: textfield;
+}
+.cont .Refresh {
+    float: left;
+    margin-left: 15px;
+    cursor: pointer;
+}
+.cont .Refresh:active {
+    animation: 0.6s rotatefresh 1;
+}
+
+@keyframes rotatefresh {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+        transition-duration: 0.1s;
+        transition: 0.1s;
+    }
+}
+
+/*角色权限*/
+.Character .CharacterCont {
+    width: 90%;
+    margin: 0 auto;
+}
+.Character .CharacterCont .cont{
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.Character .CharacterCont .table{
+    margin-bottom: 0;
+    text-align: center;
+}
+.Character .CharacterCont .table tr td:nth-child(3){
+    text-align: left;
+}
+.Character .CharacterCont .table tr td{
+    font-size: 14px;
+    height: 35px;
+    line-height: 35px;
+}
+.Character .CharacterCont .table a{
+    margin-right:10px; 
+}
+#c_role_name input{
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+    float: left;
+    outline: none;
+    min-width: 100px;
+    max-width: 120px;
+}
+#c_role_name span{
+    margin-left: 5px;
+}
+/*角色管理->编辑权限*/
+.permission{
+    overflow: hidden;
+    padding: 15px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    overflow-y: scroll;
+    background: #fff;
+}
+.permission .title{
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.permission .title i {
+    font-weight: 500;
+}
+.permission .title .SaveReturn{
+    float: right;
+}
+.permission .title .SaveReturn button {
+    padding: 0px 10px;
+    /* color: #fff;
+    border: none;
+    margin-right: 10px; */
+    margin-left: 20px;
+    border-radius: 3px;
+}
+.permission .organTop li span{
+    cursor: pointer;
+}
+.permission .organTop ul{
+    display: none;
+}
+.permission .organTop ul.active {
+    display: block;
+}
+.permission .organTop i,.permission .organTop input{
+    padding-right: 3px;
+}
+.organSecondary{
+    display: none;
+    padding-left: 20px;
+}
+.organSecondary.active{
+    display: block;
+}
+.organThird{
+    display: none;
+    padding-left: 20px;
+}
+.organThird.active{
+    display: block;
+}
+/* 新建和克隆*/
+.tab-Role{
+    width: 100%;
+    height: auto;
+    padding: 10px 15px;
+}
+.CloneNew {
+    overflow: hidden;
+}
+.CloneNew .title,.AddDelete .title{
+    font-size: 14px;
+    font-weight: bold;
+}
+.CloneNew .title i ,.AddDelete .title i{
+    font-weight: 500;
+}
+.CloneNew .prompt{
+    width: 500px;
+    overflow: hidden;
+    border: 1px dashed #919191;
+    text-align: center;
+    color: red;
+    margin: 0 auto;
+    padding: 32px 0; 
+}
+.CloneNew .prompt i {
+    font-size: 38px;
+    float: left;
+    margin-left: 60px;
+    margin-right: 15px;
+}
+.CloneNew .prompt span {
+    font-size: 16px;
+    display: block;
+    overflow: hidden;
+    width: 60%;
+    float: left;
+    text-align: left;
+}
+.CloneNew .prompt span p{
+   color: #333;
+   font-size: 18px;
+   font-weight: bold;
+   line-height: 28px;
+   border-bottom: 1px dashed #919191;
+}
+.CloneNew .table{
+    width: 90%;
+    margin: 15px auto;
+}
+.CloneNew .table input {
+    float: left;
+}
+.CloneNew .table button{
+    padding: 5px 13px;
+    color: #fff;
+    border: none;
+}
+.CloneNew .table tr td div{
+    float: left;
+    margin-right: 5px;
+}
+/* .CloneNew .table tr:last-child {
+    background: #fdfff0;
+} */
+.AddDelete .title{
+    height: 30px;
+    line-height: 30px;
+}
+.AddDelete .title .SaveReturn {
+    float: right;
+}
+.AddDelete .title .SaveReturn button{
+    padding: 5px 13px;
+    color: #fff;
+    border: none;
+}
+.AddDelete .table {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+.AddDelete .table div{
+    float: left;
+    margin-right: 10px;
+}
+.AddDelete .table input{
+    margin: 6px 0 0;
+}
+.AddDelete .table label{
+    font-size: 12px;
+    color: #333;
+}
+.AddDelete .organTop{
+    margin-top: 25px;
+}
+
+/*编辑上下班&&编辑*/
+.CloneNew .SetingTable{
+    width: 450px;
+    margin: 0 auto;
+}
+.CloneNew .SetingTable .table{
+    width:100%; 
+}
+.CloneNew .SetingTable .table tr td .form-control{
+    width: 60%;
+    padding-right: 1px;
+}
+.CloneNew .SetingTable .table tr td span{
+    margin: 0 5px;
+}
+.CloneNew .SetingTable .table tr td .Check{
+    float: none;
+}
+
+/*考勤统计*/
+.stati .AllStati .table thead{
+    background-color: #eee !important;
+}
+.stati .title{
+    height: 34px;
+    line-height: 34px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+}
+.stati .title #backSearStati,.stati .title #backSxbTj{
+    float: right;
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    font-size: 16px;
+    padding: 0px 18px;
+    color: #fff;
+    margin-top: 2px;
+}
+
+.stati .title i {
+    font-weight: 500;
+}
+.stati .statiCont{
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+.stati .statiCont thead td{
+    border-bottom: 1px solid #ddd;
+}
+
+.stati .statiCont .table{
+    margin-bottom: 0;
+    width: 60%;
+    margin: 0 auto;
+    /*box-shadow: 0px 7px 20px rgba(0, 0, 0, 0.25);*/
+}
+.stati .statiCont .table tbody tr td .c-datepicker-date-editor{
+    padding: 0 5px;
+}
+.stati .statiCont .table tbody tr td .c-datepicker-date-editor input{
+    width: 140px;
+}
+
+.stati .statiCont .table .statiBotton {
+    border-radius: 0;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    color: #fff;
+}
+.stati .AllStati{
+    margin-top: 10px;
+}
+.stati .statiCont select{
+    width: 170px;
+    border-radius: 3px;
+    padding: 7px 0px;
+    outline: none;
+    text-align: left;
+    border: 1px solid #dcdfe6;
+}
+.stati .statiCont label i {
+    font-weight: 500;
+}
+
+/*选择日期，时间*/
+.selectTime table tr th{
+    height: 28px;
+    line-height: 28px;
+}
+.selectTime table tr th input {
+    line-height: 22px;
+}
+.selectTime table tr th input:hover{
+    background-color: rgba(221, 243,254,1) !important;
+}
+.selectTime table tr th,.selectTime table tr td{
+    text-align: center;
+    vertical-align: top;
+}
+.selectTime table tr th #prevMonth{
+}
+.selectTime table#calendarTable{
+
+}
+.selectTime .timeTable tr select{
+    width: 45%;
+    height: 22px;
+    box-sizing: border-box;
+    margin: 2px 4px 0px;
+    border-radius: 12px;
+    padding: 0 2px;
+
+}
+.selectTime #calendarTable tr select{
+    width: 31%;
+}
+.selectTime .timeTable tr select,.selectTime #calendarTable tr select{
+    outline: none;
+    border: none;
+    border: 0px;
+    background: #efefef;
+    
+}
+#calendarMonth{
+    border-left:none;
+    
+}
+.selectTime #calendarTable tr select {
+    border: 1px solid #ccc;
+}
+.statiBox .showHide{
+    display: none;
+}
+.selectTime #calendarTable tbody td{
+    padding: 2px 4px;
+    font-size: 15px;
+    color: #666;
+}
+.selectTime #calendarTable tbody tr:nth-last-child(2) td{
+    border: none;
+    line-height: 28px;
+}
+
+
+/*分页*/
+.pagTop{
+    overflow: hidden;
+}
+.pagTop>span {
+    float: left;
+    width: 30px;
+    height: 32px;
+    line-height: 32px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    color: #337ab7;
+}
+.pagTop>span.disabled{
+    cursor: no-drop;
+    color: #ccc;
+    background: none;
+}
+.pagTop>span.disabled:hover{
+    background-color: #fff;
+    color: #ccc;
+}
+.pagTop>span.disabled i{
+    color: #ccc;
+}
+.pagTop>a .leftIcon ,.pagTop>span .leftIcon {
+    display: inline-block;
+    transform:rotate(180deg);
+}
+.pagTop>span i {
+    font-size: 24px;
+}
+.pag{
+    float: left;
+    margin-bottom: 0;
+}
+.pag li{
+    float: left;
+    border: 1px solid #ddd;
+    margin: 0 1px;
+}
+.pag li a{
+    display: block;
+    text-align: center;
+     width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+.pag li.active{
+    border: 1px solid #31ace2;
+}
+.pag li.active a{
+    color: #31ace2;
+}
+.pag li:hover{
+    border: 1px solid #31ace2;
+}
+.pagTop>span:hover{
+    border: 1px solid rgba(51, 122, 183, 0.2);
+}
+.pag li:hover a,.pagTop>span:hover{
+    background-color:rgba(51, 122, 183, 0.3);
+    color: #fff;
+}
+
+/* 蒙层 */
+.MLL{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    top: 0px;
+    left: 0px;
+    display: none;
+}
+
+input#workDy::-webkit-calendar-picker-indicator{
+    display: none;
+}
+
+/* 邮件 */
+.mailMenu{
+    width: 100%;
+    height: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow: hidden;
+    padding: 15px;
+}
+.mailMenu .left{
+    padding-right: 0;
+    padding-left: 0;
+    border-top: none;
+    border: 1px solid #ddd;
+}
+.mailMenu .left>.title{
+    padding: 10px 0;
+    text-align: center;
+}
+.mailMenu .left>.title span{
+    padding: 5px 16px;
+    box-shadow:0 0 1px rgb(51, 122, 183);
+    margin-right: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #585858;
+    margin-left: 6px;
+}
+.mailMenu .left>.title span:hover{
+    background: rgb(234, 234, 234);
+}
+/* #maillRole{
+    margin-bottom: 0;
+    background-color: #fff;
+}
+#maillRole li{
+    height: 30px;
+    line-height: 30px;
+    padding-left: 30px;
+    border-top: 1px solid #ddd;
+}
+#maillRole li.active,#maillRole li:hover{
+    background: #f4f4f5;
+}
+#maillRole li a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+}
+#maillRole li a i {
+    vertical-align: middle;
+    margin-right: 5px;
+} */
+.mailMenu .mailCont {
+    text-align: left;
+    background: #fff;
+    margin: 0 0 0 15px;
+    width: 81%;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    position: relative;
+    display:none;
+}
+.mailMenu .mailCont>.title{
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    /* display: flex; */
+}
+.mailMenu .mailCont>.title i {
+    font-weight: 500;
+    margin-right: 5px;
+    float: left;
+}
+.mailMenu .mailCont>.title .unreadButton{
+    margin: 5px 0;
+    float: right;
+}
+.mailMenu .mailCont>.title .unreadButton button {
+    height: 28px;
+    line-height: 28px;
+    padding: 0px 20px;
+    color: #fff;
+    border: none;
+    margin-right: 5px;
+    border-radius: 3px;
+}
+.mailMenu .mailCont>.title .unreadButton button:hover{
+    background: rgba(51, 124, 183, 0.8);
+}
+.mailMenu .mailCont .unreadCont{
+    margin-top: 5px;
+}
+.mailMenu .mailCont .unreadCont .pagTop{
+    margin-top: 5px;
+}
+.mailMenu .mailCont .unreadCont table{
+    margin-bottom: 0;
+}
+.mailMenu .mailCont .unreadCont table tbody tr:hover{
+    background: #f5f5f5;
+}
+.mailMenu .mailCont .unreadCont table tbody tr td{
+    vertical-align: middle;
+}
+.mailMenu #emailDetail .unreadCont table tbody tr:nth-child(1){
+    background: rgba(150, 150, 150, 0.06);
+}
+.mailMenu .mailCont .unreadCont table tbody tr td p {
+    margin: 5px 0;
+}
+.mailMenu #emailDetail .unreadCont table tbody tr:nth-child(1) p{
+    color: #888;
+}
+.mailMenu .mailCont .unreadCont table tbody tr td p.mailTime span{
+    margin-left: 3;
+}
+.mailMenu .mailCont .unreadCont table tbody tr td p.mailTitle span,
+.mailMenu .mailCont .unreadCont table tbody tr td p.fromName span,
+.mailMenu .mailCont .unreadCont table tbody tr td p.toNmae span,
+.mailMenu .mailCont .unreadCont table tbody tr td p.cs_user span,
+.mailMenu .mailCont .unreadCont table tbody tr td p.delivery span{
+    margin-left: 3px;
+    color: #333;
+}
+.mailMenu .mailCont .unreadCont table tbody tr td p.fromName span {
+    color: #000;
+    font-weight: bold;
+}
+.mailMenu .mailCont .unreadCont table tr td input{
+    height: auto;
+    line-height: normal;
+}
+.mailMenu .mailCont .unreadCont table tr td a {
+    margin-top: 0;
+    margin-right: 5px;
+    font-weight: 500;
+    float: none;
+}
+.mailMenu .mailCont .unreadCont table tr td a.toTitle{
+    cursor: pointer;
+}
+.mailMenu .mailCont .unreadCont table tr td a.toDetail .iconfont {
+    color: #ffb100;
+}
+.mailMenu .mailCont .unreadCont table tr td a.toDetail {
+    min-width: 100px;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: context-menu;
+    color: #333;
+}
+.mailMenu .mailCont .table{
+    margin-bottom: 0;
+}
+
+.mailMenu .mailCont .table tbody tr a{
+    /* margin-left: 5px; */
+    float: left;
+    margin-top: 3px;
+}
+.mailMenu .mailCont .table tbody tr a.addfile {
+    display: inline-block;
+    color: #207BD6;
+    text-decoration: none;
+    padding-left: 12px;
+    background-position: 0px 6px;
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 0;
+    width: 100%;
+}
+.mailMenu .mailCont .table tbody tr a.Upload {
+    margin-top: 0;
+    float: none;
+}
+.mailMenu .mailCont .table tbody tr .currentName{
+    font-size: 14px;
+    color: #666;
+    margin-right: 5px;
+}
+.mailMenu .mailCont .table tbody tr i.del {
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.mailMenu .mailCont .table tbody tr a i{
+    margin-right: 5px;
+}
+.mailMenu .mailCont .table tbody tr .SmallStatic {
+    float: left;
+    width: 300px;
+    min-height: 30px;
+    border: 1px solid #ddd;
+    margin-bottom: 0;
+}
+.mailMenu .mailCont .table tbody tr .SmallStatic li {
+    float: left;
+    padding: 3px;
+}
+.mailMenu .mailCont .table tbody tr input {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+    outline: none;
+}
+.mailMenu .mailCont .table tbody tr form a{
+    color: #207BD6;
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+    margin-top: 0px;
+}
+.mailMenu .mailCont .table tbody tr form a:hover{
+    color: #9AA9B8;
+}
+.mailMenu .mailCont .table tbody tr input.addfile{
+    cursor: pointer;
+    left: 3px;
+    top: 0px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    position: absolute;
+    width: 75px;
+}
+/* .mailMenu .mailCont .table tbody tr .note-editing-area{
+    height: 230px;
+} */
+.mailMenu .mailCont .table tbody tr .form {
+    background: #337ab7;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+}
+
+
+/* 考勤审核 */
+.Character .reviewCont>div{
+    text-align: center;
+    height: 300px;
+    font-size: 50px;
+    color: #a9a9a9;
+    font-weight: bold;
+    line-height: 300px;
+}
+.Character .reviewCont table{
+    margin-bottom: 10px;
+}
+/* .Character .reviewCont table thead tr th:nth-child(1),
+.Character .reviewCont table tbody tr td:nth-child(1){
+    width:120px; 
+} */
+.Character .reviewCont table tbody  tr:hover{
+    background: #f5f5f5;
+}
+.Character .reviewCont table tbody .reviewComp{
+    padding: 5px 15px;
+    overflow: hidden;
+}
+.Character .reviewCont table tbody .reviewComp span{
+    float: left;
+}
+.Character .reviewCont table tbody .reviewComp span em{
+    font-style: normal;
+    font-weight: bold;
+    margin: 0 3px;
+}
+.Character .reviewCont table tbody .reviewComp p{
+    margin-left: 70px;
+    margin-bottom: 5px;
+}
+.Character .reviewCont table tbody .reviewButton{
+    text-align: center;
+}
+.Character .reviewCont table tbody .reviewButton button{
+    padding: 5px 30px;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 3px;
+    background: rgb(51, 126, 183);
+}
+.Character .reviewCont table tbody .reviewButton button:hover{
+    background: rgba(51, 124, 183, 0.8);
+}
+/* 考勤审核->审批弹窗 */
+.popUps .reviewCont{
+    margin: 5px 10px;
+}
+.popUps .reviewCont table {
+    margin-bottom: 0;
+}
+.popUps .reviewCont table tr td {
+    vertical-align: middle;
+}
+.popUps .reviewCont table .BigInput{
+    resize: none;
+    height: 80px;
+    border: 1px solid #7d7d7d;
+    outline: none;
+    padding-left: 5px;
+}
+.popUps .reviewCont table tr td .radio-beauty{
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid #337ab7;
+    vertical-align: middle;
+    margin-right: 3PX;
+    margin-bottom: 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.popUps .reviewCont table tr td .radio-name{
+    vertical-align: middle;
+    font-size: 14px;
+    cursor: pointer;
+}
+.popUps .reviewCont table tr td select {
+    height: 30px;
+    line-height: 30px;
+    outline: none;
+}
+.popUps .reviewCont table tr td button {
+    color: #fff;
+    border: none;
+    padding: 5px 20px;
+    margin-right: 10px;
+    background: rgb(51, 126, 183);
+}
+/* 公告通知 */
+.Character .title{
+    display: flex;
+}
+.Character .title .status{
+    flex: 1;
+    margin-left: 5px;
+}
+.Character .title .status select {
+    height: 28px;
+    line-height: 28px;
+    outline: none;
+    border: 1px solid #ddd;
+}
+.Character .NoticeCont{
+    margin-top: 10px;
+}
+.Character .NoticeCont table {
+    margin-bottom: 0;
+}
+.Character .NoticeCont table tr td:nth-child(4),.Character .NoticeCont table tr th:nth-child(4){
+    min-width: 150px;
+    max-width: 180px;  
+    word-break:keep-all;/* 不换行 */  
+    white-space:nowrap;/* 不换行 */  
+    overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */  
+    text-overflow:ellipsis;
+}
+.Character .NoticeCont .NoticePagTop{
+    float: right;
+    margin-top: 5px;
+}
+/* 人员考勤假期设定 */
+.holiday{
+    height: 100%;
+    padding: 15px;
+}
+.holiday .holidayPage {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+.holiday .holidayPage .title,
+.holidayPageCont .title {
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 5px;
+    padding: 0 15px;
+}
+.holiday .holidayPage .title i,
+.holidayPageCont .title i{
+    font-weight: 500;
+    margin-right: 5px;
+    float: left;
+}
+.holiday .holidayPage .title .holidayBatch,
+.holidayPageCont .title .holidayBatch{
+    float: right;
+}
+.holiday .holidayPage .title .holidayBatch button,
+.holidayPageCont .title .holidayBatch button{
+    height: 28px;
+    line-height: 28px;
+    padding: 0px 20px;
+    color: #fff;
+    border: none;
+    margin-right: 5px;
+    border-radius: 3px;
+}
+.holiday .holidayPage .departMenu ul{
+    margin-bottom: 0;
+}
+.holidayLeft .browser {
+    float: left;
+    width: 240px;
+}
+.holidayLeft .browser #browser .folder i {
+    margin-right: 3px;
+}
+.browser #browser li ul li ul {
+    display: none;
+}
+.browser #browser li ul li{
+    position: relative;
+}
+.browser #browser li ul li ul.active {
+    display: block;
+}
+.browser #browser li ul li ul.active::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 8px;
+    height: calc(100% - 32px);
+    width: 1px;
+    border-left: 1px dotted #000;
+}
+.browser #browser li ul li ul.active li span.noChid{
+    padding-left: 18px;
+}
+.browser #browser li ul li ul.active li span.noChid::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 12px;
+    left: -9px;
+    height: 1px;
+    width: calc(13%);
+    border-top: 1px dotted #000;
+}
+.browser #browser li ul li ul.active li span.isChid::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 12px;
+    left: -9px;
+    height: 1px;
+    width: calc(5%);
+    border-top: 1px dotted #000;
+}
+.browser #browser li ul li ul.active>li>ul.active li>ul.active li span.noChid {
+    padding-left: 18px;
+}
+
+
+.holiday .holidayPage .holidayCont  {
+    background: #fff;
+    padding: 15px;
+    overflow: hidden;
+}
+.holiday .holidayPage .holidayCont .red{
+    margin-bottom: 3px;
+}
+.holiday .holidayPage .holidayCont table{
+    margin-bottom: 0;
+    float: left;
+    max-width: 100%;
+}
+.holiday .holidayPage .holidayCont table.widthSize{
+    max-width: 78%;
+}
+.holiday .holidayPage .holidayCont table input{
+    outline: none;
+    width: 120px;
+    margin-right: 5px;
+}
+.holiday .holidayPage .holidayCont table input.ECalendar{
+ padding-left: 5px; 
+ width: 140px;
+}
+.holiday .holidayPage .holidayCont table button{
+    border: none;
+    color: #fff;
+    padding: 5px 15px;
+}
+
+.holiday .holidayPage .holidayCont .borderBox {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 20%;
+    margin-right: 20px;
+}
+#userList {
+    float: left;
+}
+#userList .title{
+    padding: 0px;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 5px;
+}
+#userList .cont {
+    margin-bottom: 0;
+    max-height: 210px;
+    overflow-y: auto;
+}
+#userList .cont li {
+    height: 28px;
+    line-height: 28px;
+}
+#userList .cont li.on a{
+    cursor: no-drop;
+    color: #ccc;
+}
+
+.holidayPageCont{
+    position: fixed;
+    top: 10px;
+    left: 15px;
+    width: 98%;
+    height: 100%;
+    background: #fff;
+    padding: 15px;
+    display: none;
+}
+.holidayPageCont .title{
+    padding: 0;
+}
+.holidayPageCont .table{
+    margin-bottom: 0;
+}
+.holidayPageCont .table tr td{
+    vertical-align: middle;
+}
+.holidayPageCont .table .SmallStatic {
+    margin-bottom: 0;
+    width: 260px;
+    height: 80px;
+    overflow-y: auto; 
+    border: 1px solid #ddd;
+    float: left;
+}
+.holidayPageCont .table .SmallStatic li {
+    float: left;
+    padding: 3px;
+}
+.holidayPageCont .table a{
+    font-size: 14px;
+    margin-left: 10px;
+    float: left;
+    margin-top: 25px;
+}
+.holidayPageCont .table a i{
+    margin-right: 5px;
+}
+.holidayPageCont .table .days{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 3px;
+}
+.holidayPageCont .table select{
+    height: 30px;
+    line-height: 30px;
+}
+
+/* 干扰样式 */
+.leaveTimeCont{
+    float: left;
+}
+/* #leaveTimeSta,#leaveTimeEnd{
+    display: none;
+} */
+#leaveTimeWith{
+    width: 300px;
+}

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>现金管理列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+    
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header" style="height:auto;">
+                <label class="mx-10">现金管理列表</label>
+                <!-- <div class="layui-inline ml-10 fr"><a class="layui-btn layui-btn-sm layui-btn-primary" id="addcashmanagement">添加现金管理</a></div> -->
+            </div>
+            <div class="layui-card-body">
+                <div class="pz-10 layui-form" lay-filter="formTabelSel">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label for="" class="mx-10">
+                                兑换日期
+                            </label>
+                            <div class="layui-inline ml-5">
+                                <input type="text" class="layui-input caiwu-wihdt" id="StartTime" placeholder="请选择开始时间">
+                            </div>
+                            <div class="layui-inline ml-5">
+                                ~
+                            </div>
+                            <div class="layui-inline ml-5">
+                                <input type="text" class="layui-input caiwu-wihdt" id="EndTime" placeholder="请选择结束时间">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn" id="sqCashList" title="查询"><i class="iconfont icon-sousuo"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <table class="layui-hide" id="CashListTabel" lay-filter="CashListTabel"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="allUserTbTool">
+
+   
+    <!-- {{#  if(d.final_currency_remaining_amount == d.final_currency_amount) { }} -->
+    
+	<!-- {{#  }else { }}
+    <div><a class="layui-btn layui-btn-xs layui-btn-disabled"  disabled>编辑</a><a class="layui-btn layui-btn-xs layui-btn-disabled" disabled >删除</a></div>
+	{{#  } }}  -->
+
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'table', 'laydate', 'form','laytpl','formSelects'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            table = layui.table,
+            laytpl = layui.laytpl,
+            laydate = layui.laydate,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            element = layui.element,
+            router = layui.router();
+        var d = new Date();
+        StartTime=  d.getFullYear() + '-' + lay.digit(d.getMonth()+1) + '-01';
+        EndTime = d.getFullYear() + '-' + lay.digit(d.getMonth() + 1) + '-' + lay.digit(d.getDate());
+       
+        // laydate.render({
+        //     elem: '#GroupStatisticsTime'
+        //     ,range: '~'
+        //     // ,value:StartTime+' ~ '+EndTime
+        //     // ,change: function(value, date, endDate){
+        //     //     
+        //     // }
+        // });
+        
+        laydate.render({
+            elem: '#StartTime'
+       
+        });
+          
+        laydate.render({
+            elem: '#EndTime'
+            // ,value:EndTime
+        });
+        
+        $("#sqCashList").on("click",function(){
+           
+                var StartTime = $("#StartTime").val();                
+                var EndTime = $("#EndTime").val();                
+            //    console.log(StartTime>EndTime)
+            //    if(StartTime>EndTime){
+            //        layer.msg('开始日期不能大于结束日期');
+            //        return false
+            //    }
+                CashTavle.reload({
+                    where:{
+                        StartTime:StartTime,
+                        EndTime:EndTime,
+                    }
+                })
+        })
+        var CashTavle = table.render({
+            elem: '#CashListTabel',
+            url: urls + '/gateway/financial/cashstat',
+            // page: true, //开启分页
+            where:{
+                StartTime:'',
+                EndTime:'',
+            },
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            method: 'post',
+            contentType: 'application/json',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+            // totalRow: true,
+            cols: [
+                [{
+                    field: 'zh_name',
+                    title: '币种',
+                    // totalRowText:"合计(RMB)："
+                    minWidth:100
+                }, {
+                    field: 'avg_rate',
+                    title: '平均汇率',
+                    minWidth:120,
+                },
+                 {
+                    field: 'last_exchange_date',
+                    title: '最后兑换日期',
+                    minWidth:140
+                }, 
+                {
+                    field: 'rmb_amount',
+                    title: '兑换总金额(RMB)',
+                    minWidth:120,
+                    totalRow: true
+                },{
+                    field: 'foreign_amount',
+                    title: '外币总金额',
+                    minWidth:120
+                }, {
+                    field: 'remaining_amount',
+                    title: '外币总余额',
+                    minWidth:110
+                }, 
+                {
+                    fixed: 'right',
+                    width:200,
+                    title: '操作',
+                    toolbar: '<div><a class="layui-btn layui-btn-xs"  lay-event="add">添加</a><a class="layui-btn layui-btn-xs  layui-btn-normal" lay-event="change">兑换明细</a><a class="layui-btn layui-btn-xs  layui-btn-normal" lay-event="out">出款明细</a></div>'
+                }]
+            ],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    // "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    // "curr": res.data.page_index
+                    "total": res.data.rmb_amount_total,
+                };
+            },
+            done:function(res){
+                // console.log(res.total);
+                // $(".layui-table-total td[data-field='rmb_amount'] div").html('<a class="toChange">'+res.total+'</a>');
+                // $(".layui-table-total td[data-field='rmb_amount'] .toChange").on("click",function(){
+                //     var timeStr = $("#GroupStatisticsTime").val().split(' ~ ');
+                //     layer.open({
+                //     title: ' ',
+                //     type: 2,
+                //     content: 'FinancialCashListSta.html?20181204', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                //     area: ['100%', '100%'],
+                //     success: function (layero, index) {
+                //         var body = layer.getChildFrame('body', index);
+                //         var iframeWin = window[layero.find('iframe')[0]['name']];
+                //         iframeWin.editData ={
+                //             CurrencyUnitId:'',
+                //             StartExchangeDate:timeStr[0],
+                //             EndExchangeDate:timeStr[1],
+                //         };
+                //     },
+                //     end: function () {
+                //         CashTavle.reload({});
+                //     }
+                // })
+                // })
+            }
+        })
+
+        // 获取目标货币
+        $.fetch({
+            url: "/gateway/financial/currency", //任务分类
+            type: 'post',
+            cb: function (rs) {
+                var CashListOption = '';
+                CashListOption += '<option value="">全部</option>'
+                for (var i = 0; i < rs.length; i++) {
+                    CashListOption += '<option value="' + rs[i].id + '">' + rs[i].zh_name +
+                        '</option>'
+                }
+                $("#CashListSelect").html(CashListOption);
+                form.render();
+            }
+        });
+        var getCompanyCategoryFun=function(obj){
+            var isGrop = 0;//临时设置仅有公司
+            if(isGrop ==1){//集团
+                // sticsUrl ='/gateway/financial/groupstatistics';
+                // var  detalUrl='/gateway/financial/groupreportdetail';
+                var  CategoryUrl="/gateway/financial/groupCategory";//获取集团财务分级类型列表
+                // var gropArr=[];
+                // var companyArr=[];
+                // var nowIsList=1;
+            }else{
+                // sticsUrl ='/gateway/financial/companystatistics';
+                // var  detalUrl='/gateway/financial/companyreportdetail';
+                var  CategoryUrl="/gateway/financial/companyCategory";//获取公司财务分级类型列表
+            }
+            $.fetch({//调用分页类型接口的 公司状态改变 值改变
+                url: CategoryUrl,
+                data:{
+                    companyId:obj.data.CompanyId,
+                },
+                type: 'post',
+                cb:function(rs){
+                    // var oneHtml='',twoHtml='';
+                    var oneArr=[],twoArr=[],threeArr=[],twoThreeArr=[];
+                    var formSelectsArr=[];
+                    for(var i=0;i<rs.length;i++){
+                        if(rs[i].level==1){//第一及
+                            // oneHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'//两个流程类型
+                            // oneArr.push({
+                            //     name: 
+                            //     ,id:
+                            // })
+                            formSelectsArr.push({
+                                name: rs[i].name
+                                ,value:  rs[i].id
+                                ,xslkdf: '1'
+                                ,children:[]
+                            })
+                            // formSelectsArr.push({
+                            //     name: rs[i].name
+                            //     ,value: rs[i].id
+                            //     ,xslkdf: '123'
+                            //     ,children: []
+                            // })
+                        }else if(rs[i].level==2){
+                            twoArr.push({id:rs[i].id,name:rs[i].name,pid:rs[i].parent_id});
+                        }else if(rs[i].level==3){
+                            threeArr.push({id:rs[i].id,name:rs[i].name,pid:rs[i].parent_id});
+                        }
+                    }
+                    // console.log(oneArr,twoArr,threeArr);
+                    for(var i=0;i<formSelectsArr.length;i++){
+                        for(var j=0;j<twoArr.length;j++){
+                            if(twoArr[j].pid==formSelectsArr[i].value){
+                                formSelectsArr[i].children.push({
+                                    name: twoArr[j].name
+                                    ,value: twoArr[j].id
+                                    ,xslkdf: '11'
+                                    ,children: []
+                                })
+                            }
+                        }
+                    }
+                    for(var i=0;i<formSelectsArr.length;i++){
+                        for(var j=0;j<formSelectsArr[i].children.length;j++){
+                            for(var k=0;k<threeArr.length;k++){
+                                if(threeArr[k].pid==formSelectsArr[i].children[j].value){
+                                    formSelectsArr[i].children[j].children.push({
+                                        name: formSelectsArr[i].children[j].name+'/'+threeArr[k].name
+                                        ,value: threeArr[k].id
+                                        ,xslkdf: '111'
+                                    })
+                                }
+                            }
+                        }
+                    }
+                    layui.formSelects.data('onePayType', 'local', {
+                        arr:formSelectsArr
+                    });
+                    //
+                   var isSelectArr=[];
+                    if(obj.data.TwoLevelId==-1){
+                        for(var i=0;i<rs.length;i++){
+                            if(rs[i].level==2&&rs[i].is_init==0&&obj.data.OneLevelId==rs[i].parent_id){//第一及
+                                isSelectArr.push(rs[i].id);
+                            }
+                        }
+                        formSelects.value('onePayType', isSelectArr);
+                    }else if(obj.data.TwoLevelId==''||obj.data.TwoLevelId==undefined){
+                        formSelects.value('onePayType', [obj.data.OneLevelId]);
+                    }else{
+                        formSelects.value('onePayType', [obj.data.OneLevelId,obj.data.TwoLevelId]);                        
+                    }
+                }
+            })
+
+        }
+        var toDetailFun =function(obj={}){
+            var isGrop = 0;//临时设置仅有公司
+            if(isGrop ==1){//集团
+                // sticsUrl ='/gateway/financial/groupstatistics';
+                var  detalUrl='/gateway/financial/groupreportdetail';
+                // var  CategoryUrl="/gateway/financial/groupCategory";//获取集团财务分级类型列表
+                // var gropArr=[];
+                // var companyArr=[];
+                // var nowIsList=1;
+            }else{
+                // sticsUrl ='/gateway/financial/companystatistics';
+                var  detalUrl='/gateway/financial/companyreportdetail';
+                // var  CategoryUrl="/gateway/financial/companyCategory";//获取公司财务分级类型列表
+            }
+            var chtml = '<div class="layui-fluid"><div class="layui-card">'
+                        +'<div class="layui-form" id="disabled">'
+                            +'<div class="layui-inline my-10">'
+                            +'<label class="layui-form-label">开始日期：</label>'
+                            +'<div class="layui-input-inline">'
+                            +'<input type="text" class="layui-input" id="SurveyItemStart">'
+                            +'</div>'
+                        +'</div>'
+                        +'<div class="layui-inline my-10">'
+                            +'<label class="layui-form-label">结束日期：</label>'
+                            +'<div class="layui-input-inline">'
+                                +'<input type="text" class="layui-input" id="SurveyItemEnd">'
+                            +'</div>'
+                        +'</div>'
+                        // +'<div class="layui-inline my-10">'
+                        //     +'<label class="layui-form-label">固定费用：</label>'
+                        //     +'<div class="layui-input-inline">'
+                        //         +'<select name="FixedCost" id="FixedCost" lay-filter="FixedCost">'
+                        //             +'<option value="-1">全部</option>'
+                        //             +'<option value="1">是</option>'
+                        //             +'<option value="0">否</option>'                                    
+                        //         +'</select>'
+                        //     +'</div>'
+                        // +'</div>'
+                        if(isGrop ==1){
+                            chtml +='<div class="layui-inline my-10">'
+                            +'<label class="layui-form-label">公司名称：</label>'
+                            +'<div class="layui-input-inline">'
+                                +'<select name="companyId" id="companyId" lay-filter="companyId">'
+                                +'</select>'
+                            +'</div>'
+                        +'</div>'
+                        }
+                        chtml +='<div class="layui-inline my-10">'
+                        +'<label class="layui-form-label">币种名称：</label>'
+                        +'<div class="layui-input-inline">'
+                            +'<select name="moneyType" id="moneyType" lay-filter="moneyType">'
+                            +'</select>'
+                        +'</div>'
+                    +'</div>'
+                        +'<div class="layui-block my-10">'
+                            +'<label class="layui-form-label">费用类型：</label>'
+                            +'<div class="layui-input-block">'
+                                +'<select name="onePayType" id="onePayType" lay-filter="onePayType" xm-select="onePayType" xm-select-search>'
+                                +'</select>'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>'
+                    +'<table class="layui-table"  id="statisticsTable" lay-filter="statisticsTable"></table></div></div>'
+
+                    var listCont = null;
+                    var indexs=layer.open({
+                        title:' ',
+                        id:'statisticsTableLay',
+                        type: 1,
+                        content: chtml, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                        area:['92%', '92%'],
+                        success:function(index,layero){
+                            console.log(obj.data)
+                            // var index = layer.getFrameIndex(window.name);
+                         var statisticsTable=  table.render({
+                                elem: '#statisticsTable'
+                                ,url: window.urls+detalUrl
+                                ,where:obj.data
+                                ,defaultToolbar:['exports', 'print']
+                                ,limit:10
+                                ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                                ,method:'post'
+                                ,contentType: 'application/json'
+                                ,page:true
+                                ,loading:true
+                                ,totalRow: true
+                                ,toolbar: '<div>'
+                                    
+                                    +'<div class="layui-inline ml-5">'
+                                        +'<button id="InquireSur" class="layui-btn" lay-event="InquireSur">查询</button>'
+                                        // +'<button id="delSurvey" class="layui-btn" lay-event="delSurvey">删除</button>'
+                                        +'<button id="backComany" class="layui-btn">返回</button>'                                        
+                                    +'</div>'
+                                +'</div>'
+                                ,cellMinWidth: 100
+                                ,text: {
+                                    none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                }
+                                ,cols: [[ //标题栏
+                                    {field: 'applyUserName', title: '申请人',width:90, fixed: 'left', sort: true, rowspan: 2}
+                                    ,{field: 'created_at', title:'申请时间',sort: true,width:120, rowspan: 2,unresize: true}
+                                    ,{ align: 'center',title: '类型',colspan:3,}
+                                    ,{field: 'fee_remark2',  title: '费用摘要',  rowspan: 2}
+                                    // ,{field: 'is_fixed_costs_desc', title: '固定费用',sort: true, width:100, rowspan: 2,unresize: true}
+                                    ,{field: 'cashierUserName', title: '出纳审核人', rowspan: 2,totalRowText: '本页合计金额：'}
+                                    ,{field: 'cashierTime', title: '出纳审核时间',sort: true, width:130, rowspan: 2,unresize: true}
+                                    ,{field: 'fee_receipt_count', title: '单据数量',sort: true,width:100,rowspan: 2,unresize: true}
+                                    ,{field: '',align: 'center', title: '金额' ,colspan:3}
+                                ],[
+                                    { title: '流程类型',field: 'oneCateName', }
+                                    ,{ title: '费用类型',field: 'twoCateName', }
+                                    ,{ title: '费用子类型',field: 'threeCateName', }
+                                    ,{title: '原币种名称',field: 'zh_name',width:100 }
+                                    ,{title: '原币种金额',totalRow:true,field: 'fee_amount',sort: true
+                                    }
+                                    ,{title: '换算人民币',field: 'rmb_amount',sort: true,totalRow:true}
+                                ]]
+                                ,request: {
+                                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                                    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                                }
+                                ,parseData: function(res){ //res 即为原始返回的数据
+                                    return {
+                                        "status_code":res.status_code, //解析接口状态
+                                        "message": res.message, //解析提示文本
+                                        "count": res.data.total_count, //解析数据长度
+                                        "data": res.data.data_list, //解析数据列表
+                                        "curr":res.data.page_index,
+                                        "total_amount":res.data.total_amount,
+                                        "total_rmb_amount":res.data.total_rmb_amount
+
+                                    };
+                                }
+                                ,done: function(res){
+                                    listCont = res.data;
+                                    // $(".layui-table-total table tr").find("td[data-field='cashierTime']").remove()
+                                    var totalAmount=(res.total_amount==null||res.total_amount=="")?' ':res.total_amount;
+                                    var total_rmbAmount=(res.total_rmb_amount==null||res.total_rmb_amount=="")?' ':res.total_rmb_amount;
+                                    // $(".layui-table-total table tr").find("td[data-field='cashierUserName']").colSpan="2";                                    
+                                    var newSelect = $("#statisticsTableLay .layui-table-total table tr").clone(true);
+                                    $(newSelect).find("td[data-field='cashierUserName']>div").text("总合计金额：");
+                                    $(newSelect).find("td[data-field='fee_amount']>div").text(totalAmount);
+                                    $(newSelect).find("td[data-field='rmb_amount']>div").text(total_rmbAmount);
+                                    if($("#statisticsTableLay  #moneyType").val()=='-2'||res.total_amount==""){
+                                        $("#statisticsTableLay .layui-table-total table tr").find("td[data-field='fee_amount']>div").text('');
+                                        $(newSelect).find("td[data-field='fee_amount']>div").text('');
+                                    }
+                                    $("#statisticsTableLay  .layui-table-total table tbody").append(newSelect);
+
+                                    // 表格不显示时间，显示日期
+                                    $("#statisticsTableLay  .layui-table-body table tr").find("td[data-field='created_at']>div").css('white-space', 'inherit');
+                                    $("#statisticsTableLay  .layui-table-body table tr").find("td[data-field='cashierTime']>div").css('white-space', 'inherit');
+                                    // 弹出显示时间
+                                    res.data.forEach((item, index) => {
+                                        $('#statisticsTableLay  .layui-table-body table tr').eq(index).on("mouseenter", "td[data-field='cashierTime']>div", function (e) {
+                                             e.stopPropagation();
+                                            var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + item.cashierTime + "</div>";
+                                            var that = this;
+                                            layer.tips(tipsCont1, that, {
+                                                tips: [1, '#999'],
+                                                maxWidth: 'auto'
+                                            });
+                                        });
+                                        $('#statisticsTableLay  .layui-table-body table tr').eq(index).on("mouseenter", "td[data-field='created_at']>div", function (e) {
+                                             e.stopPropagation();
+                                            var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + item.created_at + "</div>";
+                                            var that = this;
+                                            layer.tips(tipsCont1, that, {
+                                                tips: [1, '#999'],
+                                                maxWidth: 'auto'
+                                            });
+                                        });
+                                    });
+                                    // 内容摘要
+                                    $("#statisticsTableLay  .layui-table-body table tr").find("td[data-field='fee_remark2']").addClass('disabledNone');
+                                    // 弹出内容
+                                    res.data.forEach((item, index) => {
+                                        $('#statisticsTableLay  .layui-table-body table tr').eq(index).on("mouseover", "td[data-field='fee_remark2']>div", function (e) {
+                                            e.stopPropagation();
+                                            // $(".layui-table-body table tr").find("td[data-field='fee_remark2']>.layui-table-grid-down").hide();
+                                            var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + item.fee_remark2 + "</div>";
+                                            var that = this;
+                                            layer.tips(tipsCont1, that, {
+                                                tips: [1, '#999'],
+                                                maxWidth: 'auto'
+                                            });
+                                        });
+                                    });
+                                    
+                                }
+                            }); 
+
+                            table.on('sort(statisticsTable)', function (obj) {
+                                 // 表格不显示时间，显示日期
+                                 $(".layui-table-body table tr").find("td[data-field='created_at']>div").css('white-space', 'inherit');
+                                 $(".layui-table-body table tr").find("td[data-field='cashierTime']>div").css('white-space', 'inherit');
+
+                                 // 弹出显示时间
+                                 listCont.forEach((item, index) => {
+                                     $('#statisticsTableLay .layui-table-body table tr').eq(index).on("mouseenter", "td[data-field='cashierTime']>div", function () {
+                                         var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + item.cashierTime + "</div>";
+                                         var that = this;
+                                         layer.tips(tipsCont1, that, {
+                                             tips: [1, '#999'],
+                                             maxWidth: 'auto'
+                                         });
+                                     });
+                                     $('#statisticsTableLay  .layui-table-body table tr').eq(index).on("mouseenter", "td[data-field='created_at']>div", function () {
+                                         var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + item.created_at + "</div>";
+                                         var that = this;
+                                         layer.tips(tipsCont1, that, {
+                                             tips: [1, '#999'],
+                                             maxWidth: 'auto'
+                                         });
+                                     });
+                                 });
+                            })
+                            laydate.render({
+                                elem: '#SurveyItemStart',
+                                value:obj.data.StartTime
+                            });
+                            laydate.render({
+                                elem: '#SurveyItemEnd',
+                                value:obj.data.EndTime
+                            });
+                        //需延迟调用
+                        setTimeout(function(){getCompanyCategoryFun(obj)},1)
+                            // getCompanyCategoryFun(obj);//初始化时传入 obj 刷新表格 并没有刷新下拉的参数
+
+                            $.fetch({
+                                url: "/gateway/financial/currency",
+                                type: 'post',
+                                cb:function(rs){
+                                    var moneyType='';
+                                    moneyType+='<option value="-2">全部</option>'
+                                    for(var i=0;i<rs.length;i++){
+                                        moneyType+='<option value="'+rs[i].id+'">'+rs[i].zh_name+'('+rs[i].short_code+')</option>'
+                                    }
+                                    moneyType+='<option value="-2">全部</option>'                                    
+                                    $("#moneyType").html(moneyType);
+                                    if(obj.data.CurrencyUnitId==''||obj.data.CurrencyUnitId==undefined){
+                                        $("#moneyType").val('-2')
+                                    }else{
+                                        $("#moneyType").val(obj.data.CurrencyUnitId);
+                                    }
+                                    form.render();
+                                }
+                            })
+                            if(isGrop ==1){
+                                $.fetch({
+                                    url: "/gateway/company/tree",
+                                    type: 'post',
+                                    cb:function(rs){
+                                        var companyId='';
+                                        for(var i=0;i<rs[0].children.length;i++){
+                                            companyId+='<option value="'+rs[0].children[i].id+'">'+rs[0].children[i].name+'</option>'
+                                        }
+                                        $("#companyId").html(companyId);
+                                        $("#companyId").val(obj.data.CompanyId)
+                                        form.render();
+                                        //监听公司选择变化
+                                        form.on('select(companyId)', function(data){
+                                            obj.data.CompanyId=data.value;
+                                            getCompanyCategoryFun(obj);
+                                        }); 
+                                    }
+                                })
+                            }
+                            form.render();
+                            // form.on('select(twoPayType)', function(data){
+                            //     if(data.value == -1){
+                            //         $("#threePayType").parents(".layui-inline").show();
+                            //     }else{
+                            //         $("#threePayType").parents(".layui-inline").hide();
+                            //     }
+                            // });
+                     
+                            table.on('toolbar(statisticsTable)', function(obj){
+                                var checkStatus = table.checkStatus(obj.config.id);
+                                switch(obj.event){
+                                    case 'InquireSur':
+                                    var oneLevelId=[];
+                                    var twoLevelId=[];
+                                    var threeLevelId=[];
+                                    var symid = $("#moneyType").val()== -2?'':$("#moneyType").val();
+                                    // var FixedCost=($("#FixedCost").val()=='-1'?'':$("#FixedCost").val());
+                                    var STime = $("#SurveyItemStart").val();
+                                    var Eime = $("#SurveyItemEnd").val();
+                                    var companyId = $("#companyId").val();
+                                    var onePayTypeArr=layui.formSelects.value('onePayType');
+                                    for(var i=0;i<onePayTypeArr.length;i++){
+                                        if(onePayTypeArr[i].xslkdf=='1'){
+                                            oneLevelId.push(onePayTypeArr[i].value);
+                                        }else if(onePayTypeArr[i].xslkdf=='11'){
+                                            twoLevelId.push(onePayTypeArr[i].value);
+                                        }else if(onePayTypeArr[i].xslkdf=='111'){
+                                            threeLevelId.push(onePayTypeArr[i].value);
+                                        }
+                                    }
+                                    var oneLevelIdStr =oneLevelId.join(',');
+                                    var twoLevelIdStr =twoLevelId.join(',');
+                                    var threeLevelIdStr =threeLevelId.join(',');
+                                    //  $("#twoPayType") 
+                                    
+                                    // if(twoLevelId == -1){
+                                    //     twoLevelId = $("#threePayType").val();
+                                    // }
+                                    // if(oneLevelId == ''){
+                                    //     twoLevelId='';
+                                    // }
+                                    statisticsTable.reload({
+                                        where:{
+                                            EndTime: Eime
+                                            // ,FixedCost:FixedCost
+                                            ,OneLevelId: oneLevelIdStr
+                                            ,StartTime:STime
+                                            ,TwoLevelId: twoLevelIdStr
+                                            ,CurrencyUnitId:symid
+                                            ,CompanyId:companyId
+                                            ,ThreeLevelId:threeLevelIdStr
+                                            ,ContainYz:1
+                                        },
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                    break;
+                                   // case 'backComany':
+                                        // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                       // console.log(index)
+                                       // layer.close(thisLayer); //再执行关闭   
+                                   // break;
+                                    case 'delSurvey':
+                                        var STime = $("#SurveyItemStart").val();
+                                        var Eime = $("#SurveyItemEnd").val();
+                                        var company =$("#companyId").val();
+                                        var companyName =' '+$("#companyId").find("option:selected").text()+' ';
+                                        
+                                        layer.open({
+                                            title:'删除'+companyName+'数据',
+                                            type: 1,
+                                            content: '<div class="layui-form layui-card-body">'
+                                                +'<div class="llayui-form-item py-5">'
+                                                    +'<div class="layui-block">'
+                                                        +'请选择删除的起始时间'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="llayui-form-item py-5">'
+                                                    +'<label class="layui-form-label">开始日期：</label>'
+                                                    +'<div class="layui-input-block">'
+                                                        +'<input type="text" class="layui-input" id="delStart">'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="llayui-form-item py-5">'
+                                                    +'<label class="layui-form-label">结束日期：</label>'
+                                                    +'<div class="layui-input-block">'
+                                                        +'<input type="text" class="layui-input" id="delEnd">'
+                                                    +'</div>'
+                                                 +'</div>'
+                                                +'</div>', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                                            area:'auto',
+                                            success:function(){
+                                                laydate.render({
+                                                    elem: '#delStart',
+                                                    type: 'datetime', //默认，可不填
+                                                    value:STime+' 00:00:00'
+                                                });
+                                                laydate.render({
+                                                    elem: '#delEnd',
+                                                    type: 'datetime', //默认，可不填
+                                                    value:Eime+' 00:00:00'
+                                                });
+                                            },
+                                            btn:['确定'],
+                                            yes: function(index, layero){
+                                                //按钮【按钮一】的回调
+                                                
+                                                var staTimes= $("#delStart").val();
+                                                var delTimes= $("#delEnd").val();
+
+                                                var pindex =index;
+                                                layer.confirm('确定删除'+companyName+'以下时段数据？<br><span style="color:#FF5722">'+staTimes+'</span>~<span style="color:#FF5722">'+delTimes+'</span>', {title:' '},function(index){
+                                                    $.fetch({
+                                                        url:'/gateway/financial/del',
+                                                        data:{
+                                                            StartTime:staTimes,
+                                                            EndTime:delTimes,
+                                                            CompanyId:company
+                                                        },
+                                                        type: 'post',
+                                                        cb:function(rs){
+                                                            layer.msg('删除成功。');
+                                                            layer.close(index);
+                                                            layer.close(pindex);
+                                                            statisticsTable.reload({
+                                                                page: {
+                                                                    curr: 1 //重新从第 1 页开始
+                                                                }
+                                                            });
+                                                        }
+                                                    })
+                                                })
+                                               
+                                            }
+                                        })
+                                        
+                                     
+                                    break;
+                                }
+                            });
+
+                        }
+                    })
+                    $("body").off("click").on("click","#backComany",function(){
+                        layer.close(indexs);
+                    })
+                            
+        }
+      
+        table.on('tool(CashListTabel)', function (obj) {
+            var data = obj.data;
+            // var timeStr = $("#GroupStatisticsTime").val().split(' ~ ');
+            var StartTime = $("#StartTime").val();                
+                var EndTime = $("#EndTime").val();  
+                var timeStr = [StartTime,EndTime];
+            if (obj.event === 'change') {
+                layer.open({
+                    title: ' ',
+                    type: 2,
+                    content: 'FinancialCashListSta.html?20181204', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    area: ['92%', '92%'],
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.editData ={
+                            CurrencyUnitId:data.final_currency_unit_id,
+                            StartExchangeDate:timeStr[0],
+                            EndExchangeDate:timeStr[1],
+                        };
+                    },
+                    end: function () {
+                        CashTavle.reload({});
+                    }
+                })
+            } else if (obj.event === 'out') {
+                var StartTime = $("#StartTime").val();                
+                var EndTime = $("#EndTime").val();  
+                var timeStr = [StartTime,EndTime];
+                
+                var trData=data;
+                $.fetch({
+                    url:'/gateway/financial/companyCategory',
+                    data:{
+                        level:1,
+                        is_init:1,
+                    },
+                    type: 'post',
+                    cb:function(rs){
+                        console.log(rs);
+                        var oneLevelId='';
+                        for(var i = 0;i<rs.length;i++){
+                            if(rs[i].code=='BX'){
+                                oneLevelId=rs[i].id;
+                            }
+                        }
+                        toDetailFun({
+                            data:{
+                                StartTime:timeStr[0],
+                                EndTime:timeStr[1],
+                                CurrencyUnitId:trData.final_currency_unit_id,
+                                OneLevelId:oneLevelId,
+                                ContainYz:1,
+                            },
+                        });
+                    }
+                })
+            } else if (obj.event === 'add') {
+                layer.open({
+                    title: ' ',
+                    content: "FinancialCash.html?20181204",
+                    area: ['80%', '80%'],
+                    btn: '',
+                    type: 2,
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.cashma={  
+                            StartDate:timeStr[0],
+                            EndDate:timeStr[1],
+                        }
+                        iframeWin.uniData = data;
+                        // $(body).find("#currencyUnit").val(data.original_currency_unit_id);
+                    },
+                    end:function(){
+                        CashTavle.reload();
+                    }
+                });
+            }
+        });
+
+    })
+</script>
+
+</html>

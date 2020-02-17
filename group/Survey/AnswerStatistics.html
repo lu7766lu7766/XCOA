@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>答卷统计</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+    <!-- <script language="javascript">
+
+     
+
+    </script> -->
+</head>
+<style>  body{overflow-y: scroll;}</style>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <!-- <div class="layui-card-header tc" style="height:auto;" id="modify-title">
+            </div> -->
+            <div class="layui-card-body">
+                <div class="layui-form" id="answerStaList">
+                        <div id="pintHtml"></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../js/common.js?0.1"></script>
+<script src="../../layui/layui.js"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index', 'form', 'laydate', 'util', 'table'], function () {
+    var $ = layui.$,
+        admin = layui.admin,
+        element = layui.element,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            util = layui.util,
+            table = layui.table,
+            form = layui.form;
+        var tableHtmlFun = function(data,elem,cols,fun){
+            table.render({
+                elem: elem
+                ,height: "auto"
+                // ,limit:10000
+                ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                ,data: data 
+                ,size: 'sm'
+                ,cols:cols
+                ,done:fun
+            });
+        }
+        
+        
+        $.fetch({
+            url: "/gateway/answerManage/statistics",
+            type: 'post',
+            data: {
+                surveyId:surveyId,
+                companyId:companyId,
+            },
+            cb:function(rs){
+                var qhtml = '',obj=[],exportData=[];
+               
+                for(var i=0;i<rs.length;i++){
+                    var qhtml = ''
+                    qhtml+='<div class="layui-form-item"><label class="">'
+                    if(rs[i].is_required==1){
+                        qhtml+='<span class="red">*</span>'
+                    }
+                    qhtml+=''+rs[i].question_no+'、'+rs[i].topic+'：</label><table class="layui-table" id="AddScore_'+rs[i].id +'"></table>'
+                    qhtml+='</div>'
+                    $("#answerStaList #pintHtml").append(qhtml);
+                    //有子问题
+                    exportData.push([' '],[''+rs[i].question_no+'、'+rs[i].topic+'']);
+                    if(rs[i].has_subquestion==1){
+                        //单选//多选
+                        if(rs[i].question_type==1||rs[i].question_type==2){
+                            var tableData=[];
+                            //导出数据的头部
+                            exportData.push([
+                                '子问题','选项序号','选项内容','选择次数','选择该项用户'
+                            ]);
+                            
+                            for(var j=0;j<rs[i].subQuestion.length;j++){
+                                for(var k=0; k<rs[i].subQuestion[j].option.length; k++){
+                                    if(k==0){
+                                        var subquestion_topic =rs[i].subQuestion[j].subquestion_no+'. '+rs[i].subQuestion[j].subquestion_topic
+                                    }else{
+                                        var subquestion_topic =' ';
+                                    }
+                                    var names =rs[i].subQuestion[j].option[k].option_statistics.names.toString().replace(/,/g,'，');
+                                    tableData.push({
+                                        "subquestion_topic":subquestion_topic,//子问题序号和内容
+                                        "option_no":rs[i].subQuestion[j].option[k].option_no,//序号
+                                        "option_content":rs[i].subQuestion[j].option[k].option_content,//选项内容
+                                        "option_count":rs[i].subQuestion[j].option[k].option_statistics.count,//次数
+                                        "option_names":names,//选项内容
+                                    })
+                                    exportData.push([
+                                        subquestion_topic
+                                        ,rs[i].subQuestion[j].option[k].option_no
+                                        ,rs[i].subQuestion[j].option[k].option_content
+                                        ,rs[i].subQuestion[j].option[k].option_statistics.count
+                                        ,names
+                                    ])
+                                   
+                                }
+                            }
+                            var elem="#AddScore_"+rs[i].id;
+                            tableHtmlFun(tableData,elem,[[ //表头
+                                {field: 'subquestion_topic', title: '子问题',width:180}
+                                ,{field: 'option_no', title: '选项序号',width:80}
+                                ,{field: 'option_content', title: '选项内容'}
+                                ,{field: 'option_count', title: '选择次数',width:100}
+                                ,{field: 'option_names', title: '选择该项用户'}
+                            ]])
+                        }
+                        //打分
+                        if(rs[i].question_type==4){
+                            var tableData=[];
+                            exportData.push([
+                                '子问题','选项序号','选项内容','评分用户','评分次数','总分','平均分'
+                            ]);
+                            for(var j=0;j<rs[i].subQuestion.length;j++){
+                                for(var k=0; k<rs[i].subQuestion[j].option.length; k++){
+                                    if(k==0){
+                                        var subquestion_topic =rs[i].subQuestion[j].subquestion_no+'. '+rs[i].subQuestion[j].subquestion_topic
+                                    }else{
+                                        var subquestion_topic =' ';
+                                    }
+                                    var names =rs[i].subQuestion[j].option[k].option_statistics.names.toString().replace(/,/g,'，');
+                                    tableData.push({
+                                        "subquestion_topic":subquestion_topic,//子问题序号和内容
+                                        "option_no":rs[i].subQuestion[j].option[k].option_no,//序号
+                                        "option_content":rs[i].subQuestion[j].option[k].option_content,//选项内容
+                                        "average_score":rs[i].subQuestion[j].option[k].option_statistics.average_score,//平均分
+                                        "count":rs[i].subQuestion[j].option[k].option_statistics.count,//次数
+                                        "total_score":rs[i].subQuestion[j].option[k].option_statistics.total_score,//总分
+                                        "names":names,
+                                    })
+                                    exportData.push([
+                                        subquestion_topic
+                                        ,rs[i].subQuestion[j].option[k].option_no
+                                        ,rs[i].subQuestion[j].option[k].option_content
+                                        ,names
+                                        ,rs[i].subQuestion[j].option[k].option_statistics.count
+                                        ,rs[i].subQuestion[j].option[k].option_statistics.total_score
+                                        ,rs[i].subQuestion[j].option[k].option_statistics.average_score
+                                    ])
+                                }
+                            }
+                            var elem="#AddScore_"+rs[i].id;
+                            tableHtmlFun(tableData,elem,[[ //表头
+                                {field: 'subquestion_topic', title: '子问题',width:180}
+                                ,{field: 'option_no', title: '选项序号',width:80}
+                                ,{field: 'option_content', title: '选项内容'}
+                                ,{field: 'names', title: '评分用户'}
+                                ,{field: 'count', title: '评分次数',width:80}
+                                ,{field: 'total_score', title: '总分',width:100}
+                                ,{field: 'average_score', title: '平均分',width:100}
+                            ]])
+                        }
+                        //文本
+                        if(rs[i].question_type==3){
+                            var tableData=[];
+                            exportData.push([
+                                '子问题','作答人数','用户名','答案'
+                            ]);
+                            for(var j=0;j<rs[i].subQuestion.length;j++){
+                                var subNum =0,counts=0;
+                                for(key in rs[i].subQuestion[j].option_statistics.text_user_answer){
+                                    if(rs[i].subQuestion[j].option_statistics.text_user_answer[key]!=null){
+                                        counts++
+                                    }
+                                }
+                                for(key in rs[i].subQuestion[j].option_statistics.text_user_answer){
+                                    if(subNum==0){
+                                        var subquestion_topic =rs[i].subQuestion[j].subquestion_no+'. '+rs[i].subQuestion[j].subquestion_topic;
+                                        var count = counts;
+                                    }else{
+                                        var subquestion_topic =' ';
+                                        var count =" ";
+                                    }
+
+                                    if( rs[i].subQuestion[j].option_statistics.text_user_answer[key]!=null){
+                                        subNum++;
+                                        tableData.push({
+                                            "subquestion_topic":subquestion_topic,//子问题序号和内容
+                                            "names":key,
+                                            "count":count,
+                                            "textAnswer":rs[i].subQuestion[j].option_statistics.text_user_answer[key],
+                                        })
+                                        exportData.push([
+                                            subquestion_topic
+                                            ,count
+                                            ,key
+                                            ,rs[i].subQuestion[j].option_statistics.text_user_answer[key]
+                                        ]);
+                                    }
+                                }
+                            }
+                            var elem="#AddScore_"+rs[i].id;
+                            tableHtmlFun(tableData,elem,[[ //表头
+                                {field: 'subquestion_topic', title: '子问题',width:180}
+                                ,{field: 'count', title: '作答人数',width:100}
+                                ,{field: 'names', title: '用户名',width:100}
+                                ,{field: 'textAnswer', title: '答案'}
+
+                            ]],function(){
+                                
+                            })
+                        }
+
+                    }
+                    //没有子问题
+                    if(rs[i].has_subquestion==0){
+                        //单选//多选
+                        if(rs[i].question_type==1||rs[i].question_type==2){
+                            var tableData=[];
+                            exportData.push([
+                                '选项序号','选项内容','选择次数','选择该项用户'
+                            ]);
+                            for(var j=0;j<rs[i].option.length;j++){
+                                var names =rs[i].option[j].option_statistics.names.toString().replace(/,/g,'，');
+                                tableData.push({
+                                    "names":names,
+                                    "option_no":rs[i].option[j].option_no,//序号
+                                    "option_content":rs[i].option[j].option_content,//内容
+                                    "count":rs[i].option[j].option_statistics.count,//选中数量
+                                })
+                                exportData.push([
+                                    rs[i].option[j].option_no
+                                    ,rs[i].option[j].option_content
+                                    ,rs[i].option[j].option_statistics.count
+                                    ,names
+                                ]);
+                            }
+                            var elem="#AddScore_"+rs[i].id;
+                            tableHtmlFun(tableData,elem,[[ //表头
+                                {field: 'option_no', title: '选项序号',width:100}
+                                ,{field: 'option_content', title: '选项内容'}
+                                ,{field: 'count', title: '选择次数',width:80}
+                                ,{field: 'names', title: '选择该项用户'}
+                            ]])
+                        }
+                        //文本
+                        if(rs[i].question_type==3){
+                            var tableData=[];
+                            exportData.push([
+                                '用户名','答案'
+                            ]);
+                            for(key in rs[i].option_statistics.text_user_answer){
+                                if(rs[i].option_statistics.text_user_answer[key]!=null){
+                                    tableData.push({
+                                        "names":key,
+                                        "textAnswer":rs[i].option_statistics.text_user_answer[key],
+                                    })
+                                    exportData.push([
+                                        key
+                                        ,rs[i].option_statistics.text_user_answer[key]
+                                    ]);
+                                }
+                            }
+                            var elem="#AddScore_"+rs[i].id;
+                            tableHtmlFun(tableData,elem,[[ //表头
+                                {field: 'names', title: '用户名',width:100}
+                                ,{field: 'textAnswer', title: '答案'}
+                            ]])
+                        }
+                        //打分
+                        if(rs[i].question_type==4){
+                            var tableData=[];
+                            exportData.push([
+                                '选项序号','选项内容','评分用户','评分次数','总分','平均分'
+                            ]);
+                            for(var j=0;j<rs[i].option.length;j++){
+                                var names =rs[i].option[j].option_statistics.names.toString().replace(/,/g,'，');
+                                tableData.push({
+                                    "names":names,
+                                    "option_no":rs[i].option[j].option_no,//序号
+                                    "option_content":rs[i].option[j].option_content,//内容
+                                    "average_score":rs[i].option[j].option_statistics.average_score,//平均分
+                                    "count":rs[i].option[j].option_statistics.count,//次数
+                                    "total_score":rs[i].option[j].option_statistics.total_score,//总分
+                                })
+                                exportData.push([
+                                    rs[i].option[j].option_no
+                                    ,rs[i].option[j].option_content
+                                    ,names
+                                    ,rs[i].option[j].option_statistics.count
+                                    ,rs[i].option[j].option_statistics.total_score
+                                    ,rs[i].option[j].option_statistics.average_score
+                                ]);
+                            }
+                            var elem="#AddScore_"+rs[i].id;
+                            tableHtmlFun(tableData,elem,[[ //表头
+                                {field: 'option_no', title: '选项序号',width:80}
+                                ,{field: 'option_content', title: '选项内容'}
+                                ,{field: 'names', title: '评分用户'}
+                                ,{field: 'count', title: '评分次数',width:100}
+                                ,{field: 'total_score', title: '总分',width:80}
+                                ,{field: 'average_score', title: '平均分',width:80}
+                            ]])
+                        }
+                            
+                            
+                            
+                    }
+               }
+                $("#answerStaList").append('<div class="layui-form-item layui-layout-admin">'
+                    +'<div class="layui-input-block"><div class="layui-footer" style="left: 0;"><button id="close" class="layui-btn layui-btn-normal">关闭</button>'
+                      +'<button id="expor" class="layui-btn layui-btn-normal">导出</button>'
+                      +'</div></div>');
+                $("#close").on("click",function(){
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭 
+                })
+                $("#expor").on("click",function(){
+                    layer.open({
+                        type:1
+                        ,id:'exporBtn'
+                        ,title:'请选择导出格式'
+                        ,content:'<div  style ="padding:20px;"><a class="layui-btn layui-btn-radius layui-btn-primary" data-type="csv">导出到 Csv 文件</a><a class="layui-btn layui-btn-radius layui-btn-primary" data-type="xls">导出到 Excel 文件</a></div>'
+                        ,success:function(){
+                            $("#exporBtn").on("click",'a.layui-btn',function(){
+                                var exType = $(this).attr('data-type');
+                                table.exportFile([],exportData, exType);
+                            })
+                        }  
+                    })
+                })
+            }
+            
+        })
+            
+    //})
+});
+</script>
+
+</html>

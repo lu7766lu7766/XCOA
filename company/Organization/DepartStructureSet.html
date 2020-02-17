@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>岗位审核</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/fonts/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/jquery.orgchart.css?v=201812180">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div id="chartStuShow"><span class="chartStu"></span></div>
+            </div>
+            <div class="">
+                <div class="layui-row layui-col-space10"> 
+                    <div class="layui-form layui-col-xs12 layui-col-sm12 layui-col-md12" lay-filter="companystructure" >
+                        <div class="layui-form-item" style="margin:10px 0; ">
+                            <div class="layui-inline" id="companystructure">
+                                <label class="layui-form-label">审核人</label>
+                                <div class="layui-input-inline">
+                                    <select name="ApprovalUserId" id="ApprovalUserId"></select>
+                                </div>
+                                <div class="layui-inline">
+                                    <button id="subcompanystructure" class="layui-btn" lay-filter="subcompanystructure">提交审批</button>
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="float: right;"><div class="layui-input-inline" id="addNewDeprBtn"> </div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-col-xs12 layui-col-sm2 layui-col-md2"  id="dpttree"></div>                
+                    <div class="layui-col-xs12 layui-col-sm10 layui-col-md10" id="chart-container"></div>
+                    <!-- <div class="layui-col-xs12 layui-col-sm1 layui-col-md2" id="deprUser">
+                        <div class="head">sss</div>
+                        <div class="list">sss</div>
+                    </div> -->
+                </div>
+            </div> 
+        </div>
+    </div>
+</body>
+<style>
+    .orgchart{width: 90%;}
+    #deprUser{
+        height: 100%;
+    }
+    #deprUser .head{
+        background-color: rgba(217, 83, 79, 0.8);
+        text-align: center;
+        height: 24px;
+        line-height: 24px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        border-radius: 4px 4px 0 0;
+    }
+</style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script src="../../layui/extend/jorgchart.js?112" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'table','form','dtree'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            table = layui.table,
+            dtree=layui.dtree,
+            laytpl = layui.laytpl,
+            laydate = layui.laydate,
+            form = layui.form,
+            upload=layui.upload,
+            element = layui.element,
+            router = layui.router();
+            // console.log(treeGrid)
+            dtree.render({
+                elem: "#dpttree",
+                url:urls+'/gateway/companystructure/dpttree',
+                response : {
+                    statusName:'status_code',
+                    statusCode: 200,
+                    message: "message",
+                    rootName: "data",
+                    parentId: "parent_id",
+                    childName: "children",
+                    nodeId: "id", 
+                    treeId: "id",//节点ID
+                    title: "name", 
+                    basicData:"data"
+                },
+                done:function(data, obj){
+                    if(data.data.length==0){
+                        layer.close('load');
+                        $("#chart-container").html('<div class="layui-form-item"><label class="layui-form-label">暂无架构图 : </label><div class="layui-input-inline"><a class="layui-btn" id="addOneCart">新建顶级部门</a></div></div>');
+                            $("#chartStuShow").hide();
+                            $("#companystructure").hide();
+                    }else{
+                        $("#addNewDeprBtn").html('<a class="layui-btn" id="addOneCart">新建顶级部门</a>');
+                        var nowid= data.data[0].id;
+                        var mId =data.data[0].data.dpt_root_node_id;
+                        dtree.dataInit("dpttree", ''+nowid+'');
+                        companystructureFun(mId)
+                        $.fetch({//获取审批人列表
+                            url:"/gateway/companyrule/getuser",
+                            type: 'post',
+                            cb:function(rs){
+                                var opHtml='';
+                                for(var i=0;i<rs.length;i++){
+                                    opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                }
+                                $("#ApprovalUserId").html(opHtml);
+                                form.render();
+                            }
+                        });
+                    }
+                },
+                firstIconArray: {
+                    "0": {
+                        "open": "icon-set-sm1",
+                        "close": "icon-favor"
+                    }
+                }, //用户自定义一级图标集合，node
+                nodeIconArray: {
+                    "0": {
+                        "open": "icon-shuye1",
+                        "close": "icon-wenjianjiazhankai"
+                    }
+                }, //用户自定义二级级图标集合，node
+                dataStyle:"layuiStyle",
+            });
+            // 点击节点触发回调
+            dtree.on("node('dpttree')" ,function(param){
+                var mId =JSON.parse(param.basicData).dpt_root_node_id;
+                companystructureFun(mId);
+                // $("#dpttree").attr("data-id",param.node_id);
+                // seeDuitFun(param)
+            });
+            // 
+
+            //渲染数据
+            var companystructureFun=function(NodeID){
+                // var params = dtree.getNowParam('dpttree');
+                // console.log(params)
+                $.fetch({
+                    url:"/gateway/companystructure/dptstruct",
+                    type: 'post',
+                    data:{
+                        NodeID:NodeID,
+                    },
+                    cb:function(rs){
+                        $('#chart-container').html('');
+                        if(rs==null){
+                           
+                        }else{
+                            if(rs.dpt_approval.approval_user_name=='--'&&rs.dpt_approval.approval_userid==""){
+                                $(".chartStu").html(
+                                '状态: 待提交'
+                                )
+                                $("#companystructure").show();
+                            }else{
+                                $("#companystructure").hide();
+                                $(".chartStu").html(
+                                    '审批人:'+rs.dpt_approval.approval_user_name+'  状态:'+rs.dpt_approval.apply_result_desc+''
+                                )
+                            }
+                            
+                            if(rs.structure_tree.length>0){
+                                var oc =  $('#chart-container').orgchart({
+                                    'data': rs.structure_tree[0],
+                                    'nodeContent': 'content',
+                                    'nodeID': 'id',
+                                    'pan':true,
+                                    'zoom':true,
+                                    "toggleSiblingsResp":true,
+                                    'createNode': function($node, data) {
+                                        var cartdata= data;
+                                        var secondMenuIcon = $('<div class="layui-btn-group cart-event"><button class="layui-btn layui-btn-primary layui-btn-xs add" lay-even="add"><i class="layui-icon">&#xe654;</i></button><button class="layui-btn layui-btn-primary layui-btn-xs edit" lay-even="edit"><i class="layui-icon">&#xe642;</i></button><button class="layui-btn layui-btn-primary layui-btn-xs del" lay-even="del"><i class="layui-icon">&#xe640;</i></button></div>', {
+                                        });
+                                        var userIcon=$('<div class="title hide-event">部门成员('+cartdata.user_count+'人)</div>');
+                                        $node.append(userIcon);
+                                        $node.append(secondMenuIcon);
+                                       // 
+                                            // var that = this;
+                                            // data.children.length * 2 
+                                            var cols='',isLast=true;
+                                            if(data.children&&data.children.length>0){
+                                                cols=data.children.length;
+                                                isLast=false;
+                                            }else{
+                                                isLast=true;
+                                            }
+                                            $.fetch({
+                                                url:'/gateway/companystructure/showtreeusers',
+                                                type: 'post',
+                                                data:{
+                                                    TreeID:cartdata.id
+                                                },
+                                                cb:function(rs){
+                                                    if(rs.length>0){
+                                                        var html="";
+                                                        for(var i=0;i<rs.length;i++){
+                                                            if(i==0){
+                                                                html+='<tr class="lines">'
+                                                            }
+                                                            if((i+1)%2 ==1){
+                                                                html+='<td style="width:50%;text-align:right;" class="right"><span>'+rs[i].name+';</span></td>'
+                                                            }else{
+                                                                 html+='<td style="width:50%;text-align:left;" class="left"><span>'+rs[i].name+';</span></td></tr><tr class="lines">'
+                                                            }
+                                                            if(i==rs.length-1){
+                                                                if(rs.length%2==1){
+                                                                    html+='<td class="left"><span></span></td>'
+                                                                }
+                                                                html+='</tr>'
+                                                            }
+                                                        }
+                                                    }else{
+                                                        var html='暂无用户'
+                                                    }
+                                                   
+                                                    // $(userIcon).find('.avatar').html(html);3
+                                                     $(userIcon).parent('div').after('<div class="userList" style="'+(isLast?'display:block':'display:none')+'"><table style="width:100%;margin-left: -1px;margin-bottom: -1px;">'+html+'</table></div>')
+                                                }
+                                            })
+                                            $node.on('click','.hide-event', function(){
+                                                $(this).parent('div').siblings('div.userList').toggle('hidden');
+                                            });
+                                        //  $('.cart-event').text();
+                                        $node.on("click",'.add,.edit,.del',function(){
+                                            var ev = $(this).attr("lay-even");
+                                            var cont='<div class="layui-fluid"><div class="layui-form" lay-filter="cart-form">'
+                                                        +'<div class="layui-form-item">'
+                                                            +'<label class="layui-form-label "><span class="red">*</span>名称</label>'
+                                                            +'<div class="layui-input-inline">'
+                                                                +'<input name="nameCart" lay-verify="required" id="nameCart" type="text" class="layui-input" >'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                        +'<div class="layui-form-item">'
+                                                            +'<label class="layui-form-label ">描述</label>'
+                                                            +'<div class="layui-input-inline">'
+                                                                +'<input name="nameCont" id="nameCont" type="text" class="layui-input" >'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                        +'<div class="layui-form-item">'
+                                                            +'<label class="layui-form-label ">添加成员</label>'         
+                                                            +'<div class="layui-input-inline departTable" data-title="">'          
+                                                                +'<textarea id="userName" name="userName" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea layui-input-inline"></textarea>'
+                                                                +'<ul id="appUserList" class="layui-small-static" style="display: none"></ul>'
+                                                                +'<a class="addDesc">'
+                                                                    +'<i class="iconfont icon-40"></i> 添加'
+                                                                +'</a>'
+                                                                +'<a class="emptyDesc">'
+                                                                    +'<i class="iconfont icon-qingkong"></i> 清除'
+                                                                
+                                                                +'</a>'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                        +'<div class="layui-form-item"><div class="layui-input-block">'
+                                                            +'<button id="subcart" class="layui-btn" lay-submit lay-filter="sub-cart-form">提交</button>'
+                                                            +'<button id="close" class="layui-btn">取消</button>'
+                                                        +'</div></div>'
+                                                    +'</div></div>'
+                                            switch(ev)
+                                            {
+                                            case "add":
+                                                layer.open({
+                                                    title:'添加子节点',
+                                                    type: 1, 
+                                                    content: cont,
+                                                    area:['auto'],
+                                                    success:function(layero,index){
+                                                        $(".addDesc").on("click",function(){
+                                                            selMemberFun($(this));
+                                                        });
+                                                        $(".emptyDesc").on("click",function(){
+                                                            $(this).siblings("ul").html("");
+                                                            $(this).siblings("ul").attr("data-val","");
+                                                            $(this).siblings(".layui-textarea").html("");
+                                                        })
+                                                        form.render();
+                                                        form.on('submit(sub-cart-form)', function(data){
+                                                            var textStr =$("ul#appUserList").attr("data-val");
+                                                            $.fetch({
+                                                                url:'/gateway/companystructure/add',
+                                                                type: 'post',
+                                                                data:{
+                                                                    IsDpt:1,
+                                                                    ParentID:cartdata.id,
+                                                                    Children:[
+                                                                        {Name:data.field.nameCart,
+                                                                        Content:data.field.nameCont,
+                                                                        UserIds:textStr}
+                                                                    ],
+                                                                },
+                                                                cb:function(rs){
+                                                                    layer.msg("添加成功");
+                                                                    layer.close(index);
+                                                                    // addChildren($node, [{
+                                                                        location.reload()
+                                                                    // }])
+                                                                }
+                                                            })
+                                                        })
+                                                        $("#close").on("click",function(){
+                                                            layer.close(index);
+                                                        })
+                                                    },
+                                                })
+                                            break;
+                                            case "edit":
+                                                layer.open({
+                                                    title:'编辑节点',
+                                                    type: 1, 
+                                                    content: cont,
+                                                    area:['auto'],
+                                                    success:function(layero,index){
+                                                        // console.log(cartdata,cartdata.nameCart)
+                                                        $("#nameCart").val(cartdata.name);
+                                                        $("#nameCont").val(cartdata.content);
+                                                        $.fetch({
+                                                                url:'/gateway/companystructure/showtreeusers',
+                                                                type: 'post',
+                                                                data:{
+                                                                    TreeID:cartdata.id
+                                                                },
+                                                                cb:function(rs){
+                                                                    console.log(rs)
+                                                                    var html ='',idstr='',nameText='';
+                                                                    for(var i=0;i<rs.length;i++){
+                                                                        html+='<li class="pick" data-user="'+rs[i].id+'">'+rs[i].name+'</li>';
+                                                                        if(i>0){
+                                                                            idstr+=",";
+                                                                        }
+                                                                        idstr+=''+rs[i].id+'';
+                                                                        nameText+=''+rs[i].name+';';
+                                                                    }
+                                                                    $("ul#appUserList").html(html); 
+                                                                    $("ul#appUserList").attr("data-val",idstr);
+                                                                    $('ul#appUserList').siblings(".layui-textarea").html(nameText);
+                                                                    $(".addDesc").on("click",function(){
+                                                                        selMemberFun($(this));
+                                                                    });
+                                                                    $(".emptyDesc").on("click",function(){
+                                                                        $(this).siblings("ul").html("");
+                                                                        $(this).siblings("ul").attr("data-val","");
+                                                                        $(this).siblings(".layui-textarea").html("");
+                                                                    })
+                                                                    form.render();
+                                                                    form.on('submit(sub-cart-form)', function(data){
+                                                                        var textStr =$("ul#appUserList").attr("data-val");
+                                                                        $.fetch({
+                                                                            url:'/gateway/companystructure/update',
+                                                                            type: 'post',
+                                                                            data:{
+                                                                                ID:cartdata.id,
+                                                                                Name:data.field.nameCart,
+                                                                                Content:data.field.nameCont,
+                                                                                UserIds:textStr
+                                                                            },
+                                                                            cb:function(rs){
+                                                                                layer.msg("修改成功");
+                                                                                layer.close(index);
+                                                                                location.reload()
+                                                                            }
+                                                                        })
+                                                                    })
+                                                                }
+                                                            })
+                                                        $("#close").on("click",function(){
+                                                            layer.close(index);
+                                                        })
+                                                    },
+                                                })
+
+                                            break;
+                                            case "del":
+                                            layer.confirm('确认删除节点"'+cartdata.name+'"?',{title:' '},function(index){
+                                                $.fetch({
+                                                    url: "/gateway/companystructure/del",
+                                                    type: 'post',
+                                                    data: {
+                                                        ID:cartdata.id,
+                                                    },
+                                                    cb:function(rs){
+                                                        layer.msg("删除成功");
+                                                        location.reload()
+                                                    }
+                                                });
+                                            })
+                                            break;
+                                            }
+                                        })
+                                    }
+                                })
+                            }else if(rs.structure_tree.length==0 ||rs.structure_tree==undefined ){
+                                $("#chart-container").html('<div class="layui-form-item"><label class="layui-form-label">暂无架构图 : </label><div class="layui-input-inline"><a class="layui-btn" id="addOneCart">添加</a></div></div>');
+                                $("#chartStuShow").hide();
+                                $("#companystructure").hide();
+                            }  
+                        }   
+                    }
+                });
+                $('#subcompanystructure').off("click").on("click", function(){
+                            var params = dtree.getNowParam('dpttree');
+                            if (JSON.stringify(params) === '{}') {
+                                
+                            }
+                            var ApprovalUserId = $("#ApprovalUserId").val();
+                            $.fetch({
+                                url:"/gateway/companystructure/submitapproval",
+                                type: 'post',
+                                data:{
+                                    NodeID:NodeID,
+                                    ApprovalUserId:ApprovalUserId,
+                                },
+                                cb:function(rs){
+                                    layer.msg("提交成功");
+                                    setTimeout(function(){
+                                        location.reload();
+                                    }, 500)
+                                }
+                            });
+                        });
+                   
+            }
+            
+            $("body").on("click",'#addOneCart',function(){
+                layer.open({
+                    title:'添加根节点',
+                    type: 1, 
+                    content: '<div class="layui-fluid"><div class="layui-form" lay-filter="cart-form">'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label "><span class="red">*</span>名称</label>'
+                                       +'<div class="layui-input-inline">'
+                                            +'<input name="nameCart" lay-verify="required" id="nameCart" type="text" class="layui-input" >'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="layui-form-item">'
+                                                    +'<label class="layui-form-label ">描述</label>'
+                                                    +'<div class="layui-input-inline">'
+                                                        +'<input name="nameCont" id="nameCont" type="text" class="layui-input" >'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="layui-form-item">'
+                                                    +'<label class="layui-form-label ">添加成员</label>'         
+                                                    +'<div class="layui-input-inline departTable" data-title="">'          
+                                                        +'<textarea id="userName" name="userName" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea layui-input-inline"></textarea>'
+                                                        +'<ul id="appUserList" class="layui-small-static" style="display: none"></ul>'
+                                                        +'<a class="addDesc">'
+                                                            +'<i class="iconfont icon-40"></i> 添加'
+                                                        +'</a>'
+                                                        +'<a class="emptyDesc">'
+                                                            +'<i class="iconfont icon-qingkong"></i> 清除'
+                                                        
+                                                        +'</a>'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="layui-form-item"><div class="layui-input-block">'
+                                                    +'<button id="subcart" class="layui-btn" lay-submit lay-filter="sub-cart-form">提交</button>'
+                                                    +'<button id="close" class="layui-btn">取消</button>'
+                                                +'</div></div>'
+                                            +'</div></div>',
+                    area:['auto'],
+                    success:function(layero,index){
+                        $(".addDesc").on("click",function(){
+                            selMemberFun($(this));
+                        });
+                        $(".emptyDesc").on("click",function(){
+                            $(this).siblings("ul").html("");
+                            $(this).siblings("ul").attr("data-val","");
+                            $(this).siblings(".layui-textarea").html("");
+                        })
+                        form.render();
+                        form.on('submit(sub-cart-form)', function(data){
+                            var textStr =$("ul#appUserList").attr("data-val");
+                            $.fetch({
+                                url:'/gateway/companystructure/add',
+                                type: 'post',
+                                data:{
+                                    IsDpt:1,
+                                    ParentID:0,
+                                    Name:data.field.nameCart,
+                                    Content:data.field.nameCont,
+                                    UserIds:textStr
+                                },
+                                cb:function(rs){
+                                    layer.msg("添加成功");
+                                    layer.close(index);
+                                    // addChildren($node, [{
+                                        location.reload()
+                                    // }])
+                                }
+                            })
+                        })
+                        $("#close").on("click",function(){
+                            layer.close(index);
+                        })
+                    },
+                })
+            })
+           //获取第一个根节点为默认值       
+    });
+</script>
+
+</html>

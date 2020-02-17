@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>公司制度审核</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/wang.css">
+    
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-header">制度审批</div>
+                     <div class="layui-card-body">
+                        <!-- <div class="layui-row layui-col-space15">
+                            <table class="layui-hide" id="CashListTabel" lay-filter="CashListTabel"></table>
+                        </div> -->
+                        <!-- <div class="layui-tab layui-tab-brief" lay-filter="TitleReview"> -->
+                                <!-- <ul class="layui-tab-title">
+                                    <li class="layui-this">未审批制度</li>
+                                    <li>未通过制度</li>
+                                    <li>已通过制度</li>
+                                </ul> -->
+                                <!-- <div class="layui-tab-content"> -->
+                                    <!-- <div class="layui-tab-item layui-show"> -->
+                                        <table id="mycompanyrules" class="layui-table modify-layui-table" lay-filter="mycompanyrules">
+                                        </table>
+                                    <!-- </div> -->
+                                    <!-- <div class="layui-tab-item">
+                                        <table id="" class="layui-table modify-layui-table">
+                                        </table>
+                                    </div> -->
+                                <!-- </div> -->
+                            <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+    
+</body>
+
+<script type="text/html" id="allUserTbTool">
+    {{#  if(d.apply_result==0) { }}
+		<a class="layui-btn layui-btn-xs" lay-event="editUserClick">审批</a>
+		<!-- <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUser">查看详情</a> -->
+	{{#  }else { }}
+        <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUser">查看详情</a>
+	{{#  } }} 
+
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'layedit', 'table','laytpl'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            form = layui.form,
+            layedit = layui.layedit,
+            element = layui.element,
+            laytpl=layui.laytpl,            
+            router = layui.router();
+        var table = layui.table;
+
+        layedit.build("rules", {
+            tool: [
+                'strong' //加粗
+                , 'italic' //斜体
+                , 'underline' //下划线
+                , 'del' //删除线
+                , '|' //分割线
+                , 'left' //左对齐
+                , 'center' //居中对齐
+                , 'right' //右对齐
+                , 'link' //超链接
+                , 'unlink' //清除链接
+                , 'face' //表情
+                // ,'image' //插入图片
+                // ,'help' //帮助
+            ]
+        });
+        element.on('tab(TitleReview)', function(data){
+                var index = data.index;
+                TitleReviewFun();
+            });
+            
+            var datameno = [];
+            // 表格
+            var listTab;
+            var TitleReviewFun  = function(){
+                var mycompanyrules = table.render({
+                    elem: '#mycompanyrules',
+                    url: urls + '/gateway/companyrule/approvallist',
+                    page: true,
+                    method: 'post',
+                    limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                    contentType: 'application/json',
+                    text: {
+                        none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    },
+                    cols: [
+                        [ {
+                            field: 'title',
+                            title: '制度名称',
+                        }, {
+                            field: 'rule_type_name',
+                            title: '制度类型',
+                        },{
+                            field: 'apply_result_desc',
+                            title: '审批状态',
+                        },   {
+                            fixed: 'right',
+                            minWidth:135,
+                            title: '操作',
+                            toolbar: '#allUserTbTool'
+                        }]
+                    ],
+                    request: {
+                        pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    parseData: function (res) { //res 即为原始返回的数据
+                        return {
+                            "status_code": res.status_code, //解析接口状态
+                            "message": res.message, //解析提示文本
+                            "count": res.data.total_count, //解析数据长度
+                            "data": res.data.data_list, //解析数据列表
+                            "curr": res.data.page_index
+                        };
+                    }
+                })
+                //监听事件
+                table.on('tool(mycompanyrules)', function(obj){
+                    
+                    var data = obj.data; //获得当前行数据
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var tr = obj.tr; //获得当前行 tr 的DOM对象
+                    var shtml='';
+                    if(data.attaches&&data.attaches!=''){
+                        for(var i=0;i<data.attaches.length;i++){
+                            shtml+='<a class="seeXqOutIn cateID ml-10" href="/gateway/companyrule/download/'+data.attaches[i].id+'"><span>'+data.attaches[i].original_name+'</span></a>'
+                        }
+                    }else{
+                        shtml+='<span>暂无附件</span>'
+                    }
+                    var layerConntent= '<div class="layui-fluid">'
+                                +'<div class="layui-card">'
+                                    // +'<div class="layui-card-header">制度审核</div>'
+                                    +'<div class="layui-card-body">'
+                                        +'<div class="layui-row layui-col-space15">'
+                                            +'<div class="layui-col-md2"></div>'
+                                            +'<div class="layui-col-md8">'
+                                                +'<div class="layui-form">'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<label class="layui-form-label modify-layui-label">制度标题</label>'
+                                                        +'<div class="layui-input-block cateID">'
+                                                        +'<span>'+obj.data.title+'</span>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<label class="layui-form-label modify-layui-label">附件</label>'
+                                                        +'<div class="layui-input-block cateID">'
+                                                            +shtml
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<label class="layui-form-label modify-layui-label">制度内容</label>'
+                                                        +'<div class="layui-input-block cateID">'
+                                                            +'<div class="w-e-text" style=" overflow-y: auto;">'+obj.data.content+'</div>'
+                                                        +'</div>'
+                                                        
+                                                    +'</div>'
+                                                    if(obj.data.apply_result==0){
+                                                        layerConntent +='<div class="layui-form-item">'
+                                                                    +'<label class="layui-form-label">审批意见：</label>'
+                                                                    + '<div class="layui-input-block">'
+                                                                    +     '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                                                                    + '</div>'
+                                                            +'</div>'
+                                                       +'<div class="layui-form-item">'
+                                                            +'<div class="layui-input-block">'
+                                                                +'<button id="yesAgree" class="layui-btn" lay-filter="">同意</button>'
+                                                                +'<button id="noAgree" class="layui-btn layui-btn-primary">不同意</button>'
+                                                                +'<button id="backC" class="layui-btn layui-btn-primary">返回</button>'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                    }
+                                                    
+                                                    layerConntent +='</div>'
+                                            +'</div>'
+                                            +'<div class="layui-col-md2"></div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                    if(layEvent === 'editUser'){ //查看
+                        layer.open({
+                            title: '审批',
+                            content:layerConntent,
+                            area: ['80%', '80%'],
+                            btn: '',
+                            type: 1,
+                        })
+                        //do somehing
+                    } else if(layEvent === 'editUserClick'){ //审批
+                        layer.open({
+                            title: '制度审核',
+                            content:layerConntent,
+                            area: ['100%', '100%'],
+                            btn: '',
+                            type: 1,
+                            success: function (layero, index) {
+                                form.render();
+                                $("#yesAgree").on("click",function(){
+                                    var cont=$("#appDacText").val();
+                                    if(cont){
+                                       $.fetch({
+                                            url: "/gateway/companyrule/approval",
+                                            dataType: 'json',
+                                            data:{
+                                                ItemID:obj.data.id,
+                                                Content:cont,
+                                                IsAgree:2,
+                                            },
+                                            type: 'post',
+                                            cb:function(rs){
+                                                layer.msg("提交成功");
+                                                setTimeout(function(){
+                                                    layer.close(index);
+                                                    mycompanyrules.reload();
+                                                }, 800 )
+                                            }
+                                        })
+                                    }else{
+                                        $("#appDacText").focus().addClass('layui-form-danger');
+                                        layer.msg('意见不能为空');
+                                        return false
+                                    }
+                                    
+                                })
+                                $("#noAgree").on("click",function(){
+                                    var cont=$("#appDacText").val();  
+                                    if(cont){
+                                       $.fetch({
+                                            url: "/gateway/companyrule/approval",
+                                            dataType: 'json',
+                                            type: 'post',
+                                            data:{
+                                                ItemID:obj.data.id,                                            
+                                                Content:cont,
+                                                IsAgree:1,
+                                            },
+                                            cb:function(rs){
+                                                layer.msg("提交成功");
+                                                setTimeout(function(){
+                                                    layer.close(index);
+                                                    mycompanyrules.reload();
+                                                }, 800 )
+                                            }
+                                        })
+                                    }else{
+                                        $("#appDacText").focus().addClass('layui-form-danger');
+                                        layer.msg('意见不能为空');
+                                        return false
+                                    }     
+                                })
+                                $("#backC").on("click",function(){
+                                    layer.close(index);                                       
+                                })
+                                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                            }
+                        });
+                    }
+                })
+            }
+            TitleReviewFun();
+    });
+</script>
+
+</html>

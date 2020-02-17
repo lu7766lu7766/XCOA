@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>绩效列表</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">绩效列表</div>
+                <div class="layui-card-body">
+                    <div class=" layui-form" lay-filter="performanceForm">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    编号
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  id="recordId" name="recordId" placeholder="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    标题
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  id="title" name="title" placeholder="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    填写人
+                                </label>
+                                <div class="layui-input-inline">
+                                        <input type="text"  id="applyName" name="applyName" placeholder="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>                       
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    填写日期
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="createStartime" name="createStartime">
+                                </div>
+                                <div class="layui-input-inline" style="width: 10px">~</div>
+                                
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="createEndtime" name="createEndtime">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item"> 
+                        </div>
+                        <div class="layui-form-item">   
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    奖惩者姓名
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  id="recorderName" name="recorderName" placeholder="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div> 
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    部门
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text" xm-select="deptId"  id="deptId" name="deptId" placeholder="" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""></select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    岗位
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="titleId" name="titleId" placeholder="" autocomplete="off" class="layui-input"  xm-select="titleId"  xm-select-search="" xm-select-radio=""></select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    发生日期
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="recordStartime" name="recordStartime">
+                                </div>
+                                <div class="layui-input-inline" style="width: 10px">~</div>
+                                
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="recordEndtime" name="recordEndtime">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">   
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    类型
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="twoLevelId" name="twoLevelId" lay-filter="twoLevelId" placeholder="" autocomplete="off" class="layui-input"></select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    考核主题
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="threeLevelId" lay-filter="threeLevelId"  name="threeLevelId" placeholder="" autocomplete="off" class="layui-input"></select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    评估项目
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="scoreId"  lay-filter="scoreId" name="scoreId" placeholder="" autocomplete="off" class="layui-input"></select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    错款类型
+                                </label>
+                                <div class="layui-input-inline" style="width: 420px;">
+                                        <input type="radio" name="errType" value="0" title="全部" checked>
+                                        <input type="radio" name="errType" value="1" title="出款">
+                                        <input type="radio" name="errType" value="2" title="入款">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">   
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    内容细节
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  id="recordDetail" name="recordDetail" placeholder="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    状态
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="status" lay-filter="status"  name="status" placeholder="" autocomplete="off" class="layui-input">
+                                        <option value="-1">全部</option>
+                                        <option value="0">已提交</option>
+                                        <option value="1">已否决</option>
+                                        <option value="2">已通过</option>
+                                        <option value="3">待知悉</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                 <button id="InquireSur" class="layui-btn" lay-submit lay-filter="InquireSur" title="查询"><i class="iconfont icon-sousuo"></i></button>
+                                 <button id="backquireSur" class="layui-btn">重置</button>
+                            </div>
+                        </div>  
+                    </div>
+                    <table id="performance" class="" lay-filter="performance"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .xm-select-parent .xm-form-select dl{
+        min-width: 220%;
+    }
+</style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20181213" type="text/javascript"></script>
+<script type="text/javascript">
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','laydate','laypage','table','formSelects'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    , table = layui.table
+    ,formSelects = layui.formSelects
+    ,element = layui.element
+    ,router = layui.router();
+    element.render();
+    element.on('tab(component-tabs-brief)', function(obj){
+
+    });
+
+    var laydate = layui.laydate
+        ,form = layui.form
+        ,laypage =layui.laypage
+        ,layedit = layui.layedit;
+
+    laydate.render({ 
+        elem: '#createStartime'
+        ,type:'datetime'
+    });
+    laydate.render({ 
+        elem: '#createEndtime'
+        ,type:'datetime'
+    });
+    laydate.render({ 
+        elem: '#recordStartime'
+        ,type:'datetime'
+    });
+    laydate.render({ 
+        elem: '#recordEndtime'
+        ,type:'datetime'
+    });
+
+    //部门下拉
+    $.fetch({//部门树列表
+        url: "/gateway/department/tree",
+        type: 'post',
+        cb:function(rs){
+            console.log(rs)
+            var formSelectsArr=rs[0].children[0].children;
+            formSelectsArr.unshift({'name':'全部','id':'-1'})
+            formSelects.config('deptId', {
+                keyName: 'name',
+                keyVal: 'id'
+            })
+            layui.formSelects.data('deptId', 'local', {
+                radio: true,
+                arr:formSelectsArr
+            });
+            // formSelects.render('deptId', {
+            //     radio: true,                    //是否设置为单选模式
+            // });
+        }
+    });
+    
+    $.fetch({//岗位树列表
+        url: "/gateway/jobTitle/tree",
+        type: 'post',
+        cb:function(rs){
+            console.log(rs)
+            var formSelectsArr=rs;
+            formSelectsArr.unshift({'name':'全部','id':'-1'})
+            formSelects.config('titleId', {
+                keyName: 'title_name',
+                keyVal: 'id'
+            })
+            layui.formSelects.data('titleId', 'local', {
+                radio: true,
+                arr:formSelectsArr
+            });
+            // formSelects.render('deptId', {
+            //     radio: true,                    //是否设置为单选模式
+            // });
+        }
+    });
+    //评分标准 下拉框渲染 /gateway/performance/listScore cateId    
+    var listScoreFun =function(cateId){
+        var datacateId = cateId==undefined?'':cateId;
+        datacateId =datacateId== '-1'?'':datacateId;        
+        if(cateId==undefined){
+            $("#scoreId").html('<option value="">暂无</option>');  
+            $("#standardScore").val('');                          
+            form.render()
+        }else{
+            $.fetch({
+                url:"/gateway/performance/listScore",
+                type: 'post',
+                data:{
+                    cateId: datacateId,
+                    pageSize:10000000,
+                },
+                cb:function(rs){
+                    ScoreData={};
+                    var op='<option value="-1" selected>全部</option>'
+                    var rs = rs.data_list
+                    if(rs&&rs.length>0){
+                        for(var i=0;i<rs.length;i++){
+                            op+='<option value="'+rs[i].id+'" >'+rs[i].title+'</option>'
+                            ScoreData[rs[i].id]=rs[i].score;
+                            console.log(ScoreData)
+                        }
+                        $("#scoreId").html(op);        
+                        $("#standardScore").val(rs[0].score);
+                    }else{
+                        op='<option value="">暂无</option>'      
+                         $("#standardScore").val('');
+                                      
+                    }
+                    form.render()
+                }
+            });
+        }
+    }
+    //流程 3级 下拉框渲染 /gateway/performance/listCate level parentId
+    var listCateFun =function(level,parentId){
+        var dataLevel = level===undefined?'':level;
+        var dataparentId = parentId===undefined?'':parentId;
+        dataparentId =dataparentId== '-1'?'':dataparentId;
+        $.fetch({
+            url:"/gateway/performance/listCate",
+            type: 'post',
+            data:{
+                level: dataLevel,
+                parentId: dataparentId,
+            },
+            cb:function(rs){
+                var op='<option value="-1" selected>全部</option>'
+                if(rs&&rs.length>0){
+                    for(var i=0;i<rs.length;i++){
+                        op+='<option value="'+rs[i].id+'" >'+rs[i].cate_name+'</option>'
+                    }
+                    if(level==1){
+                        $("#cateLevelOne").html(op);
+                        listCateFun(2,rs[0].id);
+                    }
+                    if(level==2){
+                        $("#twoLevelId").html(op);
+                        listCateFun(3,rs[0].id);                    
+                    }
+                    if(level==3){
+                        $("#threeLevelId").html(op);
+                        listScoreFun(-1);                                 
+                    }
+                }else{
+                    op='<option value="">暂无</option>'    
+                    if(level==1){
+                        $("#cateLevelOne").html(op);
+                        $("#twoLevelId").html(op);
+                        $("#threeLevelId").html(op);                        
+                        // listCateFun(2,rs[0].id);
+                    }
+                    if(level==2){
+                        $("#twoLevelId").html(op);
+                        $("#threeLevelId").html(op);                        
+                        // listCateFun(3,rs[0].id);                    
+                    }
+                    if(level==3){
+                        $("#threeLevelId").html(op);
+                        // listScoreFun(rs[0].id);                                 
+                    }              
+                }
+                form.render()
+            }
+        });
+    }
+    form.on('select(twoLevelId)', function(data){//2级
+        console.log(data.value)
+        listCateFun(3,data.value);
+    });    
+    form.on('select(threeLevelId)', function(data){//3级
+        listScoreFun(data.value);
+    });  
+    $.fetch({
+        url:"/gateway/performance/cateTree",
+        type: 'post',
+        data:{
+            level: 2,
+        },
+        cb:function(rs){
+            var select1='',select2='<option value="-1">全部</option>';
+            for(var i =0;i<rs.length;i++){
+                    // select1+='<option value="'+rs[i].id+'">'+rs[i].cate_name+'</option>';
+                select2+='<optgroup label="'+rs[i].cate_name+'">'              
+                    if(rs[i].children&&rs[i].children.length>0){
+                        for(var j =0;j<rs[i].children.length;j++){
+                                select2+='<option value="'+rs[i].children[j].id+'">'+rs[i].children[j].cate_name+'</option>'
+                        }
+                    }
+                select2+='</optgroup>'
+            }
+            $("#twoLevelId").html(select2);
+            listCateFun(3,-1);
+                
+            form.render()
+        }
+    });
+    
+    
+    // 更换为数据表格
+    var performance = table.render({
+        elem: '#performance',
+        url: urls+'/gateway/performance/list',
+        limit: 10,
+        method: 'post',
+        contentType: 'application/json',
+        page:true,
+        loading: true,
+        defaultToolbar: ['filter', 'print', 'exports'],
+        limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+        toolbar:true,
+        text: {
+            none: '暂无数据' 
+        },
+        cols: [[
+            {sort: true,field:'id',title:'编号',minWidth:80},
+            {sort: true,field:'created_at',title:'填写日期',minWidth:160},
+            {sort: true,field:'creater_name',title:'填写人',minWidth:90},
+            {sort: true,field:'title',title:'标题',minWidth:100},
+            {sort: true,field:'recorder_name',title:'奖惩者姓名',minWidth:120},
+            {sort: true,field:'recorder_dept_name',title:'部门',minWidth:100},
+            {sort: true,field:'recorder_title_name',title:'岗位',minWidth:120},
+            {sort: true,field:'record_datetime',title:'发生日期',minWidth:160},
+            {sort: true,field:'level_two_name',title:'类型',minWidth:120},
+            {sort: true,field:'level_three_name',title:'考核主题',minWidth:120},
+            {sort: true,field:'score_title',title:'评估项目',minWidth:120},
+            {sort: true,field:'standard_score',title:'原加/扣分',minWidth:100
+            //     templet: function (d){
+            //     return d.edited_score==null?d.standard_score:d.edited_score
+            // }
+            },
+            {sort: true,field:'edited_score',title:'修改分',minWidth:90},
+            {sort: true,field:'record_detail',title:'内容细节',minWidth:100},
+            {sort: true,field:'err_money_type_name',title:'错款类型',minWidth:100},
+            {sort: true,field:'err_money_submit',title:'提单金额',minWidth:100},
+            {sort: true,field:'err_money_total',title:'错款金额',minWidth:100},
+            {sort: true,field:'err_money_compensation',title:'赔偿金额',minWidth:100},
+            {sort: true,field:'record_status_name',title:'状态',minWidth:90},
+            {sort: true,field:'is_deleted_name',title:'是否删除',minWidth:100},
+            {sort: true,field:'is_edited_name',title:'是否修改',minWidth:100},
+            {title:'操作',fixed: 'right',minWidth:80,templet: function (d){
+                
+                var btn ='<a class="layui-btn layui-btn-sm"  lay-event="details">详情</a>'   
+                return btn
+            }},
+        
+        ]]
+        ,request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        ,parseData: function(res){ //res 即为原始返回的数据
+            return {
+                "status_code":res.status_code, //解析接口状态
+                "message": res.message, //解析提示文本
+                "count": res.data.total_count, //解析数据长度
+                "data": res.data.data_list, //解析数据列表
+                "curr":res.data.page_index
+            };
+        }
+    })
+    // $("#InquireSur").on("click",function(){
+    //     var timeArr = $('#NoticeTime').val().split(' - ');
+    //     var tit = $("#NoticeTit").val();
+        
+    // })
+    form.on('submit(InquireSur)', function(data){
+        // data.field['scoreTitle']=$("#scoreId").find("option:selected").text();
+        // data.field['attachIds']=AttachsId.join(",");//附件
+        // data.field['recorderName']=data.field.recorderUid;
+        // data.field.recorderDeptId=$("#recorderDeptId").attr('subVal');
+        // data.field.recorderTitleId=$("#recorderTitleId").attr('subVal');
+        // data.field.creater=$("#creater").attr('subVal');
+        // data.field.recorderUid=$("#recorderUid").attr('ts-selected');
+        console.log(data.field)
+        data.field.threeLevelId=data.field.threeLevelId=='-1'?'':data.field.threeLevelId;
+        data.field.twoLevelId=data.field.twoLevelId=='-1'?'':data.field.twoLevelId;
+        data.field.deptId=data.field.deptId=='-1'?'':data.field.deptId;
+        data.field.scoreId=data.field.scoreId=='-1'?'':data.field.scoreId;
+        data.field.titleId=data.field.titleId=='-1'?'':data.field.titleId;
+        data.field.status=data.field.status=='-1'?'':data.field.status;
+        performance.reload({
+            where:data.field
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }
+        });
+    })
+    table.on('tool(performance)', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        console.log(data)
+        if (layEvent === 'details') {
+            layer.open({
+                title:false,
+                content:'PerformanceDetail.html',
+                type:2,
+                closeBtn:false,
+                id:'performanceeDetail',
+                area:['100%','100%'],
+                success:function(layero,index){
+                    var body = layer.getChildFrame('body', index);
+					var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+					iframeWin.detailData={
+						recordId:data.id,
+						creater:data.creater,
+					}
+                }
+            });
+        }
+    })
+    $("#backquireSur").on("click",function(){
+        // performanceForm
+        layui.formSelects.value('deptId', []); 
+        layui.formSelects.value('titleId', []); 
+        form.val("performanceForm", {
+            "recordId": "" // "name": "value"
+            ,"title": ""
+            ,"applyName": ''
+            ,"createStartime": ''
+            ,"createEndtime": ''
+            ,"recordStartime": ''
+            ,"recordEndtime": ''
+            ,"recorderName": ''
+            ,'status':'-1'
+            ,"twoLevelId": '-1'
+            ,"threeLevelId": '-1'
+            ,"scoreId": '-1'
+            ,"errType":'0'
+            ,"recordDetail": ""
+        })
+        form.render()
+        performance.reload({
+            where: {
+            }
+            ,page:{
+                curr:1,
+            }
+        })
+    })
+    
+    $('#performance').on("mouseenter", '.limit-width',function(){
+        var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">'+$(this).text();+'</div>'
+        var that = this;
+        layer.tips(tipsCont1, that,{
+              tips:[1,'#999']
+              ,maxWidth: 'auto'
+        });
+    });
+})
+</script>
+</html>

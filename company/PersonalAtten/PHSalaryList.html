@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>工资列表(PH)</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/jquery.table2excel.min.js"></script>
+	
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form" style="margin-bottom: 10px;">
+                    <div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">
+                                用户名:
+							</label>
+							<div class="layui-input-inline">
+							    <input type="text" id="UserName" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<label class="layui-form-label">
+                                部门：
+							</label>
+							<div class="layui-input-inline">
+								<select type="text" xm-select="DepartmentIDPH"  id="DepartmentIDPH" name="DepartmentIDPH" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+							</div>
+						</div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">岗位：</label>
+                            <div class="layui-input-inline">
+                                <!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTit leID"></select> -->
+                                <select type="text"  id="JobTitleIDPH" name="JobTitleIDPH" placeholder="全部" autocomplete="off" class="layui-input"  xm-select="JobTitleIDPH"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+                            </div>
+                        </div> 
+                        <div class="layui-inline">
+                            <label class="layui-form-label">月份</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  class="layui-input" id="MonthPH"  autocomplete="off" name="MonthPH">
+                            </div>
+                        </div>
+						<div class="layui-inline">
+                            <label class="layui-form-label">阶段</label>
+                            <div class="layui-input-inline">
+                                <select id="IsShowPH" lay-filter="IsShowPH"  name="IsShowPH">
+                                    <option value="1">第一阶段</option>
+                                    <option value="2">第二阶段</option>
+                                    <option value="-1">全部</option>
+                                </select> 
+                            </div>
+                        </div> 
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-sm" lay-filter="filterTabelSelPH" id="filterTabelSelPH" title="查询">
+                                <i class="iconfont icon-sousuo"></i>
+                            </button>
+                            <button class="layui-btn layui-btn-primary layui-btn-sm" lay-filter="closeLayerPH" id="closeLayerPH">
+                                返回
+                            </button>
+						</div>
+					</div>
+					<div class="layui-form-item" id="WhetherIssue">
+						<div class="layui-inline">
+							<label class="layui-form-label">发放日期</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input"  autocomplete="off" id="dateTime">
+							</div>
+							<button class="layui-btn" id="subList" title="" >发放</button>
+							<button class="layui-btn" id="newList" title="" >重新生成数据</button>
+						</div> 
+                    </div>
+				</div>
+                <table id="PHTable" lay-filter="PHTable"></table>
+            </div>
+        </div>
+    </div>
+    <!-- 用于复杂表头导出的 隐藏table -->
+	<table id="report-table" cellpadding=1 cellspacing=1 border =1 style="display: none"></table>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<style>
+    .layui-form-label{
+        width: 60px;
+    }
+	.user-list{
+		max-width: 75%;
+	}
+	.user-list li{
+		float: left;
+		min-width: 0;
+		line-height: 20px;
+		max-width: 160px;
+		text-overflow: ellipsis;
+		padding-right: 40px;
+		overflow: hidden;
+		margin-right: 4px;
+		vertical-align: top;
+   		position: relative;
+		padding-left: 10px;
+	}
+	.user-list li.bg{
+		background:#f6f6f6;
+
+	}
+	.user-list li .layui-tab-close{
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		margin: -7px 0 0;
+		width: 16px;
+		height: 16px;
+		line-height: 16px;
+		border-radius: 50%;
+		font-size: 12px;
+		cursor: pointer;
+	}   
+	.user-list li .layui-tab-close:hover{
+		border-radius: 2px;
+		background-color: #FF5722;
+		color: #fff;
+	}
+	.xm-select-parent .xm-form-select dl{
+        min-width: 220%;
+    }
+	.layui-unselect.layui-form-checkbox{
+		/* min-width: 152px; */
+	}
+	 div[lay-id="PHTable"] .layui-table-fixed.layui-table-fixed-l th{
+        height:0px !important;
+	}
+	div[lay-id="PHTable"] .layui-table-fixed.layui-table-fixed-r th[rowspan="4"]{
+		height:61px !important;
+    }
+    .layui-table[lay-size=sm] th[data-field="0"],
+    .layui-table[lay-size=sm] th[data-field="Total"]{
+        background: #C6E0B4;
+    }
+    .layui-table[lay-size=sm] th[data-field="Deduction"],
+    .layui-table[lay-size=sm] th[data-field="Mandatory"]{
+        background: #FF0000;
+        color: #fff;
+    }
+    .layui-table[lay-size=sm] th[data-field="add item"],
+    .layui-table[lay-size=sm] th[data-field="de_lateness"],
+    .layui-table[lay-size=sm] th[data-field="de_shortage"],
+    .layui-table[lay-size=sm] th[data-field="de_others"],
+    .layui-table[lay-size=sm] th[data-field="de_sub_total"],
+    .layui-table[lay-size=sm] th[data-field="de_undertime"],
+    .layui-table[lay-size=sm] th[data-field="mc_sss"],
+    .layui-table[lay-size=sm] th[data-field="mc_pag_ibig"],
+    .layui-table[lay-size=sm] th[data-field="mc_philhealth"],
+    .layui-table[lay-size=sm] th[data-field="mc_sub_total"],
+    .layui-table[lay-size=sm] th[data-field="mc_sub_total"]{
+        background: #FFFF00;
+    }
+    .layui-table[lay-size=sm] th[data-field="PayBack"]{
+        background: #D9D9D9;
+    }
+    .layui-table[lay-size=sm] th[data-field="add_ot"],
+    .layui-table[lay-size=sm] th[data-field="add_nsd"],
+    .layui-table[lay-size=sm] th[data-field="add_refund"],
+    .layui-table[lay-size=sm] th[data-field="add_perfect_attd"],
+    .layui-table[lay-size=sm] th[data-field="add_13th_paid"],
+    .layui-table[lay-size=sm] th[data-field="add_others"],
+    .layui-table[lay-size=sm] th[data-field="add_sub_total"]{
+        background: #D9E1F2;
+    }
+</style>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['element', 'index', 'table', 'laydate','formSelects','form'], function () {
+        var $ = layui.$,
+            table = layui.table,
+			laydate = layui.laydate,
+            formSelects=layui.formSelects,
+            form = layui.form,
+            element = layui.element;
+        
+        
+        //渲染下拉框 mnl
+		//部门下拉
+		$.fetch({//部门树列表
+			url: "/gateway/department/tree",
+			type: 'post',
+			cb:function(rs){
+				var formSelectsArr=rs[0].children[0].children;
+				formSelects.config('DepartmentIDPH', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+			}
+        });
+        $.fetch({//岗位树列表
+			url: "/gateway/jobTitle/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs;
+				formSelects.config('JobTitleIDPH', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});  
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+        });
+        //年月选择器
+		laydate.render({ 
+			elem: '#MonthPH'
+			,type: 'month'
+			,value:new Date()
+        });
+        // 发放日期
+        laydate.render({
+            elem: '#dateTime',
+            type: 'date',
+            // value: d.getFullYear() + '-' + lay.digit(d.getMonth() + 1)
+		});
+        
+        // 列表
+        $("#WhetherIssue").hide();
+        var ResetTable = function(datas){
+            // console.log(datas,"-1-1-1-1")
+            $.fetch({
+                url:"/gateway/usersalary/ph/index",
+                type:'post',
+                data:datas,
+                
+                cb:function(res){
+                    // console.log(res)
+                    if(res.assign==false && datas.SalaryTimes != '-1'){
+                        $("#WhetherIssue").show();
+                    }else if(res.assign == true){
+                        $("#WhetherIssue").hide();
+                    }
+                    //console.log(res)
+                    var endDate1 = laydate.getEndDate(10);
+                    var d = new Date();
+		            var month = lay.digit(d.getMonth() + 1)==1?12:(d.getMonth() + 1);
+                    var allUserListPH = table.render({
+                        elem: '#PHTable',
+                        // url: window.urls + '/gateway/usersalary/ph/userbasicsalary',
+                        
+                        toolbar:true
+                        ,totalRow:true
+                        ,defaultToolbar: ['filter', 'print', 'exports']
+                        // ,where:{
+                        // 	Month:year+'-'+month,
+                        // }
+                        ,text: {
+                            none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                        }
+                        ,data:res.list
+                        // ,cellMinWidth: 100
+                        ,limit:100000
+                        // ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                        ,method:'post'
+                        ,contentType: 'application/json'
+                        ,page:false
+                        ,loading:true
+                        ,size:'sm',
+
+                        //  toolbar:false,
+                        // totalRow:true,
+                        // defaultToolbar: ['filter', 'print', 'exports'],
+                        // text: {
+                        //     none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                        // },
+                        // data:res.list,
+                        // // limits:false,
+                        
+                        // limits:100000,
+                        // method: 'post',
+                        // contentType: 'application/json',
+                        // page: false,
+                        // loading: true,
+                        // size:'sm',
+                        cols: [
+                            [//第一级表头
+                                {
+                                    title: '  ',//排序	
+                                    colspan:10,
+                                    rowspan:1,
+                                    fixed:'left',
+                                    align:'center'
+                                },{
+                                    field:'add item',
+                                    title: 'Add Item',//加项目	
+                                    colspan:7,
+                                    align:'center'
+                                },{
+                                    field:'PayBack',
+                                    title: 'PayBack Item', //回补项目
+                                    colspan:9,
+                                    align:'center'
+                                    
+                                },{
+                                    field:'Deduction',
+                                    title: 'Deduction Items', // 扣除项目
+                                    colspan:5,
+                                    align:'center'
+                                },{
+                                    field:'Mandatory',
+                                    title: 'Mandatory Contribution', //强制性扣除
+                                    colspan:4,
+                                    align:'center'
+                                },{
+                                    field:'Total',
+                                    title: 'Total Pay', //共工资
+                                    colspan:15,
+                                    align:'center'
+                                }
+                            ],
+                            [//第二级表头
+                                {
+                                    sort:true,
+                                    field:'no',
+                                    title: 'No',//排序	
+                                    type: 'numbers',
+                                    width:60,
+                                    unresize: true,
+                                    fixed:'left',
+                                    rowspan:2,
+                                },{
+                                    sort:true,
+                                    field: 'user_name',
+                                    title: 'User Name',//名称
+                                    minWidth:110,
+                                    rowspan:2,
+                                    fixed:'left',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'gender_desc',
+                                    title: 'Gender',//性别
+                                    fixed:'left',
+                                    rowspan:2,
+                                    minWidth:90,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'dpt_name',
+                                    title: 'Dept',//部门
+                                    rowspan:2,
+                                    minWidth:80,
+                                    fixed:'left',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'title_name',
+                                    title: 'Position',//岗位
+                                    rowspan:2,
+                                    minWidth:90,
+                                    fixed:'left',
+                                    unresize: true 
+                                },{
+                                    sort:true,
+                                    field: 'join_date',
+                                    title: 'Date Joined',//入职日期
+                                    rowspan:2,
+                                    minWidth:120,
+                                    // fixed:'left',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'due_date',
+                                    title: 'Confirmed Date',//转正日期
+                                    minWidth:140,
+                                    rowspan:2,
+                                    // fixed:'left',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'employ_type_desc',
+                                    title: 'Emply Type',//雇佣类型
+                                    minWidth:120,
+                                    rowspan:2,
+                                    // fixed:'left',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'calendar_daycount',
+                                    title: 'Calender Days',//日历天数
+                                    minWidth:125,
+                                    rowspan:2,
+                                    // fixed:'left',
+                                    unresize: true,
+                                    // templet: function(d){
+                                    //     // console.log(d)
+                                    //     var dval=$("#MonthPH").val();
+                                    //     var phaseOne = '15';
+                                    //     if(d.salary_times=='1'){
+                                    //         // console.log('第一阶段')
+                                    //         return phaseOne;
+                                    //     }else if(d.salary_times=='2'){
+                                    //         // console.log("第二阶段")
+                                    //         var year = dval.slice(0,4)
+                                    //         var month =dval.slice(5,7)
+                                    //         function getDaysOfMonth(year,month){
+                                    //             var date=new Date(year,month,00);
+                                    //             var days=date.getDate();
+                                    //             var us = days-phaseOne;
+                                    //             // console.log(us)
+                                    //             return us;
+                                    //         }
+                                    //         return getDaysOfMonth(year,month)
+                                    //     }else{
+                                    //         /**
+                                    //          * 获取某个月的总天数
+                                    //          * 
+                                    //          */
+                                    //         var year = dval.slice(0,4)
+                                    //         var month =dval.slice(5,7)
+                                    //         function getDaysOfMonth(year,month){
+                                    //             var date=new Date(year,month,00);
+                                    //             var days=date.getDate();
+                                    //             return days;
+                                    //         }
+                                    //         return getDaysOfMonth(year,month)
+                                    //     }
+                                        
+                                    // }
+                                },{
+                                    sort:true,
+                                    field: 'work_days',
+                                    title: 'Actual Working Days',//实际工作天数 
+                                    rowspan:2,
+                                    minWidth:160,
+                                    edit: 'text',
+                                    unresize: true
+                                }
+                            ],
+                            [//第三级表头
+                                { // 加项目
+                                    sort:true,
+                                    field: 'add_ot',
+                                    title: 'OT',//加班
+                                    minWidth:80,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_nsd',
+                                    title: 'Night Shift Diff.NSD',//晚班津贴
+                                    minWidth:160,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_refund',
+                                    title: 'Refund',//回补
+                                    minWidth:90,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_perfect_attd',
+                                    title: 'Perfect Attd',//全勤
+                                    minWidth:120,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_13th_paid',
+                                    title: '13th Paid',//13薪
+                                    minWidth:120,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_others',
+                                    title: 'Others',//其他
+                                    minWidth:120,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_sub_total',
+                                    title: 'Sub Total',//加项小计
+                                    minWidth:120,
+                                    unresize: true
+                                },{ //回补项目
+                                    sort:true,
+                                    field: 'pb_ot',
+                                    title: 'OT',//加班
+                                    minWidth:80,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_nsd',
+                                    title: 'Night Shift Diff.NSD',//晚班津贴
+                                    minWidth:160,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_refund',
+                                    title: 'Refund',//回补
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_perfect_attd',
+                                    title: 'Perfect Attd',//全勤
+                                    minWidth:120,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_sss',
+                                    title: 'SSS',//
+                                    minWidth:90,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_pag_ibig',
+                                    title: 'PAG-IBIG',//
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_philhealth',
+                                    title: 'PhilHealth',//
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_others',
+                                    title: 'Others',//其他
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_sub_total',
+                                    title: 'Sub Total',//回补小计
+                                    minWidth:110,
+                                    unresize: true
+                                },{ //扣除项目
+                                    sort:true,
+                                    field: 'de_lateness',
+                                    title: 'Lateness',//迟到
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'de_undertime',
+                                    title: 'Undertime',//不足时数
+                                    minWidth:110,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'de_shortage',
+                                    title: 'Shortage',//错款
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'de_others',
+                                    title: 'Others',//其他
+                                    minWidth:100,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'de_sub_total',
+                                    title: 'Sub Total',//扣除小计
+                                    minWidth:120,
+                                    unresize: true
+                                },{ //强制性扣除
+                                    sort:true,
+                                    field: 'mc_sss',
+                                    title: 'SSS',//社保 1
+                                    minWidth:90,
+                                    // edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'mc_pag_ibig',
+                                    title: 'PAG-IBIG',//社保 2
+                                    minWidth:100,
+                                    // edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'mc_philhealth',
+                                    title: 'PhilHealth',//社保 3
+                                    minWidth:110,
+                                    // edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'mc_sub_total',
+                                    title: 'Sub Total',//强制性扣除小计
+                                    minWidth:110,
+                                    unresize: true
+                                },{ //共工资
+                                    sort:true,
+                                    field: 'daily_wages',
+                                    title: 'Daily Wages',//日薪
+                                    minWidth:120,
+                                    edit:'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'allowance',
+                                    title: 'Allowance',//津贴
+                                    minWidth:110,
+                                    edit: 'text',
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'total_daily_wages',
+                                    title: 'Total Daily Wages',//共日薪
+                                    minWidth:150,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'total_daily_wages1',
+                                    title: 'Daily Wages (1) PESO',//共日薪（1）（披索）
+                                    minWidth:175,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'total_allowance',
+                                    title: 'Allowance Pay PESO',//津贴（披索）
+                                    minWidth:170,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'total_daily_wages3',
+                                    title: 'Total Daily Wages (3) PESO',//共日薪（3）（披索）
+                                    minWidth:210,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'mc_sub_total',
+                                    title: 'Total Mand.Ddct(Emplyee)', //强制性扣除小计
+                                    minWidth:190,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'add_sub_total',
+                                    title: 'Add Item Sub Total',//加项小计
+                                    minWidth:160,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'pb_sub_total',
+                                    title: 'Payback Item Sub Total',//回补小计
+                                    minWidth:180,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'de_sub_total',
+                                    title: 'Deduction Item Sub Total',//扣除小计
+                                    minWidth:180,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'total_gross_salary',
+                                    title: 'Total Gross Salary',//工资总额
+                                    minWidth:150,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'cut_off_wages1',
+                                    title: '1st Cut-off Wages',//第一阶段工资
+                                    minWidth:150,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'cut_off_wages2',
+                                    title: '2nd Cut-Off Wages',//第二阶段工资
+                                    minWidth:150,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'cut_off_wages1',
+                                    title: '1st Net Pay',//第一净工资
+                                    minWidth:120,
+                                    unresize: true
+                                },{
+                                    sort:true,
+                                    field: 'cut_off_wages2',
+                                    title: '2nd Net Pay',//第二净工资
+                                    minWidth:120,
+                                    unresize: true
+                                }
+                                // ,{
+                                //     title: ' ',
+                                //     rowspan:4,
+                                //     fixed:'right',
+                                //     width:100,
+                                //     align:'center',
+                                //     toolbar: '<div><button class="layui-btn layui-btn-xs" lay-event="details">详情</button></div>'
+                                // }
+            
+                            ]
+                        ],
+                        // request: {
+                        // 	pageName: 'currentIndex' //页码的参数名称，默认：page
+                        // 	,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                        // },
+                        // parseData: function (res) { //res 即为原始返回的数据
+                        // 	return {
+                        // 		"status_code": res.status_code, //解析接口状态
+                        // 		"message": res.message, //解析提示文本
+                        // 		// "count": res.data.total_count, //解析数据长度
+                        // 		"data": res.data, //解析数据列表
+                        // 		// "curr": res.data.page_index
+                        // 	};
+                        // },
+                        done: function (rs) {
+                            if(datas.SalaryTimes=="-1"||res.assign==true){
+                                // data-edit="text"
+                                $(".layui-table-body.layui-table-main td").removeAttr("data-edit")
+                            }
+                            // console.log(rs,res)
+                            $('div[lay-event="LAYTABLE_EXPORT"]').attr('lay-event','layevent-eport-table')
+                            $('div[lay-event="layevent-eport-table"]').off('click').on('click',function(){
+                                var repTh=	$("div[lay-id='PHTable'] .layui-table-box .layui-table-header>table").html();
+                                var repTb=	$("div[lay-id='PHTable'] .layui-table-box .layui-table-body.layui-table-main>table").html();
+                                $('#report-table').html(repTh+repTb);
+                                // var table2excel = new Table2Excel();
+                                // table2excel.export($('#report-table'));
+                                
+                                $('#report-table').table2excel({
+                                    fileext: ".xls",
+                                    filename: ""+month+" 工资列表"
+                                })
+                            })
+                        }
+                    });
+                    table.resize('PHTable');
+
+                    //监听单元格编辑
+                    table.on('edit(PHTable)', function(obj){
+                        var value = obj.value //得到修改后的值
+                        ,data = obj.data //得到所在行所有键值
+                        ,field = obj.field; //得到字段
+                        
+                        var dval=$('#MonthPH').val();
+                        var IsShowPH=$("#IsShowPH").val();
+                        var AgainData = {
+                            Month:dval,
+                            SalaryTimes:IsShowPH,
+                            UserSalary:[{
+                                UserID:data.user_id,
+                                Allowance:data.allowance,
+                                WorkDays:data.work_days,
+                                AddOT:data.add_ot,
+                                AddNsd:data.add_nsd,
+                                AddRefund:data.add_refund,
+                                AddPerfectAttd:data.add_perfect_attd,
+                                Add13thPaid:data.add_13th_paid,
+                                AddOthers:data.add_others,
+                                PbOT:data.pb_ot,
+                                PbNsd:data.pb_nsd,
+                                PbRefund:data.pb_refund,
+                                PbPerfectAttd:data.pb_perfect_attd,
+                                PbSSS:data.pb_sss,
+                                PbPagIbig:data.pb_pag_ibig,
+                                PbPhilhealth:data.pb_philhealth,
+                                PbOthers:data.pb_others,
+                                DeLateness:data.de_lateness,
+                                DeUndertime:data.de_undertime,
+                                DeShortage:data.de_shortage,
+                                DeOthers:data.de_others,
+                                McSSS:data.mc_sss,
+                                McPagIbig:data.mc_pag_ibig,
+                                McPhilhealth:data.mc_philhealth,
+                                DailyWages:data.daily_wages
+                            }]
+                        }
+                        if(IsShowPH=="-1"){
+                            layer.msg('请选择阶段');
+				            return false
+                        }
+                        // console.log(datas)
+                        $.fetch({
+                            url:"/gateway/usersalary/ph/savesalary",
+                            type:'post',
+                            data:AgainData,
+                            cb:function(rs){
+                                // console.log(rs)
+                                obj.update({
+                                    'work_days':rs.data.work_days,
+                                    'add_ot':rs.data.add_ot,
+                                    'add_nsd':rs.data.add_nsd,
+                                    'add_refund':rs.data.add_refund,
+                                    'add_perfect_attd':rs.data.add_perfect_attd,
+                                    'add_13th_paid':rs.data.add_13th_paid,
+                                    'add_others':rs.data.add_others,
+                                    'pb_ot':rs.data.pb_ot,
+                                    'pb_nsd':rs.data.pb_nsd,
+                                    'pb_refund':rs.data.pb_refund,
+                                    'pb_perfect_attd':rs.data.pb_perfect_attd,
+                                    'pb_sss':rs.data.pb_sss,
+                                    'pb_pag_ibig':rs.data.pb_pag_ibig,
+                                    'pb_philhealth':rs.data.pb_philhealth,
+                                    'pb_others':rs.data.pb_others,
+                                    'de_lateness':rs.data.de_lateness,
+                                    'de_undertime':rs.data.de_undertime,
+                                    'de_shortage':rs.data.de_shortage,
+                                    'de_others':rs.data.de_others,
+                                    'mc_sss':rs.data.mc_sss,
+                                    'mc_pag_ibig':rs.data.mc_pag_ibig,
+                                    'mc_philhealth':rs.data.mc_philhealth,
+                                    'allowance':rs.data.allowance,
+                                    'add_sub_total':rs.data.add_sub_total,
+                                    'pb_sub_total':rs.data.pb_sub_total,
+                                    'pb_nsd':rs.data.pb_nsd,
+                                    'pb_ot':rs.data.pb_ot,
+                                    'pb_refund':rs.data.pb_refund,
+                                    'pb_perfect_attd':rs.data.pb_perfect_attd,
+                                    'pb_sss':rs.data.pb_sss,
+                                    'pb_pag_ibig':rs.data.pb_pag_ibig,
+                                    'pb_philhealth':rs.data.pb_philhealth,
+                                    'pb_others':rs.data.pb_others,
+                                    'de_sub_total':rs.data.de_sub_total,
+                                    'mc_sub_total':rs.data.mc_sub_total,
+                                    'daily_wages':rs.data.daily_wages,
+                                    'total_gross_salary':rs.data.total_gross_salary,
+                                    'cut_off_wages1':rs.data.cut_off_wages1,
+                                    'cut_off_wages2':rs.data.cut_off_wages2,
+                                    'total_daily_wages':rs.data.total_daily_wages,
+                                    'total_allowance':rs.data.total_allowance,
+                                    'total_daily_wages1':rs.data.total_daily_wages1,
+                                    'total_daily_wages3':rs.data.total_daily_wages3
+                                });
+                                // ResetTable({
+                                //     DepartmentID: datas.DepartmentID
+                                //     ,JobTitleID:  datas.JobTitleIDPH
+                                //     ,Month:datas.Month
+                                //     ,SalaryTimes:datas.SalaryTimes
+                                // });
+                            }
+                        })
+                        
+                    })
+                }
+            })
+        }
+        var dval=$('#MonthPH').val();
+        ResetTable({
+            Month: dval,
+            SalaryTimes:1
+        });
+
+        
+        // 详情
+        // table.on('tool(PHTable)', function(obj){ 
+        //     //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        //     var data = obj.data; //获得当前行数据
+        //     var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        //     var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            
+        //     if(layEvent === 'detail'){ //查看
+        //         //do somehing
+        //     }
+        // });
+        
+        //发放 
+        $("#subList").on("click",function(){
+            var dval=$('#MonthPH').val();
+            var PayDate=$('#dateTime').val();
+            var IsShowPH=$("#IsShowPH").val();
+			if(PayDate==''){
+				layer.msg('请输入发放日期');
+				$(this).val('');
+				return false
+            }
+            if(IsShowPH=='-1'){
+                layer.msg('请选择阶段');
+				return false
+            }
+            layer.confirm(
+                '确定发放？<br>发放日期:<span style="color:#FF5722">'+PayDate+'</span><br>工资月份:<span style="color:#FF5722">'+dval+'</span>',{title:false,closeBtn:false}
+                ,function(index){
+                    $.fetch({
+                        url:"/gateway/usersalary/ph/assignsalary",
+                        type:'post',
+                        data:{
+                            Month:dval,
+                            PayDate:PayDate,
+                            SalaryTimes:IsShowPH
+                        },
+                        cb:function(rs){
+                            layer.msg('发放成功.');
+                            layer.close(index);
+                            ResetTable({
+                                Month:dval,
+                                SalaryTimes:IsShowPH
+                            });
+                            table.resize('PHTable');
+                        }
+                    })
+                }
+            )
+        })
+        // 重新生成数据
+        $("#newList").on("click",function(){    
+            var dval=$('#MonthPH').val();
+            var IsShowPH=$("#IsShowPH").val();
+			if(dval==''){
+				layer.msg('请输入清除年月');
+				$(this).val('');
+				return false
+            }
+            if(IsShowPH=='-1'){
+                layer.msg('请选择阶段');
+				return false
+            }
+            layer.confirm(
+                '确定清除 <span style="color:#FF5722">'+dval+'</span> 的工资数据?', {title:false,closeBtn:false}
+                ,function(index){
+                    $.fetch({
+                        url:"/gateway/usersalary/ph/cleardata",
+                        type:'post',
+                        data:{
+                            Month:dval,
+                            SalaryTimes:IsShowPH
+                        },
+                        cb:function(rs){
+                            layer.msg('清除成功.');
+                            layer.close(index);
+                            ResetTable({
+                                Month:dval,
+                                SalaryTimes:IsShowPH
+                            });
+                            table.resize('PHTable');
+                            $("#dateTime").val(' ')
+                        }
+                    })
+                }
+            )
+        })
+        
+        // 搜索,返回
+        $("#filterTabelSelPH").on("click",function(){
+            var UserNamePH=$("#UserName").val();
+            var IsShowPH=$("#IsShowPH").val();
+            var MonthPH=$("#MonthPH").val();
+            var DepartmentIDPH=formSelects.value('DepartmentIDPH', 'valStr');
+            var JobTitleIDPH=formSelects.value('JobTitleIDPH', 'valStr');
+            ResetTable({
+                UserName: UserNamePH
+                ,DepartmentID: DepartmentIDPH
+                ,JobTitleID:  JobTitleIDPH
+                ,Month:MonthPH
+                ,SalaryTimes:IsShowPH
+            })
+        })
+        $("#closeLayerPH").on("click",function(){
+            var DepartmentIDPH=formSelects.value('DepartmentIDPH', 'valStr');
+            var JobTitleIDPH=formSelects.value('JobTitleIDPH', 'valStr');
+            layui.formSelects.value('DepartmentIDPH', []); 
+            layui.formSelects.value('JobTitleIDPH', []); 
+            $("#IsShowPH").val('1');
+            $("#UserName").val('');
+            var date=new Date;
+            var year=date.getFullYear(); 
+            var month=date.getMonth()+1;
+            month =(month<10 ? "0"+month:month);
+            $("#MonthPH").val(year.toString()+'-'+month.toString());
+            $("#dateTime").val(' ')
+            form.render();
+            ResetTable({
+                UserName: ''
+                ,DepartmentID: DepartmentIDPH
+                ,JobTitleID:  JobTitleIDPH
+                ,Month:year.toString()+'-'+month.toString()
+                ,SalaryTimes:1
+            });
+        })
+
+
+    })
+</script>
+</html>

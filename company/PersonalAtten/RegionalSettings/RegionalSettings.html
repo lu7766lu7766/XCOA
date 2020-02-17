@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>区域设定</title>
+<link rel="stylesheet" type="text/css" href="../../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../../css/dtree.css">
+<link rel="stylesheet" type="text/css" href="../../../css/formSelects-v4.css">
+<link rel="stylesheet" type="text/css" href="../../../layui/css/admin.css">
+<script src="../../../js/jquery.min.js"></script>
+<script src="../../../js/common.js"  type="text/javascript"></script>
+
+</head>
+	
+<body class="statiBox">
+	<div class="layui-fluid">
+		<div class="layui-card layui-col-space15">
+			<div class="layui-row layui-tab layui-tab-brief" lay-filter="attendanceTabBrief">
+				<ul class="layui-tab-title">
+						<li class="layui-this" lay-id="1" >区域规则设定</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-form layui-show" id="RegionalSettingsForm" lay-filter="RegionalSettingsForm">
+						<!-- 应扣款项 -->
+						<fieldset class="layui-elem-field">
+							<legend>区域设定</legend>
+							<div class="layui-field-box">
+								<div class="layui-form-item">
+									<label class="layui-form-label">类型：</label>
+									<div class="layui-input-block">
+										<input  lay-filter="SalaryType" type="radio" name="SalaryType" value="tw" title="台湾" >
+                                        <input  lay-filter="SalaryType" type="radio" name="SalaryType" value="mnl" title="马尼拉">
+										<input  lay-filter="SalaryType" type="radio" name="SalaryType" value="sg" title="新加坡">
+										<input  lay-filter="SalaryType" type="radio" name="SalaryType" value="my" title="马来西亚">
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn" lay-submit lay-filter="RegionalSettings" id="RegionalSettings">立即提交</button>
+								<!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<style>
+	.user-list{
+		max-width: 75%;
+	}
+	.user-list li{
+		float: left;
+		min-width: 0;
+		line-height: 20px;
+		max-width: 160px;
+		text-overflow: ellipsis;
+		padding-right: 40px;
+		overflow: hidden;
+		margin-right: 4px;
+		vertical-align: top;
+   		position: relative;
+		padding-left: 10px;
+	}
+	.user-list li.bg{
+		background:#f6f6f6;
+
+	}
+	.user-list li .layui-tab-close{
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		margin: -7px 0 0;
+		width: 16px;
+		height: 16px;
+		line-height: 16px;
+		border-radius: 50%;
+		font-size: 12px;
+		cursor: pointer;
+	}   
+	.user-list li .layui-tab-close:hover{
+		border-radius: 2px;
+		background-color: #FF5722;
+		color: #fff;
+	}
+	.xm-select-parent .xm-form-select dl{
+        min-width: 220%;
+    }
+	.layui-unselect.layui-form-checkbox{
+		/* min-width: 152px; */
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th{
+		height:30px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-r th[rowspan="4"]{
+		height:164px !important;
+
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[rowspan="3"]{
+		height:134px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[data-field="0"],
+	.layui-table[lay-size=sm] th[data-field="add payback"]{
+		background: #C6E0B4;
+	}
+	div[lay-id="allUserListPH"]  .layui-table-header .layui-table-cell{
+		height:auto !important;
+		overflow:visible;
+		text-overflow:inherit;
+		white-space:normal;
+	}
+	.layui-table[lay-size=sm] th[data-field="Payback"] {
+		background: #1e9fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="Deduction Mandatory"] {
+		background: #FF0000;
+		color: #fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="NSD.NSD"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="de_undertime"]{
+		background: #FFFF00;
+	}
+	.layui-table[lay-size=sm] th[data-field="nsd ot"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday_falling_on_rest_day"]{
+		background: #D9D9D9;
+	}
+	.layui-table[lay-size=sm] th[data-field="Ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field=""]{
+		background: #D9E1F2;
+	}
+</style>
+<script src="../../../layui/layui.js"></script>
+<!-- <script src="../../js/sub/sets.js?v=201812240"></script> -->
+<script>
+	
+    layui.config({
+		base: '../../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','form','laydate','table','dtree','formSelects'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,dtree = layui.dtree
+        ,formSelects = layui.formSelects
+        ,form = layui.form
+        ,table = layui.table
+        ,router = layui.router();
+        element.render();
+
+
+        $.fetch({
+            url:"/gateway/usersalary/salaryarea",
+            type: 'post',
+            cb:function(rs){
+                for(var i=0;i<$("input[name='SalaryType']").length;i++){
+                    var dataVlue = $("input[name='SalaryType']")[i].defaultValue;
+                    if(dataVlue==rs){
+                        // console.log($("input[value='"+rs+"']"))
+                        $("input[value='"+rs+"']").prop('checked', true);
+                    }
+                }
+                form.render();
+
+            }
+        })
+        
+        $("#RegionalSettings").on('click',function(){
+            var Area = $("input[name='SalaryType']:checked").val();
+            $.fetch({
+                url:"/gateway/usersalary/setsalaryarea",
+                type: 'post',
+                data:{
+                    Area:Area
+                },
+                cb:function(rs){
+                    layer.msg("设置成功")
+                    form.render();
+                }
+            })
+        })
+        
+})
+</script>
+</html>

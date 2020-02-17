@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人考勤</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+<style>
+	tr:hover .layui-table-col-special{background-color: #f2f2f2;}
+	.layui-table-col-special{
+		background-color: #fff;
+	}
+	.layui-table th{
+		background-color:#f2f2f2;
+	}
+	.layui-table-view .layui-table{
+		height: 100%;
+	}
+</style>
+</head>
+	
+<body layadmin-themealias="fashion-red">
+	<div class="layui-fluid">
+			<!-- 上下班记录查询 -->
+		<div class="layui-row layui-col-space15">
+			<div class="layui-card" style="min-width: 935px;">
+				<div class="layui-form-item">
+					<div class="layui-form-inline">
+							<label class="layui-form-label" id="userInfor" style="width: auto;">
+									
+							</label>
+							<label class="layui-form-label">
+									按月查询
+							</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" id="test-laydate-type-month" placeholder="yyyy-MM" lay-key="7">
+							</div>
+					</div>
+							
+							<div style="float: right;">
+								<a class="layui-btn" id="closePage">返回</a>
+							</div>
+				</div>
+					<div class="tableList"  id="commuteList">
+								
+								<table class="layui-table" lay-size="sm">
+									<thead></thead>
+									<tbody></tbody>
+								</table>
+					</div>
+		</div>
+	</div>
+	<script src="../../layui/layui.js"></script>
+	<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+	<script type="text/javascript">
+
+	
+	layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','form','laydate','laypage','table'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+
+        var laydate = layui.laydate
+            ,form = layui.form
+            ,layer = layui.layer
+            ,laypage = layui.laypage
+			,table=layui.table;
+			
+		var now= new Date();  
+		console.log(window.userData)
+		if(window.userData){
+			var year = window.userData.Year,
+				month =  window.userData.Month.replace(/\b(0+)/gi,"")
+    			getCommuteTable(year,month);
+		}else{
+			var year = now.getFullYear(),
+				month = now.getMonth() + 1;
+    			getCommuteTable(year,month);
+		}
+        laydate.render({
+            elem: '#test-laydate-type-month'
+            ,type: 'month'
+            ,value:''+year+'-'+month+''
+            ,change: function(value, date){
+                getCommuteTable(date.year,date.month);
+            }
+		});
+      
+    });
+
+    function getCommuteTable(y,m,d){//上下班
+        var param = {
+			UserID:window.userData.UserID,
+            Year:y,
+            Month:m,
+        }
+        $.fetch({
+            url: "/gateway/checkinout/usercheckinout",
+            type: 'post',
+            data: param,
+            cb:function(rs){
+                forHtmlTable(rs,$("#commuteList"));
+            }
+        })
+    }
+    function getWorkDayTable(y,m,d){//打卡详情
+        var param = {
+            Year:y,
+            Month:m,
+            Date:d,
+			UserID:window.userData.UserID,
+        }
+        $.fetch({
+            url: "/gateway/checkinout/detail",
+            type: 'post',
+            data: param,
+            cb:function(rs){
+                var q ='',c='';
+				var checkHtml ="<ul>"
+				$.each(rs,function(key,val){
+					if(rs[key].list.length>0){
+						for(var i =0;i<rs[key].list.length;i++){
+							q = rs[key].list[i].source==0?'同步':'补录';
+							c = rs[key].list[i].desc == '正常'?'':'class="red"';
+							if(rs[key].is_holiday){
+								rs[key].list[i].desc='(公休日)'
+							}
+							checkHtml+='<li '+c+'>'+rs[key].list[i].check_time+'（'+q+'/'+rs[key].list[i].desc+'）</li>'
+						}
+					}else if(rs[key].list.length == 0){
+						if(rs[key].is_holiday){
+							var desc='(公休日)'
+						}else{
+							var desc=' '
+							
+						}
+						checkHtml +="<li><div>无打卡记录 "+desc+"</div></li>"
+					};
+				});
+				checkHtml +="</ul>"
+				layer.open({
+					title:"打卡详情",
+					content: checkHtml
+				})
+            }
+        })
+    }
+    // 添加星期几
+    function isNull(object){    
+        if(object == null || typeof object == "undefined"){    
+            return true;    
+        }    
+        return false;    
+    };   
+    function getWeek(dateString){  
+        var date;  
+        if(isNull(dateString)){  
+            date = new Date();  
+        }else{  
+            var dateArray = dateString.split("-");  
+            date = new Date(dateArray[0], parseInt(dateArray[1] - 1), dateArray[2]);  
+        }  
+        return "星期" + "日一二三四五六".charAt(date.getDay());  
+    }; 
+
+    function forHtmlTable(o,elem){//上下班记录表格
+        if(o==null||o.data_list==null){
+            elem.find("table tbody").html('<tr><td class="tc">暂无本月数据</td></tr>')
+        }else{
+            var thHtml= "",tbHtml="";
+            for(var i = 0;i<o.data_list.length;i++){ //列表拼接
+                if(o.data_list[i].table_header){
+                    tbHtml+=
+                    '<tr class="thead" style="background:#f2f2f2"><td><div class="layui-table-cell">'+o.data_list[i].datetime + '<span class="ml-5">' 
+                    +'</span></div></td>'
+                    +'<td><div class="layui-table-cell">'+o.data_list[i].time1 + '<span class="ml-5"></span></div></td>'
+                    +'<td><div class="layui-table-cell">'+o.data_list[i].time2 + '<span class="ml-5"></span></div></td>'
+                    +'<td><div class="layui-table-cell">'+o.data_list[i].time3 + '<span class="ml-5"></span></div></td>'
+                    +'<td><div class="layui-table-cell">'+o.data_list[i].time4+ '<span class="ml-5"></span></div></td>'
+                    +'<td></td></tr>'
+                }else{
+                
+                    var sunday = "公休日";
+                    var redTwo = "",redleave='';
+                    if( o.data_list[i].holiday) {
+                        redTwo = "TableContent";
+                    }
+                    if( o.data_list[i].isleave) {
+                        redleave = "redleave";
+                    }
+
+                    var ntime1,ntime2,ntime3,ntime4,descs; 
+
+                    var tc1 = o.data_list[i].time1.desc=="未登记"?'class="wdj"':'class="strong"';
+                    var tc2 = o.data_list[i].time2.desc=="未登记"?'class="wdj"':'class="strong"';
+                    var tc3 = o.data_list[i].time3.desc=="未登记"?'class="wdj"':'class="strong"';
+                    var tc4 = o.data_list[i].time4.desc=="未登记"?'class="wdj"':'class="strong"';
+
+                    ntime1= o.data_list[i].time1.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time1.time+'</div></td>' 
+                    :'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time1.time+' ('+o.data_list[i].time1.desc+')</div></td>';
+                    
+                    ntime2= o.data_list[i].time2.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time2.time+'</div></td>' 
+                    :'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time2.time+' ('+o.data_list[i].time2.desc+')</div></td>';
+                    
+                    ntime3= o.data_list[i].time3.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time3.time+'</div></td>' 
+                    :'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time3.time+' ('+o.data_list[i].time3.desc+')</div></td>';
+                    
+                    ntime4= o.data_list[i].time4.desc=="正常"?'<td><div class="layui-table-cell">'+o.data_list[i].time4.time+'</div></td>' 
+                    :'<td class="red"><div class="layui-table-cell">'+o.data_list[i].time4.time+' ('+o.data_list[i].time4.desc+')</div></td>';
+                    
+                    tbHtml+=
+                    '<tr class="'+redTwo+' '+(redTwo==''?redleave:'')+'"><td><div class="layui-table-cell">'+o.data_list[i].datetime + '<span class="ml-5">'+ getWeek(o.data_list[i].datetime) +
+                    '</span></div></td>'+ntime1+''+ntime2+''+ntime3+''+ntime4+
+                    '<td><div class="layui-table-cell"><span class="DayDetail" data-days="'+o.data_list[i].datetime+'">查看详情</span></div></td></tr>'
+                }
+
+            }   
+            elem.find("table tbody").html(tbHtml);
+            //绑定点击事件
+        }
+    }
+    $('#commuteList').off("click").on("click","span.DayDetail",function(){
+        var dayArr= $(this).attr("data-days").split("-");
+        var  thY=dayArr[0];
+        var  thM=dayArr[1];
+        var  thD=dayArr[2];   
+        getWorkDayTable(thY,thM,thD);            
+         
+     })
+    $("#inq").click(function(){//查询按钮点击事件
+        
+        var r=$("#test-laydate-type-month").val().match(/^(\d{1,4})(-|\/)(\d{1,2})/); 
+        if(r==null){
+            layer.msg("请输入正确日期")
+        }else{
+            var y = $("#test-laydate-type-month").val().split("-");
+            getCommuteTable(y[0],y[1].replace(/\b(0+)/gi,""));//查询某月打卡记录
+        }
+	})
+	
+	$("#closePage").on("click",function(){
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index); //再执行关闭 
+	})
+    
+    // getWorkDayTable(y,m,d)
+    //初始化页面
+    /**请假登记**/
+	</script>
+</body>
+</html>

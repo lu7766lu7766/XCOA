@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>现金管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card" style="min-width: 855px;">
+            <div class="layui-card-header" style="height:auto;">
+                <label class="mx-10">现金管理</label>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">兑换日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="" class="layui-input" id="CashItme">
+                            </div>
+                        </div>
+                    <!-- </div>
+                    <div class="layui-form-item"> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">人民币</label>
+                            <div class="layui-input-inline">
+                                <input id="receiptCount" class="layui-input  receiptCount receiptCount2" lay-verify="required" type="tel" autocomplete="off"  value="" placeholder="0.00">
+                            </div>
+                        </div>
+                    <!-- </div>
+                    <div class="layui-form-item"> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">币种名称</label>
+                            <div class="layui-input-inline">
+                                <select  id="currencyUnit" lay-filter="currencyUnit"></select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">审批人</label>
+                            <div class="layui-input-inline">
+                                <select  id="ApprovalUserId" lay-filter="ApprovalUserId"></select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <table class="layui-table" id="test-table-cellEdit">
+                                <thead>
+                                    <tr>
+                                        <th>摘要</th>
+                                        <th>输入汇率</th>
+                                        <!-- <th>汇率区间</th>                                                 -->
+                                        <th>平均汇率</th>
+                                        <th>余额</th>
+                                        <th>金额</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="FeeDetail">
+                                        <td>
+                                            <textarea lay-verify="required" class="layui-textarea textarea-modify remark"></textarea>
+                                        </td>
+                                        <td>
+                                            <input class="layui-input  receiptCount receiptCount6 rate" value="">
+                                        </td>
+                                        <!-- <td>
+                                            <div class="layui-table-cell maxMinRute"></div>
+                                        </td> -->
+                                        <td>
+                                            <div class="layui-table-cell avg_rate"></div>
+                                        </td>
+                                        <td>
+                                            <input id="remaining_amount" class="layui-input " value="" disabled>
+                                        </td>
+                                        <td>
+                                            <input class="layui-input receiptCount toRuteManey" value="" disabled>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <div class="layui-footer">
+                                <button id="subCash" class="layui-btn layui-btn-sm">提交</button>
+                                <button id="backCash" class="layui-btn layui-btn-primary layui-btn-sm">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pz-10">
+                    
+                    <!-- <label class="mx-10">人民币：</label>
+                    <div class="layui-inline ml-5">
+                        <input type="text" class="layui-input" placeholder="请输入金额">
+                    </div> -->
+                </div>
+                <!-- <table class="layui-hide" id="test-table-cellEdit" lay-filter="test-table-cellEdit"></table>
+                <div class="layui-form-item mt-5 tr">
+                    <button id="subCash" class="layui-btn ">保存</button>
+                </div> -->
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'table', 'laydate', 'form'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                table = layui.table,
+                laytpl = layui.laytpl,
+                laydate = layui.laydate,
+                form = layui.form,
+                element = layui.element,
+                router = layui.router();
+
+                
+            var RMBCurrencyUnitId;
+            // console.log(window.editData);
+            laydate.render({
+                elem: '#CashItme' //指定元素
+                ,type:'date'
+                ,value:new Date()
+            });
+            function NumberCheckten6x(obj,n){
+                obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+                obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+                obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+                obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+                obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+            }
+            function NumberCheckten2x(obj,n){
+                obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+                obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+                obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+                obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+                obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+            }
+            var NumberCheck3 =function(num) {
+                var str = num;
+                var len1 = str.substr(0, 1);
+                var len2 = str.substr(1, 1);
+                //如果第一位是0，第二位不是点，就用数字把点替换掉
+                if (str.length > 1 && len1 == 0 && len2 != ".") {
+                str = str.substr(1, 1);
+                }
+                //第一位不能是.
+                if (len1 == ".") {
+                str = "";
+                }
+                //限制只能输入一个小数点
+                if (str.indexOf(".") != -1) {
+                var str_ = str.substr(str.indexOf(".") + 1);
+                if (str_.indexOf(".") != -1) {
+                    str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+                }
+                }
+                //正则替换，保留数字和小数点
+                str = str.replace(/[^\d^\.]+/g,'')
+                //如果需要保留小数点后两位，则用下面公式
+                var result = (str.toString()).indexOf(".");
+                if(result != -1) {
+                    // alert("含有小数点");
+                    
+                    var num3=str.split('.')[1].slice(0,3);
+                } else {
+                    // alert("不含小数点");
+                }
+                // console.log(num3,(num3==''||num3==undefined)?'':'.'+num3,111)
+                
+                str = str.replace(/\.\d\d\d\d$/,(num3==''||num3==undefined)?'':'.'+num3)
+                // str = str.replace(/\.\d\d\d\d$/,'')
+                // console.log(str)
+                
+                return str;
+            }
+            var  currencyUnitData;//保存汇率区间
+            var currencyChangeFun =function(){
+                var rmbVal =$("#receiptCount").val();
+                var rate =$("#test-table-cellEdit .receiptCount").val();
+                // var original =$("#test-table-cellEdit .maxMinRute").text().split(' ~ ');
+                // console.log(original,rate,rmbVal);
+                // console.log(rate,original[1].slice(0,rate.length),original[0].slice(0,rate.length));
+                if(rate!=''){
+                    // if((rate>original[1].slice(0,rate.length)||rate<original[0].slice(0,rate.length))){
+                    //     layer.msg('超出汇率区间,请重新填写。',{time:500});
+                    //     $("#test-table-cellEdit .receiptCount").val('');
+                    // }else{
+                        var money =parseFloat((rate*rmbVal).toFixed(2));
+                        $("#test-table-cellEdit .toRuteManey").val(money);
+                    // }
+                }
+                // console.log(original)
+            }
+            // $("#test-table-cellEdit input.rate").blur(function(){
+            //     var original =$("#test-table-cellEdit .maxMinRute").text().split(' ~ ');
+            //     if($(this).val()!==''&&($(this).val()>original[1]||$(this).val()<original[0])){
+            //         layer.msg('超出汇率区间,请重新填写。',{time:500});
+            //         $("#test-table-cellEdit .receiptCount").val('');
+            //     }
+            // });
+            // $(".receiptCount").on('keyup',function () {
+            //     $(this).val(NumberCheck3($(this).val()));
+            //     currencyChangeFun();
+            // }).bind("paste", function () {  //CTR+V事件处理
+            //     $(this).val(NumberCheck3($(this).val()));
+            //     currencyChangeFun();
+            // }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+            $(".receiptCount6").on('keyup',function () {
+                NumberCheckten6x(this);
+                currencyChangeFun();
+            }).on("paste", '.receiptCount6',function (e) {  //CTR+V事件处理
+                NumberCheckten6x(this);
+                currencyChangeFun();
+            }).css("ime-mode", "disabled");
+            $(".receiptCount2").on('keyup',function () {
+                NumberCheckten2x(this);
+                currencyChangeFun();
+            }).on("paste", '.receiptCount2',function (e) {  //CTR+V事件处理
+                NumberCheckten2x(this);
+                currencyChangeFun();
+            }).css("ime-mode", "disabled");
+            // $(".receiptCount").on("input propertychange",function(){//监听人民币金额变化
+                
+            // })
+            var cashma={};//平均汇率
+            // if(window.editData){ 
+            //     console.log(editData);
+            //     cashma={
+            //         // StartDate:editData.rate_range.min,
+            //         // EndDate:s,
+                    
+            //     }
+            // }
+            // if(window.uniData){
+            //     console.log(uniData);
+            //     // cashma={
+            //     //     StartDate
+            //     //     EndDate
+            //     // }
+            // }
+            if(window.cashma){
+                cashma =window.cashma;
+            }
+            $.fetch({
+                url:'/gateway/cashmanagement/getapprovaluser',
+                type: 'post',
+                data:{
+                    IsApprovalUser:1,
+                },
+                cb:function(rs){
+                    var opHtml = '';
+                    for(var i =0;i<rs.length;i++){
+                        opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                    }
+                    $("#ApprovalUserId").html(opHtml);
+                    form.render();
+                }
+            })
+            $.fetch({
+                url:'/gateway/financial/cashmanagementinit',
+                type: 'post',
+                data:cashma,
+                cb:function(rs){
+                    // console.log(editData)
+                    RMBCurrencyUnitId=rs.rmb;
+                    currencyUnitData=rs.currency_list;
+                    var opHtml = '';
+                    for(var i =0;i<rs.currency_list.length;i++){
+                        opHtml+='<option value="'+rs.currency_list[i].id+'">'+rs.currency_list[i].zh_name+'('+rs.currency_list[i].short_code+')</option>'
+                    }
+                    $("#currencyUnit").html(opHtml);
+                    
+                    if(window.editData){ 
+                        $("#receiptCount").val(editData.original_currency_amount);
+                        $("#currencyUnit").val(editData.final_currency_unit_id);
+                        $(".remark").val(editData.remark);
+                        $("#currencyUnit").prop('disabled',true);
+                        $("#test-table-cellEdit .rate").val(editData.original_rate); 
+                        $("#test-table-cellEdit .toRuteManey").val(editData.final_currency_amount);
+                        $("#CashItme").val(editData.exchange_date);
+                        // $("#test-table-cellEdit .maxMinRute").text(''+editData.rate_range.min+' ~ '+editData.rate_range.max+'');
+                        $("#test-table-cellEdit .avg_rate").text(''+editData.avg_rate+'');
+                    }
+                    if(window.uniData){
+                        $("#currencyUnit").val(uniData.final_currency_unit_id);
+
+                    }
+                    form.render(); 
+                    var nowVal=$("#currencyUnit").val();
+                    // console.log(nowVal,currencyUnitData);
+                    for(var i =0;i<currencyUnitData.length;i++){
+                        if(currencyUnitData[i].id== nowVal){//初始化时渲染
+                            // $("#test-table-cellEdit .maxMinRute").html(''+currencyUnitData[i].rate_range.min +' ~ '+currencyUnitData[i].rate_range.max +'');
+                            var avg_rate = currencyUnitData[i].avg_rate==undefined?'暂无':currencyUnitData[i].avg_rate;
+                            $("#test-table-cellEdit .avg_rate").html(''+avg_rate+'');
+                            $("#remaining_amount").val(currencyUnitData[i].remaining_amount);
+                        }
+                    }
+                    form.on('select(currencyUnit)', function(data){
+                        for(var i =0;i<currencyUnitData.length;i++){
+                            if(currencyUnitData[i].id== data.value){//初始化时渲染
+                                // $("#test-table-cellEdit .maxMinRute").html(''+currencyUnitData[i].rate_range.min +' ~ '+currencyUnitData[i].rate_range.max +'');
+                                var avg_rate = currencyUnitData[i].avg_rate==undefined?'暂无':currencyUnitData[i].avg_rate;
+                                $("#test-table-cellEdit .avg_rate").html(''+avg_rate+'');
+                                $("#remaining_amount").val(currencyUnitData[i].remaining_amount);
+                                currencyChangeFun();
+                                
+                            }
+                        }
+                    });    
+      
+                }
+            });
+            $("#subCash").on("click",function(){
+                var rmbVal =$("#receiptCount").val();
+                var times = $("#CashItme").val();
+                var FinalCurrencyArr=[];
+                var uniId=$("#currencyUnit").val();
+                var uniName=$("#currencyUnit option[value='"+uniId+"']").text();
+                var rate = $("#test-table-cellEdit .rate").val();
+                var toRuteManey =$(".toRuteManey").val();
+                var Remark = $(".remark").val();
+                FinalCurrencyArr.push({Remark:Remark,FinalCurrencyUnitId:uniId,Rate:rate,name:uniName,toRuteManey:toRuteManey})
+                var cont ='<div><table class="layui-table"><tbody>';
+                for(var i =0;i<FinalCurrencyArr.length;i++){
+                    cont+='<tr><td>日期</td><td>'+times+'</td></tr><tr><td>兑换人民币金额(元)</td><td>'+rmbVal+'</td></tr><tr><td>兑换币种名称</td><td>'+FinalCurrencyArr[i].name+'</td></tr><tr><td>汇率</td><td>'+FinalCurrencyArr[i].Rate+'</td></tr><tr><td>兑换后金额</td><td>'+FinalCurrencyArr[i].toRuteManey+'</td></tr>'
+                }
+                cont+="</tbody></table></div>"
+                if(times==''||uniId==''||uniName==''||rate==''||rmbVal==''){
+                    layer.msg("请检查必填项");
+                    return false
+                }
+                if(rate==0){
+                    layer.msg("汇率不能为0");
+                    return false
+                }
+                var ApprovalUserId=$("#ApprovalUserId").val();
+                if(window.editData){
+                        layer.confirm(cont,{
+                            title:'请确认保存金额及币种'
+                            ,area:['40%','350px']
+                            },function(index){
+                                $.fetch({
+                                    url: "/gateway/cashmanagement/edit",
+                                    type: 'post',
+                                    data: {
+                                        ID:editData.id,
+                                        ExchangeDate:times,
+                                        RMBCurrencyAmount:rmbVal,
+                                        Rate:FinalCurrencyArr[0].Rate,
+                                        ApprovalUserId:ApprovalUserId,
+                                        Remark:FinalCurrencyArr[0].Remark,
+                                    },
+                                    cb:function(rs){
+                                        layer.msg("保存成功");
+                                        setTimeout(function(){
+                                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                                parent.layer.close(index); //再执行关闭   
+                                        }, 1000 )
+                                    }
+                                });
+                            }
+                        )
+                }else{
+                    var dataArr = [{
+                        FinalCurrencyUnitId:uniId,
+                        Rate:rate,
+                        Remark:Remark,
+                    }]
+                        layer.confirm(cont,{
+                            title:'请确认保存金额及币种'
+                            ,area:['40%','350px']
+                            },function(index){
+                                $.fetch({
+                                    url: "/gateway/cashmanagement/add",
+                                    type: 'post',
+                                    data: {
+                                        ExchangeDate:times,
+                                        RMBCurrencyAmount:rmbVal,
+                                        RMBCurrencyUnitId:RMBCurrencyUnitId.id,
+                                        FinalCurrencyInfos:dataArr,
+                                        ApprovalUserId:ApprovalUserId,
+                                    },
+                                    cb:function(rs){
+                                        layer.msg("保存成功");  
+                                        
+                                        setTimeout(function(){
+                                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            parent.layer.close(index); //再执行关闭   
+                                        }, 1000 )
+                                    }
+                                });
+                            }
+                        )
+                    }
+            })
+            $("#backCash").on("click",function(){
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            })
+    })
+</script>  
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绩效详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                绩效详情
+            </div>     
+            <div class="layui-card-body">
+                    <div class=" layui-form"  lay-filter="performanceForm" id="performanceForm">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">填写日期：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="createrDateTime"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">填写人：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="creater"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">审批流程：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="cateLevelOne">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">标题：</label>
+                                <div class="layui-input-block layui-input-lineHeight" id="title"></div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label ">附件：</label>
+                                <div class="layui-input-block layui-input-lineHeight">
+                                    <div id="fileUpload"></div>
+                                </div>
+                            </div>
+    
+                            <!-- ·奖惩者资料 -->
+                            <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·奖惩者资料</blockquote>  
+                            <div class="layui-form-item">                    
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">姓名：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="recorderUid"></div>
+                                </div>  
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">部门：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="recorderDeptId" > </div>
+                                </div>    
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">岗位：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="recorderTitleId" ></div>
+                                </div>   
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">发生日期：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="recordDatetime"></div>
+                                </div>                     
+                            </div>
+                            <!-- ·考核项目明细 -->
+                            <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·考核项目明细</blockquote>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">类型：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="cateLevelTwo"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">考核主题：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="cateLevelThree"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                 <div class="layui-block">
+                                     <label class="layui-form-label">内容细节：</label>
+                                     <div class="layui-input-block">
+                                         <textarea class="layui-textarea" id="recordDetail" disabled></textarea>
+                                     </div>
+                                 </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">评估项目：</label>
+                                <div class="layui-input-block layui-input-lineHeight" id="scoreId"></div>
+                            </div>
+                            <div class="layui-form-item">                        
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">加/扣分数：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="standardScore"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">调整分数：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="editedScore"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-block">
+                                    <label class="layui-form-label">调整原因：</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-textarea" id="editedCause" disabled></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ·错款赔偿明细 -->
+                            <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·错款赔偿明细</blockquote>                        
+                            <div class="layui-form-item">   
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">错款类型：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="errMoneyType"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">提单金额：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="errMoneySubmit"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">错误金额：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="errMoneyTotal"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">赔偿金额：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="errMoneyCompensation"></div>
+                                </div>
+                            </div> 
+                             <!-- z知悉 -->
+                             <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·知悉/否决情况</blockquote>                        
+                             <div class="layui-form-item">   
+                                 <table class="layui-table" id="informTable"></table>
+                             </div> 
+                            <div class="layui-card">
+                               <div class="reviewInput layui-card-body">
+                                   <div class="layui-form" action="">
+                                       <div class="layui-form-item" id="approvalNo">
+                                            <div class="layui-input-block layui-input-lineHeight">
+                                                <input type="radio" name="ApprYn" lay-filter="ApprYn" value="2" title="知悉" checked>
+                                                <input type="radio" name="ApprYn" lay-filter="ApprYn" value="1" title="否决">
+                                            </div>
+                                       </div>
+                                       <div class="layui-form-item contentApprBox" style="display:none">
+                                           <label class="layui-form-label modify-layui-label">否决原因</label>
+                                           <div class="layui-input-block layui-input-lineHeight">
+                                               <textarea id="contentAppr" name="contentAppr"
+                                                   class="layui-textarea"></textarea>
+                                           </div>
+                                       </div>
+                                       <div class="layui-form-item">
+                                           <div class="layui-input-block">
+                                                <button class="appOk layui-btn">确认</button>
+                                                <button class="layui-btn layui-btn-primary" id="closeId">关闭</button>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="reviewCont layui-card-body">
+                                   <div class="layui-form" action="">
+                                       <div class="layui-form-item">
+                                            <div class="layui-input-block layui-input-lineHeight">确定知悉?</div>
+                                       </div>
+                                       <div class="layui-form-item">
+                                           <div class="layui-input-block">
+                                                <button class="appOk layui-btn">确认</button>
+                                                <button class="layui-btn layui-btn-primary closeId">关闭</button>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                            <div class="layui-form-item layui-layout-admin">
+                                <div class="layui-input-block">
+                                    <div class="layui-footer" style="left: 0;">
+                                        <button id="resetPage" class="layui-btn layui-btn-primary">刷新</button>
+                                        <button class="layui-btn" id="closePage">关闭</button>
+                                    </div>
+                                </div>
+                            </div>                     
+                        </div>
+            </div>       
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190218"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','laydate','table'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        // ,dtree=layui.dtree
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table;
+        if(window.detailData){
+            $.fetch({
+                url:"/gateway/performance/detail",
+                type: 'post',
+                data:window.detailData,
+                // data:{
+                //     creater: 6,
+                //     recordId:75
+                // },
+                cb:function(rs){
+                    if(rs.recorder_uid==window.userInfo.userId){
+                        $(".reviewCont").show();
+                        $(".reviewInput").hide();
+                        if(window.detailData.informResult==0&&window.detailData.recordSatus!=1){
+                            $(".reviewCont .appOk").on("click",function(){
+                                $.fetch({
+                                    url:'/gateway/performance/doInform',
+                                    data:{
+                                        recordId:window.detailData.recordId,
+                                        informId:window.detailData.informId,
+                                        result:2
+                                    },
+                                    type: 'post',
+                                    cb:function(rs){
+                                        layer.msg('提交成功');
+                                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                        parent.layer.close(index); //再执行关闭
+                                    }
+                                })
+                            })
+                            $(".reviewCont .closeId").on("click",function(){
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+                            })
+                        }else{
+                            $(".reviewCont").hide();
+                        }
+                    }else{
+                        $(".reviewInput").show();
+                        $(".reviewCont").hide();
+                        if(window.detailData.informResult==0&&window.detailData.recordSatus!=1){
+                            form.on('radio(ApprYn)', function(data){
+                                console.log(data.elem); //得到radio原始DOM对象
+                                console.log(data.value); //被点击的radio的value值+
+                                if(data.value==1){
+                                    
+                                    $(".contentApprBox").show();
+                                    $("#contentAppr").attr('lay-verify',"required");
+                                }else{
+                                    $(".contentApprBox").hide();
+                                    $("#contentAppr").removeAttr('lay-verify');
+                                    
+                                }
+                                
+                            });  
+
+                            $(".reviewInput").show();
+                            $(".reviewInput .appOk").on("click",function(){
+                                var result=$("input[name='ApprYn']:checked").val();
+                                if(result ==1){
+                                    var content =$("#contentAppr").val();
+                                    if(content!=''&&content!=undefined){
+                                        $.fetch({
+                                            url:'/gateway/performance/doInform',
+                                            data:{
+                                                recordId:window.detailData.recordId,
+                                                informId:window.detailData.informId,
+                                                result:result,
+                                                content:content,
+                                            },
+                                            type: 'post',
+                                            cb:function(rs){
+                                                layer.msg('提交成功');
+                                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                                parent.layer.close(index); //再执行关闭
+                                            }
+                                        })
+                                        // lay.msg("请填写否决原因")
+                                        // return false
+                                    }
+                                }else{
+                                    var content='';
+                                    $.fetch({
+                                        url:'/gateway/performance/doInform',
+                                        data:{
+                                            recordId:window.detailData.recordId,
+                                            informId:window.detailData.informId,
+                                            result:result
+                                        },
+                                        type: 'post',
+                                        cb:function(rs){
+                                            layer.msg('提交成功');
+                                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            parent.layer.close(index); //再执行关闭
+                                        }
+                                    }) 
+                                }
+                            })
+                            
+                            $("#closeId").on("click",function(){
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+                            })
+                        }else{
+                            $(".reviewInput").hide();
+                        }
+                    }
+
+                    var attachs ='';
+                    if(rs.attach&&rs.attach.length>0){//接口附件数据
+                        for(var k=0;k<rs.attach.length;k++){
+                            attachs+='<a title="点击下载" class="seeXqOutIn" href="/gateway/performance/downloadAttach?attachId='+rs.attach[k].id+'&&recordId='+rs.attach[k].performance_record_id+'" >'+rs.attach[k].original_name+'</a>'    
+                        }
+                    }else{
+                        attachs='无附件';
+                    }
+                    var inform ='';
+                    if(rs.inform&&rs.inform.length>0){//接口附件数据
+                        inform +='<thead><tr><th>知悉人</th><th>开始时间</th><th>状态</th><th>否决原因</th><th>知悉备注</th><th>知悉时间</th></tr></thead><tbody>'
+                        for(var k=0;k<rs.inform.length;k++){
+                            inform+='<tr><td>'+rs.inform[k].inform_name+'</td><td>'+rs.inform[k].created_at+'</td><td>'+['--','否决','知悉'][rs.inform[k].inform_result]+'</td><td>'+(rs.inform[k].content==null?'--':rs.inform[k].content)+'</td><td>'+(rs.inform[k].remark==null?'--':rs.inform[k].remark)+'</td><td>'+(rs.inform[k].updated_at==null?'--':rs.inform[k].updated_at)+'</td></tr>'    
+                        }
+                        inform +='</tbody>'
+                        
+                    }else{
+                        inform='暂无';
+                    }
+                    $("#createrDateTime").html(rs.created_at);
+                    $("#creater").html(rs.creater_name);
+                    $("#cateLevelOne").html(rs.level_one_name);
+                    $("#fileUpload").html(attachs);
+                    $("#title").html(rs.title);
+
+                    $("#recorderUid").html(rs.recorder_name);
+                    $("#recorderDeptId").html(rs.recorder_dept_name);
+                    // 岗位
+                    // console.log(rs.recorder_title_name?'暂无岗位':rs.recorder_title_name)
+                    $("#recorderTitleId").html(rs.recorder_title_name==null?'暂无岗位':rs.recorder_title_name);
+                    $("#recordDatetime").html(rs.record_datetime);
+                    
+                    $("#cateLevelTwo").html(rs.level_two_name);
+                    $("#cateLevelThree").html(rs.level_three_name);
+                    $("#scoreId").html(rs.score_title);
+                    
+                    $("#standardScore").html(rs.standard_score);
+                    $("#editedScore").html(rs.edited_score);
+                    $("#editedCause").html(rs.edited_cause);
+                    
+                    $("#recordDetail").html(rs.record_detail);
+                    
+                    // 错款类型
+                    $("#errMoneyType").html(['暂无','出款','入款'][rs.err_money_type]);
+                    $("#errMoneySubmit").html(rs.err_money_submit);
+                    $("#errMoneyTotal").html(rs.err_money_total);
+                    $("#errMoneyCompensation").html(rs.err_money_compensation);
+                    $("#informTable").html(inform);
+                    
+                }
+            });
+        
+            // 消息表格
+        }
+        $("#closePage").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭        
+        })
+        $("#resetPage").on("click",function(){
+            location.reload();      
+        })
+        
+    })
+</script>
+
+</html>

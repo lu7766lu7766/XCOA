@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>公告审核</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/wang.css">    
+
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">公告审批</div>            
+            <div class="layui-card-body">
+                <div class=" layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">
+                                状态
+                            </label>
+                            <div class="layui-input-inline">
+                                <select type="text"  id="Status" name="Status" lay-filter="Status">
+                                    <option value="-1">全部公告</option>
+                                    <option value="0">待批公告</option>
+                                    <option value="2">已批公告</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">
+                                标题
+                            </label>
+                            <div class="layui-input-inline">
+                                <input type="text"  id="NoticeTit" name="" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">
+                                创建时间
+                            </label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="NoticeTime">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button id="InquireSur" class="layui-btn" lay-event="InquireSur" title="查询"><i class="iconfont icon-sousuo"></i></button>
+                            <button id="backquireSur" class="layui-btn">重置</button>
+                        </div>
+                    </div>
+                </div>
+                <table id="noticeAppr" lay-filter="noticeAppr" class="layui-table modify-layui-table"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script type="text/javascript">
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','laydate','laypage','layedit','table','upload'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,table = layui.table
+    ,element = layui.element
+    ,router = layui.router();
+    element.render();
+
+    var laydate = layui.laydate
+        ,form = layui.form
+        ,laypage =layui.laypage
+        ,layedit = layui.layedit
+
+    var urlTab = location.href.split('?tab=')[1]?location.href.split('?tab=')[1]:false;
+    var tabId=urlTab?urlTab.split('?')[0]:false;
+    var dataId = location.href.split('?id=')[1]?location.href.split('?id=')[1]:false;
+     if(dataId){
+        var tableSub={
+            result:'',
+            ID:dataId
+        }
+    }else{
+        var tableSub={
+            result:''
+        }
+    }
+
+    // 数据表格
+    var noticrTable = table.render({
+        elem: '#noticeAppr',
+        url: urls + "/gateway/notice/approvallist",
+        contentType: 'application/json',
+        method: 'post',
+        limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+        where:tableSub,
+        page: true, //开启分页
+        text: {
+            none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+        },
+        cols:  [[ //标题栏
+            {sort: true,field: 'apply_user_name', title: '发布人', width:100}
+            ,{
+                sort: true,field: 'to_users',
+                title:'发布范围',
+                width:220,
+                templet: function (d) {
+                    return '<div class="noticeHiad"><span data-userid="' + d.to_userId + '">' + d.to_users+ ',</span></div>'
+                } 
+            }
+            ,{
+                sort: true,field: 'title', 
+                title: '标题',
+                minWidth:120,
+                templet:function(d){
+                    return  '<a class="toTitle" lay-event="toTitle">' + d.title + '</a>'
+                }
+            }
+            ,{sort: true,field: 'apply_time', title: '创建时间',minWidth:160}
+            ,{sort: true,field: 'validity_starttime', title: '生效时间',minWidth:160}
+            ,{sort: true,field: 'validity_endtime', title: '终止时间',minWidth:160}
+            ,{
+                title: '状态',
+                minWidth:100,
+                templet:function(d){
+                    return d.status==0?'<span class="layui-btn layui-btn-normal layui-btn-xs">待审批</span>':(d.apply_result==2?'<span class="layui-btn layui-btn-xs">批准</span>':'<span class="layui-btn layui-btn-danger layui-btn-xs">不批准</span>')
+                },
+                // toolbar: '<div><button class="alertAppr layui-btn layui-btn-sm layui-btn-warm" lay-event="alertAppr">审批</button></div>'
+            }
+            ,{
+                fixed: 'right'
+                ,title:'操作'
+                ,width:100
+                ,templet:function(d){
+                    return '<div>'+(d.status==0?'<button class="alertAppr layui-btn layui-btn-sm layui-btn-warm" lay-event="alertAppr">审批</button>':'--')+'</div>'    
+                }
+            }
+        ]]
+        ,request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        ,parseData: function(res){ //res 即为原始返回的数据
+            return {
+                "status_code":res.status_code, //解析接口状态
+                "message": res.message, //解析提示文本
+                "count": res.data.total_count, //解析数据长度
+                "data": res.data.data_list, //解析数据列表
+                "curr":res.data.page_index
+            };
+        }
+        ,done:function(){
+            $('.noticeHiad').on("mouseenter", function () {
+                var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + $(this).text(); + '</div>'
+                var that = this;
+                layer.tips(tipsCont1, that, {
+                    tips: [1, '#999'],
+                    maxWidth: 'auto'
+                });
+            });
+            if(dataId&&this.where.ID!=''){
+                $('.layui-table-body.layui-table-main a[lay-event="toTitle"]').click();
+            }
+        }
+    })
+
+    table.on('tool(noticeAppr)', function (obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+        if(layEvent=='alertAppr'){
+             var htmls ='<div class="layui-card">'
+                            +'<div class="reviewCont layui-card-body">'
+                            +    '<div class="layui-form" action="">'
+                            +        '<div class="layui-form-item">'
+                            +            '<label class="layui-form-label">审批意见：</label>'
+                            +            '<div class="layui-input-block">'
+                            +                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                            +            '</div>'
+                            +        '</div>'
+                            +        '<div class="layui-form-item">'
+                            +            '<label class="layui-form-label">是否同意：</label>'
+                            +            '<div class="layui-input-block">'
+                            +                '<input type="radio" name="approvalYn" id="approvalOk" value="2" title="同意">'
+                            +                '<input type="radio" name="approvalYn" id="approvalNo" value="1" title="不同意" checked>'
+                            +            '</div>'
+                            +        '</div>'
+           
+                            +        '<div class="layui-form-item">'
+                            +            '<div class="layui-input-block">'
+                            +               ' <button class="appOk layui-btn" data-item="'+data.id+'">确认</button>'
+                            +            '</div>'
+                            +        '</div>'
+                            +    '</div>'
+                            +'</div>'
+                         +'</div>'
+            layer.open({
+                title:'审批意见',
+                content:htmls,
+                type:1,
+                id:'approvPop',
+                area:['60%','auto'],
+            })
+            form.render();
+
+            
+            $("#approvPop .appOk").off("click").on("click",function(){//审核确认
+                var itemID = $(this).attr("data-item");
+                var isAgree = $("#approvPop").find(" input[name='approvalYn']:checked").val();
+                var content = $("#appDacText").val();
+                if(content==''){
+                    layer.msg("意见不能为空!");
+                    return false
+                }
+                $.fetch({
+                    url:'/gateway/notice/approval',
+                    type: 'post',
+                    data:{
+                        ID:'',                        
+                        ItemID:itemID,
+                        IsAgree:isAgree,
+                        Content:content,
+                    },
+                    cb:function(rs){
+                        layer.closeAll();
+                        layer.msg("审批完成");
+                        noticrTable.reload({
+                            done:function(){
+                                $('.noticeHiad').on("mouseenter", function () {
+                                    var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + $(this).text(); + '</div>'
+                                    var that = this;
+                                    layer.tips(tipsCont1, that, {
+                                        tips: [1, '#999'],
+                                        maxWidth: 'auto'
+                                    });
+                                });
+                            }
+                        })
+                    }
+                })
+            })
+        }else if(layEvent == 'toTitle'){
+            $.fetch({
+                url:"/gateway/notice/detail/"+data.id+"",
+                type: 'get',
+                cb:function(rs){
+                    var atta='';
+                    if(rs.attaches&&rs.attaches!=''){
+                        for(var i=0; i<rs.attaches.length; i++){      
+                            atta+='<a title="点击下载" class="seeXqOutIn" target="_blank" href="/gateway/notice/download/'+rs.attaches[i].id+'" >'+rs.attaches[i].original_name+'</a>'
+                        }
+                    }else{
+                        atta='<span>无附件</span>'
+                    }
+                    var htmlApproval ='<div class="layui-card" id="approvPop">'
+                            +'<div class="reviewCont layui-card-body">'
+                            +    '<div class="layui-form" action="">'
+                            +        '<div class="layui-form-item">'
+                            +            '<label class="layui-form-label">审批意见：</label>'
+                            +            '<div class="layui-input-block">'
+                            +                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                            +            '</div>'
+                            +        '</div>'
+                            +        '<div class="layui-form-item">'
+                            +            '<label class="layui-form-label">是否同意：</label>'
+                            +            '<div class="layui-input-block">'
+                            +                '<input type="radio" name="approvalYn" id="approvalOk" value="2" title="同意">'
+                            +                '<input type="radio" name="approvalYn" id="approvalNo" value="1" title="不同意" checked>'
+                            +            '</div>'
+                            +        '</div>'
+           
+                            +        '<div class="layui-form-item">'
+                            +            '<div class="layui-input-block">'
+                            +               ' <button class="appOk layui-btn" data-item="'+data.id+'">确认</button>'
+                            +            '</div>'
+                            +        '</div>'
+                            +    '</div>'
+                            +'</div>'
+                         +'</div>'
+
+                    var htmls ='<div class="layui-card" style="min-height:300px">'
+                                +'<div class="reviewCont layui-card-body">'
+                                    +' <div class="layui-form-item">'
+                                        +' <p style="margin-bottom: 3px;"><label class="fl">发布部门：</label><u class="hideCont">'+rs.notice.to_users+'<i class="iconfont icon-triangle-left"></i></u></p>'
+                                        +'<div class="layui-elem-quote" style="padding: 15px 0px;">'
+                                            +' <p><label class="fl">发布人：</label><u class="fr-width">'+rs.notice.creater+'</u></p>'
+                                            +' <p><label class="fl">发布于：</label><u class="fr-width">'+rs.notice.validity_starttime+'</u></p>'
+                                            +' <p><label class="fl">标题：</label><u class="fr-width">'+rs.notice.title+'</u></p>'                                    
+                                            +' <p><label class="fl">附件：</label><u class="fr-width">'+atta+'</u></p>'
+                                        +'</div>'
+                                    +' </div>'
+                                    +'<fieldset class="layui-elem-field"><legend>公告内容</legend><div class="layui-field-box pageCont"><div class="w-e-text" style=" overflow-y: auto;">'+rs.notice.content+'</div></div></fieldset>'
+                                    +htmlApproval
+                                +'</div>'
+                            +'</div>'
+                    var publisDetail= layer.open({
+                        title:'查看公告详情',
+                        content:htmls,
+                        type:1,
+                        id:'publisDetail',
+                        area:['60%','auto'],
+                        success:function(layero,index){
+                            $("#approvPop .appOk").off("click").on("click",function(){//审核确认
+                                var itemID = $(this).attr("data-item");
+                                var isAgree = $("#approvPop").find(" input[name='approvalYn']:checked").val();
+                                var content = $("#appDacText").val();
+                                if(content==''){
+                                    layer.msg("意见不能为空!");
+                                    return false
+                                }
+                                $.fetch({
+                                    url:'/gateway/notice/approval',
+                                    type: 'post',
+                                    data:{
+                                        ItemID:itemID,
+                                        IsAgree:isAgree,
+                                        Content:content,
+                                        ID:'',
+                                    },
+                                    cb:function(rs){
+                                        layer.closeAll();
+                                        layer.msg("审批完成");
+                                        noticrTable.reload({
+                                            done:function(){
+                                                $('.noticeHiad').on("mouseenter", function () {
+                                                    var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + $(this).text(); + '</div>'
+                                                    var that = this;
+                                                    layer.tips(tipsCont1, that, {
+                                                        tips: [1, '#999'],
+                                                        maxWidth: 'auto'
+                                                    });
+                                                });
+                                            }
+                                        })
+                                    }
+                                })
+                            })
+                            form.render();
+                        }
+                    });
+                    $(".reviewCont i").click(function(){
+                        if(!$(this).parent("u").hasClass('showCont')){
+                            $(this).parent(".hideCont").addClass("showCont");
+                            $(this).parent(".hideCont").removeClass("hideCont"); 
+                        }else {
+                            $(this).parent(".showCont").removeClass("showCont"); 
+                            $(this).parent("u").addClass("hideCont");
+                        }
+                    })
+                }
+            });
+        }
+    })
+
+
+    // 数据表格
+    // var noticrTable1 = table.render({
+    //     elem: '#noticeAppr1',
+    //     url: urls + "/gateway/notice/approvallist",
+    //     contentType: 'application/json',
+    //     method: 'post',
+    //     limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+    //     where: {
+    //         Status: 2
+    //     },
+    //     page: true, //开启分页
+    //     text: {
+    //         none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+    //     },
+    //     cols: [
+    //         [ //标题栏
+    //             {
+    //                 sort: true,field: 'apply_user_name',
+    //                 title: '发布人',
+    //                 width: 100
+    //             }, {
+    //                 sort: true,field: 'to_users',
+    //                 title: '发布范围',
+    //                 width: 220,
+    //                 templet: function (d) {
+    //                     return '<div class="noticeHiad"><span data-userid="' + d.to_userId + '">' + d.to_users + ',</span></div>'
+    //                 }
+    //             }, {
+    //                 sort: true,field: 'title',
+    //                 title: '标题',
+    //                 minWidth: 120,
+    //                 templet:function(d){
+    //                     return  '<a class="toTitle"  lay-event="toTitle">' + d.title + '</a>'
+    //                 }
+    //             }, {
+    //                 sort: true,field: 'apply_time',
+    //                 title: '创建时间',
+    //                 minWidth: 160
+    //             }, {
+    //                 sort: true,field: 'validity_starttime',
+    //                 title: '生效时间',
+    //                 minWidth: 160
+    //             }, {
+    //                 sort: true,field: 'validity_endtime',
+    //                 title: '终止时间',
+    //                 minWidth: 160
+    //             }, {sort: true,field: 'current_approval_user_name', title: '审批人',minWidth:100}
+    //             , {
+    //                 title: '状态',
+    //                 minWidth:100,
+    //                 templet:function(d){
+    //                     return d.apply_result==2?'<span class="layui-btn layui-btn-normal layui-btn-xs">批准</span>':'<span class="layui-btn layui-btn-danger layui-btn-xs">不批准</span>'
+    //                 },
+    //                 // toolbar: '<div><button class="alertAppr layui-btn layui-btn-sm layui-btn-warm" lay-event="alertAppr">审批</button></div>'
+    //             }
+    //         ]
+    //     ],
+    //     request: {
+    //         pageName: 'currentIndex' //页码的参数名称，默认：page
+    //             ,
+    //         limitName: 'pageSize' //每页数据量的参数名，默认：limit
+    //     },
+    //     parseData: function (res) { //res 即为原始返回的数据
+    //         return {
+    //             "status_code": res.status_code, //解析接口状态
+    //             "message": res.message, //解析提示文本
+    //             "count": res.data.total_count, //解析数据长度
+    //             "data": res.data.data_list, //解析数据列表
+    //             "curr": res.data.page_index
+    //         };
+    //     },
+    //     done: function () {
+    //         $('.noticeHiad').on("mouseenter", function () {
+    //             var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + $(this).text(); + '</div>'
+    //             var that = this;
+    //             layer.tips(tipsCont1, that, {
+    //                 tips: [1, '#999'],
+    //                 maxWidth: 'auto'
+    //             });
+    //         });
+    //     }
+    // })
+
+    // table.on('tool(noticeAppr1)', function (obj) {
+    //     var data = obj.data; //获得当前行数据
+    //     var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+    //     if(layEvent == 'toTitle'){
+    //         //  var elem =$(this);
+    //         // var nid =elem.parents("td").attr("data-id");
+    //         $.fetch({
+    //             url:"/gateway/notice/detail/"+data.id+"",
+    //             type: 'get',
+    //             cb:function(rs){
+    //                 var atta='';
+    //                 if(rs.attaches&&rs.attaches!=''){
+    //                     for(var i=0; i<rs.attaches.length; i++){      
+    //                         atta+='<a title="点击下载" class="seeXqOutIn" target="_blank" href="/gateway/notice/download/'+rs.attaches[i].id+'" >'+rs.attaches[i].original_name+'</a>'
+    //                     }
+    //                 }else{
+    //                     atta='<span>无附件</span>'
+    //                 }
+
+    //                 var htmls ='<div class="layui-card" style="min-height:300px">'
+    //                             +'<div class="reviewCont layui-card-body">'
+    //                                 +' <div class="layui-form-item">'
+    //                                     +' <p style="margin-bottom: 3px;"><label class="fl">发布部门：</label><u class="hideCont">'+rs.notice.to_users+'<i class="iconfont icon-triangle-left"></i></u></p>'
+    //                                     +'<div class="layui-elem-quote" style="padding: 15px 0px;">'
+    //                                         +' <p><label class="fl">发布人：</label><u class="fr-width">'+rs.notice.creater+'</u></p>'
+    //                                         +' <p><label class="fl">发布于：</label><u class="fr-width">'+rs.notice.validity_starttime+'</u></p>'
+    //                                         +' <p><label class="fl">标题：</label><u class="fr-width">'+rs.notice.title+'</u></p>'                                    
+    //                                         +' <p><label class="fl">附件：</label><u class="fr-width">'+atta+'</u></p>'
+    //                                     +'</div>'
+    //                                 +' </div>'
+    //                                 +'<fieldset class="layui-elem-field"><legend>公告内容</legend><div class="layui-field-box pageCont"><div class="w-e-text" style=" overflow-y: auto;">'+rs.notice.content+'</div></div></fieldset>'
+                                    
+    //                             +'</div>'
+    //                         +'</div>'
+    //                 layer.open({
+    //                     title:'查看公告详情',
+    //                     content:htmls,
+    //                     type:1,
+    //                     id:'publisDetail',
+    //                     area:['60%','auto'],
+    //                 });
+    //                 $(".reviewCont i").click(function(){
+    //                     if(!$(this).parent("u").hasClass('showCont')){
+    //                         $(this).parent(".hideCont").addClass("showCont");
+    //                         $(this).parent(".hideCont").removeClass("hideCont"); 
+    //                     }else {
+    //                         $(this).parent(".showCont").removeClass("showCont"); 
+    //                         $(this).parent("u").addClass("hideCont");
+    //                     }
+    //                 })
+    //             }
+    //         });
+    //     }
+    // })
+    laydate.render({ 
+        elem: '#NoticeTime'
+        ,range: true //或 range: '~' 来自定义分割字符
+    });
+    // laydate.render({ 
+    //     elem: '#NoticeTime1'
+    //     ,range: true //或 range: '~' 来自定义分割字符
+    // });
+    $("#InquireSur").on("click",function(){
+        var timeArr = $('#NoticeTime').val().split(' - ');
+        var tit = $("#NoticeTit").val();
+        var Status = $("#Status").val();
+        noticrTable.reload({
+            where: { //设定异步数据接口的额外参数，任意设
+                ID:'',
+                Title: tit
+                ,Status: Status
+                ,StartDate:timeArr[0]
+                ,EndDate:timeArr[1]
+            }
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }
+            ,done:function(){
+                $('.noticeHiad').on("mouseenter", function () {
+                    var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + $(this).text(); + '</div>'
+                    var that = this;
+                    layer.tips(tipsCont1, that, {
+                        tips: [1, '#999'],
+                        maxWidth: 'auto'
+                    });
+                });
+            }
+        });
+    })
+    $("#backquireSur").on("click",function(){
+        $("#NoticeTit").val('');
+        $("#NoticeTime").val('');
+        noticrTable.reload({
+            where: {
+                ID:'',                
+                Title: ''
+                ,StartDate:''
+                ,EndDate:''
+                ,Status: ''
+            }
+            ,page:{
+                curr:1,
+            }
+            ,done:function(){
+                $('.noticeHiad').on("mouseenter", function () {
+                    var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">' + $(this).text(); + '</div>'
+                    var that = this;
+                    layer.tips(tipsCont1, that, {
+                        tips: [1, '#999'],
+                        maxWidth: 'auto'
+                    });
+                });
+            }
+        })
+    })
+    // $("#InquireSur1").on("click",function(){
+    //     var timeArr = $('#NoticeTime1').val().split(' - ');
+    //     var tit = $("#NoticeTit1").val();
+    //     noticrTable1.reload({
+    //         where: { //设定异步数据接口的额外参数，任意设
+    //             Title: tit
+    //             ,Status: 2
+    //             ,StartDate:timeArr[0]
+    //             ,EndDate:timeArr[1]
+    //         }
+    //         ,page: {
+    //             curr: 1 //重新从第 1 页开始
+    //         }
+    //     });
+    // })
+    // $("#backquireSur1").on("click",function(){
+    //     $("#NoticeTit1").val('');
+    //     $("#NoticeTime1").val('');
+    //     noticrTable1.reload({
+    //         where: { //设定异步数据接口的额外参数，任意设
+    //             Title: ''
+    //             ,Status: 2
+    //             ,StartDate:''
+    //             ,EndDate:''
+    //         }
+    //         ,page: {
+    //             curr: 1 //重新从第 1 页开始
+    //         }
+    //     });
+    // })
+})
+</script>
+</html>

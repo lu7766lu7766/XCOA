@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>人事档案管理</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" layui-card">
+            <div class="layui-row layui-col-space10 layui-card-body">
+                <div id="userFileForm" class="layui-col-xs12">
+                    <div class="layui-form" lay-filter="userFileForm" >
+                         <div class="layui-form-item">
+                             <div class="layui-card-header">基本信息</div>
+                         </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">编号：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="numbering" id="numbering" class="layui-input layui-disabled" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">公司名称：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="Handicap" id="Handicap" class="layui-input layui-disabled" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">一级部门：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="oneLevelDeptName" id="oneLevelDeptName" class="layui-input layui-disabled" disabled="disabled">
+                                </div>
+                            </div>  
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">直接部门：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="department" id="department" class="layui-input layui-disabled" disabled="disabled">
+                                </div>
+                            </div>  
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">用户名：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="EName" id="EName" class="layui-input layui-disabled" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">职位：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="position" id="position" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">性别：</label>
+                                <div class="layui-input-inline">
+                                    <select name="gender" id="gender">
+                                        <option value="0">男</option>
+                                        <option value="1">女</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">入职日期：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="entryTime" id="entryTime" class="layui-input date_5">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">转正日期：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="turnTime" id="turnTime" class="layui-input date_6">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">雇佣类型：</label>
+                                <div class="layui-input-inline">
+                                    <select name="employment" id="employment">
+                                        <option value="0">试用期</option>
+                                        <option value="1">正式</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">员工状态：</label>
+                                <div class="layui-input-inline">
+                                    <select name="status" id="status">
+                                        <option value="0">正常</option>
+                                        <option value="1">停职</option>
+                                        <option value="2">休假</option> 
+                                        <option value="3">离职</option> 
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">合同期开始：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="contractStart" id="contractStart" class="layui-input date_1">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">合同期结束：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="contractEnd" id="contractEnd" class="layui-input date_2">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">合同期年/月：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="contract" id="contract" class="layui-input date_3"  lay-verify="number">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">合同期续约：</label>
+                                <div class="layui-input-inline">
+                                    <select name="renew" id="renew">
+                                        <option value="0">不续约</option>
+                                        <option value="1">续约</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">工作签类型：</label>
+                                <div class="layui-input-inline">
+                                    <select name="workingVisa" id="workingVisa">
+                                        <option value="">无</option>                                        
+                                        <option value="0">临时工签</option>
+                                        <option value="1">9G工签</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">工作签号：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="workingID" id="workingID" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">工作签开始：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="workingStart" id="workingStart" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">工作签结束：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="workingEnd" id="workingEnd" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">工作签年/月：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="working" id="working" class="layui-input date_4" lay-verify="number">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">职等：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="titleLevel" id="titleLevel" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">职等基数：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="titleLevelBbaseNum" id="titleLevelBbaseNum"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">手机号：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="phone" id="phone" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">最后工作日期：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="lastWorkTime" id="lastWorkTime" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label modify-form-label">宿舍号：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="dormNumber" id="dormNumber" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label modify-form-label">宿舍地点：</label>
+                                <div class="layui-input-block" style="margin-left: 140px;">
+                                    <input type="text" name="dormIP" id="dormIP" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注：</label>
+                            <div class="layui-input-block">
+                                <textarea type="text" placeholder="请输入内容" name="contentTextarea" id="contentTextarea" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item tc">
+                            <button class="layui-btn" lay-submit lay-filter="userFileSub">保存修改</button>
+                            <button id="backFileList" class="layui-btn layui-btn-primary">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+  layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','form','laydate'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,router = layui.router()
+    ,layer = layui.layer;
+    element.render();
+
+    var table = layui.table
+            ,laydate = layui.laydate
+            form=layui.form;
+    var index = parent.layer.getFrameIndex(window.name);
+  
+
+    table.render({
+      elem: '#table-checkbox'
+      ,page: true
+      ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+    });
+
+    var uid=$('#userFileForm').attr('data-uid');
+    var starFormStr='';
+
+    var formStatFun=function(){
+        var position= $("#EName").val();
+        var gender=  $("#gender").val();
+        var entryTime= $("#entryTime").val();
+        var turnTime= $("#turnTime").val();
+        var employment= $("#employment").val();
+        var status= $("#status").val();
+        var contractStart= $("#contractStart").val();
+        var contractEnd= $("#contractEnd").val();
+        var contract= $("#contract").val();
+        var renew= $("#renew").val();
+        var workingVisa= $("#workingVisa").val();
+        var workingID= $("#workingID").val();
+        var workingStart= $("#workingStart").val();
+        var workingEnd= $("#workingEnd").val();
+        var working= $("#working").val();
+        var dormIP= $("#dormIP").val();
+        var dormNumber= $("#dormNumber").val();
+        var phone= $("#phone").val();
+        var contentTextarea= $("#contentTextarea").val();
+        var last_work_time = $("#lastWorkTime").val();
+        var title_level = $("#titleLevel").val();
+        var title_level_base_num = $("#titleLevelBbaseNum").val();
+        var one_level_dept_name = $("#oneLevelDeptName").val();
+        var nowFormStr =''+position
+                        +'&'+gender
+                        +'&'+entryTime
+                        +'&'+turnTime
+                        +'&'+employment
+                        +'&'+status
+                        +'&'+contractStart
+                        +'&'+contractEnd
+                        +'&'+contract
+                        +'&'+renew
+                        +'&'+workingVisa
+                        +'&'+workingID
+                        +'&'+workingStart
+                        +'&'+workingEnd
+                        +'&'+working
+                        +'&'+dormIP
+                        +'&'+dormNumber
+                        +'&'+phone
+                        +'&'+contentTextarea+''
+                        +'&'+last_work_time+''
+                        +'&'+title_level+''
+                        +'&'+title_level_base_num+''
+                        +'&'+one_level_dept_name+''
+        return nowFormStr;
+    }
+    function forRsNull(tdo){//为空数据处理
+        var s= tdo==null?'':''+tdo+'';
+        return s
+    }
+    $.fetch({
+        url:"/gateway/archives/detail",
+        type: 'POST',
+        data:{
+            userId:uid,
+        },
+        cb:function(rs){
+            $("#numbering").val(forRsNull(rs.users_id));
+            $("#Handicap").val(forRsNull(rs.company_name));
+            $("#department").val(forRsNull(rs.department_name));
+            $("#position").val(forRsNull(rs.position));
+            $("#EName").val(forRsNull(rs.user_name));
+            $("#gender").val(forRsNull(rs.gender));
+            $("#entryTime").val(forRsNull(rs.join_date).slice(0,10));
+            $("#turnTime").val(forRsNull(rs.due_date).slice(0,10));
+            $("#employment").val(forRsNull(rs.employ_type));
+            $("#status").val(forRsNull(rs.users_status));
+            $("#contractStart").val(forRsNull(rs.contract_startdate).slice(0,10));
+            $("#contractEnd").val(forRsNull(rs.contract_enddate).slice(0,10));
+            $("#contract").val(forRsNull(rs.contract_time));
+            $("#renew").val(forRsNull(rs.contract_if_continue));
+            $("#workingVisa").val(forRsNull(rs.work_visa));
+            $("#workingID").val(forRsNull(rs.visa_number));
+            $("#workingStart").val(forRsNull(rs.visa_startdate).slice(0,10));
+            $("#workingEnd").val(forRsNull(rs.visa_enddate).slice(0,10));
+            $("#working").val(forRsNull(rs.visa_time));
+            $("#dormIP").val(forRsNull(rs.dorm_address));
+            $("#dormNumber").val(forRsNull(rs.dorm_number));
+            $("#phone").val(forRsNull(rs.mobile));
+            $("#lastWorkTime").val(forRsNull(rs.last_work_time))
+            $("#titleLevel").val(forRsNull(rs.title_level))
+            $("#titleLevelBbaseNum").val(forRsNull(rs.title_level_base_num))
+            $("#oneLevelDeptName").val(forRsNull(rs.one_level_dept_name))
+            // $("#contentTextarea").html();
+            var remark=forRsNull(rs.remark)
+            form.val("userFileForm", {
+                "contentTextarea": remark
+            })
+            laydate.render({
+                elem: '#lastWorkTime' //指定元素
+                ,type: 'datetime'
+            });
+            laydate.render({
+                elem: '#entryTime' //指定元素
+                ,type: 'date'
+            });
+            laydate.render({
+                elem: '#turnTime' //指定元素
+                ,type: 'date'
+            });
+
+            laydate.render({
+                elem: '#contractStart' //指定元素
+                ,type: 'date'
+            });
+            laydate.render({
+                elem: '#contractEnd' //指定元素
+                ,type: 'date'
+            });
+            laydate.render({
+                elem: '#workingStart' //指定元素
+                ,type: 'date'
+            });
+            laydate.render({
+                elem: '#workingEnd' //指定元素
+                ,type: 'date'
+            });
+         
+            form.render();
+            starFormStr =formStatFun();
+        }
+    })
+
+//     17.3 人事档案更新
+// URI：/gateway/archives/update     POST
+// 参数：userId：【必填】，position：【选填】，
+// gender：【选填】，joinDate：【选填】，dueDate：【选填】
+// ，employType：【选填】，usersStatus：【选填】，contractStartdate：【选填】，
+// contractEnddate：【选填】，contractTime：【选填】，contractIfContinue：【选填】，
+// workVisa：【选填】，visaNumber：【选填】，visaStartdate：【选填】，visaEnddate：【选填】，
+// visaTime：【选填】，dormAddress：【选填】，dormNumber：【选填】，mobile：【选填】，remark：【选填】
+// 返回：status_code：200，操作成功，其他code 错误
+    form.on('submit(userFileSub)', function(data){
+        // console.log(data,"19191919")
+        // return false
+        var contentTextarea= $("#contentTextarea").html();
+        var prs ={
+            userId:uid,
+            position:data.field.position,
+            gender:data.field.gender,
+            joinDate:data.field.entryTime,
+            dueDate:data.field.turnTime,
+            employType:data.field.employment,
+            usersStatus:data.field.status,
+            contractStartdate:data.field.contractStart,
+            contractEnddate:data.field.contractEnd,            
+            contractTime:data.field.contract,            
+            contractIfContinue:data.field.renew,            
+            workVisa:data.field.workingVisa,            
+            visaNumber:data.field.workingID,            
+            visaStartdate:data.field.workingStart,            
+            visaEnddate:data.field.workingEnd,            
+            visaTime:data.field.working,            
+            dormAddress:data.field.dormIP,            
+            dormNumber:data.field.dormNumber,            
+            mobile:data.field.phone,            
+            remark:data.field.contentTextarea,
+            lastWorkTime:data.field.lastWorkTime,
+            titleLevel:data.field.titleLevel,
+            titleLevelBaseNum:data.field.titleLevelBbaseNum,
+            oneLevelDeptName:data.field.one_level_dept_name
+        }
+        $.fetch({
+            url:"/gateway/archives/update",
+            type: 'post',
+            data:prs,
+            cb:function(rs){
+                layer.msg("保存成功");
+                parent.layer.close(index);
+
+            }
+        })
+        
+    })
+    
+    $("#backFileList").on("click",function(){
+        var nowStat =formStatFun();
+            if(starFormStr != nowStat){
+                layer.confirm('检测到您已有修改,确定放弃保存本次编辑？', {icon: 3, title:' '}, function(index){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+                
+            });
+        }else{
+            var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+        }
+   })
+
+  });
+  </script>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>意见反馈</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <!-- <div class="layui-card-header">意见反馈</div> -->
+            <div class="layui-card-body">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">反馈标题</label>
+                        <div class="layui-input-block">
+                            <input id="feedbackTitle" placeholder="请输入内容" class="layui-input"></input>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">提交范围：</label>
+                        <div class="layui-input-block" id="readRange">
+                            <input type="checkbox" name="readRange[2]"  lay-verify="required" lay-skin="primary" title="集团" checked="">
+                            <input type="checkbox" name="readRange[1]"  lay-verify="required" lay-skin="primary" title="公司" checked="">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">反馈内容</label>
+                        <div class="layui-input-block">
+                            <textarea style="max-height: 300px;min-height: 200px" id="feedbackContent" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上传</label>
+                            <button type="button" class="layui-btn" id="feedAttach" style="float:left">
+                                <i class="layui-icon">&#xe67c;</i>上传
+                            </button>
+                            <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                        <div id="feedFiles" class="UploadNames-box"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn layui-btn-sm">提交</button>
+                            <button id="backFeek" class="layui-btn layui-btn-primary layui-btn-sm">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','upload'], function () {
+    var $ = layui.$,
+        admin = layui.admin,
+        form = layui.form,
+        element = layui.element,
+        upload = layui.upload,
+        router = layui.router(); 
+        var attachIds=[];
+        var uploadInst = upload.render({
+            elem: '#feedAttach' //绑定元素
+            ,url: urls+'/gateway/feedbackAttach/add' //上传接口
+            ,accept:"file"
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load('上传中'); //上传loading
+            }
+            ,done: function (res) {
+                //上传完毕回调
+                console.log(res);
+                layer.closeAll('loading'); //关闭loading
+                $("#feedFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                attachIds.push(res.data.attachId);
+
+            }
+            ,error: function () {
+                //请求异常回调
+            }
+        });
+        
+        $("#feedFiles").on("click",'i.del',function(){//删除附件
+            var delId =$(this).attr("data-file");
+            var elem = $(this).parent("a");
+            $.fetch({
+                url: '/gateway/feedbackAttach/del',
+                type: 'post',
+                data:{
+                    // taskId:
+                    attachId:delId
+                },
+                cb:function(rs){
+                    attachIds.splice($.inArray(delId,attachIds),1);
+                    elem.remove();
+                } 
+            });
+        })
+        $("#backFeek").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭  
+        })
+
+         form.on('submit(subFeek)', function(data){
+            var feedbackTitle =$("#feedbackTitle").val();
+            var feedbackContent = $("#feedbackContent").val();
+            var attachIdsStr = attachIds.toString();
+            // console.log($("#readRange input[name='readRange[1]']").val())1g 2j
+            if(data.field['readRange[1]']==undefined&&data.field['readRange[2]']==undefined){
+                layer.msg("请选择提交范围",{icon:5,anim: 6});
+                return false
+            }else if(data.field['readRange[1]']!=undefined&&data.field['readRange[2]']!=undefined){
+                var readRange=0;
+            }else if(data.field['readRange[1]']==undefined&&data.field['readRange[2]']!=undefined){
+                var readRange=2;
+            }else if(data.field['readRange[1]']!=undefined&&data.field['readRange[2]']==undefined){
+                var readRange=1;
+            }
+            $.fetch({
+                url: '/gateway/feedback/add',
+                type: 'post',
+                data:{
+                    feedbackTitle:feedbackTitle,
+                    // feedbackRange:feedbackRange,
+                    feedbackContent:feedbackContent,
+                    attachIds:attachIdsStr,
+                    feedbackRange:readRange,
+                    // feedbackTitle：【必填】，feedbackContent：【必填】，feedbackRange：【必填】，attachIds：【选填】
+                },
+                cb:function(rs){
+                    layer.msg("提交成功");
+                    setTimeout(function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭 
+                    }, 800)
+                } 
+            });
+        })
+})
+
+</script>
+</html>

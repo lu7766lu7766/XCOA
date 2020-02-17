@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>人员假期设定</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/modules/layer/default/layer.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<!-- <script src="../../js/sub/sethd.js?v=20181218" type="text/javascript"></script> -->
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <i class="iconfont icon-wodejiaqi"></i>
+                人员假期设置
+                <div class="holidayBatch fr">
+                    <button class="layui-btn layui-btn-normal layui-btn-sm">假期批量设置</button>
+                </div>
+            </div>
+            <div class="layui-card-body layui-row layui-col-space10">
+                <div class="layui-col-sm3 layui-col-md3 layui-col-lg3">
+                    <div class="holidayLeft">
+                        <div class="browser">
+                            <ul id="browser">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm2 layui-col-md2 layui-col-lg2">
+                    <div id="userListdpr">
+                        <div class="title"></div>
+                        <ul class="cont"></ul>
+                    </div>
+                </div>
+                <div id="sublHoliday-cont" class="layui-col-sm7 layui-col-md7 layui-col-lg7">
+                    <div class="cosepeo" style="display: block;min-height: 550px;">
+                        请选择人员
+                    </div>
+                    <div class="layui-form" style="display: none;" action="" lay-filter="form-sublHoliday">
+                        <div class="layui-form-item">
+                            <div class="layui-card-header">
+                                <span id="userNameHoli" class="red"></span>假期天数设置
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                                <label class="layui-form-label modify-form-title" style="width:115px;">年假天数:</label>
+                                <div id="y_vacation" class="layui-input-block layui-input-lineHeight">
+                                    <input type="text" name="y_vacation" lay-verify="number" placeholder="" autocomplete="off" class="layui-input modify-layui-itme">
+                                    已用
+                                    <span class="red usedDay">0</span>天，剩余
+                                    <span class="red remaDay">0</span>天
+                                </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-title" style="width:115px;">给薪病假天数：</label>
+                            <div  id="s_vacation" class="layui-input-block layui-input-lineHeight">
+                                <input type="text" name="s_vacation" lay-verify="number" placeholder="" autocomplete="off" class="layui-input modify-layui-itme">
+                                已用
+                                <span class="red usedDay">0</span>天，剩余
+                                <span class="red remaDay">0</span>天
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-title" style="width:115px;">扣薪病假天数：</label>
+                            <div id="k_vacation" class="layui-input-block layui-input-lineHeight">
+                                <input type="text" name="k_vacation" lay-verify="number" placeholder=""
+                                    autocomplete="off" class="layui-input modify-layui-itme">
+                                已用
+                                <span class="red usedDay">0</span>天，剩余
+                                <span class="red remaDay">0</span>天
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                                <label class="layui-form-label modify-form-title" style="width:115px;">生理假天数：</label>
+                                <div  id="slj_vacation" class="layui-input-block layui-input-lineHeight">
+                                    <input type="text" name="slj_vacation" lay-verify="number" placeholder="" autocomplete="off" class="layui-input modify-layui-itme">
+                                    已用
+                                    <span class="red usedDay">0</span>天，剩余
+                                    <span class="red remaDay">0</span>天
+                                </div>
+                            </div>
+                        <div class="layui-form-item">
+                                <label class="layui-form-label modify-form-title" style="width:115px;">住院假天数：</label>
+                                <div  id="zyj_vacation" class="layui-input-block layui-input-lineHeight">
+                                    <input type="text" name="zyj_vacation" lay-verify="number" placeholder="" autocomplete="off" class="layui-input modify-layui-itme">
+                                    已用
+                                    <span class="red usedDay">0</span>天，剩余
+                                    <span class="red remaDay">0</span>天
+                                </div>
+                            </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-title" style="width:115px;">清零时间：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="date" id="LAY-component-form-group-date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input modify-layui-itme">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-title" style="width:115px;">特休假天数：</label>
+                            <div id="t_vacation" class="layui-input-block layui-input-lineHeight">
+                                <input type="text" name="t_vacation" lay-verify="number" placeholder=""
+                                    autocomplete="off" class="layui-input modify-layui-itme">
+                                已用
+                                <span class="red usedDay">0</span>天，剩余
+                                <span class="red remaDay">0</span>天
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-title" style="width:115px;">特休假清零时间：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="date" id="LAY-component-form-Hugh-date" lay-verify="date"
+                                    placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input modify-layui-itme">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn"  lay-filter="subAllHoliday"   id="subHoliday">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div  >
+    </div>
+</body>
+<script  type="text/html" id="holidayPageCont" > 
+        <!-- <div class="layui-card"> -->
+            <div class="layui-card-body ">
+                    <form class="layui-form" action="" lay-filter="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择人员：</label>
+                            <div class="layui-input-block departTable layui-overflow">
+                                <ul cols="40" name="managerDesc" class="layui-small-static SmallStatic" wrap="yes">
+                                </ul>
+                                <a class="addDesc" href="javascrip:void(0)"><i class="iconfont icon-40"></i>添加</a>
+                                <a class="emptyDesc" href="javascrip:void(0)"><i class="iconfont icon-qingkong"></i>清空</a>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">天数：</label>
+                            <div class="layui-input-block">
+                                <input id="dayCount" type="number" class="days layui-input modify-layui-itme" min="0">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">假期类型：</label>
+                            <div class="layui-input-block modify-layui-select">
+                                <select id="holidayType"  name="city" lay-verify="required">
+                                    <option value="19">年假</option>                                
+                                    <option value="1">特休假</option>
+                                    <option value="2">给薪病假</option>
+                                    <option value="20">扣薪病假</option>
+                                    <option value="3">生理假</option>
+                                    <option value="23">住院假</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">清零时间：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="date" class='layui-input modify-layui-itme  ECalendar' id="clearTime"  value=""  placeholder="清零时间"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button id="subAllHoliday" class="layui-btn" type="button" >保存</button>
+                                <button id="backHoliday" class="layui-btn" type="button" >返回</button>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        <!-- </div> -->
+
+</script>
+<script src="../../layui/layui.js"></script>
+<script>
+$(function(){ // isCompny:isCompny,
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','laydate','table'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table;
+        laydate.render({
+          elem: '#LAY-component-form-group-date'
+          ,format:'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#LAY-component-form-Hugh-date'
+            ,format:'yyyy-MM-dd'
+        });
+    function  userSlect(ev,elem){ //生成树状图
+        var treeData ={
+            html:"",
+            id:""
+        }
+        function treeHtml(o){
+            // var 
+            for(var i =0;i<o.length;i++){
+                treeData.html+='<li>'
+                if(o[i].children&&o[i].children.length>0){
+                    treeData.html+=
+                    '<span  class="folder isChid" data-id="'+o[i].id+'" data-pid="'+o[i].parent_id+'"><i class="iconfont bclick icon-40"></i><i class="iconfont  iconlev"></i><a href=javascript:void(0);>'
+                    +o[i].name+'</a></span><ul  style="padding-left:18px;">'
+
+                    treeHtml(o[i].children);//存在子级再次调用循环
+                    
+                    treeData.html+="</ul>"
+                }else{
+                    treeData.html+='<span class="file noChid" data-id="'+o[i].id+'"><i class="iconfont null"></i><i class="iconfont iconlev"></i><a href=javascript:void(0);>'
+                    +o[i].name+'</a></span>'
+                } 
+                treeData.html+= '</li>'
+            }
+        };
+        treeHtml(ev);
+        elem.html( treeData.html);
+        //添加icon
+        $("#browser>li>ul>li>span").children("i.iconlev").addClass("icon-gongsi");
+        $("#browser>li>ul>li>ul").find("span>i.iconlev").addClass("icon-zy_qunzuduoren");
+        $("#browser>li>ul>li>ul").addClass("active");
+        $("#browser>li>ul>li>span>i.bclick").addClass("icon-jianhao").removeClass("icon-40");
+        $("#browser>li>ul>li").find("span.isChid>i.bclick").click(function(){//展示样式
+            if($(this).hasClass("icon-jianhao")){
+                $(this).parent("span").next("ul").removeClass("active");
+                $(this).addClass("icon-40").removeClass("icon-jianhao");
+            }else{
+                $(this).parent("span").next("ul").addClass("active");
+                $(this).addClass("icon-jianhao").removeClass("icon-40");
+            }
+        });
+        $("#browser>li>ul>li>ul").find("span>a").click(function(){//部门
+            var oid = $(this).parent().attr("data-id");
+            var gname = $(this).text();
+            $("#browser").find("span").removeClass("on");
+            $(this).parent("span").addClass("on");
+            $("#userListdpr .title").html(''+gname+'');
+            var o={departmentId:oid,pageSize:1000}
+            $("#partUsers").html(gname);
+            $.fetch({
+                url: "/gateway/user/list",
+                dataType: 'json',
+                type: 'post',
+                data:o,
+                cb:function(rs){
+                    var lrs = rs.data_list;
+                    var htmls='';
+                    for(var i=0;i<lrs.length;i++){
+                        htmls += ' <li data-user="'+lrs[i].id+'"><a href="javascript:void(0);">'+lrs[i].name+' ('+lrs[i].title_name+')</a></li>'   //添加了一个A标签 2018-10-03
+                    }
+                    $("#userListdpr .cont").html(htmls);
+                    $("#userListdpr .cont").parent("#userListdpr").addClass("borderBox");    // 渲染之后添加一个类名 2018-10-03
+                    $(".holidayCont .table").addClass("widthSize")  // 渲染之后table添加一个类名 2018-10-03
+                }
+            })
+
+        });
+        
+        $("#browser>li>ul>li").children("span").children("a").click(function(){//公司
+            var copid = $(this).parent().attr("data-id");
+            var gname = $(this).text();
+            $("#browser").find("span").removeClass("on");
+            $(this).parent("span").addClass("on");
+            var o={companyId:copid}
+            $("#partUsers").html(gname);
+        })
+
+    };
+
+    function groupLfTree (){
+        $.fetch({
+            url: "/gateway/department/tree",
+            dataType: 'json',
+            type: 'post',
+            cb:function(rs){
+                userSlect(rs,$("#browser"));
+            }
+        })
+    };
+    groupLfTree();
+    var holidayFun= function(userId){
+        $.fetch({
+            url: "/gateway/holiday/detail/"+userId+"",
+            dataType: 'json',
+            type: 'GET',
+            cb:function(rs){
+                $("#subHoliday").attr("data-user",userId);
+                if(rs==null){
+                    $(".holidayCont>div.red").html('该用户还没有设定假期');
+                    // laydate.render({
+                    //     elem: '#LAY-component-form-group-date'
+                    //     ,format:'yyyy-MM-dd'
+                    //     ,value:''
+                    // });
+                    $("#LAY-component-form-group-date").val("")
+                    $("#LAY-component-form-Hugh-date").val("")
+                    
+                    $("#y_vacation>input").val('');
+                    $("#t_vacation>input").val('');
+                    $("#k_vacation>input").val('');
+                    $("#s_vacation>input").val('');
+                    $("#slj_vacation>input").val('');
+                    $("#zyj_vacation>input").val('');
+
+                    $("#y_vacation>span.usedDay").html(0);
+                    $("#t_vacation>span.usedDay").html(0);
+                    $("#k_vacation>span.usedDay").html(0)
+                    $("#s_vacation>span.usedDay").html(0);
+                    $("#slj_vacation>span.usedDay").html(0);
+                    $("#zyj_vacation>span.usedDay").html(0);
+
+                    $("#y_vacation>span.remaDay").html(0);
+                    $("#t_vacation>span.remaDay").html(0);
+                    $("#k_vacation>span.remaDay").html(0);
+                    $("#s_vacation>span.remaDay").html(0);
+                    $("#slj_vacation>span.remaDay").html(0);
+                    $("#zyj_vacation>span.remaDay").html(0);
+
+                }else{
+                    $(".holidayCont>div.red").html('');
+                    if(rs.clear_time!=null){
+                        laydate.render({
+                            elem: '#LAY-component-form-group-date'
+                            ,format:'yyyy-MM-dd'
+                            ,value:rs.clear_time.slice(0,10)
+                        });
+                    }else{
+                        $("#LAY-component-form-group-date").val("")
+                    }
+                    if(rs.special_holiday_clear_time!=null){
+                        laydate.render({
+                            elem: '#LAY-component-form-Hugh-date'
+                            ,format:'yyyy-MM-dd'
+                            ,value:rs.special_holiday_clear_time.slice(0,10)
+                        });
+                    }else{
+                        $("#LAY-component-form-Hugh-date").val("")
+                    }
+                    
+                    $("#y_vacation>input").val(rs.year_holiday);
+                    $("#t_vacation>input").val(rs.special_holiday);
+                    $("#k_vacation>input").val(rs.kou_xin_sick_holiday);
+                    $("#s_vacation>input").val(rs.sick_holiday);
+                    $("#slj_vacation>input").val(rs.shengli_jia_holiday);
+                    $("#zyj_vacation>input").val(Number(rs.in_hospital_jia_holiday));
+
+                    $("#y_vacation>span.usedDay").html(rs.year_holiday-rs.remaining_year_holiday);
+                    $("#t_vacation>span.usedDay").html(rs.special_holiday-rs.remaining_special_holiday);
+                    $("#k_vacation>span.usedDay").html(rs.kou_xin_sick_holiday-rs.remaining_kou_xin_sick_holiday);
+                    $("#s_vacation>span.usedDay").html(rs.sick_holiday-rs.remaining_sick_holiday);
+                    $("#slj_vacation>span.usedDay").html(rs.shengli_jia_holiday-rs.remaining_shengli_jia_holiday);
+
+                    $("#zyj_vacation>span.usedDay").html(Number(rs.in_hospital_jia_holiday-rs.remaining_in_hospital_jia_holiday));
+
+                    $("#y_vacation>span.remaDay").html(rs.remaining_year_holiday);
+                    $("#t_vacation>span.remaDay").html(rs.remaining_special_holiday);
+                    $("#k_vacation>span.remaDay").html(rs.remaining_kou_xin_sick_holiday);
+                    $("#s_vacation>span.remaDay").html(rs.remaining_sick_holiday);
+                    $("#slj_vacation>span.remaDay").html(rs.remaining_shengli_jia_holiday);
+
+                    $("#zyj_vacation>span.remaDay").html(Number(rs.remaining_in_hospital_jia_holiday));
+                }
+            }
+        })
+    }
+    $("#userListdpr .cont").on("click",'a',function(){
+        var userId = $(this).parent("li").attr('data-user'); //修改 添加查找父级
+        var userName = $(this).text();
+        $(this).parent("li").addClass('on'); //修改 添加查找父级
+        $(this).parent("li").siblings().removeClass("on"); //修改 添加查找父级
+        $("#userNameHoli").html('【编号：'+userId+'，用户名：'+userName+'】');
+        $("#sublHoliday-cont .cosepeo").hide();
+        $("#sublHoliday-cont .layui-form").show();
+        holidayFun(userId);
+    })
+    $("#subHoliday").on("click",function(){
+        var y = $("#y_vacation>input").val();
+        var t = $("#t_vacation>input").val();
+        var k = $("#k_vacation>input").val();
+        var s = $("#s_vacation>input").val();
+        var slj = $("#slj_vacation>input").val();
+        var zyj = $("#zyj_vacation>input").val();
+        
+        var e = $("#LAY-component-form-group-date").val();
+        var ClearTime = $("#LAY-component-form-Hugh-date").val();
+        var uid = $(this).attr("data-user");
+        if(e==''||ClearTime==''){
+            layer.msg('清零时间未填')
+            return false
+        }
+        $.fetch({
+            url: "/gateway/holiday/set",
+            dataType: 'json',
+            type: 'post',
+            data:{
+                UserID:uid,
+                YearHoliday:y,
+                SpecialHoliday:t,
+                KouXinSickHoliday:k,
+                SickHoliday:s,
+                ShengLiJiaHoliday:slj,
+                ClearTime:e,
+                InHospitalHoliday:zyj,
+                SpecialHolidayClearTime:ClearTime
+            },
+            cb:function(rs){
+                layer.msg('设置成功!');
+                holidayFun(uid);
+            }
+        })
+    })
+    
+
+    $(".holidayBatch>button").on("click",function(){
+        var htmls=$("#holidayPageCont").html();
+        layer.open({
+            title:  ' <i class="iconfont icon-jiaqisheding"></i>假期批量设置',
+            // closeBtn:false,
+            type: 1, 
+            content: htmls,
+            area:['60%', '60%'],
+            success:function(layero,index){
+                laydate.render({
+                    elem: '#clearTime'
+                    ,format:'yyyy-MM-dd'
+                })
+                $(".addDesc").on("click",function(){//添加联系人
+                    selMemberFun($(this));
+                });
+                $("a.emptyDesc").on("click",function(){//添加联系人
+                    $(this).siblings("ul.SmallStatic").html("");
+                    $(this).siblings("ul.SmallStatic").attr("data-val","");
+                });
+                form.render();
+                $("#subAllHoliday").on("click",function(){
+                    var time = $("#clearTime").val();
+                    var types = $("#holidayType").val();
+                    var uid = $(".SmallStatic").attr("data-val");
+                    var days = $("#dayCount").val();
+                    $.fetch({
+                        url: "/gateway/holiday/batchset",
+                        dataType: 'json',
+                        type: 'post',
+                        data:{
+                            UserID:uid,
+                            DayCount:days,
+                            HolidayType:types,
+                            ClearTime:time
+                        },
+                        cb:function(rs){
+                            var id=$("#subHoliday").attr("data-user");
+                            if(id!=undefined){
+                                holidayFun(id)
+                            }
+                            layer.msg('设置成功!');
+                            layer.close(index)
+                            
+                        }
+                    })
+                })
+                $("#backHoliday").on("click",function(){
+                    layer.close(index)
+                })
+            }
+        })
+        // $(".holidayPageCont").show()
+        // $(this).parents('.holidayPage').hide();
+    })
+    // $(".holidayPageCont .holidayBatch>button").on("click",function(){
+    //     $(".holidayPageCont").hide()
+    //     $('.holidayPage').show();
+    // })
+   
+})
+})
+</script>
+</html>

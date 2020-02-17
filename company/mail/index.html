@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮件</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js?v=20190225"  type="text/javascript"></script>
+<script src="../../js/sub/email.js?v=20190413"></script>
+</head>
+<style>
+
+</style>
+<body layadmin-themealias="fashion-red">
+	<div class="mailMenu layui-fluid">
+        <div class="layui-card">
+            <div  class="layui-row layui-col-space15">
+                <div class="layui-tab layui-tab-brief" lay-filter="emailTabBrief">
+                    
+                    <ul id="maillRole"  class="layui-tab-title">
+                        <li id="noReadEmail" lay-id="noReadEmail">
+                            未读邮件 <span class="layui-badge" style="opacity: 0;"></span>
+                        </li>
+                        <li id="writeEmail" lay-id="writeEmail">
+                            <i class="layui-icon">&#xe642;</i><span>写邮件</span> 
+                        </li>
+                        <li id="roleToIn"   class="layui-this"   lay-id="roleToIn">
+                            <i class="iconfont icon-shouyoujian"></i>收件箱
+                        </li>
+                        <li id="roleToOut"  lay-id="roleToOut">
+                            <i class="iconfont icon-yifasong"></i>已发送
+                        </li>
+                        <li id="roleToDel"  lay-id="roleToDel">
+                            <i class="iconfont icon-yishanchu"></i>已删除
+                        </li>
+                        <li id="roleToDraft"  lay-id="roleToDraft">
+                            <i class="iconfont icon-caogao"></i>草稿箱
+                        </li>
+                    </ul>
+
+                    <div  class="layui-tab-content">
+                        <!-- 未读信息 -->
+                        <div id="mailNoReadBox"  class="layui-tab-item layui-show">
+                            <div class="layui-table-box layui-card-body layui-form">
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input class="chekAll" type="checkbox" name="chekAll" lay-filter="layTableAllChoose" title="全选" lay-skin="primary"></th>
+                                            <th>发信人</th>
+                                            <th>主题</th>
+                                            <th>附件</th>
+                                            <th>发送时间</th>
+                                            <th>附件大小</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" class="loadingTd"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div  class="pagTop">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 写邮件 -->
+                        <div id="mailContent"  class="layui-tab-item">
+                            <div class="layui-card-body">
+                                <div class="layui-form " action="" lay-filter="component-form-email">
+                                    <div class="layui-form-item  layui-form-text">
+                                        <label class="layui-form-label">收件人：</label>
+                                        <div class="layui-input-block departTable" data-title="收件人">
+                                            <div style="overflow-y:visible;min-height: 38px;word-break: break-all; " id="consigneeName" name="consigneeName" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                                            <ul id="consignee" style="display: none" class="layui-small-static SmallStatic"></ul>
+                                            <a class="addDesc">
+                                                <i class="iconfont icon-40"></i>
+                                                添加
+                                            </a>
+                                            <a class="emptyDesc">
+                                                <i class="iconfont icon-qingkong"></i>
+                                                清空
+                                            </a>
+                                            <p class="cmsBtn" style="color: #337ab7;font-size: 12px;cursor: pointer;padding:0 8px;display: inline-block">
+                                                <span class="addCsTr">添加抄送 </span>
+                                                -- 
+                                                <span class="addMsTr">添加密送</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item"  id="cs_input" style="display: none;">
+                                        <label class="layui-form-label">抄送人：</label>
+                                        <div class="layui-input-block departTable" data-title="抄送人">
+                                            <div style="overflow-y:visible;min-height: 38px;word-break: break-all;" id="cs_consigneeName" name="cs_consigneeName" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                                            <ul id="cs_consignee" style="display: none" class="layui-small-static SmallStatic"></ul>
+                                            <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                                            <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item"  id="ms_input" style="display: none;">
+                                        <label class="layui-form-label">密送人：</label>
+                                        <div class="layui-input-block departTable" data-title="密送人">
+                                            <div style="overflow-y:visible;min-height: 38px;word-break: break-all;" id="ms_consigneeName" name="ms_consigneeName" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                                            <ul id="ms_consignee" style="display: none" class="layui-small-static SmallStatic"></ul>
+                                            <a class="addDesc">
+                                                <i class="iconfont icon-40"></i>
+                                                添加
+                                            </a>
+                                            <a class="emptyDesc">
+                                                <i class="iconfont icon-qingkong"></i>
+                                                清空
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">标题：</label>
+                                        <div class="layui-input-block">
+                                            <input id="emailSubject" name="title" type="text" placeholder="请输入标题" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">正文：</label>
+                                        <div class="layui-input-block">
+                                            <textarea name="emailEit" id="emailEit" style="display: none;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">附件：</label>
+                                        <div class="layui-input-block" id="fileUploadBox">
+                                            <button type="button" class="layui-btn layui-btn-primary" id="elmailfileUpload">
+                                                <i class="layui-icon">&#xe67c;</i>上传附件
+                                            </button>
+                                            <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                                            <div id="mailFiles" class="UploadNames-box"></div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button id="sendEmalBtn" class="form layui-btn"  lay-submit lay-filter="form-email">立即发送</button>
+                                            <button id="saveEmalBtn" class="form layui-btn">保存草稿</button>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item"> <div class="layui-input-block layui-form-mid red">注：系统每隔3分钟会自动保存一次草稿。</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 收件箱 -->
+                        <div id="mailInbox" class="layui-tab-item">
+                            <div class="layui-table-box layui-card-body  layui-form">
+                                <div class="unreadButton">
+                                    <button class="isRead layui-btn layui-btn-primary layui-btn-sm">标记为已读</button>
+                                    <button class="noRead layui-btn layui-btn-primary layui-btn-sm">标记为未读</button>
+                                    <button class="del layui-btn layui-btn-primary layui-btn-sm">删除选中</button>
+                                </div>
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input class="chekAll" type="checkbox" name="chekAll" lay-filter="layTableAllChoose" title="全选" lay-skin="primary"></th>
+                                            <th>发信人</th>
+                                            <th>主题</th>
+                                            <th>附件</th>
+                                            <th>发送时间</th>
+                                            <th>附件大小</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" class="loadingTd"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div  class="pagTop">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 已发送  class="mailConts layui-card"-->
+                        <div id="mailOutbox" class="layui-tab-item">
+                            <div class="layui-table-box layui-card-body layui-form">
+                                <div class="unreadButton">
+                                    <button class="del layui-btn layui-btn-primary layui-btn-sm">删除</button>
+                                </div>
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input class="chekAll" type="checkbox" name="chekAll" lay-filter="layTableAllChoose" title="全选" lay-skin="primary"></th>                                            
+                                            <th>收信人</th>
+                                            <th>主题</th>
+                                            <th>附件</th>
+                                            <th>发送时间</th>
+                                            <th>附件大小</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" class="loadingTd"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div  class="pagTop">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 已删除 -->
+                        <div id="mailDelbox" class="layui-tab-item">
+                            <div class="layui-table-box layui-card-body layui-form">
+                                <div class="unreadButton">
+                                    <button class="del layui-btn layui-btn-primary layui-btn-sm">销毁</button>
+                                    <button class="cancelDel layui-btn layui-btn-primary layui-btn-sm">恢复至收件箱</button>     
+                                </div>
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input class="chekAll" type="checkbox" name="chekAll" lay-filter="layTableAllChoose" title="全选" lay-skin="primary"></th>                                            
+                                            <th>发信人</th>
+                                            <th>主题</th>
+                                            <th>附件</th>
+                                            <th>发送日期</th>
+                                            <th>附件大小</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" class="loadingTd"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div  class="pagTop">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 草稿箱 -->
+                        <div id="mailDraftbox" class="layui-tab-item">
+                            <div class="layui-table-box layui-card-body layui-form">
+                                <div class="unreadButton">
+                                    <button class='del layui-btn layui-btn-primary layui-btn-sm'>删除</button>
+                                </div>
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input class="chekAll" type="checkbox" name="chekAll" lay-filter="layTableAllChoose" title="全选" lay-skin="primary"></th>                                            
+                                            <th>收信人</th>
+                                            <th>主题</th>
+                                            <th>附件</th>
+                                            <th>附件大小</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="loadingTd"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div  class="pagTop">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                
+            </div>   
+        </div>
+	</div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+    $("#maillRole>li").on("click",function(){
+        $(this).addClass("active").siblings().removeClass("active");
+        var index = $(this).index();
+        $("#perRtBox>div").eq(index).show().siblings().hide();
+        var isShowId = $("#perRtBox>div").eq(index).attr("id");
+        if( isShowId=="xxbjl"){
+            sleTime($("#commute_y"),$("#commute_m"));
+        }
+    });
+
+    $("#mailContent .cmsBtn").on("click","span.addCsTr",function(){
+        $("#cs_input").show();
+        $(this).text("删除抄送");
+        $(this).attr("class","remCsTr");
+    })
+    $("#mailContent .cmsBtn").on("click","span.addMsTr",function(){
+        $("#ms_input").show();
+        $(this).text("删除密送");        
+        $(this).attr("class","remMsTr");        
+    })
+
+
+    $("#mailContent .cmsBtn").on("click","span.remCsTr",function(){
+        $("#cs_input").hide();
+        $("#cs_input").find("ul.SmallStatic").html("");
+        $("#cs_input").find("ul.SmallStatic").attr("data-val","");
+        $("#cs_input").find(".layui-textarea").html("");
+
+        $(this).text("添加抄送");
+        $(this).attr("class","addCsTr");        
+    })
+
+    $("#mailContent .cmsBtn").on("click","span.remMsTr",function(){
+        $("#ms_input").find("ul.SmallStatic").html("");
+        $("#ms_input").find("ul.SmallStatic").attr("data-val","");
+        $("#ms_input").find(".layui-textarea").html("");
+        
+        $("#ms_input").hide();
+        $(this).text("添加密送");
+        $(this).attr("class","addMsTr"); 
+    })
+</script>
+</html>

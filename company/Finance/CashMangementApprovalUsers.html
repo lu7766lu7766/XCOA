@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>财务审批人设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/common.js?0.1" type="text/javascript"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card layui-row layui-col-space15">
+            <div class="layui-col-md3"></div>
+            <div class="layui-col-md6">
+                <div class="layui-form layui-card-body" action="" lay-filter="component-form-group">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label modify-form-labelout">现金管理审批人员：</label>
+                        <div class="layui-input-block departTable" data-title="设置财务审批人员">
+                            <textarea id="userName" name="userName" required lay-verify="required"
+                                placeholder="点击添加进行编辑" readonly="readonly"
+                                class="layui-textarea layui-input-inline"></textarea>
+                            <ul class="layui-small-static" style="display: none"></ul>
+                            <a class="addDesc">
+                                <i class="iconfont icon-40"></i>
+                                添加
+                            </a>
+                            <a class="emptyDesc">
+                                <i class="iconfont icon-qingkong"></i>
+                                清除
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button id="subnotice" class="layui-btn">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3"></div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use('index', function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            router = layui.router();
+        element.render();
+        $.fetch({
+            url: "/gateway/cashmanagement/getapprovaluser",
+            type: 'post',
+            cb: function (rs) {
+                var html = '',
+                    idstr = '',
+                    nameText = '';
+                for (var i = 0; i < rs.length; i++) {
+                    html += '<li class="pick" data-user="' + rs[i].id + '">' + rs[i].name + '</li>';
+                    if (i > 0) {
+                        idstr += ",";
+                    }
+                    idstr += '' + rs[i].id + '';
+                    nameText += '' + rs[i].name + ';';
+                }
+                $(".departTable ul").html(html);
+                $(".departTable ul").attr("data-val", idstr);
+                $(".departTable ul").siblings(".layui-textarea").html(nameText);
+
+
+            }
+        });
+        $("a.addDesc").on("click", function () {
+            selMemberFun($(this));
+        });
+        $("a.emptyDesc").on("click", function () {
+            $(this).siblings("ul").html("");
+            $(this).siblings("ul").attr("data-val", "");
+            $(this).siblings(".layui-textarea").html("");
+        })
+        $("#subnotice").on('click', function () {
+            var UserID = $(".departTable ul").attr("data-val");
+            // if (UserID == '') {
+            //     layer.msg('审批人不能为空.', {
+            //         'icon': 5
+            //     });
+            //     return false
+            // }
+            $.fetch({
+                url: "/gateway/cashmanagement/setapprovaluser",
+                type: 'post',
+                data: {
+                    UserID: UserID,
+                },
+                cb: function (rs) {
+                    layer.msg('设置成功');
+                }
+            });
+        })
+
+    })
+</script>
+
+</html>

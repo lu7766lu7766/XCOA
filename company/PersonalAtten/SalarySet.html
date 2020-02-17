@@ -1,0 +1,4621 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工资设置</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+	<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+
+</head>
+	
+<body class="statiBox">
+	<div class="layui-fluid">
+		<div class="layui-card layui-col-space15">
+			<div class="layui-row layui-tab layui-tab-brief" lay-filter="attendanceTabBrief">
+				<ul class="layui-tab-title">
+						<!-- <li  lay-id="2">岗位相关设定</li> -->
+						<!-- <li  lay-id="3">工资扣除设定</li> -->
+						<li class="layui-this" lay-id="1" >工资规则设定</li>
+						<li lay-id="3" >工资设置查询</li>
+						<li lay-id="4" class="TabPH" style="display: none;">工资设置查询(菲籍)</li>
+				</ul>
+				<div class="layui-tab-content">
+					
+					
+
+					<div class="layui-tab-item layui-form layui-show" id="setdeductionForm" lay-filter="setdeductionForm">
+						<!-- 应扣款项 -->
+						<fieldset class="layui-elem-field">
+							<legend>规则类型</legend>
+							<div class="layui-field-box">
+								<div class="layui-form-item">
+									<label class="layui-form-label">类型：</label>
+									<div class="layui-input-block">
+										<input  lay-filter="SalaryType" type="radio" name="SalaryType" value="tw" title="台湾" >
+										<input  lay-filter="SalaryType" type="radio" name="SalaryType" value="mnl" title="马尼拉">
+									</div>
+								</div>
+								<div class="layui-form-item  l-tw layui-hide">
+									<div class="layui-input-block">
+										<button id="jbbtn" class="layui-btn">健保列表</button>
+										<button id="lbbtn" class="layui-btn">劳保列表</button>
+										<button id="ltbtn" class="layui-btn">劳退列表</button>
+										<button id="setleaveattend" class="layui-btn">不扣全勤设置</button>
+									</div>
+								</div>
+								<div class="layui-form-item  l-mnl">
+									<div class="layui-input-block">
+										<button id="gwszbtn" class="layui-btn">岗位设置</button>
+										<button id="ygbtn" class="layui-btn">补贴设置</button>
+										<!-- <button id="hlbtn" class="layui-btn">汇率设置</button> -->
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<!-- 其他应扣 -->
+						<fieldset class="layui-elem-field l-tw layui-hide">
+							<legend>其他应扣</legend>
+							<div class="layui-field-box">
+								<!-- 迟到 -->
+								<div class="layui-form-item">						
+										<label class="layui-form-label">迟到：</label>
+										<div class="layui-form-mid">小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime1Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"   name="TWLateTime1Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime2Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime2Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>									
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"  name="TWLateTime2Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime3Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime3Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"   name="TWLateTime3Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime4Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime4Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"   name="TWLateTime4Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime5Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime5Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"   name="TWLateTime5Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>	
+										<div class="layui-form-mid">大于等于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLateTime6Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>		
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"  name="TWLateTime6Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+	
+									<!-- 早退 -->
+									<div class="layui-form-item">						
+										<label class="layui-form-label">早退：</label>
+										<div class="layui-form-mid">小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime1Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"  name="TWLeaveEarlyTime1Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime2Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime2Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>									
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px" name="TWLeaveEarlyTime2Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime3Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime3Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"  name="TWLeaveEarlyTime3Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime4Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime4Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"  name="TWLeaveEarlyTime4Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime5Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime5Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"  name="TWLeaveEarlyTime5Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>	
+										<div class="layui-form-mid">大于等于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="TWLeaveEarlyTime6Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>		
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="text" style="text-align: center;padding: 0 5px"   name="TWLeaveEarlyTime6Count"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+										<div class="layui-form-mid">小时</div>
+									</div>
+
+										<!-- 假期相关调整 -->
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 95px;">扣薪病假：</label>
+									<div class="layui-form-mid">扣</div>
+									<div  class="layui-input-inline" style="width:104px;">
+										<input type="text"   style="text-align: center;padding: 0 5px"  name="TWLeve_20"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+									</div>
+									<div class="layui-form-mid">天</div>
+								</div>
+								<div class="layui-form-item l-tw layui-hide">
+									<label class="layui-form-label" style="width: 95px;">生理假：</label>
+									<div class="layui-form-mid">扣</div>
+									<div  class="layui-input-inline" style="width:104px;">
+										<input type="text"   style="text-align: center;padding: 0 5px"  name="TWLeve_3"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+									<div class="layui-form-mid">天</div>
+								</div>
+								<div class="layui-form-item l-tw layui-hide">
+									<label class="layui-form-label" style="width: 95px;">病假(生理假)：</label>
+									<div class="layui-form-mid">扣</div>
+									<div  class="layui-input-inline" style="width:104px;">
+										<input type="text"   style="text-align: center;padding: 0 5px"  name="TWLeve_22"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+										</div>
+									<div class="layui-form-mid">天</div>
+								</div>
+
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 95px;">事假：</label>
+									<div class="layui-form-mid">扣</div>
+									<div  class="layui-input-inline" style="width: 104px;">
+										<input type="text"   style="text-align: center;padding: 0 5px"  name="TWLeve_4"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+									</div>
+									<div class="layui-form-mid">天</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 95px;">家庭照顾假：</label>
+									<div class="layui-form-mid">扣</div>
+									<div  class="layui-input-inline" style="width: 104px;">
+										<input type="text"   style="text-align: center;padding: 0 5px"  name="TWLeve_5"   lay-verify="" placeholder="0" autocomplete="off" class="layui-input amountNumberx2">
+									</div>
+									<div class="layui-form-mid">天</div>
+								</div>
+										<!-- 假期相关调整 19/09/25-->
+
+								<div class="layui-form-item">
+									<label class="layui-form-label">月均天数：</label>
+									<div  class="layui-input-inline" style="width:104px;">
+										<input type="tel"  style="text-align: center;padding: 0 5px" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="MonthDayCount"   lay-verify="" placeholder="请输入0~31" autocomplete="off" class="layui-input amountNumber0-31">
+									</div>
+									<div class="layui-form-mid">天</div>
+									<div class="layui-form-mid">(用于计算每天的平均工资)</div>
+								</div>
+							</div>
+						</fieldset>
+						<!-- 应扣款项 -->
+			
+
+						<!-- 个人代扣款项 -->
+						<!-- <fieldset class="layui-elem-field l-tw layui-hide" >
+							<legend>全勤奖设置</legend>
+							<div class="layui-field-box">
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 125px;">每月全勤奖金额：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="FullAttendAward"   lay-verify="" placeholder="请输入金额" autocomplete="off" class="layui-input FullAttendAward">
+									</div>
+								</div>
+							</div>
+						</fieldset> -->
+						<!-- 个人代扣款项 -->
+						<fieldset class="layui-elem-field l-tw layui-hide" >
+							<legend>个人代扣款项</legend>
+							<div class="layui-field-box">
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">个人健保费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GeRenJianBaoRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 126px;">个人健保负担比例：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GeRenJianBaoFuDanRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>   
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">普通保险费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GeRenPTBXRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">就业保险费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GeRenJYBXRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 126px;">个人劳保负担比例：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GeRenLaoBaoFuDanRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+							</div>
+						</fieldset>
+						<!-- 公司代扣 -->
+						<fieldset class="layui-elem-field l-tw layui-hide" >
+							<legend>公司代扣款项</legend>
+							<div class="layui-field-box"> 
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">公司健保费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSJianBaoRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>  
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 126px;">公司健保负担比例：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSJianBaoFuDanRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">平均眷属人数：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="tel"  style="text-align: center;padding: 0 5px" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="AvgJuanShu"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">普通保险费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSPTBaoXianRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">就业保险费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSJYBaoXianRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 126px;">公司劳保负担比例：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSLaoBaoFuDanRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">职业灾害费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSZYZHRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 100px;">工资垫偿费率：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSGZDCRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label" style="width: 126px;">公司劳退负担比例：</label>
+									<div  class="layui-input-inline" style="width: 125px;">
+										<input type="text" style="text-align: center;padding: 0 5px" name="GSLaoTuiFuDanRate"   lay-verify="" placeholder="0~100" autocomplete="off" class="layui-input receipt100">
+									</div>
+									<div class="layui-form-mid">%</div>
+								</div>
+							</div>
+						</fieldset>
+						<!-- mnl工资规则扣除设定 -->
+						<div class="layui-tab layui-tab-card l-mnl layui-hide" style=" margin-bottom: 15px;"  id="deductionTab">
+							<ul class="layui-tab-title">
+								<li style="margin: 0;padding: 0 15px">公司设置</li>
+								<li class="layui-this" style="margin: 0;padding: 0 15px">公司设置(菲籍)</li>
+							</ul>
+							<div class="layui-tab-content">
+								<div class="layui-tab-item">
+									<div class="layui-form-item">
+										<label class="layui-form-label">全勤奖：</label>
+										<div class="layui-form-mid">加</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="FullAttend"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<!-- 迟到 -->
+									<div class="layui-form-item">						
+										<label class="layui-form-label">迟到：</label>
+										<div class="layui-form-mid">小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime1Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime1Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime2Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime2Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>									
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime2Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime3Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime3Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime3Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">天</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>	
+										<div class="layui-form-mid">旷工:大于等于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime4Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>		
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime4Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">天</div>
+									</div>
+
+									<!-- 早退 -->
+									<div class="layui-form-item">						
+										<label class="layui-form-label">早退：</label>
+										<div class="layui-form-mid">小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime1Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime1Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime2Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime2Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>									
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime2Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>
+										<div class="layui-form-mid">大于等于</div>	
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime3Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟,小于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime3Max"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>	
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime3Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">天</div>
+									</div>
+									<div class="layui-form-item">				
+										<label class="layui-form-label"></label>	
+										<div class="layui-form-mid">旷工:大于等于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime4Min"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>		
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime4Count"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">天</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">特殊事假：</label>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="SpecialShijiaDeducteDayCount"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">天</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">事假：</label>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="ShijiaDeducteDayCount"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">天</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">9G押金：</label>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="WorkVisaDeducteAmount"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">人民币</div>
+									</div>
+								</div>
+								<div class="layui-tab-item layui-show">
+									<div class="layui-form-item">
+										<label class="layui-form-label">全勤奖：</label>
+										<div class="layui-form-mid">加</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="FullAttendPH"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<!-- 迟到 -->
+									<div class="layui-form-item">						
+										<label class="layui-form-label">迟到：</label>
+										<div class="layui-form-mid">大于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime1MaxPH"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LateTime1CountPH"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+									<div class="layui-form-item">						
+										<label class="layui-form-label">早退：</label>
+										<div class="layui-form-mid">大于</div>
+										<div  class="layui-input-inline" style="width: 60px;">
+											<input type="tel"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime1MaxPH"   lay-verify="" placeholder="0" autocomplete="off" style="text-align: center;padding: 0 5px" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">分钟</div>
+										<div class="layui-form-mid">扣</div>
+										<div  class="layui-input-inline" style="width: 104px;">
+											<input type="tel" style="text-align: center;padding: 0 5px"  onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" name="LeaveEarlyTime1CountPH"   lay-verify="" placeholder="请输入正整数" autocomplete="off" class="layui-input amountNumber">
+										</div>
+										<div class="layui-form-mid">披索</div>
+									</div>
+								</div>
+							</div>
+						</div>
+								
+						<!-- <fieldset class="layui-elem-field l-mnl layui-hide">
+							<legend>公司设置</legend>
+							<div class="layui-field-box">
+								
+							</div>
+						</fieldset> -->
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn" lay-submit lay-filter="subdeductionForm">立即提交</button>
+								<!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+							</div>
+						</div>
+					</div>
+					<div class="layui-tab-item layui-form">
+						<!-- <div style="color: #FF5722">注：点击列表可进行编辑</div> -->
+						
+						<div class="layui-item l-mnl">
+							<div class="layui-inline">
+								<label class="layui-form-label">用户名</label>
+								<div class="layui-input-inline">
+									<input type="text"  class="layui-input" id="UserName" name="UserName">
+								</div>
+							</div>
+							<div class="layui-inline">
+                                <label class="layui-form-label">部门：</label>
+                                <div class="layui-input-inline">
+									<!-- <select id="DepartmentID" lay-filter="DepartmentID" name="DepartmentID"></select> -->
+									<select type="text" xm-select="DepartmentID"  id="DepartmentID" name="DepartmentID" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+                                </div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">岗位：</label>
+								<div class="layui-input-inline">
+									<!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTitleID"></select> -->
+									<select type="text"  id="JobTitleID" name="JobTitleID" placeholder="全部" autocomplete="off" class="layui-input"  xm-select="JobTitleID"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+								</div>
+							</div>
+							<div class="layui-inline" style="margin-top: 5px">
+								<label class="layui-form-label" style="width:100px">显示在工资列表</label>
+								<div class="layui-input-inline">
+									<select id="IsShow" lay-filter="IsShow"  name="IsShow">
+										<option value="-1">全部</option>
+										<option value="1">是</option>
+										<option value="0">否</option>
+									</select> 
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button class="layui-btn layui-btn-sm"  lay-filter="filterTabelSel" id="filterTabelSel" title="查询">
+									<i class="iconfont icon-sousuo"></i>
+								</button>
+								<button class="layui-btn layui-btn-sm"  lay-filter="closeLayer" id="closeLayer">
+									返回
+								</button>
+							</div>
+						</div>
+						<table class="layui-table" lay-filter="allUserList" id="allUserList"></table>
+					</div>
+
+					<div class="layui-tab-item layui-form">
+							<!-- <div style="color: #FF5722">注：点击列表可进行编辑</div> -->
+							
+							<div class="layui-item l-mnl">
+								<div class="layui-inline">
+									<label class="layui-form-label">用户名</label>
+									<div class="layui-input-inline">
+										<input type="text"  class="layui-input"  autocomplete="off" id="UserNamePH" name="UserNamePH">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">部门：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="DepartmentID" lay-filter="DepartmentID" name="DepartmentID"></select> -->
+										<select type="text" xm-select="DepartmentIDPH"  id="DepartmentIDPH" name="DepartmentIDPH" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">岗位：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTit leID"></select> -->
+										<select type="text"  id="JobTitleIDPH" name="JobTitleIDPH" placeholder="全部" autocomplete="off" class="layui-input"  autocomplete="off"  xm-select="JobTitleIDPH"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline" style="margin-top: 5px">
+									<label class="layui-form-label">阶段</label>
+									<div class="layui-input-inline">
+										<select id="IsShowPH" lay-filter="IsShowPH"  name="IsShowPH">
+											<option value="1">第一阶段</option>
+											<option value="2">第二阶段</option>
+											<option value="-1">全部</option>
+										</select> 
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">月份</label>
+									<div class="layui-input-inline">
+										<input type="text"  class="layui-input"  autocomplete="off" id="MonthPH" name="MonthPH">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<button class="layui-btn layui-btn-sm"  lay-filter="filterTabelSelPH" id="filterTabelSelPH" title="查询">
+										<i class="iconfont icon-sousuo"></i>
+									</button>
+									<button class="layui-btn layui-btn-sm"  lay-filter="closeLayerPH" id="closeLayerPH">
+										返回
+									</button>
+								</div>
+							</div>
+							<table class="layui-table" lay-filter="allUserListPH" id="allUserListPH"></table>
+					</div>
+				</div>
+					<!-- <div class="layui-col-xs2"></div>
+					<div class="layui-col-xs8">
+					</div>
+					<div class="layui-col-xs2"></div> -->
+			</div>
+		</div>
+	</div>
+</body>
+<style>
+	.user-list{
+		max-width: 75%;
+	}
+	.user-list li{
+		float: left;
+		min-width: 0;
+		line-height: 20px;
+		max-width: 160px;
+		text-overflow: ellipsis;
+		padding-right: 40px;
+		overflow: hidden;
+		margin-right: 4px;
+		vertical-align: top;
+   		position: relative;
+		padding-left: 10px;
+	}
+	.user-list li.bg{
+		background:#f6f6f6;
+
+	}
+	.user-list li .layui-tab-close{
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		margin: -7px 0 0;
+		width: 16px;
+		height: 16px;
+		line-height: 16px;
+		border-radius: 50%;
+		font-size: 12px;
+		cursor: pointer;
+	}   
+	.user-list li .layui-tab-close:hover{
+		border-radius: 2px;
+		background-color: #FF5722;
+		color: #fff;
+	}
+	.xm-select-parent .xm-form-select dl{
+        min-width: 220%;
+    }
+	.layui-unselect.layui-form-checkbox{
+		/* min-width: 152px; */
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th{
+		height:30px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-r th[rowspan="4"]{
+		height:164px !important;
+
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[rowspan="3"]{
+		height:134px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[data-field="0"],
+	.layui-table[lay-size=sm] th[data-field="add payback"]{
+		background: #C6E0B4;
+	}
+	div[lay-id="allUserListPH"]  .layui-table-header .layui-table-cell{
+		height:auto !important;
+		overflow:visible;
+		text-overflow:inherit;
+		white-space:normal;
+	}
+	.layui-table[lay-size=sm] th[data-field="Payback"] {
+		background: #1e9fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="Deduction Mandatory"] {
+		background: #FF0000;
+		color: #fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="NSD.NSD"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="de_undertime"]{
+		background: #FFFF00;
+	}
+	.layui-table[lay-size=sm] th[data-field="nsd ot"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday_falling_on_rest_day"]{
+		background: #D9D9D9;
+	}
+	.layui-table[lay-size=sm] th[data-field="Ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field=""]{
+		background: #D9E1F2;
+	}
+</style>
+<script src="../../layui/layui.js"></script>
+<!-- <script src="../../js/sub/sets.js?v=201812240"></script> -->
+<script>
+	
+    layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','form','laydate','table','dtree','formSelects'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,dtree = layui.dtree
+    	,formSelects = layui.formSelects
+        ,table = layui.table
+        ,router = layui.router();
+        element.render();
+        element.on('tab(attendanceTabBrief)', function(obj){
+			$(window).resize();
+		});
+
+		var laydate = layui.laydate,form = layui.form,layer = layui.layer,laypage = layui.laypage,table=layui.table, form = layui.form;
+        var isgroup =$("#statiDepSel").attr("data-isgroup")==1?true:false;	
+		var iscompanies;
+	    // 起始，截止时间选择
+        // var StartTime=  d.getFullYear() + '-' + lay.digit(d.getMonth()+1) + '-01';
+		// var EndTime = d.getFullYear() + '-' + lay.digit(d.getMonth() + 1) + '-' + lay.digit(d.getDate());
+		// var usercheckTime=StartTime;
+		function NumberCheckten2(obj,n){
+				obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+				obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+				obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+				obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+				obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+			}
+		function NumberCheckten2x(obj,n){
+				obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+				obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+				obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+				obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+				obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+		}		
+        form.verify({
+            startItem:function(value){
+                if(!value.match(/\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}/)){
+                    return '请选择正确日期';
+                };
+            },
+		})
+		//年月选择器
+		laydate.render({ 
+			elem: '#MonthPH'
+			,type: 'month'
+			,value:new Date()
+		});
+		//渲染下拉框 mnl
+		//部门下拉 PHHolidayList
+		$.fetch({//部门树列表
+			url: "/gateway/department/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs[0].children[0].children;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('DepartmentID', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentID', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+				formSelects.config('DepartmentIDPH', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		$.fetch({//岗位树列表
+			url: "/gateway/jobTitle/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('JobTitleID', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleID', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+				formSelects.config('JobTitleIDPH', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});  
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		$.fetch({
+			url:"/gateway/usersalary/getcode",
+			type:'post',
+			cb:function(rs){
+				var rs =rs[0];
+				var isCompany=rs;
+				var isCompanyOne=rs;
+				form.val("setdeductionForm", {
+					"SalaryType":isCompany
+				});
+				getdeduction(isCompany)
+				form.on('radio(SalaryType)', function(data){
+					// $(".l-"+(data.value=='tw'?'tw':'mnl')+"").addClass('layui-show').removeClass('layui-hide');
+					// $(".l-"+(data.value=='mnl'?'tw':'mnl')+"").removeClass('layui-show').addClass('layui-hide');
+					isCompany=data.value;
+					getdeduction(isCompany);
+				});  
+				if(isCompanyOne=='tw'){
+					userbasicsalaryFun({
+						UserName:'',
+						DepartmentID:'-1',
+						JobTitleID:'-1',
+						IsShow:'-1',
+					},"tw");
+						$(".FullAttendAward").on('keyup',function () {
+							// $(this).val(NumberCheckten4($(this).val()));
+							NumberCheckten2x(this)
+						}).bind("paste", function () {  //CTR+V事件处理
+							NumberCheckten2x(this)
+							
+							// $(this).val(NumberCheckten4($(this).val()));
+						}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+						$(".amountNumberx2").on('keyup',function () {
+							// $(this).val(NumberCheckten4($(this).val()));
+							NumberCheckten2x(this)
+						}).bind("paste", function () {  //CTR+V事件处理
+							NumberCheckten2x(this)
+							
+							// $(this).val(NumberCheckten4($(this).val()));
+						}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+						$.fetch({
+							url:"/gateway/usersalary/getdeduction",
+							type:'post',
+							cb:function(rs){
+								if(rs){
+									var  leaveData={
+										"TWLeve_20":'',
+										"TWLeve_3":'',
+										"TWLeve_22":'',
+										"TWLeve_4":'',
+										"TWLeve_5":''
+									};
+									for(var i=0;i<rs.leave_type_dedu.length;i++){
+										leaveData['TWLeve_'+rs.leave_type_dedu[i].leave_type+'']=rs.leave_type_dedu[i].day_count;
+									};
+									// console.log(leaveData);
+									form.val("setdeductionForm", {
+										"LateTime": rs.late.time,
+										"LateDeduction": rs.late.deduction,
+										"LeaveEarlyTime": rs.leave_early.time,
+										"LeaveEarlyDeduction": rs.leave_early.deduction,
+
+										// "ShiJiaDeduction":rs.shijia.deduction,
+										// "BingJiaDeduction":rs.bingjia.deduction,
+										// "ShengLiJiaDeduction":rs.shenglijia.deduction,
+										"TWLeve_20":leaveData.TWLeve_20,
+										"TWLeve_3":leaveData.TWLeve_3,
+										"TWLeve_22":leaveData.TWLeve_22,
+										"TWLeve_4":leaveData.TWLeve_4,
+										"TWLeve_5":leaveData.TWLeve_5,
+
+										"YingkouOtherDeduction":rs.yingkou_other.deduction,
+										"DaikouTaxDeduction":rs.daikou_tax.deduction,
+										"DaikouAccumFundDeduction":rs.daikou_accum_fund.deduction,
+										"DaikouOtherDeduction":rs.daikou_other.deduction,
+										"MonthDayCount":rs.month_day_count,
+										// "SalaryType":rs.salary_rule_name,
+										"GeRenPTBXRate":rs.ge_ren_ptbx_rate.deduction,
+										"GeRenJYBXRate":rs.ge_ren_jybx_rate.deduction,
+										"GeRenJianBaoRate":rs.ge_ren_jb_rate.deduction,
+ 
+										"GSPTBaoXianRate":rs.gs_pt_bao_xian_rate.deduction,
+										"GSJYBaoXianRate":rs.gs_jy_bao_xian_rate.deduction,
+										"GSZYZHRate":rs.gs_zhi_ye_zai_hai_rate.deduction,
+										"GSGZDCRate":rs.gs_gzdc_rate.deduction,
+										"GSJianBaoRate":rs.gs_jianbao_rate.deduction,
+										
+										"GeRenJianBaoFuDanRate":rs.ge_ren_jb_fudan_rate.deduction,
+										"GSJianBaoFuDanRate":rs.gs_jianbao_fudan_rate.deduction,
+										"AvgJuanShu":rs.avg_juanshu_count.deduction,
+										"GeRenLaoBaoFuDanRate":rs.ge_ren_lb_fudan_rate.deduction,
+										"GSLaoBaoFuDanRate":rs.gs_lb_fudan_rate.deduction,
+										"GSLaoTuiFuDanRate":rs.gs_lt_fudan_rate.deduction,
+
+										"FullAttendAward":rs.full_attend_award,
+										
+										'TWLateTime1Max':(rs.late.late_time1&&rs.late.late_time1.max)?rs.late.late_time1.max:'0',
+										'TWLateTime1Count':(rs.late.late_time1&&rs.late.late_time1.count)?rs.late.late_time1.count:'0',
+										'TWLateTime2Min':(rs.late.late_time2&&rs.late.late_time2.min)?rs.late.late_time2.min:'0',
+										'TWLateTime2Max':(rs.late.late_time2&&rs.late.late_time2.max)?rs.late.late_time2.max:'0',
+										'TWLateTime2Count':(rs.late.late_time2&&rs.late.late_time2.count)?rs.late.late_time2.count:'0',
+										'TWLateTime3Min':(rs.late.late_time3&&rs.late.late_time3.min)?rs.late.late_time3.min:'0',
+										'TWLateTime3Max':(rs.late.late_time3&&rs.late.late_time3.max)?rs.late.late_time3.max:'0',
+										'TWLateTime3Count':(rs.late.late_time3&&rs.late.late_time3.count)?rs.late.late_time3.count:'0',
+
+										'TWLateTime4Min':(rs.late.late_time4&&rs.late.late_time4.min)?rs.late.late_time4.min:'0',
+										'TWLateTime4Max':(rs.late.late_time4&&rs.late.late_time4.max)?rs.late.late_time4.max:'0',
+										'TWLateTime4Count':(rs.late.late_time4&&rs.late.late_time4.count)?rs.late.late_time4.count:'0',
+
+										'TWLateTime5Min':(rs.late.late_time5&&rs.late.late_time5.min)?rs.late.late_time5.min:'0',
+										'TWLateTime5Max':(rs.late.late_time5&&rs.late.late_time5.max)?rs.late.late_time5.max:'0',
+										'TWLateTime5Count':(rs.late.late_time5&&rs.late.late_time5.count)?rs.late.late_time5.count:'0',
+
+										'TWLateTime6Min':(rs.late.late_time6&&rs.late.late_time6.min)?rs.late.late_time6.min:'0',
+										'TWLateTime6Count':(rs.late.late_time6&&rs.late.late_time6.count)?rs.late.late_time6.count:'0',
+
+										'TWLeaveEarlyTime1Max':(rs.leave_early.leave_early_time1&&rs.leave_early.leave_early_time1.max)?rs.leave_early.leave_early_time1.max:'0',
+										'TWLeaveEarlyTime1Count':(rs.leave_early.leave_early_time1&&rs.leave_early.leave_early_time1.count)?rs.leave_early.leave_early_time1.count:'0',
+										'TWLeaveEarlyTime2Min':(rs.leave_early.leave_early_time2&&rs.leave_early.leave_early_time2.min)?rs.leave_early.leave_early_time2.min:'0',
+										'TWLeaveEarlyTime2Max':(rs.leave_early.leave_early_time2&&rs.leave_early.leave_early_time2.max)?rs.leave_early.leave_early_time2.max:'0',
+										'TWLeaveEarlyTime2Count':(rs.leave_early.leave_early_time2&&rs.leave_early.leave_early_time2.count)?rs.leave_early.leave_early_time2.count:'0',
+										'TWLeaveEarlyTime3Min':(rs.leave_early.leave_early_time3&&rs.leave_early.leave_early_time3.min)?rs.leave_early.leave_early_time3.min:'0',
+										'TWLeaveEarlyTime3Max':(rs.leave_early.leave_early_time3&&rs.leave_early.leave_early_time3.max)?rs.leave_early.leave_early_time3.max:'0',
+										'TWLeaveEarlyTime3Count':(rs.leave_early.leave_early_time3&&rs.leave_early.leave_early_time3.count)?rs.leave_early.leave_early_time3.count:'0',
+										
+										'TWLeaveEarlyTime4Min':(rs.leave_early.leave_early_time4&&rs.leave_early.leave_early_time4.min)?rs.leave_early.leave_early_time4.min:'0',
+										'TWLeaveEarlyTime4Max':(rs.leave_early.leave_early_time4&&rs.leave_early.leave_early_time4.max)?rs.leave_early.leave_early_time4.max:'0',
+										'TWLeaveEarlyTime4Count':(rs.leave_early.leave_early_time4&&rs.leave_early.leave_early_time4.count)?rs.leave_early.leave_early_time4.count:'0',
+										
+										'TWLeaveEarlyTime5Min':(rs.leave_early.leave_early_time5&&rs.leave_early.leave_early_time5.min)?rs.leave_early.leave_early_time5.min:'0',
+										'TWLeaveEarlyTime5Max':(rs.leave_early.leave_early_time5&&rs.leave_early.leave_early_time5.max)?rs.leave_early.leave_early_time5.max:'0',
+										'TWLeaveEarlyTime5Count':(rs.leave_early.leave_early_time5&&rs.leave_early.leave_early_time5.count)?rs.leave_early.leave_early_time5.count:'0',
+										
+										
+										'TWLeaveEarlyTime6Min':(rs.leave_early.leave_early_time6&&rs.leave_early.leave_early_time6.min)?rs.leave_early.leave_early_time6.min:'0',
+										'TWLeaveEarlyTime6Count':(rs.leave_early.leave_early_time6&&rs.leave_early.leave_early_time6.count)?rs.leave_early.leave_early_time6.count:'0',
+
+									})
+								}
+						
+								// console.log(rs);
+								// $(".l-"+(rs.salary_rule_name=='tw'?'tw':'mnl')+"").addClass('layui-show').removeClass('layui-hide');
+								// $(".l-"+(rs.salary_rule_name=='mnl'?'tw':'mnl')+"").removeClass('layui-show').addClass('layui-hide');
+								
+						
+						
+						
+							}
+						})
+						//tw必填校验
+						$("#setdeductionForm .l-tw input").attr( "lay-verify","required");
+
+						$("#filterTabelSel").on("click",function(){
+				// var datas=
+							var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+							var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+					// console.log(DepartmentID,JobTitleID,000)
+							userbasicsalaryFun({
+								UserName:$("#UserName").val(),
+								DepartmentID:DepartmentID==''?'-1':DepartmentID,
+								JobTitleID:JobTitleID==''?'-1':JobTitleID,
+								IsShow:$("#IsShow").val(),
+							},"tw")
+						})
+						$("#closeLayer").on("click",function(){
+							// var datas=
+							layui.formSelects.value('DepartmentID', []); 
+							layui.formSelects.value('JobTitleID', []); 
+							$("#IsShow").val('-1');
+							$("#UserName").val('');
+							form.render();
+							userbasicsalaryFun({
+								UserName:'',
+								DepartmentID:'-1',
+								JobTitleID:'-1',
+								IsShow:'-1',
+							},"tw");
+						})
+				}else if(isCompanyOne=='mnl'||isCompanyOne=='ph'){
+						userbasicsalaryFun({
+							UserName:'',
+							DepartmentID:'-1',
+							JobTitleID:'-1',
+							IsShow:'-1',
+						},"mnl");
+						
+						var UserNamePH=$("#UserNamePH").val();
+						var DepartmentIDPH=formSelects.value('DepartmentID', 'valStr');
+						var JobTitleIDPH=formSelects.value('JobTitleID', 'valStr');
+						var IsShowPH=$("#IsShowPH").val();
+						var MonthPH=$("#MonthPH").val();
+						// DepartmentID:DepartmentID==''?'-1':DepartmentID,
+						 // JobTitleID:JobTitleID==''?'-1':JobTitleID,
+						 
+						userbasicsalaryFun({
+							UserName: ''
+							,DepartmentID: DepartmentIDPH==""?'-1':DepartmentIDPH
+							,JobTitleID:  JobTitleIDPH==""?'-1':JobTitleIDPH
+							,Month:MonthPH
+							,SalaryTimes:IsShowPH
+						},"ph");
+						$("#filterTabelSel").on("click",function(){
+				// var datas=
+							var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+							var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+					// console.log(DepartmentID,JobTitleID,000)
+							userbasicsalaryFun({
+								UserName:$("#UserName").val(),
+								DepartmentID:DepartmentID==''?'-1':DepartmentID,
+								JobTitleID:JobTitleID==''?'-1':JobTitleID,
+								IsShow:$("#IsShow").val(),
+							},"mnl")
+						})
+						$("#closeLayer").on("click",function(){
+							// var datas=
+							layui.formSelects.value('DepartmentID', []); 
+							layui.formSelects.value('JobTitleID', []); 
+							$("#IsShow").val('-1');
+							$("#UserName").val('');
+							form.render();
+							userbasicsalaryFun({
+								UserName:'',
+								DepartmentID:'-1',
+								JobTitleID:'-1',
+								IsShow:'-1',
+							},"mnl");
+						})
+
+						$("#filterTabelSelPH").on("click",function(){
+				// var datas=
+							var UserNamePH=$("#UserNamePH").val();
+							var DepartmentIDPH=formSelects.value('DepartmentIDPH', 'valStr');
+							var JobTitleIDPH=formSelects.value('JobTitleIDPH', 'valStr');
+							var IsShowPH=$("#IsShowPH").val();
+							var MonthPH=$("#MonthPH").val();	
+					// console.log($("#DepartmentIDPH").val())
+							userbasicsalaryFun({
+								UserName: UserNamePH
+								,DepartmentID: DepartmentIDPH==""?'-1':DepartmentIDPH
+								,JobTitleID:  JobTitleIDPH==""?'-1':JobTitleIDPH
+								,Month:MonthPH
+								,SalaryTimes:IsShowPH
+							},"ph")
+						})
+						$("#closeLayerPH").on("click",function(){
+							// var datas=
+							layui.formSelects.value('DepartmentIDPH', []); 
+							layui.formSelects.value('JobTitleIDPH', []); 
+							$("#IsShowPH").val('1');
+							$("#UserName").val('');
+							var date=new Date;
+							var year=date.getFullYear(); 
+							var month=date.getMonth()+1;
+							month =(month<10 ? "0"+month:month);
+							$("#MonthPH").val(year.toString()+'-'+month.toString());	
+							
+							form.render();
+							userbasicsalaryFun({
+								UserName: ''
+								,DepartmentID: DepartmentIDPH==""?'-1':DepartmentIDPH
+								,JobTitleID:  JobTitleIDPH==""?'-1':JobTitleIDPH
+								,Month:year.toString()+'-'+month.toString()
+								,SalaryTimes:1
+							},"ph");
+						})
+						$.fetch({
+							url:"/gateway/usersalary/mnl/getdeduction",
+							type:'post',
+							cb:function(rs){
+							//	console.log(rs)
+								if(rs){
+									form.val("setdeductionForm", {
+										// 'SalaryType':rs.salary_rule_name,
+										'FullAttend':rs.full_attend.count,
+										'LateTime1Max':rs.late.late_time1.max,
+										'LateTime1Count':rs.late.late_time1.count,
+										'LateTime2Min':rs.late.late_time2.min,
+										'LateTime2Max':rs.late.late_time2.max,
+										'LateTime2Count':rs.late.late_time2.count,
+										'LateTime3Min':rs.late.late_time3.min,
+										'LateTime3Max':rs.late.late_time3.max,
+										'LateTime3Count':rs.late.late_time3.count,
+										'LateTime4Min':rs.late.late_time4.min,
+										'LateTime4Count':rs.late.late_time4.count,
+
+										'LeaveEarlyTime1Max':rs.leave_early.leave_early_time1.max,
+										'LeaveEarlyTime1Count':rs.leave_early.leave_early_time1.count,
+										'LeaveEarlyTime2Min':rs.leave_early.leave_early_time2.min,
+										'LeaveEarlyTime2Max':rs.leave_early.leave_early_time2.max,
+										'LeaveEarlyTime2Count':rs.leave_early.leave_early_time2.count,
+										'LeaveEarlyTime3Min':rs.leave_early.leave_early_time3.min,
+										'LeaveEarlyTime3Max':rs.leave_early.leave_early_time3.max,
+										'LeaveEarlyTime3Count':rs.leave_early.leave_early_time3.count,
+										'LeaveEarlyTime4Min':rs.leave_early.leave_early_time4.min,
+										'LeaveEarlyTime4Count':rs.leave_early.leave_early_time4.count,
+
+										'SpecialShijiaDeducteDayCount':rs.special_shijia.count,
+										'ShijiaDeducteDayCount':rs.shijia.count,
+										'WorkVisaDeducteAmount':rs.work_visa.count,
+
+									})
+								}
+
+								
+							}
+						})
+						$.fetch({
+							url:"/gateway/usersalary/ph/getdeduction",
+							type:'post',
+							cb:function(rs){
+							//	console.log(rs)
+								if(rs){
+									form.val("setdeductionForm", {
+										// 'SalaryType':rs.salary_rule_name,
+										'FullAttendPH':rs.full_attend.count,
+										'LateTime1MaxPH':rs.late.late_time1.max,
+										'LateTime1CountPH':rs.late.late_time1.count,
+
+										'LeaveEarlyTime1MaxPH':rs.leave_early.leave_early_time1.max,
+										'LeaveEarlyTime1CountPH':rs.leave_early.leave_early_time1.count,
+
+									})
+								}
+
+								
+							}
+						})
+					}
+
+			//	console.log(rs)
+				function getdeduction(isCompany){
+					$(".l-"+(isCompany=='tw'?'tw':'mnl')+"").addClass('layui-show').removeClass('layui-hide');
+					$(".l-"+(isCompany=='mnl'?'tw':'mnl')+"").removeClass('layui-show').addClass('layui-hide');
+					
+					form.on('submit(subdeductionForm)', function(data){
+						// console.log(data)
+						if(isCompany=='tw'){
+							// "TWLeve_20":'id20',
+							// "TWLeve_3":'id3',
+							// "TWLeve_22":'id22',
+							// "TWLeve_4":'id4',
+							// "TWLeve_5":'id5',
+							var o = {
+								LeaveTypeDedu:[
+									{LeaveType:20,DayCount:data.field.TWLeve_20},
+									{LeaveType:3,DayCount:data.field.TWLeve_3},
+									{LeaveType:22,DayCount:data.field.TWLeve_22},
+									{LeaveType:4,DayCount:data.field.TWLeve_4},
+									{LeaveType:5,DayCount:data.field.TWLeve_5}
+								],
+
+								LateTime:data.field.LateTime,
+								LateDeduction:data.field.LateDeduction,
+								LeaveEarlyTime:data.field.LeaveEarlyTime,
+								LeaveEarlyDeduction:data.field.LeaveEarlyDeduction,
+								ShiJiaDeduction:data.field.ShiJiaDeduction,
+								BingJiaDeduction:data.field.BingJiaDeduction,
+								MonthDayCount:data.field.MonthDayCount,
+								SalaryType:data.field.SalaryType,
+								ShengLiJiaDeduction:data.field.ShengLiJiaDeduction,
+								GeRenPTBXRate:data.field.GeRenPTBXRate,
+								GeRenJYBXRate:data.field.GeRenJYBXRate,
+								GeRenJianBaoRate:data.field.GeRenJianBaoRate,
+								FullAttendAward:data.field.FullAttendAward,
+								GSPTBaoXianRate:data.field.GSPTBaoXianRate,
+								GSJYBaoXianRate:data.field.GSJYBaoXianRate,
+								GSZYZHRate:data.field.GSZYZHRate,
+								GSGZDCRate:data.field.GSGZDCRate,
+								GSJianBaoRate:data.field.GSJianBaoRate,
+								GeRenJianBaoFuDanRate:data.field.GeRenJianBaoFuDanRate,
+								GSJianBaoFuDanRate:data.field.GSJianBaoFuDanRate,
+								AvgJuanShu:data.field.AvgJuanShu,
+								GeRenLaoTuiFuDanRate:data.field.GeRenLaoTuiFuDanRate,
+								GeRenLaoBaoFuDanRate:data.field.GeRenLaoBaoFuDanRate,
+								GSLaoBaoFuDanRate:data.field.GSLaoBaoFuDanRate,
+								GSLaoTuiFuDanRate:data.field.GSLaoTuiFuDanRate,
+
+								LateTime1Max:data.field.TWLateTime1Max,
+								LateTime1Count:data.field.TWLateTime1Count,
+
+								LateTime2Min:data.field.TWLateTime2Min,
+								LateTime2Max:data.field.TWLateTime2Max,
+								LateTime2Count:data.field.TWLateTime2Count,
+
+								LateTime3Min:data.field.TWLateTime3Min,
+								LateTime3Max:data.field.TWLateTime3Max,
+								LateTime3Count:data.field.TWLateTime3Count,
+
+								LateTime4Min:data.field.TWLateTime4Min,
+								LateTime4Max:data.field.TWLateTime4Max,
+								LateTime4Count:data.field.TWLateTime4Count,
+
+								LateTime5Min:data.field.TWLateTime5Min,
+								LateTime5Max:data.field.TWLateTime5Max,
+								LateTime5Count:data.field.TWLateTime5Count,
+
+								LateTime6Min:data.field.TWLateTime6Min,
+								LateTime6Count:data.field.TWLateTime6Count,
+
+
+								LeaveEarlyTime1Max:data.field.TWLeaveEarlyTime1Max,
+								LeaveEarlyTime1Count:data.field.TWLeaveEarlyTime1Count,
+								LeaveEarlyTime2Min:data.field.TWLeaveEarlyTime2Min,
+								LeaveEarlyTime2Max:data.field.TWLeaveEarlyTime2Max,
+								LeaveEarlyTime2Count:data.field.TWLeaveEarlyTime2Count,
+
+								LeaveEarlyTime3Min:data.field.TWLeaveEarlyTime3Min,
+								LeaveEarlyTime3Max:data.field.TWLeaveEarlyTime3Max,
+								LeaveEarlyTime3Count:data.field.TWLeaveEarlyTime3Count,
+
+								LeaveEarlyTime4Min:data.field.TWLeaveEarlyTime4Min,
+								LeaveEarlyTime4Max:data.field.TWLeaveEarlyTime4Max,
+								LeaveEarlyTime4Count:data.field.TWLeaveEarlyTime4Count,
+
+								LeaveEarlyTime5Min:data.field.TWLeaveEarlyTime5Min,
+								LeaveEarlyTime5Max:data.field.TWLeaveEarlyTime5Max,
+								LeaveEarlyTime5Count:data.field.TWLeaveEarlyTime5Count,
+
+								LeaveEarlyTime6Min:data.field.TWLeaveEarlyTime6Min,
+								LeaveEarlyTime6Count:data.field.TWLeaveEarlyTime6Count,
+							}
+							$.fetch({
+								url:"/gateway/usersalary/setdeduction",
+								type:'post',
+								data:o,
+								cb:function(rs){
+									layer.msg('保存成功');
+								}
+							})
+									
+						}else if(isCompany=='mnl'){
+							var isPH=$('#deductionTab').find("li.layui-this").index();
+							// console.log(isPH);
+							// return false
+							if(isPH===0){
+								var o = {
+									SalaryType:data.field.SalaryType,
+									
+									FullAttend:data.field.FullAttend,
+									LateTime1Max:data.field.LateTime1Max,
+									LateTime1Count:data.field.LateTime1Count,
+									LateTime2Min:data.field.LateTime2Min,
+									LateTime2Max:data.field.LateTime2Max,
+									LateTime2Count:data.field.LateTime2Count,
+									LateTime3Min:data.field.LateTime3Min,
+									LateTime3Max:data.field.LateTime3Max,
+									LateTime3Count:data.field.LateTime3Count,
+									LateTime4Min:data.field.LateTime4Min,
+									LateTime4Count:data.field.LateTime4Count,
+									LeaveEarlyTime1Max:data.field.LeaveEarlyTime1Max,
+									LeaveEarlyTime1Count:data.field.LeaveEarlyTime1Count,
+									LeaveEarlyTime2Min:data.field.LeaveEarlyTime2Min,
+									LeaveEarlyTime2Max:data.field.LeaveEarlyTime2Max,
+									LeaveEarlyTime2Count:data.field.LeaveEarlyTime2Count,
+									LeaveEarlyTime3Min:data.field.LeaveEarlyTime3Min,
+									LeaveEarlyTime3Max:data.field.LeaveEarlyTime3Max,
+									LeaveEarlyTime3Count:data.field.LeaveEarlyTime3Count,
+									LeaveEarlyTime4Min:data.field.LeaveEarlyTime4Min,
+									LeaveEarlyTime4Count:data.field.LeaveEarlyTime4Count,
+									SpecialShijiaDeducteDayCount:data.field.SpecialShijiaDeducteDayCount,
+									ShijiaDeducteDayCount:data.field.ShijiaDeducteDayCount,
+									WorkVisaDeducteAmount:data.field.WorkVisaDeducteAmount,
+								}
+								$.fetch({
+									url:"/gateway/usersalary/mnl/setdeduction",
+									type:'post',
+									data:o,
+									cb:function(rs){
+										layer.msg('保存成功');
+									}
+								})
+
+							}else if(isPH===1){
+								var o = {
+									// SalaryType:data.field.SalaryType,
+									
+									FullAttend:data.field.FullAttendPH,
+
+									LateTime1Max:data.field.LateTime1MaxPH,
+									LateTime1Count:data.field.LateTime1CountPH,
+									
+									LeaveEarlyTime1Max:data.field.LeaveEarlyTime1MaxPH,
+									LeaveEarlyTime1Count:data.field.LeaveEarlyTime1CountPH,
+								
+								}
+								$.fetch({
+									url:"/gateway/usersalary/ph/setdeduction",
+									type:'post',
+									data:o,
+									cb:function(rs){
+										layer.msg('保存成功');
+									}
+								})
+							}
+
+						}
+						
+						return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+					});
+
+				}
+			}
+		})
+		
+		
+		var now= new Date();
+        var year = now.getFullYear(),
+            month = now.getMonth() + 1,
+            date = now.getDate(),
+            wHtml = "",
+            zmonth ='',zdate='';
+            if(month<10){
+                zmonth = "0"+month;
+            }else{
+                zmonth = month;
+            }
+            if(date<10){
+                zdate = "0"+date;
+            }else{
+                zdate = date;
+			}
+
+
+			// var allStaList = table.render({
+			// 		elem: '#allUserList',
+			// 		url: urls+'/gateway/usersalary/userbasicsalary',
+			// 		method: 'post',
+			// 		contentType: 'application/json',
+			// 		page:false,
+			// 		loading: true,
+			// 		where:{
+			// 			pageSize:100000,
+			// 		},
+			// 		// toolbar:,
+			// 		// toolbar: ['filter', 'print', 'exports'],
+			// 		// defaultToolbar: ['filter', 'print', 'exports'],
+			// 		text: {
+			// 			none: '暂无' 
+			// 		},
+			// 		size:'sm',
+			// 		even:true,
+			// 		height: 'full-175',
+			// 		cols: [[
+			// 			{field:'user_name',title:'姓名',sort:true},
+			// 			{field:'dpt_name',title:'部门',sort:true},
+			// 			{field:'title_name',title:'岗位',sort:true},
+			// 			{field:'basic_salary',title:'薪资设置<span style="color:#1E9FFF">(点击单元格进行编辑)</span>',sort:true,edit:'text'},
+			// 			{field:'family_member_count',title:'家属数量<span style="color:#1E9FFF">(点击单元格进行编辑)</span>',sort:true,edit:'text'},
+			// 		]]
+			// 		// ,request: {
+			// 		//     pageName: 'currentIndex' //页码的参数名称，默认：page
+			// 		//     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+			// 		// }
+			// 		,parseData: function(res){ //res 即为原始返回的数据
+			// 			return {
+			// 				"status_code":res.status_code, //解析接口状态
+			// 				"message": res.message, //解析提示文本
+			// 			// "count": res.data.total_count, //解析数据长度
+			// 				"data": res.data, //解析数据列表
+			// 			// "curr":res.data.page_index
+			// 			};
+			// 		}
+			// })
+			//工资列表获取
+			window.userbasicsalaryFun =function(datas,cType){
+				
+							// console.log(cType)
+				if(cType=="tw"){
+					$("ul.layui-tab-title").find("li.TabPH").hide();
+					
+					$.fetch({
+						url:'/gateway/usersalary/userbasicsalary',
+						type: 'post',
+						data:{
+							pageSize:100000000,
+						},
+						cb:function(rs){
+
+								var data=rs.salary_list;
+								var cols= [[
+									{field:'user_name',title:'姓名',sort:true,minWidth:80},
+									{field:'dpt_name',title:'部门',sort:true,minWidth:80},
+									{field:'title_name',title:'岗位',sort:true,minWidth:80},
+									{field:'basic_salary',title:'薪资设置<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:140},
+									{field:'xin_zi_dai_kou',title:'薪資代扣繳<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:140},
+									{field:'full_attend_award',title:'全勤奖<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:140},
+									{field:'family_member_count',title:'家属数量<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:140},
+									{field:'ban_bie_salary',title:'班别津贴<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:140},
+									{field:'meal_subsidy',title:'伙食津貼(免)<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:160},
+									{field:'laotui_per',title:'劳退自愿提缴比例<span style="color:#1E9FFF">(可编辑)</span>',sort:true,edit:'text',minWidth:180},
+								]]
+							
+								var allStaList = table.render({
+										elem: '#allUserList',
+										// url: urls+'/gateway/usersalary/userbasicsalary',
+										// method: 'post',
+										// contentType: 'application/json',
+										page:false,
+										limit:100000000,
+										// limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+										// loading: true,
+										// where:{
+										// 	pageSize:100000,
+										// },
+										// toolbar:,
+										// toolbar: ['filter', 'print', 'exports'],
+										// defaultToolbar: ['filter', 'print', 'exports'],
+										text: {
+											none: '暂无' 
+										},
+										size:'sm',
+										even:true,
+										height: 'full-175',
+										cols: cols,
+										data:data,
+										// ,request: {
+										//     pageName: 'currentIndex' //页码的参数名称，默认：page
+										//     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+										// }
+										// ,parseData: function(res){ //res 即为原始返回的数据
+										// 	return {
+										// 		"status_code":res.status_code, //解析接口状态
+										// 		"message": res.message, //解析提示文本
+										// 	// "count": res.data.total_count, //解析数据长度
+										// 		"data": res.data, //解析数据列表
+										// 	// "curr":res.data.page_index
+										// 	};
+										// } 
+								})
+								table.on('edit(allUserList)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+				// var s=parseFloat(obj.data.family_member_count);	
+									if(obj.field=="basic_salary"){
+										if(isNaN(obj.value)){
+											layer.msg('请输入正确值');
+											$(this).val('');
+											return false
+										}
+										
+									}else if(obj.field=="family_member_count"){
+										var r = /^\+?[0-9][0-9]*$/;
+										var s=parseFloat(obj.value);
+										if (!r.test(s)){
+											layer.msg('请输入整数值');
+											$(this).val('');
+											return false
+										}else{
+											$(this).val(s);
+										}
+										
+									}else if(obj.field=="meal_subsidy"){
+										if(isNaN(obj.value)){
+											layer.msg('请输入正确值');
+											$(this).val('');
+											return false
+										}
+									}else if(obj.field=="ban_bie_salary"){
+										if(isNaN(obj.value)){
+											layer.msg('请输入正确值');
+											$(this).val('');
+											return false
+										}
+									}else if(obj.field=="laotui_per"){
+										if(isNaN(obj.value)){
+											layer.msg('请输入正确值');
+											$(this).val('');
+											return false
+										}
+									}		
+									$.fetch({
+										url:"/gateway/usersalary/setbasicsalary",
+										type:'post',
+										data:{
+											UserID:obj.data.user_id==null?0:obj.data.user_id,
+											Amount:obj.data.basic_salary==null?0:obj.data.basic_salary,		
+											FamilyMemberCount:obj.data.family_member_count==null?0:obj.data.family_member_count,
+											HuoShiSalary:obj.data.meal_subsidy==null?0:obj.data.meal_subsidy,	
+											BanBieSalary:obj.data.ban_bie_salary==null?0:obj.data.ban_bie_salary,	
+											LaoTuiPer:obj.data.laotui_per==null?0:obj.data.laotui_per,	
+											XinZiDaiKou:obj.data.xin_zi_dai_kou==null?0:obj.data.xin_zi_dai_kou,
+											FullAttendAward:obj.data.full_attend_award==null?0:obj.data.full_attend_award	
+										},
+										cb:function(rs){
+										}
+									})
+								});
+
+						
+						
+
+						}
+					})	
+				}else if(cType=="mnl"){
+
+								$("ul.layui-tab-title").find("li.TabPH").show();
+								// console.log(cType)
+								
+								var userbasicsalaryName={
+									air_tickets_deduct: 'AirTicketsDeduct'
+									,basic_salary: 'BasicSalary'
+									,deduction: 'Deduction'
+									,rental_fees_jian:'RentalFeesJian'
+									,guarantee_deduct: 'GuaranteeDeduct'
+									,medicine_subsidy: 'MedicineSubsidy'
+									,spring_festival_subsidy: 'SpringFestivalSubsidy'
+									,temp_visa_deduct: 'TempVisaDeduct'
+									,travel_visa_deduct: 'TravelVisaDeduct'
+									,visa_deduct: 'VisaDeduct'
+									,water_electricity_jian: 'WaterElectricityJian'
+									,wrong_money_jian: 'WrongMoneyJian'
+									
+									,first_currency_amount: 'FirstCurrencyUnitID'
+									,first_currency_unit_id: 'FirstCurrencyAmount'
+									,ticheng_jia:'TiCheng'
+									,xiangmu_jixiao_jia:'XiangMuJiXiao'
+								}
+								var userbasicsalaryUni={}
+								// $('#setdeductionForm').addClass("mnlTable");
+						//		console.log(datas)
+								$.fetch({
+									url:'/gateway/usersalary/mnl/userbasicsalary',
+									type: 'post',
+									data:datas,
+									cb:function(rs){
+
+										var cols= [{type:'checkbox',fixed:'left'},{type:'numbers',fixed:'left',title:'序号'},{fixed:'left',field:'user_name',title:'姓名',sort:true,align: 'center',minWidth:80},{fixed:'left',field:'dpt_name',title:'部门',align: 'center',sort:true,minWidth:110},{fixed:'left',field:'title_name',title:'岗位',sort:true,align: 'center',minWidth:110},{field:'basic_salary',title:'基本薪资',align: 'center',sort:true,minWidth:110},{field:'basic_currency_name',title:'基本薪资币种',align: 'center',sort:true,minWidth:110}];
+										for(var i=0;i<rs.columns.length;i++){
+											if(rs.columns[i].is_display){
+												cols.push({field:''+rs.columns[i].column_name+'',title:''+rs.columns[i].zh_name+'('+['','补贴','扣除'][rs.columns[i].calc_type] +')<br>币种：'+rs.columns[i].currency_unit_name+'',sort:true,align: 'center',minWidth:180},)//edit:'text',
+												userbasicsalaryUni[''+rs.columns[i].column_name+'']=rs.columns[i].currency_unit_id;
+											}
+										}
+										cols.push({field:'auto_update_salary',title:'是否自动',align: 'center',fixed:'right',sort:true,minWidth:100,templet: function (d){return ['否','是',''][d.auto_update_salary==null?2:d.auto_update_salary]}},{field:'',title:'操作',minWidth:80,fixed:'right',
+											toolbar:'<div><a class="layui-btn layui-btn-xs" lay-event="edit">详情</a></div>'
+											
+										})
+										var data=rs.salary_list;
+										var allStaList = table.render({
+											elem: '#allUserList',
+											limit:100000000,
+											// autoSort:false,
+											// limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+											// url: urls+'/gateway/usersalary/userbasicsalary',
+											// method: 'post',
+											// contentType: 'application/json',
+											toolbar:'',
+											defaultToolbar:'',
+											page:false,
+											text: {
+												none: '暂无' 
+											},
+											size:'sm',
+											even:true,
+											// initSort: {
+											// 	field: 'basic_salary' //排序字段，对应 cols 设定的各字段名
+											// 	,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+											// },
+											height: 'full-225',
+											cols: [cols],
+											data:data,
+											done:function(){
+												$("div[lay-id='allUserList'] div.layui-table-header th div").height(38)
+												// window.yourFunction=function(){//解决列表定位列无高度问题
+												// 	var tableHeight=$(".layui-form.layui-border-box.layui-table-view").height();
+												// 	$(".layui-table-body.layui-table-main").height(tableHeight-29);
+												// 	$(".layui-table-fixed.layui-table-fixed-l .layui-table-body").height(tableHeight-46);
+													
+												// 	// console.log(tableHeight)
+												// }
+												// setTimeout('window.yourFunction()',10);
+												//  'height:38px'
+											
+											}
+											// request: {
+											//      pageName: 'currentIndex' //页码的参数名称，默认：page
+											//      ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+											// }
+											// ,parseData: function(res){ //res 即为原始返回的数据
+											// 	return {
+											// 		"status_code":res.status_code, //解析接口状态
+											// 		"message": res.message, //解析提示文本
+											// 	"count": res.data.total_count, //解析数据长度
+											// 		"data": res.data, //解析数据列表
+											// "curr":res.data.page_index
+											// 	};
+											// }
+										})
+							
+										table.on('tool(allUserList)', function(obj){
+										//	console.log(obj.tr) //得到当前行元素对象
+										//	console.log(obj.data) //得到当前行数据
+											var layEvent = obj.event;
+											if(layEvent === 'edit'){
+												$.fetch({
+													url:"/gateway/usersalary/mnl/rateinit",
+													type:'post',
+													cb:function(rate){
+														var ophtml="";
+														var rateD={};
+														for(var i=0;i<rate.length;i++){
+															ophtml+='<option value="'+rate[i].id+'">'+rate[i].zh_name+'('+rate[i].short_code+')</option>'
+															rateD[rate[i].id]=rate[i].zh_name+'('+rate[i].short_code+')'
+														}
+														
+														var conthtmls6input='';
+														var userbasicsalaryUid=obj.data.user_id;
+														for(key in obj.data){
+															// console.log($('th[data-field="'+key+'"]').text())
+															var labelText=$('th[data-field="'+key+'"]').text();
+														//	console.log(userbasicsalaryName[key])
+															if(labelText!=''&&userbasicsalaryName[key]!=undefined&&key!='basic_salary'){
+																conthtmls6input += '<div class="layui-inline">'
+																				+'<label class="layui-form-label" style="width: 128px;">'+labelText+'</label>'
+																					+'<div class="layui-input-inline">'
+																						+'<input type="text" name="'+userbasicsalaryName[key]+'" value="'+(obj.data[key]==null?'':obj.data[key])+'" placeholder="请输入" autocomplete="off" class="layui-input num2" disabled="disabled">'
+																					+'</div>'
+																					+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;">'+rateD[userbasicsalaryUni[key]]+'</div>'
+																				+'</div>'
+																				
+															}
+														}
+															// $('#setdeductionForm').addClass("mnlTable");
+													
+														if(obj.data.is_all==null||obj.data.is_all==''){
+															obj.data.is_all=0;
+														}
+														var conthtmls6 ='<div class="layui-card">'
+																			+'<div class="layui-card-body layui-form">'
+																					+'<div class="layui-form-item">'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">姓名：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.user_name==null?"暂无":obj.data.user_name)+'</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">部门：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.dpt_name==null?"暂无":obj.data.dpt_name)+'</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">岗位：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.title_name==null?"暂无":obj.data.title_name)+'</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">显示在工资列表：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.is_show==1?"是":'否')+'</div></div>'
+																					+'</div>'
+																						
+																					
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资</label>'
+																								+'<div class="layui-input-inline"><input disabled="disabled" type="text" name="BasicSalary"  id="BasicSalary" value="'+(obj.data.basic_salary==null?'':obj.data.basic_salary)+'"  placeholder="请输入" autocomplete="off" class="layui-input num2"></div>'
+																								+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;"></div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资币种</label>'
+																							+'<div class="layui-input-inline"><select disabled="disabled" id="BasicSalaryCurrencyUnitID" name="BasicSalaryCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																						+conthtmls6input
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否房屋补贴</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="1" disabled="disabled" title="是" '+(obj.data.has_housing_subsidy==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="0" disabled="disabled" title="否" '+(obj.data.has_housing_subsidy==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">工资货币</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" disabled="disabled" lay-filter="checkIsAll" name="checkIsAll" value="1" title="全" '+(obj.data.is_all==1?'checked':'')+'>'
+																									+'<input type="radio" disabled="disabled" lay-filter="checkIsAll" name="checkIsAll" value="0" title="部分" '+(obj.data.is_all==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否自动计算</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" disabled="disabled" lay-filter="AutoUpdateSalary" name="AutoUpdateSalary" value="1" title="是" '+(obj.data.auto_update_salary==1?'checked':'')+'>'
+																									+'<input type="radio" disabled="disabled" lay-filter="AutoUpdateSalary" name="AutoUpdateSalary" value="0" title="否" '+(obj.data.auto_update_salary==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																						
+																					+'</div>'
+
+																					+'<div class="layui-form-item all">'
+																						//领
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">打回币种</label> <div class="layui-input-inline"><select id="SecondCurrencyUnitID" disabled="disabled" name="SecondCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item part '+(obj.data.is_all==1?'layui-hide':'')+'">'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取币种</label> <div class="layui-input-inline"><select  disabled="disabled" id="FirstCurrencyUnitID" name="FirstCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item part '+(obj.data.is_all==1?'layui-hide':'')+'">'
+																						//外币 打
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取金额</label> <div class="layui-input-inline"><input  disabled="disabled" type="text" id="FirstCurrencyAmount" name="FirstCurrencyAmount" placeholder="请输入" value="'+(obj.data.first_currency_amount==null?'':obj.data.first_currency_amount)+'" autocomplete="off" class="layui-input num2"></div>'
+																						+'</div>'
+																					+'</div>'
+
+
+
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-input-block">'
+																							// +' <button class=" layui-btn" id="subuserbasicsalary">保存</button>'
+																							+' <button class=" layui-btn" id="backuserbasicsalary">返回</button>'
+																						+'</div>'
+																					+'</div>'
+
+																				+'</div>'
+																		+'</div>'
+															layer.open({
+																title:'基本工资设置',
+																type: 1, 
+																id:"conthtmls6",
+																content:conthtmls6,
+																resize:false,            
+																area:['90%', '90%'],   
+																success:function(layero,index){
+																	$("#backuserbasicsalary").on("click",function(){
+																		layer.close(index);
+																	})
+																	form.on('radio(checkIsAll)', function(data){
+																		if(data.value==1){
+																			$(".part").addClass('layui-hide').removeClass('layui-show');
+																			// $("#FirstCurrencyAmount").val()
+																		}else{
+																			
+																			$(".part").addClass('layui-show').removeClass('layui-hide');
+																			// $(".all").addClass('layui-hide').removeClass('layui-show');
+																		}
+																		
+																	}); 
+																	$("#conthtmls6").on('keyup','.layui-input.num2',function () {
+																		NumberCheckten2x(this)
+																	}).bind("paste", function () {  //CTR+V事件处理
+																		NumberCheckten2x(this)
+																		// $(this).val(NumberCheckten4($(this).val()));
+																	}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+																			
+																	$("#BasicSalaryCurrencyUnitID").val(obj.data.basic_salary_currency_unit_id);
+																	$("#FirstCurrencyUnitID").val(obj.data.first_currency_unit_id);
+																	$("#SecondCurrencyUnitID").val(obj.data.second_currency_unit_id);
+																	form.render();
+																	$("#subuserbasicsalary").on("click",function(){
+																		var subData={};
+																		var BasicSalaryCurrencyUnitIDVal=$("#BasicSalaryCurrencyUnitID").val();
+																		var BasicSalaryVal=$("#BasicSalary").val();
+																		if(BasicSalaryCurrencyUnitIDVal==''||BasicSalaryCurrencyUnitIDVal==null){
+																			layer.msg('基本薪资不能为空');
+																			return false
+																		}
+																		if(BasicSalaryVal==''||BasicSalaryVal==null){
+																			layer.msg('基本薪资币种不能为空');
+																			return false															
+																		}
+																		$("#conthtmls6").find('input.layui-input.num2').each(function(){
+																		//	console.log($(this).val())
+																			var subName=$(this).attr("name");
+																			subData[subName]=$(this).val();
+																		})
+																		subData['UserID']=userbasicsalaryUid;						
+																		// console.log($("input[name='checkIsAll']:checked").val())								
+																		subData['IsAll']=$("input[name='checkIsAll']:checked").val();
+																		subData['HasHousingSubsidy']=$("input[name='HasHousingSubsidy']:checked").val();
+																		if(subData.IsAll==0){
+																			subData['FirstCurrencyAmount']=$("#FirstCurrencyAmount").val();
+																			subData['FirstCurrencyUnitID']=$("#FirstCurrencyUnitID").val();
+																		}else if(subData.IsAll==1){
+																			subData['FirstCurrencyAmount']=0;
+																			subData['FirstCurrencyUnitID']='';
+																		}
+																		subData['BasicSalaryCurrencyUnitID']=$("#BasicSalaryCurrencyUnitID").val();
+																		subData['SecondCurrencyUnitID']=$("#SecondCurrencyUnitID").val();
+																	//	console.log(subData);
+																		$.fetch({
+																			url:'/gateway/usersalary/mnl/setbasicsalary',
+																			type: 'post',
+																			data:subData,
+																			cb:function(rs){
+																				layer.msg('保存成功');
+																				layer.close(index);
+
+																				var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+																				var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+																				// console.log(DepartmentID,JobTitleID,000)
+																				userbasicsalaryFun({
+																					UserName:$("#UserName").val(),
+																					DepartmentID:DepartmentID==''?'-1':DepartmentID,
+																					JobTitleID:JobTitleID==''?'-1':JobTitleID,
+																					IsShow:$("#IsShow").val(),
+																				})
+																			}
+																		})
+																	})
+																}
+															})
+															//obj.del(); //删除当前行
+															//obj.update(fields) //修改当前行数据
+														}
+													})
+															
+													
+												}
+										});
+										
+										table.on('toolbar(allUserList)', function(obj){
+										//	console.log(obj.tr) //得到当前行元素对象
+										 	 //得到当前行数据
+											var checkStatus = table.checkStatus(obj.config.id);
+											if(checkStatus.data.length===0){
+												layer.msg('无选中项，无法设置。');
+												return false
+											}
+											var uNames='';
+											var uIdsArr=[];
+											for(var i =0;i<checkStatus.data.length;i++){
+												uNames+='<li class="bg"><span>'+checkStatus.data[i].user_name+';</span><i data-id="'+checkStatus.data[i].user_id+'" class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>';
+												uIdsArr.push(checkStatus.data[i].user_id);
+											}
+											
+											var SubUidsStr=uIdsArr.join(',');
+											var userAmount=checkStatus.data.length;
+											var firstData=checkStatus.data[0];
+											var layEvent = obj.event;
+											if(layEvent === 'editAll'){
+												$.fetch({
+													url:"/gateway/usersalary/mnl/rateinit",
+													type:'post',
+													cb:function(rate){
+														var ophtml="";
+														var rateD={};
+														for(var i=0;i<rate.length;i++){
+															ophtml+='<option value="'+rate[i].id+'">'+rate[i].zh_name+'('+rate[i].short_code+')</option>'
+															rateD[rate[i].id]=rate[i].zh_name+'('+rate[i].short_code+')'
+														}
+														
+														var conthtmls6input='';
+													//	console.log(obj.data.user_id);
+														// var userbasicsalaryUid=firstData.user_id;
+														for(key in firstData){
+															// console.log($('th[data-field="'+key+'"]').text())
+															var labelText=$('th[data-field="'+key+'"]').text();
+														//	console.log(userbasicsalaryName[key])
+															if(labelText!=''&&userbasicsalaryName[key]!=undefined&&key!='basic_salary'){
+																conthtmls6input += '<div class="layui-inline">'
+																					+'<label class="layui-form-label" style="width: 128px;">'+labelText+'</label>'
+																					+'<div class="layui-input-inline">'
+																						+'<input type="text" name="'+userbasicsalaryName[key]+'" value="'+(firstData[key]==null?'':firstData[key])+'" placeholder="请输入" autocomplete="off" class="layui-input num2">'
+																					+'</div>'
+																					+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;">'+rateD[userbasicsalaryUni[key]]+'</div>'
+																				+'</div>'
+																				
+															}
+														}
+															// $('#setdeductionForm').addClass("mnlTable");
+													
+														if(firstData.is_all==null||firstData.is_all==''){
+															firstData.is_all=0;
+														}
+														// console.log(uNames)
+														
+														var conthtmls6 ='<div class="layui-card">'
+																			+'<div class="layui-card-body layui-form">'
+																					+'<div class="layui-form-item">'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">用户名：</label><ul class="layui-form-mid layui-word-aux user-list">'+(uNames==null?"暂无":uNames)+'</ul><div class="layui-form-mid layui-word-aux" style="display:none;"><button class="layui-btn layui-btn-xs" id="cancelDel">撤销删除</button></div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">已选中：</label><div class="layui-form-mid layui-word-aux user-amount">'+(userAmount==null?"暂无":userAmount)+'人</div></div>'
+																					+'</div>'
+																						
+																					
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资</label>'
+																								+'<div class="layui-input-inline"><input type="text" name="BasicSalary"  id="BasicSalary" value="'+(firstData.basic_salary==null?'':firstData.basic_salary)+'"  placeholder="请输入" autocomplete="off" class="layui-input num2"></div>'
+																								+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;"></div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资币种</label>'
+																							+'<div class="layui-input-inline"><select id="BasicSalaryCurrencyUnitID" name="BasicSalaryCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																						+conthtmls6input
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否房屋补贴</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="1" title="是" '+(firstData.has_housing_subsidy==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="0" title="否" '+(firstData.has_housing_subsidy==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">工资货币</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="checkIsAll" name="checkIsAll" value="1" title="全" '+(firstData.is_all==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="checkIsAll" name="checkIsAll" value="0" title="部分" '+(firstData.is_all==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item all">'
+																						//领
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">打回币种</label> <div class="layui-input-inline"><select id="SecondCurrencyUnitID" name="SecondCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item part '+(firstData.is_all==1?'layui-hide':'')+'">'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取币种</label> <div class="layui-input-inline"><select id="FirstCurrencyUnitID" name="FirstCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item part '+(firstData.is_all==1?'layui-hide':'')+'">'
+																						//外币 打
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取金额</label> <div class="layui-input-inline"><input type="text" id="FirstCurrencyAmount" name="FirstCurrencyAmount" placeholder="请输入" value="'+(firstData.first_currency_amount==null?'':firstData.first_currency_amount)+'" autocomplete="off" class="layui-input num2"></div>'
+																						+'</div>'
+																					+'</div>'
+
+
+
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-input-block">'
+																							+' <button class=" layui-btn" id="subuserbasicsalary">保存</button>'
+																							+' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+																						+'</div>'
+																					+'</div>'
+
+																				+'</div>'
+																		+'</div>'
+															layer.open({
+																title:'基本工资设置',
+																type: 1, 
+																id:"conthtmls6",
+																content:conthtmls6,
+																resize:false,            
+																area:['90%', '90%'],   
+																success:function(layero,index){
+																	//删除多选用户
+																	if(userAmount==1){
+																		$(".user-list li>.layui-tab-close").hide();
+																	}else{
+																		$(".user-list li>.layui-tab-close").show();
+																		// $("#cancelDel").parent('div').show();
+																	}
+																	$(".user-list").on("click",'li>.layui-tab-close',function(){
+																		var uid=$(this).attr('data-id');
+																		$(this).parent("li").remove();
+																		var SubUidsArr=SubUidsStr.split(',');
+																		SubUidsArr.splice($.inArray(uid,SubUidsArr),1);
+																		SubUidsStr=SubUidsArr.join(',');
+																		userAmount=userAmount-1;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').show();
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+																	 
+																	$("#cancelDel").on("click",function(){
+																		$(".user-list").html(uNames);
+																		SubUidsStr=uIdsArr.join(',');
+																		userAmount=uIdsArr.length;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').hide();
+																		
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+
+																	$("#backuserbasicsalary").on("click",function(){
+																		layer.close(index);
+																	})
+																	form.on('radio(checkIsAll)', function(data){
+																		if(data.value==1){
+																			$(".part").addClass('layui-hide').removeClass('layui-show');
+																			// $("#FirstCurrencyAmount").val()
+																		}else{
+																			
+																			$(".part").addClass('layui-show').removeClass('layui-hide');
+																			// $(".all").addClass('layui-hide').removeClass('layui-show');
+																		}
+																		
+																	}); 
+																	$("#conthtmls6").on('keyup','.layui-input.num2',function () {
+																		NumberCheckten2x(this)
+																	}).bind("paste", function () {  //CTR+V事件处理
+																		NumberCheckten2x(this)
+																		// $(this).val(NumberCheckten4($(this).val()));
+																	}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+																			
+																	$("#BasicSalaryCurrencyUnitID").val(firstData.basic_salary_currency_unit_id);
+																	$("#FirstCurrencyUnitID").val(firstData.first_currency_unit_id);
+																	$("#SecondCurrencyUnitID").val(firstData.second_currency_unit_id);
+																	form.render();
+																	$("#subuserbasicsalary").on("click",function(){
+																		var subData={};
+																		var BasicSalaryCurrencyUnitIDVal=$("#BasicSalaryCurrencyUnitID").val();
+																		var BasicSalaryVal=$("#BasicSalary").val();
+																		if(BasicSalaryCurrencyUnitIDVal==''||BasicSalaryCurrencyUnitIDVal==null){
+																			layer.msg('基本薪资不能为空');
+																			return false
+																		}
+																		if(BasicSalaryVal==''||BasicSalaryVal==null){
+																			layer.msg('基本薪资币种不能为空');
+																			return false															
+																		}
+																		$("#conthtmls6").find('input.layui-input.num2').each(function(){
+																		//	console.log($(this).val())
+																			var subName=$(this).attr("name");
+																			subData[subName]=$(this).val();
+																		})
+																		subData['UserID']=SubUidsStr;						
+																		// console.log($("input[name='checkIsAll']:checked").val())								
+																		subData['IsAll']=$("input[name='checkIsAll']:checked").val();
+																		subData['HasHousingSubsidy']=$("input[name='HasHousingSubsidy']:checked").val();
+																		if(subData.IsAll==0){
+																			subData['FirstCurrencyAmount']=$("#FirstCurrencyAmount").val();
+																			subData['FirstCurrencyUnitID']=$("#FirstCurrencyUnitID").val();
+																		}else if(subData.IsAll==1){
+																			subData['FirstCurrencyAmount']=0;
+																			subData['FirstCurrencyUnitID']='';
+																		}
+																		subData['BasicSalaryCurrencyUnitID']=$("#BasicSalaryCurrencyUnitID").val();
+																		subData['SecondCurrencyUnitID']=$("#SecondCurrencyUnitID").val();
+																	//	console.log(subData);
+																		$.fetch({
+																			url:'/gateway/usersalary/mnl/setbasicsalary',
+																			type: 'post',
+																			data:subData,
+																			cb:function(rs){
+																				layer.msg('保存成功');
+																				layer.close(index);
+
+																				var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+																				var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+																				// console.log(DepartmentID,JobTitleID,000)
+																				userbasicsalaryFun({
+																					UserName:$("#UserName").val(),
+																					DepartmentID:DepartmentID==''?'-1':DepartmentID,
+																					JobTitleID:JobTitleID==''?'-1':JobTitleID,
+																					IsShow:$("#IsShow").val(),
+																				})
+																			}
+																		})
+																	})
+																}
+															})
+															//obj.del(); //删除当前行
+															//obj.update(fields) //修改当前行数据
+														}
+													})
+															
+													
+												}
+										});
+									}
+								})
+							//	console.log(cType)		
+					
+				}else if(cType=="ph"){
+					//  以下马尼拉 菲籍
+								//console.log(cType)		
+					$.fetch({
+						url:"/gateway/usersalary/ph/userbasicsalary",
+						type:'post',
+						data:datas,
+						
+						cb:function(res){
+							//console.log(res)
+							// console.log(datas.SalaryTimes)
+							if(datas.SalaryTimes==-1){
+								var noedit=false;
+							}else{
+								var noedit=true;
+							}
+							var endDate1 = laydate.getEndDate(10);
+							var allUserListPH = table.render({
+								elem: '#allUserListPH',
+								// url: window.urls + '/gateway/usersalary/ph/userbasicsalary',
+								limits:false,
+								toolbar:false,
+								// defaultToolbar:'',
+								// where:datas,
+								// method: 'post',
+								// contentType: 'application/json',
+								data:res.salary_list,
+								page: false,
+								size:'sm',
+								// loading: true,
+								// toolbar:true,
+								// defaultToolbar: '<div><a>删除</a></div>',
+								text: {
+									none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+								},
+								cols: [
+									[//第一级表头
+										{
+											title: '  ',//排序	
+											colspan:13,
+											rowspan:1,
+											fixed:'left',
+											align:'center'
+										},{
+											field:'add payback',
+											title: 'Add Item ',//排序	
+											colspan:28,
+											align:'center'
+										},{
+											field:'Payback',
+											title: 'Payback Item',
+											colspan:31,
+											align:'center'
+											
+										},{
+											field:'Deduction Mandatory',
+											title: 'Deduction Items',
+											colspan:4,
+											align:'center'
+										}
+										// ,{
+										// 	field:'Deduction Mandatory',
+										// 	title: 'Mandatory Contribution',
+										// 	colspan:4,
+										// 	align:'center'
+										// }
+										// ,{
+										// 	title: 'Total Pay',
+										// 	colspan:20
+										// }
+										,{
+											field:'creator',
+											title: '创建人',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											field:'modifier',
+											title: '编辑人',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											title: ' ',
+											rowspan:4,
+											fixed:'right',
+											width:100,
+											align:'center',
+											// toolbar: 
+											templet:function(d){
+												// return noedit?'<div><button class="layui-btn layui-btn-xs" lay-event="edit">详情</button></div>':'<div><button class="layui-btn  layui-btn-disabled layui-btn-xs layui-disabled" lay-event="">详情</button></div>';
+												return '<div><button class="layui-btn layui-btn-xs" lay-event="edit">详情</button></div>';
+											}
+										}
+									],
+								
+									[//第二级表头
+									{
+										sort:true,
+										field: 'no',
+										title: 'No',//排序	
+										type: 'numbers',
+										width:60,
+										unresize: true,
+										fixed:'left',
+										rowspan:3,
+									},{
+										sort:true,
+										field: 'user_name',
+										title: 'User Name',//名称
+										width:80,
+										rowspan:3,
+										fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'gender_desc',
+										title: 'Gender',//性别
+										fixed:'left',
+										rowspan:3,
+										width:80,
+										unresize: true
+									},{
+										sort:true,
+										field: 'dpt_name',
+										title: 'Dept',//部门
+										rowspan:3,
+										width:80,
+										fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'title_name',
+										title: 'Position',//岗位
+										rowspan:3,
+										width:80,
+										fixed:'left',
+										unresize: true 
+									},{
+										sort:true,
+										field: 'join_date',
+										title: 'Date Joined',//入职日期
+										rowspan:3,
+										width:95,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'due_date',
+										title: 'Confirmed Date',//转正日期
+										width:95,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'employ_type_desc',
+										title: 'Emply Type',//雇佣类型
+										width:80,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'salary_times',
+										title: 'stage',//实际工作天数 
+										rowspan:3,
+										minWidth:90,
+										// fixed:'left',
+										unresize: true
+									},
+
+									{
+										sort:true,
+										field: 'daily_wages',
+										title: 'Daily Wages',//雇佣类型
+										width:80,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'allowance',
+										title: 'allowance',//实际工作天数 
+										rowspan:3,
+										minWidth:90,
+										// fixed:'left',
+										unresize: true
+									},
+									
+									
+									{
+										sort:true,
+										field: 'calendar_daycount',
+										title: 'Calender Days',//日历天数
+										width:95,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'work_days',
+										title: 'Actual Working Days',//实际工作天数 
+										rowspan:3,
+										width:80,
+										// fixed:'left',
+										unresize: true
+									},{
+										field: '',
+										title: 'OT',//加班
+										minWidth:120,
+										// fixed:'left',
+										colspan:16,
+										unresize: true,
+										align:'center'
+									},
+									// {
+									// 	field: '',
+									// 	title: 'OT',//加班
+									// 	minWidth:120,
+									// 	// fixed:'left',
+									// 	colspan:16,
+									// 	unresize: true
+									// },
+									{
+										field: 'NSD.NSD',
+										title: 'Night Shift Diff.NSD',//晚班津贴
+										minWidth:120,
+										// fixed:'left',
+										colspan:8,
+										unresize: true,
+										align:'center'
+									}
+
+									,{
+										sort:true,
+										field: 'add_refund',
+										title: 'Refund',//回补
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_perfect_ttd',
+										title: 'Perfect Attd',//全勤
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_13th_paid',
+										title: '13th Paid',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_others',
+										title: 'Others',//其他
+										rowspan:3,
+										minWidth:120,
+										//fixed:'left',
+										unresize: true
+									},
+									
+									// {
+									// 	sort:true,
+									// 	field: 'add_sub_total',
+									// 	title: 'Sub Total',//加小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+
+								//回补
+									{
+										field: '',
+										title: 'OT',//加班
+										minWidth:120,
+										// //fixed:'left',
+										colspan:16,
+										unresize: true
+										,align:'center'
+										
+									},{
+										field: 'NSD.NSD',
+										title: 'Night Shift Diff.NSD',//晚班津贴
+										minWidth:120,
+										// //fixed:'left',
+										colspan:8,
+										unresize: true
+										,align:'center'
+									},
+									
+									{
+										sort:true,
+										field: 'pb_refund',
+										title: 'Refund',//回补
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_perfect_attd',
+										title: 'Perfect Attd',//全勤
+										rowspan:3,
+										minWidth:120,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_13th_paid',
+										title: '13th Paid',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_sss',
+										title: 'SSS',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_pag_ibig',
+										title: 'PAG-IBIG',//13薪
+										rowspan:3,
+										//fixed:'left',
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_philhealth',
+										title: 'PhilHealth',//13薪
+										rowspan:3,
+										//fixed:'left',
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'pb_others',
+										title: 'Others',//其他
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'pb_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+									//扣除项目
+									{
+										sort:true,
+										field: 'de_lateness',
+										title: 'Lateness',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_undertime',
+										title: 'Undertime',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_shortage',
+										title: 'Shortage',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_others',
+										title: 'Others',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									}
+									// ,{
+									// 	sort:true,
+									// 	field: 'de_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+									//强制性扣除
+									// {
+									// 	sort:true,
+									// 	field: 'mc_sss',
+									// 	title: 'SSS',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_pag_ibig',
+									// 	title: 'PAG-IBIG',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_philhealth',
+									// 	title: 'PhilHealth',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// }
+									//Total Pay 共工资
+									// ,{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Allowance',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages (1) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages (2) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Allowance Pay PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages (3) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages (4) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Mand.Ddct(Emplyee)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Add Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Payback Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Deduction Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Gross Salary',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Gross Salary (1+2)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '1st Cut-off Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '2nd Cut-Off Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Wages(1st + 2nd)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '1st Net Pay',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '2st Net Pay',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Net Pay (1+2)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// }
+								],[//第三级表头
+										{	
+											field:'Ordinary',
+											title: 'Ordinary OT ',//排序	
+											colspan:8
+											,align:'center'
+										},{
+											field:'nsd ot',
+											title: 'NSD OT',
+											colspan:8
+											,align:'center'
+										},
+										
+										{
+											sort:true,
+											field: 'add_nsd_ordinary',
+											title: 'Ordinary',//回补
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_rest_day',
+											title: 'Rest Day',//全勤
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_special_day',
+											title: 'Special Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_special_day_falling_on_rest_day',
+											title: 'Special Day Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_regular_holiday',
+											title: 'Regular Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_regular_holiday_falling_on_rest_day',
+											title: 'Regular Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_double_holiday',
+											title: 'Double Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_double_holiday_falling_on_rest_day',
+											title: 'Double Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},
+										{	
+											field:'Ordinary',
+											title: 'Ordinary OT ',//排序	
+											colspan:8
+											,align:'center'
+										},{
+											field:'nsd ot',
+											title: 'NSD OT',
+											colspan:8
+											,align:'center'
+										},
+										{
+											sort:true,
+											field: 'pb_nsd_ordinary',
+											title: 'Ordinary',//回补
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_rest_day',
+											title: 'Rest Day',//全勤
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_special_day',
+											title: 'Special Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_special_day_falling_on_rest_day',
+											title: 'Special Day Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_regular_holiday',
+											title: 'Regular Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_regular_holiday_falling_on_rest_day',
+											title: 'Regular Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_double_holiday',
+											title: 'Double Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_double_holiday_falling_on_rest_day',
+											title: 'Double Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},
+									],[//第四级表头
+									{
+										sort:true,
+										field: 'add_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'add_nsd_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									}
+									
+									,{
+										sort:true,
+										field: 'pb_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'pb_nsd_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									}
+				
+								]
+								],
+								// request: {
+								// 	pageName: 'currentIndex' //页码的参数名称，默认：page
+								// 	,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								// },
+								// parseData: function (res) { //res 即为原始返回的数据
+								// 	return {
+								// 		"status_code": res.status_code, //解析接口状态
+								// 		"message": res.message, //解析提示文本
+								// 		// "count": res.data.total_count, //解析数据长度
+								// 		"data": res.data, //解析数据列表
+								// 		// "curr": res.data.page_index
+								// 	};
+								// },
+								done: function (rs) {
+									// console.log(rs)
+								}
+							});
+						}
+					})
+					table.on('tool(allUserListPH)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+						var data = obj.data; //获得当前行数据
+						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+						var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+						
+						if(layEvent === 'detail'){ //查看
+							//do somehing
+						}  else if(layEvent === 'edit'){ //编辑
+							//do something
+							
+							//同步更新缓存对应的值
+							// console.log(data)
+							layer.open({
+								type: 2, 
+								title:'详情',								
+								area:['95%','95%'],								
+								content: 'SalarySetEdit.html',
+								success:function(layero,index){
+                            	    // console.log(data);//id 
+                            	    var body = layer.getChildFrame('body', index);
+                            	    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+									iframeWin.isDiate=true;
+									iframeWin.res=data;
+									iframeWin.MonthPH = $("#MonthPH").val();
+									iframeWin.SalaryTimes = $("#IsShowPH").val();
+
+									iframeWin.UserNamePH=$("#UserNamePH").val();
+									iframeWin.DepartmentIDPH=formSelects.value('DepartmentID', 'valStr');
+									iframeWin.JobTitleIDPH=formSelects.value('JobTitleID', 'valStr');
+									// iframeWin.IsShowPH=$("#IsShowPH").val();
+									// iframeWin.MonthPH=$("#MonthPH").val();
+                            	}
+							}); 
+						}
+					});
+				}
+
+						
+			}
+			
+			
+			
+			
+			var NumberCheckten =function(num) {
+				var str = num;
+				var len1 = str.substr(0, 1);
+				var len2 = str.substr(1, 1);
+				//如果第一位是0，第二位不是点，就用数字把点替换掉
+				if (str.length > 1 && len1 == 0 && len2 != ".") {
+				str = str.substr(1, 1);
+				}
+				//第一位不能是.
+				if (len1 == ".") {
+					str = "";
+				}
+				//限制只能输入一个小数点
+				if (str.indexOf(".") != -1) {
+				var str_ = str.substr(str.indexOf(".") + 1);
+				if (str_.indexOf(".") != -1) {
+					str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+				}
+				}
+				//正则替换，保留数字和小数点
+				str = str.replace(/[^\d^\.]+/g,'')
+				//如果需要保留小数点后两位，则用下面公式
+				var result = (str.toString()).indexOf(".");
+				if(result != -1) {
+					// alert("含有小数点");
+					
+					var num3=str.split('.')[1].slice(0,10);
+				} else {
+					// alert("不含小数点");
+				}
+				// //console.log(num3,(num3==''||num3==undefined)?'':'.'+num3,111)
+				
+				str = str.replace(/\.\d\d\d\d\d\d\d\d\d\d\d$/,(num3==''||num3==undefined)?'':'.'+num3)
+				// str = str.replace(/\.\d\d\d\d$/,'')
+				// //console.log(str)
+				
+				return str;
+			}
+			
+			var NumberCheckten4 =function(num) {
+				var str = num;
+				var len1 = str.substr(0, 1);
+				var len2 = str.substr(1, 1);
+				//如果第一位是0，第二位不是点，就用数字把点替换掉
+				if (str.length > 1 && len1 == 0 && len2 != ".") {
+				str = str.substr(1, 1);
+				}
+				//第一位不能是.
+				if (len1 == ".") {
+					str = "";
+				}
+				//限制只能输入一个小数点
+				if (str.indexOf(".") != -1) {
+				var str_ = str.substr(str.indexOf(".") + 1);
+				if (str_.indexOf(".") != -1) {
+					str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+				}
+				}
+				//正则替换，保留数字和小数点
+				str = str.replace(/[^\d^\.]+/g,'')
+				//如果需要保留小数点后两位，则用下面公式
+				var result = (str.toString()).indexOf(".");
+				if(result != -1) {
+					// alert("含有小数点");
+					
+					var num3=str.split('.')[1].slice(0,4);
+				} else {
+					// alert("不含小数点");
+				}
+				// //console.log(num3,(num3==''||num3==undefined)?'':'.'+num3,111)
+				
+				str = str.replace(/\.\d\d\d\d\d$/,(num3==''||num3==undefined)?'':'.'+num3)
+				// str = str.replace(/\.\d\d\d\d$/,'')
+				// //console.log(str)
+				
+				return str;
+			}
+			$("#setdeductionForm").on('keyup','.amountNumber60',function () {
+				if(0<=$(this).val()&&$(this).val()<=60){$(this).val(NumberAmount($(this).val()));}
+         		else{
+					$(this).val('')
+				}
+			}).bind("paste", function () {  //CTR+V事件处理
+				if(0<=$(this).val()&&$(this).val()<=60){$(this).val(NumberAmount($(this).val()));}
+				else{
+					$(this).val('')
+				}
+				
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+			$("#setdeductionForm").on('keyup','.amountNumber0-31',function () {
+				if(0<=$(this).val()&&$(this).val()<=31){$(this).val(NumberAmount($(this).val()));}
+         		else{
+					$(this).val('')
+				}
+			}).bind("paste", function () {  //CTR+V事件处理
+				if(0<=$(this).val()&&$(this).val()<=31){$(this).val(NumberAmount($(this).val()));}
+				else{
+					$(this).val('')
+				}
+				
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+			$("#setdeductionForm").on('keyup','.amountNumber',function () {
+				$(this).val(NumberAmount($(this).val()));
+			}).bind("paste", function () {  //CTR+V事件处理
+				$(this).val(NumberAmount($(this).val()));
+				
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+			$("#setdeductionForm").on('keyup','.receipt100',function () {
+				if(0<=$(this).val()&&$(this).val()<=100){$(this).val(NumberCheckten($(this).val()));}
+				else{
+					$(this).val('')
+				}
+			}).bind("paste", function () {  //CTR+V事件处理
+				if(0<=$(this).val()&&$(this).val()<=100){$(this).val(NumberCheckten($(this).val()));}
+				else{
+					$(this).val('')
+				}
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+			
+			
+			// jbbtn
+			// lbbtn
+			// ltbtn
+			//台湾 保险列表
+			//健保
+			var conthtmls ='<div class="layui-card">'
+								+'<div class="layui-card-body">'
+									+'<table class="layui-table" id="jbbTb" lay-filter="jbbTb"></table>'
+								
+								+'</div>'
+							+'</div>'
+			$("#jbbtn").on("click",function(){
+                layer.open({
+                    title:'健保列表',
+                    type: 1, 
+                    content:conthtmls,
+					resize:false,            
+					area:['90%', '90%'],   
+                    success:function(layero,index){
+						table.render({
+							elem: '#jbbTb',
+							url: urls + '/gateway/usersalary/tw/jianbao',
+							// page: true,                 							
+							toolbar:'<div><button class="layui-btn layui-btn-sm" lay-event="toolAdd">添加</button><div>',
+							text: {
+								none: '暂无数据' //默认：无数
+							},
+							limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+							method: 'post',
+							size: 'sm' ,//小尺寸的表格
+							defaultToolbar:['filter', 'print', 'exports'],
+							contentType: 'application',//据。注：该属性为 layui 2.2.5 开始新增
+							height: 'full-200',
+							cols: [
+								[ 
+								// 	{
+								// 	field: 'id',
+								// 	title: 'ID',
+								// }, 
+								{
+									field: 'name',
+									title: '名称',
+								},{
+									field: 'amount',
+									title: '金额',
+								}, {
+									fixed: 'right',
+									width:200,
+									title: '操作',
+									toolbar: '<div><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></div>'
+								}]
+							],
+							request: {
+								pageName: 'currentIndex' //页码的参数名称，默认：page
+								,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+							},
+							parseData: function (res) { //res 即为原始返回的数据
+								return {
+									"status_code": res.status_code, //解析接口状态
+									"message": res.message, //解析提示文本
+									"count": res.data.total_count, //解析数据长度
+									"data": res.data, //解析数据列表
+									// "curr": res.data.page_index
+								};
+							}
+						});
+						table.on('toolbar(jbbTb)', function(obj){
+							var checkStatus = table.checkStatus(obj.config.id);
+							switch(obj.event){
+								case 'toolAdd':
+								layer.open({
+									title:'添加健保',
+									
+									type: 1, 
+									content:'<div class="layui-card">'
+                                    +'<div class="reviewCont layui-card-body">'
+                                        +'<div class="layui-form" >'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">健保名称：</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<input class="layui-input" id="jbName"  name="jbName" placeholder="" type="text" lay-verify="jbName" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">保险金额：</label>'
+                                                +'<div class="layui-input-block">'
+													+'<input class="layui-input" id="amount" name="amount" placeholder="" type="text" lay-verify="amount" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-input-block">'
+                                                    +' <button class=" layui-btn" id="subJb">保存</button>'
+                                                    +' <button class=" layui-btn" id="backJb">取消</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>',
+									resize:false,            
+									area:['auto', 'auto'],   
+									success:function(layero,index){
+										$("#subJb").on("click",function(){
+											var name = $("#jbName").val();
+											var amount = $("#amount").val();
+											$.fetch({
+												url:"/gateway/usersalary/tw/addjianbao",
+												type:'post',
+												data:{
+													Name:name,
+													Amount:amount,
+												},
+												cb:function(rs){
+													layer.msg("添加成功");
+													layer.close(index);
+													table.reload('jbbTb');
+													
+												}
+											})
+										})
+										$("#backJb").on("click",function(){
+											layer.close(index);
+										})
+									}
+								})
+								break;
+							};
+						});
+						table.on('tool(jbbTb)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 				lay-filter="对应的值"
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							var tr = obj.tr; //获得当前行 tr 的DOM对象
+							
+							if(layEvent === 'edit'){ //查看
+								layer.open({
+									title:'健保编辑',
+									type: 1, 
+									content:'<div class="layui-card">'
+                                    +'<div class="reviewCont layui-card-body">'
+                                        +'<div class="layui-form" >'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">健保名称：</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<input class="layui-input" id="jbName"  name="jbName" placeholder="" value="'+obj.data.name+'" type="text" lay-verify="jbName" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">保险金额：</label>'
+                                                +'<div class="layui-input-block">'
+													+'<input class="layui-input" id="amount" name="amount" placeholder="" value="'+obj.data.amount+'" type="text" lay-verify="amount" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-input-block">'
+                                                    +' <button class=" layui-btn" id="subJb">保存</button>'
+                                                    +' <button class=" layui-btn" id="backJb">取消</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>',
+									resize:false,            
+									area:['auto', 'auto'],   
+									success:function(layero,index){
+										$("#subJb").on("click",function(){
+											var name = $("#jbName").val();
+											var amount = $("#amount").val();
+											$.fetch({
+												url:"/gateway/usersalary/tw/updatejianbao",
+												type:'post',
+												data:{
+													ID:+obj.data.id,
+													Name:name,
+													Amount:amount,
+												},
+												cb:function(rs){
+													layer.msg("保存成功");
+													layer.close(index);
+													table.reload('jbbTb');
+													
+												}
+											})
+										})
+										$("#backJb").on("click",function(){
+											layer.close(index);
+										})
+									}
+								})
+								//do somehing
+							} else if(layEvent === 'del'){ //删除
+								layer.confirm('确认删除?', function(index){
+									$.fetch({
+										url:"/gateway/usersalary/tw/deljianbao ",
+										type:'post',
+										data:{
+											ID:obj.data.id,
+										},
+										cb:function(rs){
+											layer.msg("删除成功");
+											layer.close(index);
+											table.reload('jbbTb');
+										}
+									})
+
+									layer.close(index);
+								//向服务端发送删除指令
+								});
+							}
+						});
+					}
+				})
+			})
+			
+			//劳保
+			var conthtmls2 ='<div class="layui-card">'
+								+'<div class="layui-card-body">'
+									+'<table class="layui-table" id="lbbTb" lay-filter="lbbTb"></table>'
+								
+								+'</div>'
+							+'</div>'
+			$("#lbbtn").on("click",function(){
+                layer.open({
+                    title:'劳保列表',
+                    type: 1, 
+                    content:conthtmls2,
+					resize:false,            
+					area:['90%', '90%'],   
+                    success:function(layero,index){
+						table.render({
+							elem: '#lbbTb',
+							url: urls + '/gateway/usersalary/tw/laobao',
+							// page: true,                 							
+							toolbar:'<div><button class="layui-btn layui-btn-sm" lay-event="toolAdd">添加</button><div>',
+							text: {
+								none: '暂无数据' //默认：无数
+							},
+							limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+							method: 'post',
+							size: 'sm' ,//小尺寸的表格
+							defaultToolbar:['filter', 'print', 'exports'],
+							contentType: 'application',//据。注：该属性为 layui 2.2.5 开始新增
+							height: 'full-200',
+							cols: [
+								[ 
+								// 	{
+								// 	field: 'id',
+								// 	title: 'ID',
+								// }, 
+								{
+									field: 'name',
+									title: '名称',
+								},{
+									field: 'amount',
+									title: '金额',
+								}, {
+									fixed: 'right',
+									width:200,
+									title: '操作',
+									toolbar: '<div><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></div>'
+								}]
+							],
+							request: {
+								pageName: 'currentIndex' //页码的参数名称，默认：page
+								,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+							},
+							parseData: function (res) { //res 即为原始返回的数据
+								return {
+									"status_code": res.status_code, //解析接口状态
+									"message": res.message, //解析提示文本
+									"count": res.data.total_count, //解析数据长度
+									"data": res.data, //解析数据列表
+									// "curr": res.data.page_index
+								};
+							}
+						});
+						table.on('toolbar(lbbTb)', function(obj){
+							var checkStatus = table.checkStatus(obj.config.id);
+							switch(obj.event){
+								case 'toolAdd':
+								layer.open({
+									title:'添加劳保',
+									
+									type: 1, 
+									content:'<div class="layui-card">'
+                                    +'<div class="reviewCont layui-card-body">'
+                                        +'<div class="layui-form" >'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">劳保名称：</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<input class="layui-input" id="lbName"  name="lbName" placeholder="" type="text" lay-verify="lbName" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">保险金额：</label>'
+                                                +'<div class="layui-input-block">'
+													+'<input class="layui-input" id="amount" name="amount" placeholder="" type="text" lay-verify="amount" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-input-block">'
+                                                    +' <button class=" layui-btn" id="sublb">保存</button>'
+                                                    +' <button class=" layui-btn" id="backlb">取消</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>',
+									resize:false,            
+									area:['auto', 'auto'],   
+									success:function(layero,index){
+										$("#sublb").on("click",function(){
+											var name = $("#lbName").val();
+											var amount = $("#amount").val();
+											$.fetch({
+												url:"/gateway/usersalary/tw/addlaobao",
+												type:'post',
+												data:{
+													Name:name,
+													Amount:amount,
+												},
+												cb:function(rs){
+													layer.msg("添加成功");
+													layer.close(index);
+													table.reload('lbbTb');
+													
+												}
+											})
+										})
+										$("#backlb").on("click",function(){
+											layer.close(index);
+										})
+									}
+								})
+								break;
+							};
+						});
+						table.on('tool(lbbTb)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 				lay-filter="对应的值"
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							var tr = obj.tr; //获得当前行 tr 的DOM对象
+							
+							if(layEvent === 'edit'){ //查看
+								layer.open({
+									title:'劳保编辑',
+									type: 1, 
+									content:'<div class="layui-card">'
+                                    +'<div class="reviewCont layui-card-body">'
+                                        +'<div class="layui-form" >'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">劳保名称：</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<input class="layui-input" id="lbName"  name="lbName" placeholder="" value="'+obj.data.name+'" type="text" lay-verify="lbName" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">保险金额：</label>'
+                                                +'<div class="layui-input-block">'
+													+'<input class="layui-input" id="amount" name="amount" placeholder="" value="'+obj.data.amount+'" type="text" lay-verify="amount" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-input-block">'
+                                                    +' <button class=" layui-btn" id="sublb">保存</button>'
+                                                    +' <button class=" layui-btn" id="backlb">取消</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>',
+									resize:false,            
+									area:['auto', 'auto'],   
+									success:function(layero,index){
+										$("#sublb").on("click",function(){
+											var name = $("#lbName").val();
+											var amount = $("#amount").val();
+											$.fetch({
+												url:"/gateway/usersalary/tw/updatelaobao",
+												type:'post',
+												data:{
+													ID:+obj.data.id,
+													Name:name,
+													Amount:amount,
+												},
+												cb:function(rs){
+													layer.msg("保存成功");
+													layer.close(index);
+													table.reload('lbbTb');
+													
+												}
+											})
+										})
+										$("#backlb").on("click",function(){
+											layer.close(index);
+										})
+									}
+								})
+								//do somehing
+							} else if(layEvent === 'del'){ //删除
+								layer.confirm('确认删除?', function(index){
+									$.fetch({
+										url:"/gateway/usersalary/tw/dellaobao ",
+										type:'post',
+										data:{
+											ID:obj.data.id,
+										},
+										cb:function(rs){
+											layer.msg("删除成功");
+											layer.close(index);
+											table.reload('lbbTb');
+										}
+									})
+
+									layer.close(index);
+								//向服务端发送删除指令
+								});
+							}
+						});
+					}
+				})
+			})
+
+			//劳退
+			var conthtmls3 ='<div class="layui-card">'
+								+'<div class="layui-card-body">'
+									+'<table class="layui-table" id="ltTb" lay-filter="ltTb"></table>'
+								
+								+'</div>'
+							+'</div>'
+			$("#ltbtn").on("click",function(){
+                layer.open({
+                    title:'劳保列表',
+                    type: 1, 
+                    content:conthtmls3,
+					resize:false,            
+					area:['90%', '90%'],   
+                    success:function(layero,index){
+						table.render({
+							elem: '#ltTb',
+							url: urls + '/gateway/usersalary/tw/laotui',
+							// page: true,                 							
+							toolbar:'<div><button class="layui-btn layui-btn-sm" lay-event="toolAdd">添加</button><div>',
+							text: {
+								none: '暂无数据' //默认：无数
+							},
+							limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+							method: 'post',
+							size: 'sm' ,//小尺寸的表格
+							defaultToolbar:['filter', 'print', 'exports'],
+							contentType: 'application',//据。注：该属性为 layui 2.2.5 开始新增
+							height: 'full-200',
+							cols: [
+								[ 
+								// 	{
+								// 	field: 'id',
+								// 	title: 'ID',
+								// }, 
+								{
+									field: 'name',
+									title: '名称',
+								},{
+									field: 'amount',
+									title: '金额',
+								}, {
+									fixed: 'right',
+									width:200,
+									title: '操作',
+									toolbar: '<div><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></div>'
+								}]
+							],
+							request: {
+								pageName: 'currentIndex' //页码的参数名称，默认：page
+								,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+							},
+							parseData: function (res) { //res 即为原始返回的数据
+								return {
+									"status_code": res.status_code, //解析接口状态
+									"message": res.message, //解析提示文本
+									"count": res.data.total_count, //解析数据长度
+									"data": res.data, //解析数据列表
+									// "curr": res.data.page_index
+								};
+							}
+						});
+						table.on('toolbar(ltTb)', function(obj){
+							var checkStatus = table.checkStatus(obj.config.id);
+							switch(obj.event){
+								case 'toolAdd':
+								layer.open({
+									title:'添加劳退',
+									
+									type: 1, 
+									content:'<div class="layui-card">'
+                                    +'<div class="reviewCont layui-card-body">'
+                                        +'<div class="layui-form" >'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">劳退名称：</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<input class="layui-input" id="lbName"  name="lbName" placeholder="" type="text" lay-verify="lbName" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">保险金额：</label>'
+                                                +'<div class="layui-input-block">'
+													+'<input class="layui-input" id="amount" name="amount" placeholder="" type="text" lay-verify="amount" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-input-block">'
+                                                    +' <button class=" layui-btn" id="sublb">保存</button>'
+                                                    +' <button class=" layui-btn" id="backlb">取消</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>',
+									resize:false,            
+									area:['auto', 'auto'],   
+									success:function(layero,index){
+										$("#sublb").on("click",function(){
+											var name = $("#lbName").val();
+											var amount = $("#amount").val();
+											$.fetch({
+												url:"/gateway/usersalary/tw/addlaotui",
+												type:'post',
+												data:{
+													Name:name,
+													Amount:amount,
+												},
+												cb:function(rs){
+													layer.msg("添加成功");
+													layer.close(index);
+													table.reload('ltTb');
+													
+												}
+											})
+										})
+										$("#backlb").on("click",function(){
+											layer.close(index);
+										})
+									}
+								})
+								break;
+							};
+						});
+						table.on('tool(ltTb)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 				lay-filter="对应的值"
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							var tr = obj.tr; //获得当前行 tr 的DOM对象
+							
+							if(layEvent === 'edit'){ //查看
+								layer.open({
+									title:'劳退编辑',
+									type: 1, 
+									content:'<div class="layui-card">'
+                                    +'<div class="reviewCont layui-card-body">'
+                                        +'<div class="layui-form" >'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">劳退名称：</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<input class="layui-input" id="lbName"  name="lbName" placeholder="" value="'+obj.data.name+'" type="text" lay-verify="lbName" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">保险金额：</label>'
+                                                +'<div class="layui-input-block">'
+													+'<input class="layui-input" id="amount" name="amount" placeholder="" value="'+obj.data.amount+'" type="text" lay-verify="amount" >'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-input-block">'
+                                                    +' <button class=" layui-btn" id="sublb">保存</button>'
+                                                    +' <button class=" layui-btn" id="backlb">取消</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>',
+									resize:false,            
+									area:['auto', 'auto'],   
+									success:function(layero,index){
+										$("#sublb").on("click",function(){
+											var name = $("#lbName").val();
+											var amount = $("#amount").val();
+											$.fetch({
+												url:"/gateway/usersalary/tw/updatelaotui",
+												type:'post',
+												data:{
+													ID:+obj.data.id,
+													Name:name,
+													Amount:amount,
+												},
+												cb:function(rs){
+													layer.msg("保存成功");
+													layer.close(index);
+													table.reload('ltTb');
+													
+												}
+											})
+										})
+										$("#backlb").on("click",function(){
+											layer.close(index);
+										})
+									}
+								})
+								//do somehing
+							} else if(layEvent === 'del'){ //删除
+								layer.confirm('确认删除?', function(index){
+									$.fetch({
+										url:"/gateway/usersalary/tw/dellaotui",
+										type:'post',
+										data:{
+											ID:obj.data.id,
+										},
+										cb:function(rs){
+											layer.msg("删除成功");
+											layer.close(index);
+											table.reload('ltTb');
+										}
+									})
+
+									layer.close(index);
+								//向服务端发送删除指令
+								});
+							}
+						});
+					}
+				})
+			})
+
+			
+			// setleaveattend
+			var conthtmlsLeve ='<div class="layui-card">'
+								+'<div class="layui-card-body layui-form">'
+									+'<div class="layui-form-item">'
+										+'<label class="layui-form-label" style="width:103px;padding:9px 1px;">请选择<span style="color:red">不扣全勤</span>的请假类型:</label>'
+										+'<div class="layui-input-block" id="leveType"></div>'
+									+'</div>'
+									+'<div class="layui-form-item">'
+											+'<div class="layui-input-block">'
+												+' <button class=" layui-btn" id="subuserbasicsalary">保存</button>'
+												+' <button class=" layui-btn" id="backuserbasicsalary">关闭</button>'
+											+'</div>'
+									+'</div>'
+									
+								+'</div>'
+							+'</div>'
+			$("#setleaveattend").on("click",function(){
+
+				layer.open({
+                    title:'不扣全勤设置',
+                    type: 1, 
+                    content:conthtmlsLeve,
+					resize:false,            
+					area:['60%', '60%'],
+                    success:function(layero,index){
+						$.fetch({ //获取请假类型
+							url: '/gateway/userleave/leavetypes',
+							type: 'post',
+							cb: function (res) {
+								var checkBoxs='';
+								for(key in res){
+									if(key!='is_crossday'){
+										checkBoxs+='<input lay-skin="primary" type="checkbox" value="'+key+'" name="n_'+key+'" title="'+res[key]+'">'
+									}
+								}
+								$("#leveType").html(checkBoxs)
+								$.fetch({ //获取已关联得类型
+									url: '/gateway/usersalary/tw/getleaveattend',
+									type: 'post',
+									cb: function (rs) {
+										if(rs){
+											var checkArr= rs.leave_type.split(',');
+											for(var i=0;i<checkArr.length;i++){
+												$("#leveType").find('input[name="n_'+checkArr[i]+'"]').attr('checked','checked');
+												
+											}
+										}
+										form.render();
+										$("#subuserbasicsalary").on("click",function(){
+											var subArr=[];
+											$("#leveType").find('input[type="checkbox"]:checked').each(function(){
+												subArr.push($(this).val());	
+											})
+											$.fetch({ //获取请假类型
+												url: '/gateway/usersalary/tw/setleaveattend',
+												type: 'post',
+												data:{
+													LeaveType:subArr.join(',')
+												},
+												cb: function (res) {
+													layer.msg('设置成功');
+													// layer.close(index);
+												}
+											})
+										})
+										$("#backuserbasicsalary").on("click",function(){
+											layer.close(index);
+											
+										})										
+									}
+								})
+							}
+						})
+
+					}
+				})
+			})
+			
+			
+			var conthtmls4 ='<div class="layui-card">'
+								+'<div class="layui-card-body">'
+									// +'<div class="layui-form">'
+									// 	+'<div class="layui-form-item">'
+									// +'<div class="layui-block">员工补贴</div>'
+									+'<table class="layui-table" id="ygTb" lay-filter="ygTb"></table>'
+                                    //             +'</div>'
+									// +'<div class="layui-form-item">'
+									
+                                    //             +'<div class="layui-input-block">'
+                                    //                 +'<button class=" layui-btn" id="sublb">保存</button>'
+                                    //                 +'<button class=" layui-btn" id="backlb">取消</button>'
+                                    //             +'</div>'
+                                    //         +'</div>'
+                                    //  +'</div>'
+								+'</div>'
+							+'</div>'	
+			$("#ygbtn").on("click",function(){
+                layer.open({
+                    title:'设置补贴扣除',
+					type: 1, 
+					id:"ygTbLayer",
+					
+                    content:conthtmls4,
+					resize:false,            
+					area:['90%', '90%'],  
+					btn: ['保存','取消']
+					,yes:function(){
+						// console.log(1111,ygTable)
+					} 
+                    ,success:function(layero,index){
+						var ygTable= table.render({
+							elem: '#ygTb',
+							url: urls + '/gateway/usersalary/mnl/subsidycolumns',
+							// page: true,                 							
+							// toolbar:'<div><button class="layui-btn layui-btn-sm" lay-event="toolAdd">添加</button><div>',
+							text: {
+								none: '暂无数据' //默认：无数
+							},
+							limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+							method: 'post',
+							size: 'lg' ,//大尺寸的表格
+							// defaultToolbar:['filter', 'print', 'exports'],
+							contentType: 'application',//据。注：该属性为 layui 2.2.5 开始新增
+							// height: 'full-200',
+							initSort: {
+								field: 'type_id' //排序字段，对应 cols 设定的各字段名
+								,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+							},
+							cols: [
+								[ 
+								// {
+								// 	field: 'id',
+								// 	title: 'ID',
+								// }, 
+								{
+									field: 'zh_name',
+									title: '名称',
+								},{
+									field: 'type_id',
+									title: '补贴类型',
+									templet:function(d){
+										return ['','员工补贴','岗位补贴'][d.type_id]
+									}
+								}, {
+									field: 'is_display',
+									title: '是否显示',
+									templet:function(d){
+										return '<div class="layui-input-inline"><input type="radio" name="isDisplay_'+d.id+'" '+(d.is_display==1?'checked':'')+' value="1" title="是"><input type="radio" name="isDisplay_'+d.id+'" value="0" title="否" '+(d.is_display==1?'':'checked')+'></div>'
+									},
+								}, {
+									field: 'calc_type',
+									title: '补贴扣除',
+									templet:function(d){
+										return '<div class="layui-input-inline"><input disabled type="radio" name="calcType_'+d.id+'" value="1" title="补贴" '+(d.calc_type==1?'checked':'')+'><input disabled type="radio" name="calcType_'+d.id+'" value="2" title="扣除"  '+(d.calc_type==1?'':'checked')+' ></div>'
+									},
+								},{
+									width:200,
+									title: '币种',
+									templet:function(d){
+										var opHtml=''
+										for(var i=0;i<d.currency_list.length;i++){
+											opHtml+='<option '+(d.currency_unit_id==d.currency_list[i].id?'selected = "selected"':'')+'  value="'+d.currency_list[i].id+'">'+d.currency_list[i].zh_name+'</option>'
+										}
+										return ' <select data-id="interest_'+d.id+'" lay-filter="aihao">'
+														+opHtml
+      												+'</select>'
+										//'<div class="layui-input-block">'
+										//	+'</div>'	
+									},
+								}]
+							],
+							request: {
+								pageName: 'currentIndex' //页码的参数名称，默认：page
+								,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+							},
+							parseData: function (res) { //res 即为原始返回的数据
+
+								var newsDate = res.data.columns
+								for(var i=0;i<newsDate.length;i++){
+									newsDate[i]['currency_list']=res.data.currency_list;
+								}
+								return {
+									"status_code": res.status_code, //解析接口状态
+									"message": res.message, //解析提示文本
+									"count": res.data.total_count, //解析数据长度
+									"data": newsDate, //解析数据列表
+									// "curr": res.data.page_index
+								};
+							},
+							done:function(res, curr, count){
+								count || this.elem.next('.layui-table-view').find('.layui-table-header').css('overflow-y', 'auto');
+								layui.each($('select'), function (index, item) {
+									var elem = $(item);
+									elem.parents('div.layui-table-cell').css('overflow', 'visible');
+								});
+								form.render();
+								$(".layui-layer-btn0").on("click",function(){
+									// console.log(res, curr, count)
+									// LAY_TABLE_INDEX
+									var Items=[];
+									$("#ygTbLayer div[lay-id='ygTb'] tbody").find("tr").each(function(){
+										var IsDisplay=$(this).find("td[data-field='is_display'] input[type='radio']:checked").val();
+										var CalcType=$(this).find("td[data-field='calc_type'] input[type='radio']:checked").val();
+										var CurrencyUnitID=$(this).find("select").val();
+										
+										var ids = $(this).find("select").attr("data-id").split('_')[1];
+										var ZhName =$(this).find("td[data-field='zh_name']").text();
+										// console.log(IsDisplay, CurrencyUnitID)
+										Items.push({
+											ID:ids,
+											ZhName:ZhName,
+											IsDisplay:IsDisplay,
+											CurrencyUnitID:CurrencyUnitID,
+											CalcType:CalcType,
+										});
+										// console.log(Items);
+
+									})
+									$.fetch({
+										url:"/gateway/usersalary/mnl/setsubsidycolumns",
+										type:'post',
+										data:{
+											Items:Items
+										},
+										cb:function(rs){
+											layer.msg("保存成功");
+											layer.close(index);
+											var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+											var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+											// console.log(DepartmentID,JobTitleID,000)
+											userbasicsalaryFun({
+												UserName:$("#UserName").val(),
+												DepartmentID:DepartmentID==''?'-1':DepartmentID,
+												JobTitleID:JobTitleID==''?'-1':JobTitleID,
+												IsShow:$("#IsShow").val(),
+											})
+											
+										}
+									})
+									
+								})
+							},
+						});
+					}
+				})
+			})
+			
+			var conthtmls5 ='<div class="layui-card">'
+								+'<div class="layui-card-body">'
+									 +'<div class="layui-form" id="hlTable">'
+										+'<div class="layui-form-item">'
+											+'<div class="layui-inline"><label class="layui-form-label">月份</label><div class="layui-input-inline"><input type="text" class="layui-input" id="hlMonth" readonly="readonly"></div></div>'
+                                        +'</div>'
+										// +'<table class="layui-table" id="hlTb" lay-filter="hlTb"></table>'
+									// +'<div class="layui-form-item">'
+									
+                                    //             +'<div class="layui-input-block">'
+                                    //                 +'<button class=" layui-btn" id="sublb">保存</button>'
+                                    //                 +'<button class=" layui-btn" id="backlb">取消</button>'
+                                    //             +'</div>'
+                                    //         +'</div>'
+                                      +'</div>'
+								+'</div>'
+							+'</div>'	
+			var rateinitFun=function(month){
+				$.fetch({
+					url:"/gateway/usersalary/mnl/ratelist",
+					type:'post',
+					data:{
+						Month:month,
+					},
+					cb:function(rs){
+					//	console.log(rs)
+						if(rs&&rs.length>0){
+							for(var i=0;i<rs.length;i++){
+								$("#"+rs[i].foreign_currency_short_code+"_"+rs[i].foreign_currency_id+"").val(rs[i].rates)
+							}
+						}else{
+							$("input.ratesinp").val('');
+							$("input#CNY_1").val(1)
+						}
+						form.render();
+					}
+				})
+							
+			}
+			
+			$("#hlbtn").on("click",function(){
+				var date=new Date;
+				var year=date.getFullYear(); 
+				var month=date.getMonth()+1;
+				month=month<10?'0'+month+'':month;
+				$.fetch({
+					url:"/gateway/usersalary/mnl/ratelist",
+					type:'post',
+					data:{
+						Month:year+'-'+month,
+					},
+					cb:function(rs){
+					//	console.log(rs)
+						
+				
+						layer.open({
+							title:'汇率设置',
+							type: 1, 
+							id:"hlTbLayer",
+							content:conthtmls5,
+							resize:false,            
+							area:['600', '80%'],  
+							btn: ['保存','取消']
+							,yes:function(){
+								var Month=$("#hlMonth").val()
+								,Rates=[];
+								$("#hlTable").find('input.ratesinp').each(function(){
+								//	console.log($(this).val())
+									var thisRates=$(this).val();
+									if(thisRates==''){
+										layer.msg('汇率不能为空.');
+										return false
+									}
+									var ForeignCurrencyID=$(this).attr('id').split("_")[1]
+									Rates.push({
+										CurrentCurrencyID:1,
+										ForeignCurrencyID:ForeignCurrencyID,
+										Rates:thisRates,
+									});
+
+								})
+									$.fetch({
+										url:"/gateway/usersalary/mnl/addrate",
+										type:'post',
+										data:{
+											Month:Month,
+											Rates:Rates,
+										},
+										cb:function(rs){
+											layer.msg('保存成功')
+										}
+									})
+							} 
+							,success:function(layero,index){
+								$("#hlTbLayer").on('keyup','.layui-input.ratesinp',function () {
+									// $(this).val(NumberCheckten4($(this).val()));
+									NumberCheckten2(this)
+								}).bind("paste", function () {  //CTR+V事件处理
+									NumberCheckten2(this)
+									
+									// $(this).val(NumberCheckten4($(this).val()));
+								}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+								var nowMoth=new Date();
+								$.fetch({
+									url:"/gateway/usersalary/mnl/rateinit",
+									type:'post',
+									cb:function(rs){
+										var html='';
+										for(var i=0;i<rs.length;i++){
+												html+='<div class="layui-form-item">'
+													+'<div class="layui-inline"><label class="layui-form-label" style="width:200px;text-align:center">人民币(CNY) => '+ rs[i].zh_name+'('+rs[i].short_code+')</label><div class="layui-input-inline"><input type="text" class="layui-input ratesinp" '+(rs[i].id==1?'readonly="readonly"':'')+' id="'+rs[i].short_code+'_'+rs[i].id+'"/></div></div>'
+												+'</div>'
+										}
+										$("#hlTable").append(html);
+									}
+								})
+								
+								laydate.render({ 
+									elem: '#hlMonth'
+									,type: 'month'
+									,value:nowMoth
+									,btns: ['confirm']
+									,done: function(value, date, endDate){
+										rateinitFun(value);
+									}
+								});
+								var rateinitMonth=$("#hlMonth").val();
+								rateinitFun(rateinitMonth)
+							
+							
+							}
+						})
+					}
+				})
+			
+			})
+			//岗位
+			var conthtmls6 ='<div class="layui-card">'
+								+'<div class="layui-card-body layui-row layui-form">'
+									+'	<div class="layui-col-sm4 layui-col-md3 layui-col-lg3">'
+									+'		<div class="departMenu"  style="overflow: auto;" id="toolbarDiv">'
+									+'			<div id="main">'
+									+'				<ul id="commonTree1" class="dtree" data-id="0"></ul>'
+									+'			</div>'
+									+'		</div>'
+									+'	</div>'
+									+'	<div class="layui-col-sm8 layui-col-md9 layui-col-lg9">'
+											+'<div class="layui-form-item" ><div class="layui-form-mid layui-word-aux" id="setjobtitle">选中岗位进行设定。</div></div>'
+											+'<div id="setjobtitlesubsidy"></div>'
+									+'	</div>'
+								+'</div>'
+							+'</div>'
+			$("#gwszbtn").on("click",function(){
+                layer.open({
+                    title:'岗位设置',
+					type: 1, 
+					id:"gwbtLayer",
+                    content:conthtmls6,
+					resize:false,            
+					area:['85%', '85%'],  
+					btn: false
+					// ,yes:function(){
+						
+					// } 
+                    ,success:function(layero,index){
+						$("#setjobtitlesubsidy ").on("click",'#subsetjoby_close',function(){
+							layer.close(index);
+						})
+						var commonTree1 = dtree.render({
+							// elem: "#commonTree1",
+							obj:$(layero).find("#commonTree1"),
+							url:urls+'/gateway/jobTitle/tree',
+							response : {
+								statusName:'status_code',
+								statusCode: 200,
+								message: "message",
+								rootName: "data",
+								parentId: "parent_id",
+								childName: "children",
+								nodeId: "id", //节点ID
+								treeId: "id",
+								title: "title_name", 
+								basicData:"data"
+							},
+							firstIconArray: {
+								"0": {
+									"open": "icon-set-sm1",
+									"close": "icon-favor"
+								}
+							}, //用户自定义一级图标集合，node
+							nodeIconArray: {
+								"0": {
+									"open": "icon-shuye1",
+									"close": "icon-wenjianjiazhankai"
+								}
+							}, //用户自定义二级级图标集合，node
+							// defaultRequest:{
+							//     basicData:'title_en_name'
+							// },
+							dataStyle:"layuiStyle",
+							// done: function(data, obj){  
+							//     // ////console.log(data);
+							//     // //console.log(obj);
+							// }
+						});
+
+						$.fetch({
+							url:"/gateway/usersalary/mnl/subsidycolumns",
+							type:'post',
+							cb:function(rs){
+								var currencyList={}
+								for(var i =0;i<rs.currency_list.length;i++){
+									currencyList[''+rs.currency_list[i].id+'']=rs.currency_list[i].zh_name+'('+rs.currency_list[i].short_code+')';
+								}
+								subsidytypesData=rs.columns;
+								var subDataKey={
+									housing_subsidy:{'id': 'HousingSubsidy', 'name': "房补"},
+									job_subsidy:{'id': 'JobSubsidy', 'name': "岗位补贴"},
+									life_subsidy:{'id': 'LifeSubsidy', 'name': "生活补贴"},
+									meal_subsidy:{'id': 'MealSubsidy', 'name': "伙食补贴"},
+								}
+
+								var formHtml='';
+
+								var subsetjobyShow=0;
+								for(var i =0;i<subsidytypesData.length;i++){
+
+									if(subsidytypesData[i].is_display==1&&subsidytypesData[i].type_id==2){
+										formHtml+=' <div class="layui-form-item">' 
+											+'<label class="layui-form-label" style="width: 100px;">'+subsidytypesData[i].zh_name+'('+['','补贴','扣除'][subsidytypesData[i].calc_type] +')</label>'
+											+'<div class="layui-input-inline "><input type="text" disabled name="'+subsidytypesData[i].column_name+'" placeholder="请输入" autocomplete="off" class="layui-input layui-disabled"></div><div class="layui-form-mid layui-word-aux">'+currencyList[subsidytypesData[i].currency_unit_id]+'</div>'
+										+'</div>'
+										subsetjobyShow++;
+									}
+
+								}
+								if(subsetjobyShow==0){
+									formHtml+=' <div class="layui-form-item">'
+												+'当前暂无岗位补贴相关设置项'
+										+'</div>'
+								}
+								formHtml+='<div class="layui-form-item">'
+											+'<div class="layui-input-block"><button id="subsetjoby" class="layui-btn disabled '+(subsetjobyShow==0?'layui-hide':'')+'" disabled>保存</button><button id="subsetjoby_close" class="layui-btn">关闭</button></div>'
+										+'<div>'
+								$("#setjobtitlesubsidy").html(formHtml);
+								form.render();
+								$("#subsetjoby").on("click",function(){
+									var param = dtree.getNowParam(commonTree1);
+									//console.log(param);
+									var pramas ={
+										JobTitleID:param.node_id,
+									}
+									$("#setjobtitlesubsidy").find('input').each(function(){
+										var SubsidyType=subDataKey[$(this).attr('name')].id;
+										var Amount=$(this).val();
+										pramas[''+SubsidyType+'']=Amount
+										// prama.SubsidyTypes.push({
+										// 	SubsidyType:SubsidyType,
+										// 	Amount:Amount,
+										// })
+									//	console.log(pramas)
+									})
+									$.fetch({
+										url:"/gateway/usersalary/mnl/setjobtitlesubsidy",
+										type:'post',
+										data:pramas,
+										cb:function(rs){
+											layer.msg('设定成功');
+										}
+									})
+								})
+						
+								dtree.on("node('commonTree1')" ,function(param){
+									// ////console.log(JSON.stringify(param)); 
+									$("#setjobtitle").text('岗位名称:'+param.context)
+									$.fetch({
+										url:"/gateway/usersalary/mnl/getjobtitlesubsidy",
+										type:'post',
+										data:{
+											JobTitleID:param.node_id,
+										},
+										cb:function(rs){
+											$("#setjobtitlesubsidy").find('input').removeAttr('disabled').removeClass('layui-disabled');
+											$("#subsetjoby").removeAttr('disabled').removeClass('disabled');
+											if(rs&&rs!=''){
+											//	console.log($("input[name='HousingSubsidy']"),rs.housing_subsidy)
+												$("input[name='housing_subsidy']").val(rs.housing_subsidy);
+												$("input[name='job_subsidy']").val(rs.job_subsidy); 
+												$("input[name='life_subsidy']").val(rs.life_subsidy);
+												$("input[name='meal_subsidy']").val(rs.meal_subsidy);
+											}else{
+												$("input[name='housing_subsidy']").val('');
+												$("input[name='job_subsidy']").val(''); 
+												$("input[name='life_subsidy']").val('');
+												$("input[name='meal_subsidy']").val('');
+											}
+											
+										}
+									})
+									// formHtmlFun(param);
+									// $("#delComponent").attr("data-id",""+param.node_id+"");
+								});
+							}
+						})
+					
+					}
+					,end:function(){
+						var commonTree1='';
+					}
+				})
+			})							
+})
+</script>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>问题管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                    问题管理
+                <!-- <div class="layui-inline">
+                    <label class="layui-form-label">标题：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>-->
+                <div class="layui-inline fr">
+                    <button id="backSurvey" class="layui-btn layui-btn-primary layui-btn-sm">关闭</button>
+                </div> 
+            </div>
+            <div class="layui-card-body" >
+                <div class="layui-inline">
+                    <label class="layui-form-label">题目标题：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="InquireQtText" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button id="InquireQt" class="layui-btn" title="查询"><i class="iconfont icon-sousuo"></i></button>
+                    <button id="InquireQtBack" class="layui-btn layui-btn-primary">返回</button>
+                    <button id="addQtion" class="layui-btn">新增</button>
+                    
+                </div>
+                <table class="layui-table" id="ProblemList" lay-filter="ProblemList">
+                    <!-- <colgroup>
+                        <col width="50">
+                        <col width="80">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col>
+                        <col>
+                        <col>
+                        <col width="200">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>问卷ID</th>
+                            <th>题目类型</th>
+                            <th>问题编号</th>
+                            <th>是否必填</th>
+                            <th>标题</th>
+                            <th>备注</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>单选</td>
+                            <td>1</td>
+                            <td>是</td>
+                            <td class="limit-width">
+                                <a class="toTitle">您觉得自己在就业求职过程中,最具有竞争实力的方面是</a>
+                            </td>
+                            <td>形势大好：80分以上；一般：60-80分；不看好：60分以下</td>
+                            <td>2018-10-27 15:39:59</td>
+                            <td>
+                                <button class="layui-btn layui-btn-xs">修改</button>
+                                <button class="layui-btn layui-btn-xs layui-btn-danger">删除</button>
+                            </td>
+                        </tr>
+                    </tbody> -->
+                </table>
+                <div id="QtsurveyTablePag"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../js/common.js?0.1"></script>
+<script src="../../layui/layui.js"></script>
+<script>
+    layui.config({
+		base: '../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index', 'laydate','table','laypage'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,layer = layui.layer
+        ,laydate = layui.laydate
+        ,laypage=layui.laypage
+        ,table=layui.table;
+        
+        
+        var QtsurveyTable=function(o={}){//用户table接口
+            var objs=o;
+            $.fetch({
+                url: "/gateway/question/list",
+                type: 'post',
+                data:objs,
+                cb:function(rs){
+                    var  list =rs.data_list;
+                    QtsurveyTableHtml(list);
+                    laypage.render({
+                        elem: 'QtsurveyTablePag' //注意，这里是 ID，不用加 # 号
+                        ,count: rs.total_count //数据总数，从服务端得到
+                        ,curr:objs.currentIndex
+                        ,jump: function(obj, first){
+                            //obj包含了当前分页的所有参数，比如：
+                            //得到当前页，以便向服务端请求对应页的数据。
+                            var eData =objs;
+                            eData.currentIndex=obj.curr;
+                            ctableNowPage=eData;
+                            if(!first){   //得到每页显示的条数
+                                // var eData =$.extend(obj,{currentIndex:curr,pageSize:10,})
+                                $.fetch({
+                                    url:"/gateway/question/list",
+                                    type: 'post',
+                                    data:eData,
+                                    cb:function(rs){
+                                        QtsurveyTableHtml(rs.data_list);
+                                    }
+                                });
+                           }
+                        }
+                    });
+                    
+                }
+            }) 
+        };
+        var QtsurveyTableHtml =function(list){
+            // console.log(list);
+            // list==list.length==0?null:list;
+            table.render({
+                elem: '#ProblemList'
+                ,cellMinWidth: 50
+                ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                ,text: {
+                    none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                }
+                // ,toolbar: '#Qtsurvey'
+                ,cols:  [[ //标题栏
+                    {field: 'id', title: 'ID'}
+                    ,{field: 'topic', title:'题目标题'}
+                    ,{field: 'question_type', title: '题目类型',templet:function(d){
+                        return d.question_type==1?'单选':(d.question_type==2?'多选':(d.question_type==3?'文本':(d.question_type==4?'评分':'')))
+                    }}
+                    ,{field: 'has_subquestion', title: '子问题',templet:function(d){
+                        return d.has_subquestion==1?(d.subquestion_show_type==0?'加选':'全部显示' ):'无';
+                    }}
+                    ,{field: 'question_no', title: '排序编号',sort: true,}
+                    ,{field: 'is_required', title: '是否必填',templet:function(d){
+                        return d.is_required==0?'否':(d.is_required==1?'必填':'')
+                    }}
+                    ,{field: 'remarks', title: '备注',sort: true ,width:180}
+                    // ,{field: 'created_at', title: '',sort: true ,width:180}
+                    ,{field: 'survey_status', title: '可读范围', templet:function(d){
+                        return ['公司','集团','全部'][d.read_range-1];
+                    }}
+                    ,{fixed: 'right'
+                        ,title:'操作'
+                        ,width:140
+                        ,toolbar:'<div><a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>'+
+                                '<a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="del">删除</a>'
+                    }
+                ]]
+                ,data:list
+                //,…… //其他参数
+            }); 
+        }
+        QtsurveyTable(ctableNowPage);
+        table.on('tool(ProblemList)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var tdata = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            // console.log(tdata);
+            if(layEvent === 'edit'){ //问题管理
+                var index=layer.open({
+                    title:'',
+                    type: 2,
+                    // content: 'ProblemAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    content: 'ProblemAdd.html?v=20181204', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    area:['100%', '100%'],                                
+                    maxmin: false,
+                    closeBtn: 0,
+                    success: function(layero, index){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; 
+                        $(body).attr("data-new","0");
+                        iframeWin.window.daiData=tdata;
+                        // console.log(iframeWin.window.layui);
+                        // iframeWin.window.formData = tdata;
+                    },
+                    end:function(){
+                        //关闭层后刷新列表
+                        QtsurveyTable(ctableNowPage);
+                    } 
+                })
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('确定删除吗？', function(index){
+                    $.fetch({
+                        url:"/gateway/question/delete",
+                        type: 'post',
+                        data:{
+                            questionId: tdata.id,
+                        },
+                        cb:function(rs){
+                            // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.close(index);
+                            QtsurveyTable(ctableNowPage);
+                        }
+                    });
+                    //向服务端发送删除指令
+                });
+            } 
+        });
+        //模糊查询
+        
+        //新建问题
+        $("#addQtion").on("click",function(){
+            var index=layer.open({
+                title:'',
+                type: 2,
+                // content: 'ProblemAdd.html?v=20181204', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                content: 'ProblemAdd.html?v=20181204', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                area:['100%', '100%'],                                
+                maxmin: false,
+                closeBtn: 0,
+                success: function(layero, index){ 
+                    var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; 
+                    $(body).attr("data-new","1");
+                    $(body).attr("data-suve",ctableNowPage.surveyId);
+                    // console.log(iframeWin.window.layui);
+                    // iframeWin.window.formData = tdata;
+                },
+                end:function(){
+                    //关闭层后刷新列表
+                    QtsurveyTable(ctableNowPage);
+                } 
+            })
+        })
+        $("#InquireQt").on("click",function(){
+            var topicVal=$("#InquireQtText").val();
+            var pro = $.extend(ctableNowPage,{topic:topicVal});
+            QtsurveyTable(pro);
+            if(topicVal==''){
+                $("#InquireQtBack").css('display','none')
+            }else {
+                 $("#InquireQtBack").css('display','inline-block')
+            }
+        })
+        //取消搜索
+        $("#InquireQtBack").css('display','none')
+        $("#InquireQtBack").on("click",function(){
+            ctableNowPage.topic='';
+            ctableNowPage.currentIndex=1;
+            $("#InquireQtText").val('');
+            QtsurveyTable(ctableNowPage);
+            $(this).css('display','none')
+        })
+        //关闭
+        $("#backSurvey").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭 
+        })
+    });
+</script>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增排班人员</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="fashion-red">
+	<div  class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<!-- 新建排班人员 -->
+			<div class="layui-card">
+				<div class="layui-card-header" >
+					<i class="iconfont icon-Group"></i>
+					新增排班人员
+				</div>
+				<div class="settingCont layui-card-body">
+                        <div class="popUpsCont layui-card layui-form layui-fluid">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label modify-form-label">用户：</label>
+                                <div class="layui-input-block modify-input-cont">
+                                    <ul class="layui-small-static" id="workUserList" style="display:none;">
+                                    </ul>
+                                    <textarea style="width: 100%;" name="workUserList" lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea  layui-input-inline"></textarea>
+                                    <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                                    <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label  modify-form-label">新增选项：</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="paiban"  lay-filter="paiban" value="0" title="普通班" checked>
+                                    <input type="radio" name="paiban"  lay-filter="paiban" value="1" title="倒班" >
+                                </div>
+                            </div>
+                            <div class="paiban_0">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">选择排班类型：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <select id="workTypeSel" name="workTypeSel" lay-filter="workTypeSel"></select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">起始,结束时间：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <input id="workSETime" type="text" placeholder="请选择开始时间和结束时间" class="layui-input test1">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label modify-form-label">审批人：</label>
+                                        <div class="layui-input-inline">
+                                            <select id="workApprUs" name="workApprUs" lay-filter="workApprUs"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="paiban_1" style="display: none;">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label modify-form-label">倒班名称：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text"  class="layui-input" id="WorkTimeName" name="WorkTimeName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">开始日期：</label>
+                                    <div class="layui-input-inline">
+                                        <input id="StartDate" type="text" placeholder="请选择开始日期" class="layui-input StartDate">
+                                    </div>                                                                       
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">排班类型：</label>
+                                    <div class="layui-input-inline">
+                                        <select id="workTypeSel1" name="workTypeSel1" lay-filter="workTypeSel1"></select>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <select id="workTypeSel2" name="workTypeSel2" lay-filter="workTypeSel2"></select>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <select id="workTypeSel3" name="workTypeSel3" lay-filter="workTypeSel3"></select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*按顺序添加，至少添加一项，不能相同。</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">变更周期：</label>
+                                    <div class="layui-input-inline">
+                                        <select id="TimeUnit" name="TimeUnit" lay-filter="TimeUnit">
+                                            <option value="day_15">15 天</option>
+                                            <option value="month_1">1 个月</option>
+                                            <option value="month_2">2 个月</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*排班类型自动变更周期,倒班总时长固定为六个月</div>                                    
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label modify-form-label">审批人：</label>
+                                        <div class="layui-input-inline">
+                                            <select id="ApprovalUserid" name="ApprovalUserid" lay-filter="ApprovalUserid"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button id="subworkForm"  class="layui-btn">保存</button>
+                                </div>
+                            </div>
+                        </div>
+				</div>
+            </div>
+		</div>
+	</div>
+    <script src="../../js/common.js?v=20181222"  type="text/javascript"></script>
+    <!-- <script src="../../js/sub/UserWorkTime.js?v=20181222111"  type="text/javascript"></script> -->
+	<script src="../../layui/layui.js"></script>
+	<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','form','laypage'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router()
+        ,layer = layui.layer;
+        element.render();
+
+        var table = layui.table
+            ,laydate = layui.laydate
+            ,laypage = layui.laypage
+            ,form = layui.form;
+
+        table.render({
+            elem: '#table-checkbox',
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+        })
+        $.fetch({
+            url:"/gateway/worktime/showuser",
+            type: 'post',
+            cb:function(rs){
+                var ophtml='';
+                if(rs.length ==0){
+                    ophtml= '<option value="0">暂无审批人</option>'
+                }else{
+                    for(var i =0;i<rs.length;i++){
+                    ophtml+='<option value="'+rs[i].user_id+'">　'+rs[i].user_name+'</option>'
+                    }
+                }
+                $("#ApprovalUserid").html(ophtml);                
+                $("#workApprUs").html(ophtml);
+                form.render();
+            }}
+        )
+        //自动
+        laydate.render({
+            elem: '#StartDate' //指定元素
+        });                
+        $("a.addDesc").on("click", function () {
+            selMemberFun($(this));
+        });
+        $("a.emptyDesc").on("click", function () {
+            $(this).siblings("ul").html("");
+            $(this).siblings("ul").attr("data-val", "");
+            $(this).siblings(".layui-textarea").html("");
+        })
+        $.fetch({
+            url:"/gateway/worktime/list",
+            type: 'post',
+            cb:function(rs){
+            var ophtml='';
+            if(rs.length ==0){
+                    ophtml= '<option value="0">暂无排班</option>'
+                }else{
+                    ophtml= '<option value=""></option>'                    
+                    for(var i =0;i<rs.length;i++){
+                        ophtml+='<option value="'+rs[i].id+'">　'+rs[i].name+'</option>'
+                    }
+                }
+                $("#workTypeSel").html(ophtml);  
+                $("#workTypeSel1").html(ophtml);
+                $("#workTypeSel2").html(ophtml);
+                $("#workTypeSel3").html(ophtml);              
+                form.render();
+            }
+        });
+        
+        laydate.render({
+            elem: '#workSETime' //指定元素
+            ,type: 'date'
+            ,range: '~'
+        });
+        form.on('radio(paiban)', function(data){
+            console.log(data.elem); //得到radio原始DOM对象
+            console.log(data.value); //被点击的radio的value值
+            if(data.value==='1'){
+                $("div.paiban_1").show();
+                $("div.paiban_0").hide();
+            }else{
+                $("div.paiban_0").show();
+                $("div.paiban_1").hide();
+            }
+        }); 
+        $("#subworkForm").on("click",function(){
+            var isPaiban=$("input[name='paiban']:checked").val();
+            console.log(isPaiban)
+            if(isPaiban==='1'){
+                var UserID=$("#workUserList").attr('data-val');
+                var WorkTimeName=$("#WorkTimeName").val();
+                var StartDate=$("#StartDate").val();
+                var TimeUnitArr=$("#TimeUnit").val().split('_');
+                var TimeInterval=TimeUnitArr[1];
+                var TimeUnit=TimeUnitArr[0];
+                    var workTypeSel1=$("#workTypeSel1").val();
+                    var workTypeSel2=$("#workTypeSel2").val();
+                    var workTypeSel3=$("#workTypeSel3").val();
+                    var WorkTimeTypeLoopArr=[workTypeSel1,workTypeSel2,workTypeSel3];
+                    var ApprovalUserid=$("#ApprovalUserid").val();
+                    if(!UserID){
+                        layer.msg('请选择排班用户.');
+                        return false
+                    }
+                    if(!WorkTimeName){
+                        layer.msg('倒班名称不能为空.');
+                        return false
+                    }
+                    if(!StartDate){
+                        layer.msg('开始日期不能为空.');
+                        return false
+                    }
+                    if(!workTypeSel1){
+                        layer.msg('第一项排班类型不能为空.');
+                        return false
+                    }
+                    if(!workTypeSel2&&workTypeSel3){
+                        layer.msg('请选择第二项排班类型.');
+                        return false
+                    }
+      
+                    var nary = WorkTimeTypeLoopArr;
+                    for(var i = 0; i < nary.length - 1; i++) {
+                        if(nary[i] == nary[i + 1] && nary[i]!='') {
+                            layer.msg('排班类型不能重复.');
+                            return false
+                        }
+                    }
+                    console.log(nary)
+                    
+                    Array.prototype.clean = function(deleteValue) {  
+                        for (var i = 0; i < this.length; i++) {  
+                            if (this[i] == deleteValue) {           
+                            this.splice(i, 1);//返回指定的元素  
+                            i--;  
+                            }  
+                        }  
+                        return this;  
+                    };  
+                    var WorkTimeTypeLoop=WorkTimeTypeLoopArr.clean("").join(',');
+                    var prs={
+                        UserID:UserID,
+                        WorkTimeName:WorkTimeName,
+                        StartDate:StartDate,
+                        TimeInterval:TimeInterval,
+                        TimeUnit:TimeUnit,
+                        WorkTimeTypeLoop:WorkTimeTypeLoop,
+                        ApprovalUserid:ApprovalUserid,
+                    }
+                    $.fetch({
+                        url:"/gateway/worktimetypeuser/setautopaiban",
+                        type: 'post',
+                        data:prs,
+                        cb:function(rs){
+                            layer.msg("提交成功！");
+                            setTimeout(function(){
+                                location.reload();
+                            }, 500 );
+                        }
+                    });
+                }else if(isPaiban==='0'){
+                    var seTime =$("#workSETime").val();
+                    var timesArr= seTime.split(" ~ ");
+                    var starT =timesArr[0];
+                    var endT =timesArr[1];
+                    var WorkTimeTypeId = $("#workTypeSel").val();
+                    var userId=$("ul#workUserList").attr("data-val");
+                    var ApprovalUserid=$("#workApprUs").val();
+                    if(!userId){
+                        layer.msg('请选择排班用户.');
+                        return false
+                    }
+                    if(!WorkTimeTypeId){
+                        layer.msg('排班类型不能为空.');
+                        return false
+                    }
+                    if(!starT||!endT){
+                        layer.msg('起始,结束时间.');
+                        return false
+                    }
+                    var prs={
+                        UserIds:userId,
+                        WorkTimeTypeId:WorkTimeTypeId,
+                        StartTime:starT,
+                        EndTime:endT,
+                        ApprovalUserid:ApprovalUserid
+                    }
+                    $.fetch({
+                        url:"/gateway/worktimetypeuser/add",
+                        type: 'post',
+                        data:prs,
+                        cb:function(rs){
+                            layer.msg("新增成功！");
+                            setTimeout(function(){
+                                location.reload();
+                            }, 500 );
+                        }
+                    });
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

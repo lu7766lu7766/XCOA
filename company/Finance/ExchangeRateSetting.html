@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>汇率设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                汇率设置
+                <div class="layui-inline ml-10 fr">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" id="addExchange">添加汇率</a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="pz-10 layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">有效日期</label>
+                        <div class="layui-inline">
+                            <!-- <label class="layui-form-label">开始日期</label>                             -->
+                            <div class="layui-inline">
+                                <input type="text" class="layui-input" id="StartDate">
+                            </div>
+                            ~
+                        <!-- </div>
+                        ~
+                        <div class="layui-inline"> -->
+                            <!-- <label class="layui-form-label">结束日期</label> -->
+                            <div class="layui-inline">
+                                <input type="text" class="layui-input" id="EndDate">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button id="ExchangFilter" lay-submit="" lay-filter="ExchangFilter"
+                                class="layui-btn layui-btn">
+                                <i class="iconfont icon-sousuo"></i>
+                            </button>
+                            <button id="backExchang" 
+                            class=" layui-btn layui-hide">
+                               返回
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <table id="Exchange" lay-filter="Exchange" lay-data="{id: 'Exchange'}"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190215"></script>
+<script>
+    $(function () {
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'form','table','laydate'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                table = layui.table,
+                form = layui.form,
+                laydate = layui.laydate,
+                router = layui.router();
+                element.render();
+
+
+            table.render({
+                elem: '#Exchange',
+                url: urls+'/gateway/financialrate/ratelist', //数据接口
+                page: true, //开启分页
+                method: 'post',
+                // where:{
+                //     status:3
+                // },
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                contentType: 'application/json',
+                text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //表头
+                        {
+                            field: 'id',
+                            title: '编号',
+                            minWidth:80,
+                        },{
+                            field: 'rate',
+                            title: '汇率',
+                            minWidth:80,
+                            templet:function(d){
+                                return toNonExponential(d.rate)
+                            }
+                        },{
+                            field: 'original_currency_name',
+                            title: '原始货币',
+                            minWidth:80,
+                        },{
+                            field: 'final_currency_name',
+                            title: '买入货币',
+                            minWidth:80,
+                        },{
+                            field: 'exchange_date',
+                            title: '兑换日期',
+                            minWidth:120,
+                        },{
+                            field: 'apply_result_desc',
+                            title: '审批状态',
+                            minWidth:120,
+                        }, {
+                            field:'current_approval_user_name',
+                            title:'当前审批人', 
+                            minWidth:120                           
+                        }, {sort: true,
+                        field: '',
+                        title: '审批历史',
+                        minWidth: 280,
+                        templet:function(d){
+                            var apprList = '';
+                             if (d.approval_history.length == 0) {
+                                 apprList = '暂无';
+                             } else {
+                                 for (var k = 0; k < d.approval_history.length; k++) {
+                                     var res = '';
+                                     var classList = '';
+                                     if (d.approval_history[k].is_forward == 1) { //是转发的
+                                         res = '--转发-->';
+                                         apprList += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '】：' //意见
+                                             +
+                                             d.approval_history[k].content + '</p>' //意见内容
+
+                                     } else { //是审批的
+                                        var NULLData = d.approval_history[k].content==null?'暂无':d.approval_history[k].content;
+                                         if (d.approval_history[k].approval_result == 1) {
+                                             res = "未批准";
+                                             classList = "red";
+                                         } else if (d.approval_history[k].approval_result == 2) {
+                                             res = "已批准";
+                                             classList = 'green';
+                                         }
+                                         apprList += '<p><span> 【' + d.approval_history[k].username + '<em class=' + classList + '>' + res + '</em>' + '】</span>' + NULLData + '</p>'
+                                     }
+
+                                 };
+                             }
+                            return apprList;
+                        }
+                    },{
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            minWidth:260,
+                            templet:function(d){
+                                var btn ='<a class="layui-btn layui-btn-xs SeeDetails" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change">修改</a><a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="history">兑换历史</a><a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del">删除</a>'
+                                return btn
+                            }
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {
+                }
+            });
+
+            table.on('tool(Exchange)', function(obj){
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event
+                // //console.log(data)
+                if(layEvent=="diat"){
+                    $.fetch({
+                        url:'/gateway/financialrate/ratedetail',
+                        type: 'post',
+                        data:{
+                            ID:data.id
+                        },
+                        cb:function(re){
+                            var apprList = '';
+                            var d=re;
+                             if (d.approval_history.length == 0) {
+                                 apprList = '暂无';
+                             } else {
+                                 for (var k = 0; k < d.approval_history.length; k++) {
+                                     var res = '';
+                                     var classList = '';
+                                     if (d.approval_history[k].is_forward == 1) { //是转发的
+                                         res = '--转发-->';
+                                         apprList += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '】：' //意见
+                                             +
+                                             d.approval_history[k].content + '</p>' //意见内容
+
+                                     } else { //是审批的
+                                        var NULLData = d.approval_history[k].content==null?'暂无':d.approval_history[k].content;
+                                         if (d.approval_history[k].approval_result == 1) {
+                                             res = "未批准";
+                                             classList = "red";
+                                         } else if (d.approval_history[k].approval_result == 2) {
+                                             res = "已批准";
+                                             classList = 'green';
+                                         }
+                                         apprList += '<p><span> 【' + d.approval_history[k].username + '<em class=' + classList + '>' + res + '</em>' + '】</span>' + NULLData + '</p>'
+                                     }
+
+                                 };
+                             }
+                            var DiatList = '<div class="layui-card-body">'
+                                    +'<div class="layui-form" lay-filter="component-form-depar">'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">汇率：</label>'
+                                                +'<div class="layui-input-inline cateID bumen">'
+                                                    +'<span>'+toNonExponential(re.rate)+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">创建人：</label>'
+                                                +'<div class="layui-input-inline cateID sqname">'
+                                                    +'<span>'+re.creator+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">原始货币：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.original_currency_name+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">买入货币：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.final_currency_name+'</span>'
+                                                 +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">兑换日期：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.exchange_date+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">审批状态：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.apply_result_desc+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">审批历史：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +apprList
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                     +'</div>'
+                                +'</div>'
+                            layer.open({
+                                title:'查看详情',
+                                type: 1,
+                                content:DiatList,
+                                area:['700px', '50%'],
+                                success:function(layero,index){
+                                    
+                                }
+                            })
+                        }
+                    })
+                }else if(layEvent=="change"){
+                    var ChangeList = '<div class="layui-card-body">'
+                            +'<div class="layui-form" lay-filter="component-form-change">'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label modify-form-labelout">1 '+data.original_currency_name+' 兑换 '+data.final_currency_name+'汇率</label>'
+                                    +'<div class="layui-input-inline">'
+                                        +'<input type="text" lay-verify="required" name="ExchangeRate" class="layui-input" id="ExchangeRate">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label modify-form-labelout">兑换日期：</label>'
+                                    +'<div class="layui-input-inline">'
+                                        +'<input type="text" lay-verify="required" name="ExchangeDate" class="layui-input" id="ExchangeDate">'
+                                    +'</div>'
+                                +'</div>'
+                                 +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label modify-form-labelout">审批人：</label>'
+                                    +'<div class="layui-input-inline">'
+                                        +'<select  lay-verify="required" name="ApprovalUserId" class="layui-select" id="ApprovalUserId" lay-filter="ApprovalUserId"></select>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-input-block">'
+                                        +'<div class="layui-footer">'
+                                            +'<button id="subFeek" l class=" layui-btn">提交</button>'
+                                            +'<button id="backFeek" class="layui-btn layui-btn-primary layui-btn">关闭</button>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                        +'</div>'
+                    layer.open({
+                        title:'汇率修改',
+                        type: 1,
+                        content:ChangeList,
+                        area:['510px', '50%'],
+                        success:function(layero,index){
+                            // var DateSplice = data.start_date+' ~ '+data.end_date
+                            $.fetch({
+                                url:'/gateway/financialrate/getrateuser',
+                                type: 'post',
+                                data:{
+                                    IsApprovalUser:1,
+                                },
+                                cb:function(resa){ 
+                                    var Approption='';
+                                    for(var i=0;i<resa.length;i++){
+                                        Approption+='<option value="'+resa[i].id+'">'+resa[i].name+'</option>'
+                                    }    
+                                    $("#ApprovalUserId").html(Approption);
+                                    form.render()
+                                    
+                                    form.val("component-form-change", {
+                                        "ExchangeRate": toNonExponential(data.rate) // "name": "value"
+                                        ,"ExchangeDate": data.exchange_date
+                                        ,"ApprovalUserId":data.current_approval_user_id
+                                    })
+                                    laydate.render({
+                                        elem: $("#ExchangeDate").selector, //指定元素
+                                        type: 'date',
+                                    });
+                                    $("#ExchangeRate").on('keyup',function () {
+                                            NumberCheckten6x(this)
+                                        }).on("paste", '.receiptCount',function (e) {  //CTR+V事件处理
+                                            NumberCheckten6x(this)
+                                        }).css("ime-mode", "disabled");
+                                    $("#backFeek").on("click",function(){
+                                        layer.close(index);
+                                    })
+                                    $("#subFeek").on("click",function(){
+                                        var rate = $("#ExchangeRate").val();
+                                        var ExchangeDate = $("#ExchangeDate").val(); //获取时间
+                                        var ApprovalUserIds = $("#ApprovalUserId").val(); //获取时间
+                                        $.fetch({
+                                            url:'/gateway/financialrate/updaterate',
+                                            type: 'post',
+                                            data:{
+                                                ID:data.id,
+                                                Rate:rate,
+                                                ExchangeDate:ExchangeDate,
+                                                ApprovalUserId:ApprovalUserIds
+                                            },
+                                            cb:function(res){
+                                                layer.msg("修改成功");
+                                                layer.close(index);
+                                                table.reload('Exchange', {
+                                                    where: {} //设定异步数据接口的额外参数
+                                                    ,page: {
+                                                        curr: 1 //重新从第 1 页开始
+                                                    }
+                                                });
+                                            }
+                                        })
+                                    })
+                                }
+                            })
+                        
+                        }
+                    })
+                     
+                }else if(layEvent=="history"){
+                        
+                   var ChangeList= '<div class="layui-card-body"><div class="layui-fluid"><div class="layui-card"><div class="layui-card-header">'+data.original_currency_name+'换'+data.final_currency_name+'历史记录</div><div class="pz-10 layui-form"><table id="Exchangehistory" lay-filter="Exchangehistory"></table></div></div></div></div>';
+                   layer.open({
+                        title:'历史纪录',
+                        type: 1,
+                        content:ChangeList,
+                        area:['80%', '80%'],
+                        success:function(layero,index){
+                            // var DateSplice = data.start_date+' ~ '+data.end_date
+                            
+                            table.render({
+                                elem: '#Exchangehistory',
+                                url: urls+'/gateway/financialrate/history', //数据接口
+                                page: true, //开启分页
+                                method: 'post',
+                                where:{
+                                    OriginalCurrencyUnitID:data.original_currency_unit_id,
+                                    FinalCurrencyUnitID:data.final_currency_unit_id
+                                },
+                                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                                contentType: 'application/json',
+                                text: {
+                                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                },
+                                cols: [
+                                    [ //表头
+                                        {
+                                            field: 'id',
+                                            title: '编号',
+                                            minWidth:80,
+                                        },{
+                                            field: 'rate',
+                                            title: '汇率',
+                                            minWidth:80,
+                                            templet:function(d){
+                                                return toNonExponential(d.rate)
+                                            }
+                                        },{
+                                            field: 'original_currency_name',
+                                            title: '原始货币',
+                                            minWidth:80,
+                                        },{
+                                            field: 'final_currency_name',
+                                            title: '买入货币',
+                                            minWidth:80,
+                                        },{
+                                            field: 'exchange_date',
+                                            title: '兑换日期',
+                                            minWidth:120,
+                                        },{
+                                            field: 'apply_result_desc',
+                                            title: '审批状态',
+                                            minWidth:120,
+                                        }
+                                    ]
+                                ],
+                                request: {
+                                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                                        ,
+                                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                                },
+                                parseData: function (res) { //res 即为原始返回的数据
+                                    return {
+                                        "status_code": res.status_code, //解析接口状态
+                                        "message": res.message, //解析提示文本
+                                        "count": res.data.total_count, //解析数据长度
+                                        "data": res.data.data_list, //解析数据列表
+                                        "curr": res.data.page_index
+                                    };
+                                },
+                                done: function () {
+                                }
+                            });
+                        }
+                    })
+                }else if(layEvent=="del"){
+                    layer.confirm('确定删除？', {icon: 3, title:' '}, function(index){
+                        //do something
+                        
+                        $.fetch({
+                            url:'/gateway/financialrate/delrate',
+                            type: 'post',
+                            data:{
+                                ID:data.id,
+                            },
+                            cb:function(res){
+                                layer.msg("删除成功");
+                                table.reload('Exchange', {
+                                    where: {} //设定异步数据接口的额外参数
+                                    ,page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                                layer.close(index);
+                            }
+                        })
+                    });
+                }
+            })
+
+            function NumberCheckten6x(obj,n){
+                obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+                obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+                obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+                obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+                obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+            }
+            
+            // 添加汇率
+            $("#addExchange").on("click",function(){
+                // 初始化
+                
+                $.fetch({
+                    url:'/gateway/financial/currency',
+                    type: 'post',
+                 
+                    cb:function(res){
+                       //console.log(res);  
+                       var option='';    
+                       for(var i=0;i<res.length;i++){
+                        option+='<option value="'+res[i].id+'">'+res[i].zh_name+'('+res[i].short_code+')</option>'
+                       }       
+                             
+                        var DataList='<div class="layui-card-body">'
+                                    +'<div class="layui-form" lay-filter="component-form-change">'
+                                        +'<div class="layui-form-item">'
+                                            +'<label class="layui-form-label modify-form-labelout">原始币种：</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<select  lay-verify="required" name="OriginalCurrencyUnitID" class="layui-select" id="OriginalCurrencyUnitID" lay-filter="OriginalCurrencyUnitID">'+option+'</select>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<label class="layui-form-label modify-form-labelout">买入币种：</label>'
+                                            +'<div class="layui-input-inline">'
+                                                    +'<select  lay-verify="required" name="FinalCurrencyUnitID" class="layui-select" id="FinalCurrencyUnitID" lay-filter="FinalCurrencyUnitID">'+option+'</select>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<label class="layui-form-label modify-form-labelout">汇率</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="text" lay-verify="required" name="ExchangeRate" class="layui-input" id="ExchangeRate" value="1" disabled="disabled" >'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<label class="layui-form-label modify-form-labelout">兑换日期：</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="text" lay-verify="required" name="ExchangeDate" class="layui-input" id="ExchangeDate">'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<label class="layui-form-label modify-form-labelout">审批人：</label>'
+                                            +'<div class="layui-input-inline">'
+                                                    +'<select  lay-verify="required" name="ApprovalUserId" class="layui-select" id="ApprovalUserId" lay-filter="ApprovalUserId"></select>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-input-block">'
+                                                +'<div class="layui-footer">'
+                                                    +'<button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn">提交</button>'
+                                                    +'<button id="backFeek" class="layui-btn layui-btn-primary layui-btn">关闭</button>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>';
+                        layer.open({
+                            title:'添加汇率',
+                            type: 1, 
+                            content:DataList,
+                            area:['60%', '70%'],
+                            success:function(layero,index){
+                                $.fetch({
+                                    url:'/gateway/financialrate/getrateuser',
+                                    type: 'post',
+                                    data:{
+                                        IsApprovalUser:1,
+                                    },
+                                    cb:function(resa){ 
+                                        var Approption='';
+                                        for(var i=0;i<resa.length;i++){
+                                            Approption+='<option value="'+resa[i].id+'">'+resa[i].name+'</option>'
+                                        }    
+                                        $("#ApprovalUserId").html(Approption)
+                                  
+                                        var d = new Date();
+                                        laydate.render({
+                                            elem: "#ExchangeDate", //指定元素
+                                            type: 'date',
+                                            value:  d.getFullYear() + '-' + lay.digit(d.getMonth() + 1) + '-' + lay.digit(d.getDate())
+                                        });
+                                        form.render();
+                                        $("#backFeek").on("click",function(){
+                                            layer.close(index);
+                                        })
+                                        form.on('select(FinalCurrencyUnitID)', function(data){
+                                            var OriginalID=$("#OriginalCurrencyUnitID").val();
+                                            if(OriginalID==data.value){
+                                                $("#ExchangeRate").val('1').attr('disabled','disabled');
+                                            }else{
+                                                $("#ExchangeRate").val('').removeAttr('disabled');                                        
+                                            }
+                                        });      
+                                        form.on('select(OriginalCurrencyUnitID)', function(data){
+                                            var FinalID=$("#FinalCurrencyUnitID").val();
+                                            if(FinalID==data.value){
+                                                $("#ExchangeRate").val('1').attr('disabled','disabled');
+                                            }else{
+                                                $("#ExchangeRate").val('').removeAttr('disabled');                                        
+                                            }
+                                        });  
+                                        
+                                        $("#ExchangeRate").on('keyup',function () {
+                                            NumberCheckten6x(this)
+                                        }).on("paste", '.receiptCount',function (e) {  //CTR+V事件处理
+                                            NumberCheckten6x(this)
+                                        }).css("ime-mode", "disabled");
+                                        form.on('submit(subFeek)', function(data){
+                                            var RateItems = [{
+                                                OriginalCurrencyUnitID:data.field.OriginalCurrencyUnitID,
+                                                FinalCurrencyUnitID:data.field.FinalCurrencyUnitID,
+                                                Rate:data.field.ExchangeRate,
+                                                ExchangeDate:data.field.ExchangeDate,
+                                            }];
+                                        
+                                            $.fetch({
+                                                url:'/gateway/financialrate/addrate',
+                                                type: 'post',
+                                                data:{
+                                                    RateItems:RateItems,
+                                                    ApprovalUserId:data.field.ApprovalUserId
+                                                },
+                                                cb:function(res){
+                                                    layer.msg("提交成功");
+                                                    layer.close(index);
+                                                    table.reload('Exchange', {
+                                                        where: {} //设定异步数据接口的额外参数
+                                                        ,page: {
+                                                            curr: 1 //重新从第 1 页开始
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                                        });
+                                
+                                    }
+                                })
+                            }
+                        })
+           
+                    }
+                })
+            })
+            
+
+            // 开始日期
+            laydate.render({
+                elem: $("#StartDate").selector, //指定元素
+                type: 'date',
+            });
+            // 结束日期
+            laydate.render({
+                elem: $("#EndDate").selector, //指定元素
+                type: 'date',
+            });
+            
+            // 筛选
+            $("#ExchangFilter").on("click",function(){
+                var startDate = $("#StartDate").val()
+                var endDate = $("#EndDate").val()
+                if(startDate==''&&endDate==''){
+                    layer.msg('请选择时间');
+                }else{
+                    $("#backExchang").removeClass('layui-hide');
+                    table.reload('Exchange', {
+                        // url: urls+'/gateway/financial/ratelist'
+                        where: {
+                            StartDate:startDate,
+                            EndDate:endDate
+                        } 
+                        ,page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+
+                }
+            })
+            $("#backExchang").on("click",function(){
+                $("#StartDate").val('')
+                $("#EndDate").val('')
+                $("#backExchang").addClass('layui-hide')
+                table.reload('Exchange', {
+                    // url: urls+'/gateway/financial/ratelist'
+                    where: {
+                        StartDate:'',
+                        EndDate:''
+                    } 
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            })
+            
+        })
+    })
+</script>
+</html>

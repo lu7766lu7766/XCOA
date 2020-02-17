@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建公告</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+
+<script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+                <div class="layui-card-header">
+                   新建公告
+                </div>
+                <div class="layui-card-body">
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md2"></div>
+                            <div class="layui-col-md8">
+                                <div class="layui-card-body">
+                                    <div class="layui-form" action="" lay-filter="component-form-notice">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label modify-layui-label">公告标题：</label>
+                                            <div class="layui-input-block">
+                                                <input id="noticetitle" name="title" lay-verify="required" type="text" placeholder="请输入公告标题" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label modify-layui-label">发布成员：</label>
+                                            <div class="layui-input-block departTable">
+                                                <textarea id="userName" name="userName" required lay-verify="required" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea layui-input-inline"></textarea>
+                                                <ul id="noticUser" style="display: none" class="layui-small-static"></ul>
+                                                <a class="addDesc">
+                                                    <i class="iconfont icon-40"></i>
+                                                    添加
+                                                </a>
+                                                <a class="emptyDesc">
+                                                    <i class="iconfont icon-qingkong"></i>
+                                                    清除
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label modify-layui-label">有效期：</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="ytime" lay-verify="timeinput" class="layui-input" placeholder="开始时间 ~ 结束时间" id="StartEnd-item">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label modify-layui-label">附件：</label>
+                                            <div class="layui-input-block">
+                                                <button type="button" class="layui-btn layui-btn-primary" id="fileUpload" style="float: left;">
+                                                    <i class="layui-icon">&#xe67c;</i>上传附件
+                                                </button>
+                                                <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                                                <div id="UploadNames" class="UploadNames-box"></div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item" id="approBox">
+                                            <label class="layui-form-label modify-layui-label">审核人：</label>
+                                            <div class="layui-input-inline">
+                                                <select name="appro"  id="appro">
+                                                    <!-- <option value="">123</option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <!-- <div class="layui-input-block"> -->
+                                                <!-- <textarea name="noticeEit" id="noticeEit" style="display: none;"></textarea> -->
+                                                <div  class="layui-input-block" id="editor"></div>
+                                                
+                                            <!-- </div> -->
+                                            
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button id="subnotice" class="layui-btn" lay-submit lay-filter="form-notice">提交审批</button>
+                                                <button id="resetnotice" class="layui-btn layui-btn-primary">重置</button>    
+                                                <button id="close" class="layui-btn layui-btn-primary layui-hide">关闭</button>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2"></div>
+                        </div>
+                </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script type="text/javascript" src="../../js/wangEdit.js?v=20181201"></script>
+
+<!-- <script src="../../js/sub/notice.js?v=20190201" type="text/javascript"></script> -->
+<script>
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','laydate','laypage','layedit','table','upload'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,table =layui.table
+    ,router = layui.router();
+    element.render();
+    var laydate = layui.laydate
+        ,form = layui.form
+        ,laypage =layui.laypage
+        ,layedit = layui.layedit;
+    
+    //执行一个laydate实例
+ 
+    var upload = layui.upload;
+    var AttachsId=[];
+
+    var E = window.wangEditor
+    var editor = new E('#editor')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.customConfig.uploadImgShowBase64 = true ;
+    editor.customConfig.zIndex = 0;
+    editor.create()
+
+
+  
+     //修改
+        if(window.noticeData){
+                $(".layui-card-header").html('修改公告')
+                var prs=window.noticeData;
+                var starTime =prs.notice.validity_starttime;
+                var endTime =prs.notice.validity_endtime;
+                    
+                timesVal =starTime.slice(0,10)+' ~ '+endTime.slice(0,10)
+                var AttachsId=[],atta='';
+                    //发布给
+                var useridArr=prs.notice.to_userId.split(",");
+                var userNameArr=prs.notice.to_users.split(",");
+                var userUlHtml='';
+                $("#approBox").remove();
+                for(var i=0;i<userNameArr.length;i++){
+                    userUlHtml+='<li class="pick" data-user="'+useridArr[i]+'">'+userNameArr[i]+'</li>';
+                }
+                if(prs.attaches&&prs.attaches!=''){//附件
+                    for(var i=0; i<prs.attaches.length; i++){      
+                        AttachsId.push(prs.attaches[i].id);
+                        $("#c_UploadNames").append('<a><span>'+prs.attaches[i].original_name+'</span><i class="layui-icon layui-unselect layui-tab-close" data-id="'+prs.attaches[i].id+'">ဆ</i></a>')
+                    }
+                }
+                editor.txt.html(prs.notice.content);         
+                
+                //赋值
+                form.val("component-form-notice", {
+                    "title":prs.notice.title,  // "name": "value"
+                    "ytime":timesVal,
+                    // ,"sex": "女"
+                    // ,"auth": 3
+                    // ,"check[write]": true
+                    // ,"open": false
+                    // ,"desc": "我爱layui"
+                })
+                $("#noticUser").html(userUlHtml);
+                $("#noticUser").attr('data-val',prs.notice.to_userId)
+                $("#userName").html(prs.notice.to_users);
+    
+        }else{
+            $.fetch({
+                url:"/gateway/notice/showuser",
+                type: 'post',
+                cb:function(rs){
+                    var op='';
+                    if(rs.length==0){
+                        op+='<option value="">无审核人</option>';
+                        layer.msg("未设置审核人无法新建,请先设置指定审核人。",{icon:5});
+                        $("#subnotice").attr("disabled","disabled").addClass("layui-disabled");
+                    }
+                    for(var i=0;i<rs.length;i++){
+                        op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                    }
+                    $("#appro").html(op);
+                    form.render('select','component-form-notice');
+                
+                }
+            });
+        }
+    var laydate = layui.laydate
+        ,form = layui.form
+        ,laypage =layui.laypage
+        ,layedit = layui.layedit;
+    
+    //执行一个laydate实例
+    laydate.render({
+       elem: '#StartEnd-item' //指定元素
+      ,type: 'date'
+      ,range: '~'
+      ,format: 'yyyy-MM-dd'
+    });
+    form.render();
+    var upload = layui.upload;
+    var AttachsId=[];
+    //执行实例
+    // var  noDataHtml ='<tr><td colspan="8"><div class="layui-table-cell" style="text-align: center">暂无公告</div></td></tr>'
+   
+    var uploadInst = upload.render({
+        elem: '#fileUpload' //绑定元素
+        ,url: window.urls+'/gateway/notice/addattach' //上传接口
+        ,accept:'file'
+        ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+            layer.load(); //上传loading
+        }
+        ,done: function(res){
+            //上传完毕回调
+            layer.closeAll('loading'); //关闭loading
+            AttachsId.push(res.data.attachId);
+            $("#UploadNames").append('<a><span>'+res.data.attachName+'</span><i class="layui-icon layui-unselect layui-tab-close" data-id="'+res.data.attachId+'">ဆ</i></a>')
+            
+        }
+        ,error: function(){
+            layer.closeAll('loading'); //关闭loading
+        //请求异常回调
+        }
+    });
+
+    form.verify({
+        timeinput:function(value){
+            if(!value.match(/\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}/)){
+                return '请选择日期';
+            };
+        },
+     
+    })
+    
+    //添加人员
+    $("a.addDesc").on("click",function(){
+        selMemberFun($(this));
+    });
+    $("a.emptyDesc").on("click",function(){
+        $(this).siblings("ul").html("");
+        $(this).siblings("ul").attr("data-val","");
+        $(this).siblings(".layui-textarea").html("");
+    });
+    //删除附件
+    $('#UploadNames').on("click","i",function(){
+        var el =$(this);
+        var aid=el.attr('data-id');
+        $.fetch({
+            url:"/gateway/notice/delattach/"+aid+"",
+            type: 'get',
+            cb:function(rs){
+                el.parent("a").remove();
+            }
+        });
+    })
+    var resetForm =function(){
+        $("#StartEnd-item").val('').prop("placeholder",'开始时间 ~ 结束时间');
+        $("#noticetitle").val('');
+        // $("#noticeEit").val('');
+        editor.txt.html('');         
+        $("ul#noticUser").attr("data-val",'');
+        $("#UploadNames").html('');
+        $("#noticUser").html('');
+        $("#userName").html('');
+        var appro =$("#appro").val();
+        // noticedit = layedit.build("noticeEit", {
+        //     tool: [
+        //         'strong' //加粗
+        //         ,'italic' //斜体
+        //         ,'underline' //下划线
+        //         ,'del' //删除线
+        //         ,'|' //分割线
+        //         ,'left' //左对齐
+        //         ,'center' //居中对齐
+        //         ,'right' //右对齐
+        //         ,'link' //超链接
+        //         ,'unlink' //清除链接
+        //         ,'face' //表情
+        //         // ,'image' //插入图片
+        //         // ,'help' //帮助
+        //       ]
+        // })
+        form.render();
+    }
+
+    if(window.noticeData){
+        $("#close").removeClass('layui-hide');
+        $("#close").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭    
+        })
+        form.on('submit(form-notice)', function(data){
+            var userName= data.field.userName;
+            userName=userName.replace(/;/, ",");
+            userName =userName.slice(0,userName.length-1);
+            var timesArr= $("#StartEnd-item").val();
+            timesArr= timesArr.split(" ~ ");
+            var tit = $("#noticetitle").val();
+            var Content =editor.txt.html();
+            var uid= $("ul#noticUser").attr("data-val");
+            var Attastr =AttachsId.join(',');
+            var StartTime = timesArr[0];
+            var EndTime = timesArr[1];
+            var appro =$("#appro").val();
+            var prama={
+                ID:window.noticeData.notice.id,                                
+                Users:userName,
+                UserID:uid,
+                Content:Content,
+                Title:tit,
+                StartTime:StartTime,
+                EndTime:EndTime,
+                // ApprovalUserId:appro,
+                Attachs:Attastr
+            }
+            $.fetch({
+                url:"/gateway/notice/update",
+                type: 'post',
+                data:prama,
+                cb:function(rs){
+                    layer.msg("修改成功!");
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭    
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    }else{
+        form.on('submit(form-notice)', function(data){
+            var userName= data.field.userName;
+            userName=userName.replace(/;/, ",");
+            userName =userName.slice(0,userName.length-1);
+            
+            var timesArr= $("#StartEnd-item").val();
+            timesArr= timesArr.split(" ~ ");
+            var tit = $("#noticetitle").val();
+            var Content =editor.txt.html();
+            var uid= $("ul#noticUser").attr("data-val");
+            var Attastr =AttachsId.join(',');
+            var StartTime = timesArr[0];
+            var EndTime = timesArr[1];
+            var appro =$("#appro").val();
+            var prama={
+                Users:userName,
+                UserID:uid,
+                Content:Content,
+                Title:tit,
+                StartTime:StartTime,
+                EndTime:EndTime,
+                ApprovalUserId:appro,
+                Attachs:Attastr
+            }
+            $.fetch({
+                url:"/gateway/notice/add",
+                type: 'post',
+                data:prama,
+                cb:function(rs){
+                    layer.msg("提交成功!");
+                    resetForm();
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    }
+
+
+    $("#resetnotice").on("click",function(){
+        resetForm();
+    })
+    laydate.render({ 
+        elem: '#NoticeTime'
+        ,range: true //或 range: '~' 来自定义分割字符
+    });
+
+    form.on('switch(stopOpen)', function(data){
+        console.log($(data.elem))
+        var sid = $(data.elem).parents("div").attr("data-id");
+        var st =data.elem.checked?1:2;
+        prama={
+            ID:sid,
+            Status:st,
+        }
+        $.fetch({
+            url:"/gateway/notice/updatestatus",
+            type: 'post',
+            data:prama,
+            cb:function(rs){
+            }
+        });
+    });
+   
+})
+</script>
+
+</html>

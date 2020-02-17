@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>集团管理</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+	<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script src="../../js/sub/company.js?v=201812s22"></script>
+</head>
+<style>
+.departCont {
+	padding-left: 15px;
+}
+.departCont .departMenu {
+    padding-left: 20px;
+    padding-right: 0px;
+}
+.departCont .filetree ul li {
+    padding: 5px 0;
+}
+.departCont .filetree ul  li span {
+	cursor: pointer;
+}
+.departCont .filetree > li > span{
+    font-size: 16px;
+    color: #0072ff !important;
+}
+</style>
+<body layadmin-themealias="default">
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15 layui-card">
+			<div class="layui-card-header" data-lang="string_lang29">
+				<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+				集团管理
+			</div>
+			<div class="layui-col-xs3 departCont">
+				<div id="main">
+					<ul id="ManagDuti" class="dtree" data-id="0"></ul>
+				</div>
+			</div>
+			<div id="companyBox" class="layui-col-xs9 layui-form">
+				<table class="layui-table">
+					<tr>
+						<td >
+							所属集团：
+						</td>
+						<td >
+							<div class="layui-input-inline">
+								<select id="groupSlect" name="groupSlect" value="" >  
+								<!-- <option class="compid_1" value=""></option> -->
+								</select>
+							</div>
+							<!-- <span class="red">错误选项</span> -->
+						</td>
+					</tr>
+					<tr>
+						<td><span class="red">*</span>公司名称：</td>
+						<td>
+							<div class="layui-form-item" style="margin-bottom:0;">
+								<div class="layui-inline">
+									<label class="layui-form-label" style="text-align:left; padding:9px 0px;">中文名称</label>
+									<div class="layui-input-block" style="margin-left:80px;">
+										<input id="cp_zh_name"  type="text" class="layui-input" placeholder="请输入公司中文名称" 
+										aria-describedby="basic-addon1" value="">
+										<span id="cp_zh_warm"></span>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label" style="text-align:left; padding:9px 0px;">英文名称</label>
+									<div class="layui-input-block" style="margin-left:80px;">
+										<input  id="cp_en_name"  type="text" class="layui-input" placeholder="请输入公司英文名称" aria-describedby="basic-addon1" value="">
+										<span id="cp_en_warm"></span>	
+									</div>
+								</div>
+							</div>
+							<!-- <p>软件注册后，请不要随意修改单位名称，这会导致需要重新注册</p> -->
+						</td>
+					</tr>
+					<!-- <tr>
+						<td>
+							<label>英文名称</label>
+							<input  id="cp_en_name"  type="text" class="form-control" placeholder="请输入公司英文名称" aria-describedby="basic-addon1" value="">
+							<span id="cp_en_warm"></span>					
+							<p>软件注册后，请不要随意修改单位名称，这会导致需要重新注册</p>
+						</td>
+					</tr> -->
+					<tr>
+						<td rowspan="3"><span class="red">*</span><i id="addUserText">添加用户：</i></td>
+						<td>
+							<div class="layui-form-item" style="margin-bottom:0;">
+								<div class="layui-inline">
+									<label class="layui-form-label" style="text-align:left; padding:9px 0px;">用户名</label>
+									<div class="layui-input-block" style="margin-left:80px;">
+										<input id="userName"  type="text" class="layui-input" placeholder="请输入用户名" value="">
+									</div>
+								</div>
+							</div>
+							<!-- <label>用户名</label>
+							<input id="userName"  type="text" class="form-control" placeholder="请输入用户名" value=""> -->
+							<!-- <p>软件注册后，请不要随意修改单位名称，这会导致需要重新注册</p> -->
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="layui-form-item" style="margin-bottom:0;">
+								<div class="layui-inline">
+									<label class="layui-form-label" style="text-align:left; padding:9px 0px;">密码</label>
+									<div class="layui-input-block" style="margin-left:80px;">
+										<input id="userPassword"  type="password" class="layui-input" placeholder="请输入密码" value="">
+									</div>
+								</div>
+							</div>
+							<!-- <label>密码</label>
+							<input  id="userPassword"  type="password" class="form-control" placeholder="请输入密码" value=""> -->
+							<!-- <p>软件注册后，请不要随意修改单位名称，这会导致需要重新注册</p> -->
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="layui-form-item" style="margin-bottom:0;">
+								<div class="layui-inline">
+									<label class="layui-form-label" style="text-align:left; padding:9px 0px;">确认密码</label>
+									<div class="layui-input-block" style="margin-left:80px;">
+										<input id="userPasswords"  type="password" class="layui-input" placeholder="请再次输入密码" value="">
+									</div>
+								</div>
+							</div>
+							<!-- <label>确认密码</label>
+							<input  id="userPasswords"  type="password" class="form-control" placeholder="请再次输入密码" value="">	 -->
+							<!-- <p>软件注册后，请不要随意修改单位名称，这会导致需要重新注册</p> -->
+						</td>
+					</tr>
+					<tr style="display: none;">
+						<td >
+							<span class="red"> </span>
+							公司ID：
+						</td>
+						<td>
+							<div class="layui-form-item" style="margin-bottom:0;">
+								<div class="layui-inline layui-disabled">
+									<label class="layui-form-label" style="text-align:left; padding:9px 0px;">ID</label>
+									<div class="layui-input-block" style="margin-left:80px;">
+										<input id="companyIDtext" disabled="disabled"  type="text" class="layui-input layui-disabled"  aria-describedby="basic-addon1" value="">
+									</div>
+								</div>
+							</div>							
+							<!-- <span class="red">错误选项</span> -->
+						</td>
+					</tr>
+				<!-- <tr>
+						<td>电话：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>传真：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>邮编：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>地址：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>网站：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>电子信箱：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>开户行：</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+					<tr>
+						<td>账号</td>
+						<td>
+							<input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+						</td>
+					</tr>
+				-->
+
+					 	<tr>
+							<td colspan="3">
+								<button id="suBmitCompanyForm" type="button" class="layui-btn" >新建公司</button>
+								<button id="changCompanyForm" type="button" style="display: none;" class="layui-btn" >保存修改</button>								
+								<button id="delCompanyForm" type="button" style="display: none;" class="layui-btn layui-btn-danger" >删除</button>
+								<button id="backCompanyForm" type="button" style="display: none;" class="layui-btn layui-btn-primary">返回</button>
+							</td>
+						</tr>
+				</table>
+			</div>
+			<div id="groupBox" class="layui-col-xs9 layui-form" style="display: none;min-height: 360px;">
+				<div  class="layui-form" style="padding: 50px;border: 1px solid #f1f1f1;">
+					<div class="layui-form-item">
+						<label class="layui-form-label">中文名称</label>
+						<div class="layui-input-inline">
+							<input type="text" id="groupInput_c"  class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">英文名称</label>
+						<div class="layui-input-inline">
+							<input type="text" id="groupInput_e"  class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button id="changCompanyName" type="button"  class="layui-btn" >保存修改</button>	
+							<button id="backCompany" type="button" class="layui-btn" >取消</button>		
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../layui/layui.js"></script>
+</html>

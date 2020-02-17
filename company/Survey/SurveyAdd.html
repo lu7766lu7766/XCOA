@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新增调查问卷</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default" data-new="1" data-Eid="">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <i class=""></i>
+                <span id="suveyHeader">新增调查问卷</span>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form" lay-filter="add-suvery-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label modify-layui-label">名称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" id="suveyName" name="suveyName">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label modify-layui-label">描述：</label>
+                        <div class="layui-input-block">
+                            <textarea class="layui-textarea" id="suveyDesc" name="suveyDesc" placeholder="请输入内容"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item  layui-form-text">
+                        <label class="layui-form-label label-six modify-layui-label">按部门发布：
+                            <p id="addRoleUserTr" style="color: #337ab7;font-size: 12px;cursor: pointer;padding:0 8px;display: inline-block">
+                                <span class="addThis">按人员或角色发布</span>
+                            </p>
+                        </label>
+                        <div id="suveyDepar" class="layui-input-block departTable" data-title="按部门发布">
+                            <div style="overflow-y:visible;min-height: 38px;word-break: break-all; "  placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                            <ul  style="display: none" class="layui-small-static SmallStatic"></ul>
+                            <a class="addDesc">
+                                <i class="iconfont icon-40"></i>
+                                添加
+                            </a>
+                            <a class="emptyDesc">
+                                <i class="iconfont icon-qingkong"></i>
+                                清空
+                            </a>
+                            
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label label-six modify-layui-label">按人员发布：</label>
+                        <div  id="suveyToUser" class="layui-input-block departTable" data-title="按人员发布">
+                            <div style="overflow-y:visible;min-height: 38px;word-break: break-all;" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                            <ul  style="display: none" class="layui-small-static SmallStatic"></ul>
+                            <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                            <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label label-six modify-layui-label">按角色发布：</label>
+                        <div id="suveyToRole" class="layui-input-block departTable" data-title="按角色发布">
+                            <div style="overflow-y:visible;min-height: 38px;word-break: break-all;"  placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                            <ul  style="display: none" class="layui-small-static SmallStatic"></ul>
+                            <a class="addDesc">
+                                <i class="iconfont icon-40"></i>
+                                添加
+                            </a>
+                            <a class="emptyDesc">
+                                <i class="iconfont icon-qingkong"></i>
+                                清空
+                            </a>
+                            <p class="cmsBtn">
+                                <span class="">注：发布范围取部门、人员和角色的并集</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label modify-layui-label">时间：</label>
+                        <div class="layui-input-block">
+                            <input type="text"  class="layui-input" id="SurveyItem" name="SurveyItem" placeholder="开始时间 ~ 结束时间">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label modify-layui-label">状态：</label>
+                            <div class="layui-input-block">
+                                <select name="statusSurvey" id="statusSurvey">
+                                    <option value="1">初始化</option>
+                                    <option value="0">禁用</option>
+                                    <option value="2">已发布</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button lay-filter="sub-newSuver-form" lay-submit class="layui-btn">确定</button>
+                            <button class="layui-btn layui-btn-primary " id="backSuver">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'laydate'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,layer = layui.layer
+        ,laydate = layui.laydate
+        ,form = layui.form;
+        laydate.render({
+            elem: '#SurveyItem'
+            ,type: 'datetime'
+            ,range: '~'
+            ,format: 'yyyy-MM-dd'
+        });
+        var isNew = $('body').attr("data-new");
+        form.render();
+        if(isNew==0){
+           var SurveyItem = formData.survey_starttime==null?'':formData.survey_starttime+' ~ '+formData.survey_endtime;
+           $("#suveyHeader").text("修改调差问卷");
+            form.val('add-suvery-form',{
+                'suveyName':formData.survey_title,
+                'suveyDesc':formData.survey_desc,
+                'statusSurvey':formData.survey_status,
+                'SurveyItem':SurveyItem,
+            })
+            if(formData.user_ids&&formData.user_ids.length>0){
+                $("#suveyToUser ul").attr("data-val",formData.user_ids);
+                $("#suveyToUser .layui-textarea").html(formData.user_names);
+                var userIdArr= formData.user_ids.split(",");
+                var userNameArr= formData.user_names.split(",");
+                var picHtml = '';
+                for(var i =0;i<userIdArr.length;i++){
+                    picHtml+='<li class="pick" data-user="'+userIdArr[i]+'">'+userNameArr[i]+'</li>'
+                }
+                $("#suveyToUser ul").html(picHtml);
+            }
+
+            if(formData.dept_ids&&formData.dept_ids.length>0){
+                $("#suveyDepar ul").attr("data-val",formData.dept_ids);
+                $("#suveyDepar .layui-textarea").html(formData.dept_names);
+                $("#suveyToUser").parent(".layui-form-item").show();
+                $("#suveyToRole").parent(".layui-form-item").show();
+               
+                var deptIdArr= formData.dept_ids.split(",");
+                var deptNameArr= formData.dept_names.split(",");
+                var picHtml = '';
+                for(var i =0;i<deptIdArr.length;i++){
+                    picHtml+='<li class="pick" data-user="'+deptIdArr[i]+'">'+deptNameArr[i]+'</li>'
+                }
+                $("#suveyDepar ul").html(picHtml);
+            }
+
+            if(formData.role_ids&&formData.role_ids.length>0){
+                $("#suveyToRole ul").attr("data-val",formData.role_ids);
+                $("#suveyToRole .layui-textarea").html(formData.role_names);
+                $("#suveyToUser").parent(".layui-form-item").show();
+                $("#suveyToRole").parent(".layui-form-item").show();
+                var roleIdArr= formData.role_ids.split(",");
+                var roleNameArr= formData.role_names.split(",");
+                var picHtml = '';
+                for(var i =0;i<roleIdArr.length;i++){
+                    picHtml+='<li class="pick" data-user="'+roleIdArr[i]+'">'+roleNameArr[i]+'</li>'
+                }
+                $("#suveyToRole ul").html(picHtml);
+            }
+        }
+        $("#suveyToUser .addDesc").on("click",function(){
+            selMemberFun($(this));
+        });
+        $("#suveyToUser .emptyDesc").on("click",function(){//添加联系人
+            $(this).siblings("ul.SmallStatic").html("");
+            $(this).siblings("ul.SmallStatic").attr("data-val","");
+            $(this).siblings(".layui-textarea").html("");
+        });
+        $("#suveyDepar .addDesc").on("click",function(){
+            selDeparFun($(this));
+        });
+        $("#suveyDepar .emptyDesc").on("click",function(){//添加联系人
+            $(this).siblings("ul.SmallStatic").html("");
+            $(this).siblings("ul.SmallStatic").attr("data-val","");
+            $(this).siblings(".layui-textarea").html("");
+        });
+        $("#suveyToRole .addDesc").on("click",function(){
+            selRoleFun($(this));
+        });
+        $("#suveyToRole .emptyDesc").on("click",function(){//添加联系人
+            $(this).siblings("ul.SmallStatic").html("");
+            $(this).siblings("ul.SmallStatic").attr("data-val","");
+            $(this).siblings(".layui-textarea").html("");
+        });
+        form.on('submit(sub-newSuver-form)', function(data){
+            // console.log(data);
+            var statusSurvey = data.field.statusSurvey;
+            var times = data.field.SurveyItem;
+            var timesArr= times.split(" ~ ");
+            
+            var userIds = $("#suveyToUser ul.SmallStatic").attr("data-val");
+            var userNames =$("#suveyToUser .layui-textarea").text();
+
+            var deptIds = $("#suveyDepar ul.SmallStatic").attr("data-val");
+            var deptNames =$("#suveyDepar .layui-textarea").text();
+
+            var roleIds = $("#suveyToRole ul.SmallStatic").attr("data-val");
+            var roleNames =$("#suveyToRole .layui-textarea").text();
+
+            var startTime=timesArr[0];
+            var endTime=timesArr[1];
+            
+            if(isNew==1){
+                var prama={
+                    title:data.field.suveyName,
+                    startTime:startTime,
+                    endTime:endTime,
+                    status:statusSurvey,
+                    desc:data.field.suveyDesc,
+                    userIds:userIds,
+                    userNames:userNames,
+                    deptIds:deptIds,
+                    deptNames:deptNames,
+                    roleIds:roleIds,
+                    roleNames:roleNames,
+                }
+                var subUrl="/gateway/survey/add";
+            }else{
+                var eid = $('body').attr("data-Eid")
+                var prama={
+                    title:data.field.suveyName,
+                    startTime:startTime,
+                    endTime:endTime,
+                    status:statusSurvey,
+                    desc:data.field.suveyDesc,
+                    userIds:userIds,
+                    userNames:userNames,
+                    deptIds:deptIds,
+                    deptNames:deptNames,
+                    roleIds:roleIds,
+                    roleNames:roleNames,
+                    surveyId:eid,
+                }
+                var subUrl="/gateway/survey/update";                
+            }
+           
+            // console.log(prama)
+            $.fetch({
+                url: subUrl,
+                data:prama,
+                type: 'post',
+                cb:function(rs){
+                    layer.msg("提交成功",{anim: 0,time:800},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭  
+                    });
+                }
+            })
+            return false;
+
+        });
+        $("#backSuver").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭  
+        })
+
+        $("#addRoleUserTr").on("click","span.addThis",function(){
+            $("#suveyToUser").parent(".layui-form-item").show();
+            $("#suveyToRole").parent(".layui-form-item").show();
+            $(this).text("隐藏按人员或角色发布");        
+            $(this).attr("class","remThis");        
+        })
+        $("#addRoleUserTr").on("click","span.remThis",function(){
+            $("#suveyToUser").parent(".layui-form-item").hide();
+            $("#suveyToRole").parent(".layui-form-item").hide();
+            $("#suveyToUser").find("ul.SmallStatic").html("");
+            $("#suveyToUser").find("ul.SmallStatic").attr("data-val","");
+            $("#suveyToUser").find(".layui-textarea").html("");
+            $("#suveyToRole").find("ul.SmallStatic").html("");
+            $("#suveyToRole").find("ul.SmallStatic").attr("data-val","");
+            $("#suveyToRole").find(".layui-textarea").html("");
+            $(this).text("按人员或角色发布");
+            $(this).attr("class","addThis");        
+        })
+    });
+  </script>
+</html>

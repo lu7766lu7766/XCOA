@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>汇率审批</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+        <div class="layui-fluid">
+            <div class="layui-card">
+                <div class="layui-card-header"><i class="iconfont mr-5 icon-xiujiashenqing"></i>汇率审批</div>
+                <div class="layui-card-body">
+                    <div  class="layui-form">
+                        <div class="layui-form-item">
+                           <div class="layui-inline mb-5">
+                               <label class="layui-form-label">选择状态</label>
+                               <div class="layui-input-inline">
+                                    <select class="slct"  name="myfinanDescSel" lay-filter="myfinanDescSel"  id="myfinanDescSel"><option value="-1">全部</option><option value="0">待审批</option><option value="1">未批准</option><option value="2">已批准</option></select>
+                               </div>
+                           </div>
+                           <div class="layui-inline">
+                                <label class="layui-form-label">申请时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="sqSTime">
+                                </div>
+                                 <span  class="layui-inline" style="float: left;line-height: 38px;"> ~ </span> 
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="sqETime">
+                                </div>
+                            </div>
+                           <div class="layui-inline">
+                                <button class="layui-btn" id="sqFinancial" title="查询">查询</button>
+                                <button class="layui-btn" id="Empty" title="查询">清空</button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-table layui-form" id="financialTable" lay-filter="financialTable"></table>
+                </div>
+            </div>
+        </div>
+       
+    </body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery.jqprint-0.3.js?v=201902190"></script>
+<script src="../../js/common.js?v=20190105"></script>
+<script>
+ 
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','form','laypage','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+        ,laypage=layui.laypage;
+        form.render('select');
+        laydate.render({ 
+            elem: '#sqSTime'
+            ,type: 'datetime'
+        });
+    
+        laydate.render({ 
+            elem: '#sqETime'
+            ,type: 'datetime'
+        });
+
+        var urlTab = location.href.split('?tab=')[1]?location.href.split('?tab=')[1]:false;
+        var tabId=urlTab?urlTab.split('?')[0]:false;
+        var dataId = location.href.split('?id=')[1]?location.href.split('?id=')[1]:false;
+
+        if(dataId){
+            var tableSub={
+                ApprovalResult:'-1',
+                ID:dataId
+            }
+            // detailFun(dataId);
+            
+        }else{
+            var tableSub={
+                ApprovalResult:'-1'
+            }
+        }
+
+        $("#sqFinancial").on("click",function(){
+            var st=$('#sqSTime').val();
+            var et=$('#sqETime').val();
+            var ApprovalResult = $("#myfinanDescSel").val();
+            ReimTable.reload({
+                where: {
+                    ID:'',
+                    ApprovalResult: ApprovalResult,
+                    EndTime:et,
+                    StartTime:st,
+                },
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        })
+        $("#Empty").on("click",function(){
+            $('#sqSTime').val('');
+            $('#sqETime').val('');
+            var ApprovalResult = $("#myfinanDescSel").val();
+            ReimTable.reload({
+                where: {
+                    ID:'',                    
+                    ApprovalResult: ApprovalResult,
+                    EndTime:'',
+                    StartTime:'',
+                },
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },done: function (rs) {
+                        }
+            });
+        })
+        // 数据表格渲染
+        // financialTable
+        var ReimTable = table.render({
+            elem: '#financialTable',
+            url: window.urls + '/gateway/financialrate/approvallist',
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            // toolbar:true,
+            // defaultToolbar: ['filter', 'print', 'exports'],
+            where:tableSub,
+            method: 'post',
+            contentType: 'application/json',
+            page: true,
+            loading: true,
+            // toolbar:'<div><button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="appr">批量审批</button></div>',
+            // defaultToolbar: '',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+            cols: [
+                    [ //表头
+
+                    //  {checkbox: true},
+                        {
+                            field: 'id',
+                            title: '编号',
+                            minWidth:80,
+                        },{
+                            field: 'rate',
+                            title: '汇率',
+                            minWidth:80,
+                            templet:function(d){
+                                return toNonExponential(d.rate)
+                            }
+                        },{
+                            field: 'original_currency_name',
+                            title: '原始货币',
+                            minWidth:80,
+                        },{
+                            field: 'final_currency_name',
+                            title: '买入货币',
+                            minWidth:80,
+                        },{
+                            field: 'exchange_date',
+                            title: '兑换日期',
+                            minWidth:120,
+                        },{
+                            field: 'creator',
+                            title: '申请人',
+                            minWidth:120,
+                        },{
+                            field: 'apply_result_desc',
+                            title: '审批状态',
+                            minWidth:120,
+                        },  {sort: true,
+                        field: '',
+                        title: '审批历史',
+                        minWidth: 280,
+                        templet:function(d){
+                            var apprList = '';
+                             if (d.approval_history.length == 0) {
+                                 apprList = '暂无';
+                             } else {
+                                 for (var k = 0; k < d.approval_history.length; k++) {
+                                     var res = '';
+                                     var classList = '';
+                                     if (d.approval_history[k].is_forward == 1) { //是转发的
+                                         res = '--转发-->';
+                                         apprList += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '】：' //意见
+                                             +
+                                             d.approval_history[k].content + '</p>' //意见内容
+
+                                     } else { //是审批的
+                                        var NULLData = d.approval_history[k].content==null?'暂无':d.approval_history[k].content;
+                                         if (d.approval_history[k].approval_result == 1) {
+                                             res = "未批准";
+                                             classList = "red";
+                                         } else if (d.approval_history[k].approval_result == 2) {
+                                             res = "已批准";
+                                             classList = 'green';
+                                         }
+                                         apprList += '<p><span> 【' + d.approval_history[k].username + '<em class=' + classList + '>' + res + '</em>' + '】</span>' + NULLData + '</p>'
+                                     }
+
+                                 };
+                             }
+                            return apprList;
+                        }
+                    },{
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            minWidth:145,
+                            templet:function(d){
+                                var s=d.apply_result==0?'<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="appr">审批</a>':'';
+                                var btn ='<a class="layui-btn layui-btn-xs SeeDetails" lay-event="diat">查看详情</a>'+s
+
+                                return btn
+                            }
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {
+                    if(dataId&&this.where.ID!=''){
+                        $('.layui-table-body.layui-table-main a[lay-event="diat"]').click();
+                    }
+                }
+            });
+        form.on('select(myfinanDescSel)', function (data) {
+            var st=$('#sqSTime').val();
+            var et=$('#sqETime').val();
+            ReimTable.reload({
+                where: {
+                    ID:'',
+                    ApprovalResult: data.value,
+                    EndTime:et,
+                    StartTime:st,
+                },
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                ,done: function (rs) {
+                }
+            });
+        });
+        var apprFun=function(o,index){
+            $.fetch({
+                url:'/gateway/financialrate/approval',
+                type: 'post',
+                data:o,
+                cb:function(re){
+                    layer.msg('审批成功');
+                    layer.close(index);
+                    var st=$('#sqSTime').val();
+                    var et=$('#sqETime').val();
+                    var ApprovalResult = $("#myfinanDescSel").val();
+                    ReimTable.reload({
+                        where: {
+                            ID:'',                    
+                            ApprovalResult: ApprovalResult,
+                            EndTime:'',
+                            StartTime:'',
+                        },
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        ,done: function (rs) {
+                        }
+                    });
+                }
+            })
+        };
+        table.on('toolbar(financialTable)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'appr':
+                    var apprHtml='<div class="layui-form-item">'
+                                                    +            '<label class="layui-form-label">审批意见：</label>'
+                                                    +            '<div class="layui-input-block">'
+                                                    +                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                                                    +            '</div>'
+                                                    +        '</div>'
+                                                    +        '<div class="layui-form-item">'
+                                                    +            '<label class="layui-form-label">是否同意：</label>'
+                                                    +            '<div class="layui-input-block">'
+                                                    +                '<input type="radio" name="approvalYn" id="approvalOk" value="2" title="同意">'
+                                                    +                '<input type="radio" name="approvalYn" id="approvalNo" value="1" title="不同意" checked>'
+                                                    +            '</div>'
+                                                    +        '</div>'
+                                
+                                                    +        '<div class="layui-form-item">'
+                                                    +            '<div class="layui-input-block">'
+                                                    +               ' <button class="appOk layui-btn">确认</button>'
+                                                    +               ' <button class="appClose layui-btn layui-btn-primary" >关闭</button>'
+                                                    +            '</div>'
+                                                    +        '</div>'
+                                                                        
+                                            +'</div>'
+                    // console.log(checkStatus);
+                    var idArr=[];
+                    for(var i=0;i<checkStatus.data.length;i++){
+                        idArr.push(checkStatus.data[i].id)
+                    }
+                    // console.log(idArr)
+                    layer.open({
+                    title:'审批',
+                    type: 1,
+                    content: '<div class="layui-card-body">'
+                                    +'<div class="layui-form" lay-filter="component-form-depar">'+apprHtml+'</div>'
+                                +'</div>',
+                    area:['700px', '50%'],
+                    success:function(layero,index){
+                                        
+                        form.render();
+                            $(".appOk").on("click",function(){
+                                var ids=idArr.join(',');      
+                                var IsAgree=$("input[name='approvalYn']:checked").val();
+                                var Content=$("#appDacText").val();
+                                apprFun({
+                                    ID:ids,
+                                    IsAgree:IsAgree,
+                                    Content:Content,
+                                },index)
+                            })
+                    }   
+                })
+                break;
+              
+            };
+        });
+        table.on('tool(financialTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            var apprHtml='<div class="layui-form-item">'
+                                                    +            '<label class="layui-form-label">审批意见：</label>'
+                                                    +            '<div class="layui-input-block">'
+                                                    +                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                                                    +            '</div>'
+                                                    +        '</div>'
+                                                    +        '<div class="layui-form-item">'
+                                                    +            '<label class="layui-form-label">是否同意：</label>'
+                                                    +            '<div class="layui-input-block">'
+                                                    +                '<input type="radio" name="approvalYn" id="approvalOk" value="2" title="同意">'
+                                                    +                '<input type="radio" name="approvalYn" id="approvalNo" value="1" title="不同意" checked>'
+                                                    +            '</div>'
+                                                    +        '</div>'
+                                
+                                                    +        '<div class="layui-form-item">'
+                                                    +            '<div class="layui-input-block">'
+                                                    +               ' <button class="appOk layui-btn" data-item="'+data.id+'">确认</button>'
+                                                    +               ' <button class="appClose layui-btn layui-btn-primary" >关闭</button>'
+                                                    +            '</div>'
+                                                    +        '</div>'
+                                                                        
+                                            +'</div>'
+            if(layEvent === 'diat'){ 
+                $.fetch({
+                        url:'/gateway/financialrate/ratedetail',
+                        type: 'post',
+                        data:{
+                            ID:data.id
+                        },
+                        cb:function(re){
+                            var apprList = '';
+                            var d=re;
+                             if (d.approval_history.length == 0) {
+                                 apprList = '暂无';
+                             } else {
+                                 for (var k = 0; k < d.approval_history.length; k++) {
+                                     var res = '';
+                                     var classList = '';
+                                     if (d.approval_history[k].is_forward == 1) { //是转发的
+                                         res = '--转发-->';
+                                         apprList += '<p>【' + d.approval_history[k].username + '' + res + '' + d.approval_history[k].forward_username + '】：' //意见
+                                             +
+                                             d.approval_history[k].content + '</p>' //意见内容
+
+                                     } else { //是审批的
+                                        var NULLData = d.approval_history[k].content==null?'暂无':d.approval_history[k].content;
+                                         if (d.approval_history[k].approval_result == 1) {
+                                             res = "未批准";
+                                             classList = "red";
+                                         } else if (d.approval_history[k].approval_result == 2) {
+                                             res = "已批准";
+                                             classList = 'green';
+                                         }
+                                         apprList += '<p><span> 【' + d.approval_history[k].username + '<em class=' + classList + '>' + res + '</em>' + '】</span>' + NULLData + '</p>'
+                                     }
+
+                                 };
+                             }
+                            var DiatList = '<div class="layui-card-body">'
+                                    +'<div class="layui-form" lay-filter="component-form-depar">'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">汇率：</label>'
+                                                +'<div class="layui-input-inline cateID bumen">'
+                                                    +'<span>'+re.rate+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">创建人：</label>'
+                                                +'<div class="layui-input-inline cateID sqname">'
+                                                    +'<span>'+re.creator+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">原始货币：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.original_currency_name+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">买入货币：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.final_currency_name+'</span>'
+                                                 +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">兑换日期：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+re.exchange_date+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            if(re.apply_result!=0){
+                                                DiatList +='<div class="layui-inline">'
+                                                    +'<label class="layui-form-label">审批状态：</label>'
+                                                    +'<div class="layui-input-inline cateID">'
+                                                        +'<span>'+re.apply_result_desc+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="layui-inline">'
+                                                    +'<label class="layui-form-label">审批历史：</label>'
+                                                    +'<div class="layui-input-inline cateID">'
+                                                        +apprList
+                                                    +'</div>'
+                                                +'</div>'
+                                              //  DiatList +=''
+                                            }
+                                            DiatList +='</div>'
+                                        if(re.apply_result===0){
+                                            DiatList +=apprHtml
+                                        }
+                                        DiatList +='</div>'
+                                +'</div>'
+                            layer.open({
+                                title:'查看详情',
+                                type: 1,
+                                content:DiatList,
+                                area:['700px', '50%'],
+                                success:function(layero,index){
+                                    form.render()
+                                    $(".appOk").on("click",function(){
+                                        var id=$(this).attr('data-item');
+                                        var IsAgree=$("input[name='approvalYn']:checked").val();
+                                        var Content=$("#appDacText").val();
+                                        apprFun({
+                                            ID:id,
+                                            IsAgree:IsAgree,
+                                            Content:Content,
+                                        },index)
+                                    })
+                                    $(".appClose").on("click",function(){
+                                        layer.close(index);
+                                    })
+                                }   
+                            })
+                        }
+                    })
+            } else if(layEvent === 'appr'){
+                layer.open({
+                    title:'审批',
+                    type: 1,
+                    content: '<div class="layui-card-body">'
+                                +'<div class="layui-form" lay-filter="component-form-depar">'+apprHtml+'</div>'
+                            +'</div>',
+                    area:['700px', '50%'],
+                    success:function(layero,index){
+                            form.render();
+                            $(".appOk").on("click",function(){
+                                var id=$(this).attr('data-item');
+                                var IsAgree=$("input[name='approvalYn']:checked").val();
+                                var Content=$("#appDacText").val();
+                                apprFun({
+                                    ID:id,
+                                    IsAgree:IsAgree,
+                                    Content:Content,
+                                },index)
+                            })
+                            $(".appClose").on("click",function(){
+                                layer.close(index);
+                            })
+                   
+                            
+                    }   
+                })
+            } 
+        });
+    })
+</script>
+
+</html>

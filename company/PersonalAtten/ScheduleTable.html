@@ -1,0 +1,1124 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>排班表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+    <script src="../../js/common.js" type="text/javascript"></script>
+
+
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card layui-form">
+            <div class="layui-card-header">排班表</div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-form-inline">
+                        <label class="layui-form-label">
+                            按月查询
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="workMonth" placeholder="" lay-key="1">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="UserName">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">排班名称</label>
+                        <div class="layui-input-inline">
+                            <select type="text"  id="WorktimeTypeID" name="WorktimeTypeID"></select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="min-width:45%">
+                        <label class="layui-form-label">
+                            部门
+                        </label>
+                        <div class="layui-input-block">
+                            <select type="text" xm-select="DepartmentID" id="DepartmentID" name="DepartmentID"
+                                placeholder="请选择部门" autocomplete="off" class="xm-input xm-select" xm-select-search="">
+                                <option value="">请选择部门</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="min-width:45%">
+                        <label class="layui-form-label">
+                            岗位
+                        </label>
+                        <div class="layui-input-block">
+                            <select type="text" xm-select="JobTitleID" id="JobTitleID" name="JobTitleID"
+                                placeholder="请选择岗位" autocomplete="off" class="xm-input xm-select" xm-select-search="">
+                                <option value="">请选择岗位</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-sm" lay-filter="filterTabelSelPH" id="filterTabelSelPH"
+                            title="查询">
+                            <i class="iconfont icon-sousuo"></i>
+                        </button>
+                        <button class="layui-btn layui-btn-sm" lay-filter="closeLayerPH" id="closeLayerPH">
+                            返回
+                        </button>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <table id="ScheduleTable" class="layui-table" lay-filter="ScheduleTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .xm-select-parent .xm-form-select dl {
+        min-width: 220%;
+    }
+
+    #ScheduleTable td.bg_wihte{
+        background: #fff;
+        font-weight: bold;
+    }
+    div[lay-id="ScheduleTable"] div select,div[lay-id="ScheduleTable"] div  option{
+        text-align: center;
+        text-align-last: center;
+    }
+    div[lay-id="ScheduleTable"] div.bg_wihte select{
+        color: #333;
+    }
+    div[lay-id="ScheduleTable"] a:hover{
+        color:crimson ;
+        cursor: pointer;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+    div[lay-id="ScheduleTable"] div.bg_gry{
+        background: #808080;
+        color: #111;
+    }
+    div[lay-id="ScheduleTable"] div.bg_gry select{
+        color: #111;
+    }
+    div[lay-id="ScheduleTable"] div.bg_green{
+        background: #70ad47;
+        color: #111;
+    }
+    div[lay-id="ScheduleTable"] div.bg_green select{
+        color: #111;
+    }
+    div[lay-id="ScheduleTable"] div.bg_black{
+        background: #000;
+        color: #fff;
+    }
+    div[lay-id="ScheduleTable"] div.bg_black select{
+        color: #fff;
+        background:#111 !important;
+    }
+    .is_pbtj_tr{display: none;}
+    .layui-table-view .layui-table-body.layui-table-main td{
+        padding: 0;
+        height: 30px;
+    }
+    .layui-table-view .layui-table-body.layui-table-main .layui-table[lay-size=sm] td div{
+        padding: 0;
+        height: 30px;
+        text-align: center;
+    }
+    .layui-table-view .layui-table-body.layui-table-main .layui-table[lay-size=sm] td div.layui-unselect.layui-form-select{
+       display: none;
+    }
+    a.dataWorkId{    text-decoration: underline;}
+    .layui-table tbody tr.nohover_tr:hover{ background-color: #fff;} 
+
+    .layui-table-fixed-l .layui-table-header tr:nth-child(n+6),.layui-table-box  .layui-table-header tr:nth-child(n+6){
+        display: none;
+    }
+    .layui-table-fixed-l .layui-table-header tr:last-child,.layui-table-box  .layui-table-header tr:last-child{
+        display: table-row;
+    }
+    .layui-table-header th {
+        height: 31px !important;
+    }
+    div[lay-id="ScheduleTable"] .layui-table-header .layui-table-cell {
+        overflow: visible;
+        text-overflow: inherit;
+        white-space: normal;
+    }
+    div[lay-id="ScheduleTable"] .layui-table-header .layui-table-cell span{
+        white-space: normal;
+    }
+    .leaveBtn_1 a,.leaveBtn_2 a{
+        cursor: pointer;
+    }
+    </style>
+    <script src="../../layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'table', 'form', 'formSelects', 'laydate'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                router = layui.router();
+            element.render();
+            var layer = layui.layer,
+                form = layui.form,
+                laydate = layui.laydate,
+                formSelects = layui.formSelects,
+                table = layui.table;
+            //时间处理
+            var now = new Date();
+            var year = now.getFullYear(),
+                month = now.getMonth() + 1;
+            month2 = now.getMonth() + 2;
+            if ((Number(month2) - 12) > 0) {
+                var year2 = year + 1;
+                var month2 = Number(month2) - 12;
+            } else {
+                var year2 = year;
+            }
+            var day2 = new Date();
+            // window.leavetypesData={};
+            day2.setMonth(day2.getMonth() + 1);
+            day2.setDate(0);
+            var dayEnd = new Date(day2).getDate();
+            month = month < 10 ? '0' + month : month;
+            month2 = month2 < 10 ? '0' + month2 : month2;
+            //默认当前月1号到当前月最后一天；支持最多三个月；
+            laydate.render({
+                elem: '#workMonth'
+                    // ,type: 'month'
+                    ,
+                value: year + '-' + month + '-0' + 1 + ' ~ ' + year + '-' + month + '-' + dayEnd,
+                range: '~',
+                change: function (value, date, endDate) {
+                    //console.log(value, date, endDate)
+
+                }
+            });
+            var weekDay = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+            function DayFun(o) {
+                // $("#ScheduleTable .layui-table-fixed.layui-table-fixed-l table tbody").html('');
+                // $("#ScheduleTable .layui-table-body.layui-table-main table tbody").html('');
+                var index = layer.load(1, {
+                    time: 5 * 1000
+                });
+                
+                if(!window.leavetypesData){
+                        $.fetch({
+                            url: '/gateway/userleave/leavetypes',
+                            type: 'post',
+                            cb: function (leavetypes) {
+                                window.leavetypesData=leavetypes;
+                                DayFunL(o)
+                            }
+                        });
+                    }else{
+                    DayFunL(o)
+                }
+                function DayFunL(o){
+                    $.fetch({
+                            url: '/gateway/worktimetypeuser/userschedule',
+                            type: 'post',
+                            data: o,
+                            cb: function (res) {
+                                var leavetypes=window.leavetypesData;
+                                layer.close(index);
+                                var rs = res.user_list,
+                                    colsArr = res.date_list;
+                                //console.log(leavetypes,rs);
+                                var countArr = [],
+                                    dapbanArr = [],
+                                    allCountArr = [],
+                                    userCountArr = [],
+                                    nbrObj = {},
+                                    colsAll = [];
+                                //以下为表头
+                                var cols = [{
+                                        colGroup:true,
+                                        fixed: 'left',
+                                        field: 'title_name',
+                                        width:100,
+                                    },
+                                    {
+                                        colGroup:true,
+                                        fixed: 'left',
+                                        field: 'workType',
+                                        width:100,
+                                    },
+                                    {
+                                        colGroup:true,
+                                        fixed: 'left',
+                                        field: 'username',
+                                        // width:100,
+                                    }
+                                ];
+                                var cols2 = [{
+                                        colGroup:true,
+                                        title: ' ',
+                                        field: 'title_name',
+                                        fixed: 'left',
+                                        width:100,
+                                    },
+                                    {
+                                        colGroup:true,
+                                        title: ' ',
+                                        field: 'workType',
+                                        fixed: 'left',
+                                        width:100,
+                                    },
+                                    {
+                                        colGroup:true,
+                                        title: ' ',
+                                        field: 'username',
+                                        fixed: 'left',
+                                        // width:100,
+                                    }
+                                ]
+                                for (var i = 0; i < colsArr.length; i++) {
+                                    cols.push({
+                                        colGroup:true,
+                                        field: colsArr[i],
+                                        title: colsArr[i],
+                                        width:100,
+                                    })
+                                    cols2.push({
+                                        colGroup:true,
+                                        field: colsArr[i],      
+                                        width:100,                                  
+                                        title: weekDay[new Date('' + colsArr[i] + '').getDay()],
+                                    })
+                                }
+                                var leavetypesArr = Object.keys(leavetypes); //['org','det']
+
+                                cols.push({
+                                    colGroup:true,
+                                    title: ' ',
+                                    field: 'workday_count',
+                                    colspan: (leavetypesArr.length + 1),
+                                })
+                                
+
+                                cols2.push({
+                                    colGroup:true,
+                                    title: ' ',
+                                    // field: 'workday_count',
+                                    colspan: (leavetypesArr.length + 1),
+
+                                })
+                                colsAll.push(cols);
+                                colsAll.push(cols2);
+                                //排班统计表头
+                                var userWorkIdArr={} 
+                                for (var i = 0; i < rs.length; i++) {
+                                    var workt = rs[i].work_time_data;
+                                    userWorkIdArr[rs[i].id]=[]
+                                    // var holiday_count=0,workday_count=0;
+                                    userCountArr.push(rs[i].id); //插入当前人
+
+                                    for (var j = 0; j < colsArr.length; j++) { //td
+                                        var u_t = workt[colsArr[j]];
+                                        if (u_t.worktime_type_id && countArr.indexOf(u_t.worktime_type_id) == -1) { //获取当前页面所有普通班
+                                            countArr.push(u_t.worktime_type_id); //去重排班
+                                            // console.log(countArr)
+                                            dapbanArr.push({
+                                                'work_id': u_t.worktime_type_id,
+                                                'work_name': u_t.worktime_type_name,
+                                            })
+                                        }
+                                        if (u_t.worktime_type_id&&userWorkIdArr[rs[i].id].indexOf(u_t.worktime_type_id) == -1) {//插入当前人 未插入的班次
+                                            userWorkIdArr[rs[i].id].push(u_t.worktime_type_id);
+                                            allCountArr.push(u_t.worktime_type_id);
+                                        }
+                                        
+                                        
+                                    }
+                                }
+                                // console.log(allCountArr)
+                                var mapCount = {};
+                                for(var i = 0; i < allCountArr.length; i++){
+                                    var ai = allCountArr[i];
+                                    if(!mapCount[ai]){
+                                        mapCount[ai] = 1;
+                                    }else{
+                                        mapCount[ai]++;
+                                    }
+                                }
+                                for (var i = 0; i < dapbanArr.length; i++) {
+                                    nbrObj[dapbanArr[i].work_id]={};
+                                    
+                                    var daobCol = [];
+                                    if (i === 0) {
+                                        daobCol.push({
+                                            colGroup:true,
+                                            fixed: 'left',
+                                            width:100,
+                                        })
+                                        var showAllDbNbm=dapbanArr.length<3?dapbanArr.length:3;
+                                        var showAllDbtitle=(dapbanArr.length<4?' ':'<br><button class="showAllDb layui-btn layui-btn-xs " style="cursor: pointer;">查看更多</button><button class="hideAllDb layui-btn layui-btn-xs " style="display:none;cursor: pointer;">收起</button>');
+                                        daobCol.push({
+                                            colGroup:true,
+                                            title: '上班人数'+showAllDbtitle,
+                                            fixed: 'left',
+                                            rowspan:showAllDbNbm,
+                                            width:100,
+                                        })
+                                        daobCol.push({
+                                            colGroup:true,
+                                            title: '<a class="dataWorkId" data-workId="'+dapbanArr[i].work_id+'">'+dapbanArr[i].work_name +':'+mapCount[dapbanArr[i].work_id]+'<a>',
+                                            fixed: 'left',
+                                            // width:100,
+                                            field: 'username',
+                                            
+                                        })
+                                        // dapbanArr[i]
+                                    }
+
+                                    if (i != 0) {
+                                        daobCol.push({
+                                            
+                                            colGroup:true,
+                                            fixed: 'left',
+                                            width:100,
+                                        })
+                                        // daobCol.push({
+                                        //     field:'',
+                                        //     title:'',
+                                        // })
+                                        daobCol.push({
+                                            colGroup:true,
+                                            title: '<a class="dataWorkId" data-workId="'+dapbanArr[i].work_id+'">'+dapbanArr[i].work_name +':'+mapCount[dapbanArr[i].work_id]+'<a>',
+                                            fixed: 'left',
+                                            field: 'username',
+                                            
+                                            // width:100,
+                                        })
+                                    }
+                                    for (var j = 0; j < colsArr.length; j++) {
+                                        daobCol.push({
+                                            colGroup:true,
+                                            title: '<div class="th_'+dapbanArr[i].work_id+'_'+colsArr[j]+'"></div>',
+                                            width:100,
+                                        })
+                                        nbrObj[dapbanArr[i].work_id][colsArr[j]]=0;
+                                        
+                                    }
+                                    if(i==2){
+                                        var leave_btn="<div class='leaveBtn_1'><button class='leaveShow layui-btn layui-btn-xs '>查看更多 >></button><button class='leaveHide layui-btn layui-btn-xs ' style='display:none'>收起 <<</button></div>"
+                                    }else if(i==dapbanArr.length-1){
+                                        var leave_btn="<div class='leaveBtn_2'><button class='leaveShow layui-btn layui-btn-xs '>查看更多 >></button><button class='leaveHide layui-btn layui-btn-xs ' style='display:none'>收起 <<</button></div>"
+                                    } else{
+                                        var leave_btn=" "                                        
+                                    }
+                                    daobCol.push({
+                                        title:leave_btn,
+                                        colGroup:true,
+                                        colspan: (leavetypesArr.length + 1),
+
+                                    })
+                                    colsAll.push(daobCol);
+                                }
+                                // console.log(allCountArr)
+                                var fieldCol = [{
+                                        title: '岗位',
+                                        fixed: 'left',
+                                        field: 'title_name',
+                                        width:100,
+                                        // colGroup:true,
+                                    },
+                                    {
+                                        title: '班次',
+                                        fixed: 'left',
+                                        field: 'workType',
+                                        width:100,
+                                        // colGroup:true,
+                                    },
+                                    {
+                                        title: '姓名',
+                                        fixed: 'left',
+                                        field: 'username',
+                                        // width:100,
+                                        // colGroup:true,
+                                    }
+                                ];
+                                
+                                for (var i = 0; i < colsArr.length; i++) {
+                                    fieldCol.push({
+                                        title: ' ',
+                                        field: colsArr[i],  
+                                        width:100, 
+                                        templet: function (d) {
+                                           var tdData=this.field;
+                                            var time1=d[tdData].time1_hour;
+                                            var time4=d[tdData].time4_hour;;
+                                            var data_obj={
+                                                Dates:tdData,
+                                                uname:d.username,
+                                                user_id:d.id,
+                                                auto_key:d.auto_key,
+                                                is_auto:d.is_auto,
+                                                hour:time1+'~'+time4,
+                                                worktime_type_id:d[tdData].worktime_type_id,
+                                                worktime_type_user_id:d[tdData].worktime_type_user_id,
+                                                work_type:d[tdData].work_type,
+                                                is_holiday:d[tdData].is_holiday,
+                                            }
+                                            var data_obj=JSON.stringify(data_obj);
+                                            data_obj=data_obj.replace(/"/g,'\'');
+
+                                            var t_box=''
+                                            if(d[tdData].is_holiday){
+                                                var sel='<select  class="set_Holiday" data-obj="'+data_obj+'" style=" width: 100%;display:block;background: rgba(0,0,0,0);height: 100%;position: absolute;left: 0;border:none;text-align:center;"><option value="0" selected>休</option><option value="1">'+time1+'~'+time4+'</option><option value="2">换班</option></select>'
+                                                if(d[tdData].leave_type!==0){
+                                                    var sel='<span style=" line-height: 31px;" title="休('+d[tdData].leave_type_desc+')">休</span>'
+                                                }
+                                                t_box+='<div class="bg_wihte '+tdData+' wihte">'+sel+'</div>'
+                                            }else{
+                                                var sel='<select  class="set_Holiday" data-obj="'+data_obj+'" style=" width: 100%;display:block;background: rgba(0,0,0,0);height: 100%;position: absolute;left: 0;border:none;text-align:center;"><option value="0">休</option><option value="1" selected>'+time1+'~'+time4+'</option><option value="2">换班</option></select>'
+                                                var bgColors=['','bg_green','bg_gry','bg_black'][d[tdData].work_type];
+                                                if(d[tdData].leave_type!==0){
+                                                    var sel='<span  style=" line-height: 31px;"  title="'+time1+'~'+time4+'('+d[tdData].leave_type_desc+')">'+d[tdData].leave_type_desc+'</span>'
+                                                    var bgColors='bg_wihte';
+                                                    
+                                                }
+                                                if(d[tdData].work_type!=''){
+                                                    t_box+='<div class=" workingDay '+bgColors+' '+tdData+'" data-count="'+d[tdData].worktime_type_id+'_'+tdData+'">'+sel+'</div>'
+                                                }else{
+                                                    t_box+=' '
+                                                }
+                                            }
+                                            return t_box
+                                        }
+                                    });
+
+                                }
+                                fieldCol.push({
+                                    field: 'workday_count',
+                                    title: '实际上班天数',
+                                    minWidth:115,
+
+                                }, {
+                                    field: 'holiday_count',
+                                    minWidth:115,
+                                    title: '休',
+                                })
+
+                                var showLeave = ['19', '4', '2'];
+                                for (var i = 0; i < showLeave.length; i++) {
+                                    fieldCol.push({
+                                        field: 'leave_' + showLeave[i],
+                                        minWidth:115,
+                                        title: leavetypes[showLeave[i]],
+                                        templet: function (d) {
+                                            // console.log(d[colsArr[i]]);
+                                            return d[this.field]
+                                        },
+                                    });
+                                }
+                                for (key in leavetypes) {
+                                    if (key != 'is_crossday' && showLeave.indexOf(key) == -1) {
+                                        fieldCol.push({
+                                            field: 'leave_'+key,
+                                            title: leavetypes[key],
+                                            // hide:true,
+                                            minWidth:115,
+                                            templet: function (d) {
+                                                // console.log(d[this.field],d);
+                                                return '<div class="leave_hide">'+d[this.field]+'</div>'
+                                            },
+                                        });
+                                    } 
+                                }
+                                colsAll.push(fieldCol);
+                                //以上为表头     
+                                //以下处理数据   
+                                var tableData = [];
+                                for (var i = 0; i < rs.length; i++) {
+                                    var thisData = {
+                                        'title_name': rs[i].title_name,
+                                        'workType': rs[i].work_time_name,
+                                        'username': rs[i].username,
+                                        'id': rs[i].id,
+                                        'is_admin': rs[i].is_admin,
+                                        'is_auto': rs[i].is_admin,
+                                        'leave_info':rs[i].leave_info,
+                                        'status':rs[i].status,
+                                        'auto_key':rs[i].auto_key
+                                    };
+                                  
+                                    var isWorkDay=0,isHoliDay=0,isLeaveDay=0;
+                                    for (key in leavetypes) { 
+                                        if (key != 'is_crossday') {
+                                            thisData["leave_"+key+""]='0'; 
+                                            if(rs[i].leave_info&&rs[i].leave_info.length>0){
+                                                for(var j=0;j<rs[i].leave_info.length;j++){
+                                                    if(rs[i].leave_info[j].leave_type == key){
+                                                        thisData["leave_"+key+""]=rs[i].leave_info[j].leave_day_count;
+                                                        isLeaveDay=(Number(isLeaveDay)*100+Number(rs[i].leave_info[j].leave_day_count)*100)/100
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    for (key in rs[i].work_time_data) {
+                                        thisData[key] = rs[i].work_time_data[key];
+                                        //计算 休 天数
+                                        if(rs[i].work_time_data[key].is_holiday){
+                                            isHoliDay++
+                                        }
+                                        
+                                    };
+                                    isWorkDay=(Number(colsArr.length)*100 - Number(isHoliDay)*100 - Number(isLeaveDay)*100 )/100;
+                                    thisData['workday_count']=isWorkDay;
+                                    thisData['holiday_count']=isHoliDay;
+                                    
+                                    tableData.push(thisData)
+                                }
+
+                                var ScheduleTable = table.render({
+                                    elem: '#ScheduleTable',
+                                    data: tableData,
+                                    defaultToolbar: '',
+                                    limit:100000000000,
+                                    page:false,
+                                    text: {
+                                        none: '暂无'
+                                    },
+                                    cols: colsAll,
+                                    height: 'full-250',
+                                    size: 'sm',
+                                    done:function(res, curr, count) {/*回调，重新渲染头像列、操作列*/
+                                       var dataWorkidHover=$("#WorktimeTypeID").val()==-1?'':$("#WorktimeTypeID").val();
+                                       
+                                        $("a.dataWorkId[data-workid='"+dataWorkidHover+"']").css('color','crimson')
+                                        //处理第三列宽度
+                                        var thWidth3=100;
+                                        thWidth3=$("div[lay-id='ScheduleTable'] .layui-table-fixed.layui-table-fixed-l table tr:nth-child(3) th:nth-child(3)").width();
+                                        $("div[lay-id='ScheduleTable'] .layui-table-box>.layui-table-header table tr th[data-field='username'] div").width(thWidth3-30);
+                                        $("div[lay-id='ScheduleTable'] .layui-table-body table tr td[data-field='username'] div").width(thWidth3-30);
+                                         $("div[lay-id='ScheduleTable'] .layui-table-body.layui-table-main table tr td[data-field='username'] div").width(thWidth3);
+                                        //统计每天 班次人数
+                                        $("div[lay-id='ScheduleTable']").find("div.workingDay").each(function(){
+                                            var keyid=$(this).attr('data-count').split('_')[0];
+                                            var keyday=$(this).attr('data-count').split('_')[1];
+                                            nbrObj[keyid][keyday]=nbrObj[keyid][keyday]+1;
+                                        })
+                                        for(key in nbrObj){
+                                            for(key2 in nbrObj[key]){
+                                                $("div.th_"+key+"_"+key2+"").html(nbrObj[key][key2]);
+                                            }
+                                        }
+
+                                        //设置假期统计隐藏
+                                        $(".leave_hide").parents('td').addClass("layui-hide");
+                                        $("div[lay-id='ScheduleTable'] ").on("click",".leaveShow",function(){
+                                            $(".leave_hide").parents('td').removeClass("layui-hide");
+                                            $(".leaveShow").hide();
+                                            $(".leaveHide").show();
+                                            $(window).resize();
+                                        })
+                                        $("div[lay-id='ScheduleTable'] ").on("click",".leaveHide",function(){
+                                            $(".leave_hide").parents('td').addClass("layui-hide");
+                                            $(".leaveShow").show();
+                                            $(".leaveHide").hide();
+                                            $(window).resize();
+                                        })
+                                        //排班隐藏显示功能
+                                        $("div[lay-id='ScheduleTable'] ").on("click",'.showAllDb',function(){
+                                            $(".layui-table-header tr").css("display","table-row");
+                                            var dataKey= $(this).parents("th").attr("data-key");
+                                            $("th[data-key='"+dataKey+"']").attr("rowspan",""+dapbanArr.length+"");
+                                            
+                                            // $(this).parents("th").attr("rowspan",""+dapbanArr.length+"");
+                                            $(this).hide();
+                                            $(".hideAllDb").show();
+                                            $(window).resize();
+                                            $(".leaveBtn_2").show();
+                                            $(".leaveBtn_1").hide();
+                                            var thWidth3=100;
+                                            thWidth3=$("div[lay-id='ScheduleTable'] .layui-table-fixed.layui-table-fixed-l table tr:nth-child(3) th:nth-child(3)").width();
+                                            $("div[lay-id='ScheduleTable'] .layui-table-box>.layui-table-header table tr th[data-field='username'] div").width(thWidth3-30);
+                                            $("div[lay-id='ScheduleTable'] .layui-table-body table tr td[data-field='username'] div").width(thWidth3-30);
+                                            $("div[lay-id='ScheduleTable'] .layui-table-body.layui-table-main table tr td[data-field='username'] div").width(thWidth3);
+                                            
+                                        })
+                                        $("div[lay-id='ScheduleTable'] ").on("click",".hideAllDb",function(){
+                                            $(".layui-table-header tr:nth-child(5)").nextAll().css("display","none");
+                                            $(".layui-table-fixed-l .layui-table-header tr:last-child").css("display","table-row");
+                                            $(".layui-table-box  .layui-table-header tr:last-child").css("display","table-row");
+                                            var dataKey= $(this).parents("th").attr("data-key");
+                                            $("th[data-key='"+dataKey+"']").attr("rowspan","3");
+                                            
+                                            $(this).hide();
+                                            $(".showAllDb").show();
+                                            $(window).resize();
+                                            $(".leaveBtn_1").show();
+                                            $(".leaveBtn_2").hide();
+                                            var thWidth3=100;
+                                            thWidth3=$("div[lay-id='ScheduleTable'] .layui-table-fixed.layui-table-fixed-l table tr:nth-child(3) th:nth-child(3)").width();
+                                            $("div[lay-id='ScheduleTable'] .layui-table-box>.layui-table-header table tr th[data-field='username'] div").width(thWidth3-30);
+                                            $("div[lay-id='ScheduleTable'] .layui-table-body table tr td[data-field='username'] div").width(thWidth3-30);
+                                            $("div[lay-id='ScheduleTable'] .layui-table-body.layui-table-main table tr td[data-field='username'] div").width(thWidth3);
+                                        })
+                                        //根据排班统计进行筛选
+                                        $("div[lay-id='ScheduleTable'] ").on("click",".dataWorkId",function(){
+                                            // console.log()
+                                            var dataWorkid=$(this).attr("data-workid");
+                                            $("#WorktimeTypeID").val(dataWorkid)
+                                            form.render();
+                                            var workMonth = $("#workMonth").val();
+                                            var UserName = $("#UserName").val();
+                                            var DepartmentID = formSelects.value('DepartmentID', 'valStr');
+                                            var JobTitleID = formSelects.value('JobTitleID', 'valStr');
+                                            DayFun({
+                                                StartDate: workMonth.split(' ~ ')[0],
+                                                EndDate: workMonth.split(' ~ ')[1],
+                                                DepartmentID: DepartmentID == '' ? '' : DepartmentID,
+                                                JobTitleID: JobTitleID == '' ? '' : JobTitleID,
+                                                UserName: UserName,
+                                                WorktimeTypeID:dataWorkid,
+                                            })
+                                            window.selData = {
+                                                StartDate: workMonth.split(' ~ ')[0],
+                                                EndDate: workMonth.split(' ~ ')[1],
+                                                DepartmentID: DepartmentID == '' ? '' : DepartmentID,
+                                                JobTitleID: JobTitleID == '' ? '' : JobTitleID,
+                                                UserName: UserName,
+                                                WorktimeTypeID:dataWorkid,                                                
+                                            }
+                                        })
+
+                                        //换班等操作
+                                        $("div[lay-id='ScheduleTable']").off("change").on("change",'select.set_Holiday',function(){
+                                            var isSel=$(this);                        
+                                            var isH=$(this).val();
+                                            // var WorkTimeTypeID=$(this).attr('data-TypeID');
+                                            // var UID=$(this).attr('data-uid');
+                                            // var uName=$(this).attr('data-uname');
+                                            // var Dates=$(this).attr('data-time');
+                                            // var WorkTimeTypeUserID =$(this).attr('data-wtuid');
+                                            // var workType=$(this).attr('data-workType');
+                                            // var WorkTimeTypeID=
+                                            var objs=$(this).attr('data-obj');
+                                            objs=objs.replace(/'/g,'"');
+                                            var obj_t=JSON.parse(objs);
+                                            var WorkTimeTypeID=obj_t.worktime_type_id;
+                                            var UID=obj_t.user_id;
+                                            var uName=obj_t.uname;
+                                            var Dates=obj_t.Dates;
+                                            var WorkTimeTypeUserID=obj_t.worktime_type_user_id;
+                                            var hour=obj_t.hour;
+                                            var workType=obj_t.work_type;
+                                            var auto_key=obj_t.auto_key;
+                                            var is_holiday=obj_t.is_holiday;
+                                            var is_auto=obj_t.is_auto;
+                                            var tdColor=['','bg_green','bg_gry','bg_black'][workType];
+                                            if(isH==='0'){
+                                                var pr={
+                                                    WorkTimeTypeID:WorkTimeTypeID,
+                                                    UserID:UID,
+                                                    Date:Dates,
+                                                    WorkTimeTypeUserID:WorkTimeTypeUserID,
+                                                }
+                                                var tdColor='bg_wihte';
+                                                
+                                            }else if(isH==='1'){
+                                                var pr={
+                                                    WorkTimeTypeID:WorkTimeTypeID,
+                                                    DelUserID:UID,
+                                                    Date:Dates,
+                                                    WorkTimeTypeUserID:WorkTimeTypeUserID,                                
+                                                }
+                                                var tdColor=['','bg_green','bg_gry','bg_black'][workType];
+                                                
+                                            }else if(isH==='2'){     
+                                                var cont='<div class="popUpsCont layui-card layui-form layui-fluid" lay-filter="move-layer-form">'
+                                                +'    <div class="layui-form-item">'
+                                                +'      <label class="layui-form-label">用户名</label>'
+                                                +'        <div class="layui-input-block">'
+                                                +'          <div class="layui-form-mid layui-word-aux">'
+                                                +               uName
+                                                +'          </div>'
+                                                    
+                                                +'        </div>'
+                                                +'    </div>'
+                                                +'    <div class="layui-form-item">'
+                                                +'      <label class="layui-form-label">日期</label>'
+                                                +'        <div class="layui-input-block">'
+                                                +'          <div id="SelectDates" class="layui-form-mid layui-word-aux">'
+                                                +               Dates
+                                                +'          </div>'
+                                                    
+                                                +'        </div>'
+                                                +'    </div>'
+                                                +'    <div class="layui-form-item">'
+                                                +'          <label class="layui-form-label">移动到</label>'
+                                                +'          <div class="layui-input-block">'
+                                                +'              <input type="radio"  lay-filter="ToType" name="ToType" value="0" title="倒班" checked>'
+                                                +'              <input type="radio"  lay-filter="ToType" name="ToType" value="1" title="普通班">'
+                                                +'          </div>'
+                                                +'    </div>'
+                                                +'    <div class="layui-form-item ToAutoKey_0">'
+                                                +'          <label class="layui-form-label">倒班列表</label>'
+                                                +'         <div class="layui-inline">'
+                                                +'             <select id="ToAutoKey" name="ToAutoKey" lay-filter="ToAutoKey"></select>'
+                                                +'         </div>'
+                                                +'         <div class="layui-inline">'
+                                                +'             <select id="ToAutoKey_pt" name="ToAutoKey_pt" lay-filter="ToAutoKey_pt"></select>'
+                                                +'         </div>'
+                                                +'    </div>'
+                                                +'    <div class="layui-form-item ToAutoKey_1" style="display:none">'
+                                                +'          <label class="layui-form-label">普通班列表</label>'
+                                                +'         <div class="layui-inline">'
+                                                +'             <select id="ToAutoKey_1" name="ToAutoKey_1" lay-filter="ToAutoKey_1"></select>'
+                                                +'         </div>'
+                                                +'    </div>'
+                                                +'    <div class="layui-form-item">'
+                                                +'         <div class="layui-block">'
+                                                +'          <button id="subAdd" class="layui-btn">确定</button>'
+                                                +'          <button id="close" class="layui-btn">取消</button>'
+                                                +'        </div>'
+                                                +'    </div>'
+                                                +'</div>'
+                                                layer.open({
+                                                    title:'更换班次',
+                                                    type: 1, 
+                                                    content:cont,
+                                                    area:['60%', '60%'],
+                                                    success:function(layero,index){
+                                                        form.render('radio','move-layer-form');
+                                                        form.on('radio(ToType)', function(data){
+                                                            ////console.log(data.elem); //得到radio原始DOM对象
+                                                            ////console.log(data.value); //被点击的radio的value值
+                                                            if(data.value==='1'){
+                                                                $(".ToAutoKey_0").hide();
+                                                                $(".ToAutoKey_1").show();
+                                                            }
+                                                            if(data.value==='0'){
+                                                                $(".ToAutoKey_1").hide();
+                                                                $(".ToAutoKey_0").show();
+                                                            }
+                                                        }); 
+                                                
+                                                            $.fetch({
+                                                                url:"/gateway/worktimetypeuser/daobanlist",
+                                                                type: 'post',
+                                                                data:{
+                                                                    ApprovalResult:'-1',
+                                                                    pageSize:'100000000000000'
+                                                                },
+                                                                cb:function(rs){
+                                                                    ////console.log(rs.data_list)
+                                                                    var tworkArr={};
+                                                                    if(rs.data_list&&rs.data_list.length>0){
+                                                                        var ToAutoKeyHtml=''
+                                                                        for(var i=0;i<rs.data_list.length;i++){
+                                                                            ToAutoKeyHtml+='<option value="'+rs.data_list[i].auto_key+'">'+rs.data_list[i].work_time_name+'</option>'
+                                                                            tworkArr[''+rs.data_list[i].auto_key+'']=rs.data_list[i].work_time_type_arr;
+                                                                        }
+                                                                    }
+                                                                    $("#ToAutoKey").html(ToAutoKeyHtml).val('');
+                                                                    // $("#ToAutoKey").find("option[value='"+auto_key+"']").attr('disabled','disabled');
+                                                                    form.render('select','move-layer-form');
+                                                                    // var NowAutoKey =$("#ToAutoKey").val();
+                                                                    // var ToAutoKeyPt='';
+                                                                    // for(var i=0;i<tworkArr[NowAutoKey].length;i++){
+                                                                    //     ToAutoKeyPt+='<option value="'+tworkArr[NowAutoKey][i].id+'">'+tworkArr[NowAutoKey][i].name+'</option>'
+                                                                    // }
+                                                                    // $("#ToAutoKey_pt").html(ToAutoKeyPt).val('');
+                                                                    form.render('select','move-layer-form');    
+                                                                    form.on('select(ToAutoKey)', function(data){
+                                                                        var NowAutoKey =data.value;
+                                                                        var ToAutoKeyPt='';
+                                                                        for(var i=0;i<tworkArr[NowAutoKey].length;i++){
+                                                                            ToAutoKeyPt+='<option value="'+tworkArr[NowAutoKey][i].id+'">'+tworkArr[NowAutoKey][i].name+'</option>'
+                                                                        }
+                                                                        $("#ToAutoKey_pt").html(ToAutoKeyPt).val('');
+                                                                        form.render('select','move-layer-form');   
+                                                                        if(is_auto=='1'){
+                                                                            if($("#ToAutoKey").val()==auto_key){
+                                                                                $("#ToAutoKey_pt").find("option[value='"+WorkTimeTypeID+"']").attr('disabled','disabled');
+                                                                            }
+                                                                            form.render('select','move-layer-form'); 
+                                                                        }
+                                                                    });         
+                                                                }
+                                                            })    
+                                                            $.fetch({
+                                                                url:"/gateway/worktime/list",
+                                                                type: 'post',
+                                                            
+                                                                cb:function(rs){
+                                                                    ////console.log(rs)
+                                                                    if(rs&&rs.length>0){
+                                                                        var ToAutoKeyHtml=''
+                                                                        for(var i=0;i<rs.length;i++){
+                                                                            ToAutoKeyHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                                                            
+                                                                        }
+                                                                    }
+                                                                    // $("#ToAutoKey").html(ToAutoKeyHtml);
+                                                                    $("#ToAutoKey_1").html(ToAutoKeyHtml).val('');
+                                                                    if(is_auto=='0'){
+                                                                        $("#ToAutoKey_1").find("option[value='"+WorkTimeTypeID+"']").attr('disabled','disabled');
+                                                                        form.render('select','move-layer-form'); 
+                                                                    }
+                                                                    // $("#ToAutoKey").find("option[value='"+window.res.auto_key+"']").attr('disabled','disabled');
+                                                                    form.render('select','move-layer-form');
+                                                                    
+                                                                }
+                                                            })   
+
+                                                        $("#subAdd").on("click",function(){
+
+                                                            var SelectDate=$("#SelectDates").text();
+                                                            var ToType=$("input[name='ToType']:checked").attr('value');
+                                                            
+                                                            if(ToType==='0'){//倒班
+                                                                var ToAutoKey=$("#ToAutoKey").val();
+                                                                var WorkTimeTypeID=$("#ToAutoKey_pt").val();
+                                                                if(ToAutoKey==null||WorkTimeTypeID==null){
+                                                                    layer.msg('请选择班次');
+                                                                    return false
+                                                                }
+                                                                var pr={
+                                                                    AutoKey:ToAutoKey,//
+                                                                    IsDaoBan:1,//
+                                                                    UserID:UID,//
+                                                                    SelectDate:SelectDate,//
+                                                                    WorkTimeTypeID:WorkTimeTypeID,
+                                                                }
+                                                            }
+                                                            if(ToType==='1'){//普通班
+                                                                // var ToAutoKey=$("#ToAutoKey").val();
+                                                                var WorkTimeTypeID=$("#ToAutoKey_1").val();
+                                                                if(WorkTimeTypeID==null){
+                                                                    layer.msg('请选择班次');
+                                                                    return false
+                                                                }
+                                                                var pr={
+                                                                    // AutoKey:ToAutoKey,//
+                                                                    IsDaoBan:0,//
+                                                                    WorkTimeTypeID:WorkTimeTypeID,
+                                                                    UserID:UID,//
+                                                                    SelectDate:SelectDate,//
+                                                                }
+                                                            }
+                                                            if(is_holiday){
+                                                                $.fetch({
+                                                                    url:"/gateway/publicholiday/set",
+                                                                    type: 'post',
+                                                                    data:{
+                                                                        WorkTimeTypeID:WorkTimeTypeID,
+                                                                        DelUserID:UID,
+                                                                        Date:Dates,
+                                                                        WorkTimeTypeUserID:WorkTimeTypeUserID,  
+                                                                        Source:1,   
+                                                                    },
+                                                                    cb:function(rs){
+                                                                        $.fetch({
+                                                                            url:"/gateway/worktimetypeuser/dingban",
+                                                                            type: 'post',
+                                                                            data:pr,
+                                                                            cb:function(rs){
+                                                                                DayFun(window.selData);
+                                                                                layer.close(index);
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                })
+                                                            }else{
+                                                                $.fetch({
+                                                                    url:"/gateway/worktimetypeuser/dingban",
+                                                                    type: 'post',
+                                                                    data:pr,
+                                                                    cb:function(rs){
+                                                                        DayFun(window.selData);
+                                                                        layer.close(index);
+                                                                    }
+                                                                })
+                                                            }
+                                                        })
+                                                        $("#close").on("click",function(){
+                                                            DayFun(window.selData);
+
+                                                            layer.close(index)
+                                                        })
+                                                    },
+                                                    cancel: function(index, layero){ 
+                                                        DayFun(window.selData);
+
+                                                    }   
+                                                })
+                                            }
+                                            if(isH!='2'){
+                                                pr['Source']=1;
+                                                $.fetch({//部门树列表
+                                                    url: "/gateway/publicholiday/set",
+                                                    type: 'post',
+                                                    data:pr,
+                                                    cb:function(rs){
+                                                        DayFun(window.selData);
+
+                                                    }
+                                                });
+                                            }
+                                        
+                                        })
+
+                                    }
+                                })
+                            }
+                        })
+                }
+            }
+            $.fetch({ //部门树列表
+                url: "/gateway/department/tree",
+                type: 'post',
+                cb: function (rs) {
+                    //	//console.log(rs)
+                    var formSelectsArr = rs[0].children[0].children;
+                    // formSelectsArr.unshift({'name':'全部','id':'-1'})
+                    formSelects.config('DepartmentID', {
+                        keyName: 'name',
+                        keyVal: 'id'
+                    })
+                    layui.formSelects.data('DepartmentID', 'local', {
+                        radio: true,
+                        arr: formSelectsArr
+                    });
+
+                    // formSelects.render('deptId', {
+                    //     radio: true,                    //是否设置为单选模式
+                    // });
+                }
+            });
+            $.fetch({ //岗位树列表
+                url: "/gateway/jobTitle/tree",
+                type: 'post',
+                cb: function (rs) {
+                    //	//console.log(rs)
+                    var formSelectsArr = rs;
+                    // formSelectsArr.unshift({'name':'全部','id':'-1'})
+                    formSelects.config('JobTitleID', {
+                        keyName: 'title_name',
+                        keyVal: 'id'
+                    })
+                    formSelects.data('JobTitleID', 'local', {
+                        radio: true,
+                        arr: formSelectsArr
+                    });
+
+                    // formSelects.render('deptId', {
+                    //     radio: true,                    //是否设置为单选模式
+                    // });
+                }
+            });
+            
+            $.fetch({ //岗位树列表
+                url: "/gateway/worktime/index",
+                type: 'post',
+                data:{
+                    pageSize:10000000000000,
+                    currentIndex:1,
+                },
+                cb: function (rs) {
+                    var op='<option value="-1">全部</option>';
+                    for(var i=0;i<rs.data_list.length;i++){
+                        op+='<option value="'+rs.data_list[i].id+'">'+rs.data_list[i].name+'</option>'
+                    }
+                    $("#WorktimeTypeID").html(op)
+                    // formSelects.render('deptId', {
+                    //     radio: true,                    //是否设置为单选模式
+                    // });
+
+                    form.render()
+
+                }
+            });
+            DayFun({
+                StartDate: '' + year + '-' + month + '-0' + 1 + '',
+                EndDate: year + '-' + month + '-' + dayEnd,
+                DepartmentID: '',
+                UserName: '',
+                JobTitleID: '',
+                WorktimeTypeID:'',   
+                
+            })
+
+            window.selData = {
+                StartDate: '' + year + '-' + month + '-0' + 1 + '',
+                EndDate: year + '-' + month + '-' + dayEnd,
+                DepartmentID: '',
+                UserName: '',
+                JobTitleID: '',
+                WorktimeTypeID:'',   
+                
+            };
+            $("#filterTabelSelPH").on("click", function () {
+                var workMonth = $("#workMonth").val();
+                var UserName = $("#UserName").val();
+                var WorktimeTypeID = $("#WorktimeTypeID").val()==-1?'':$("#WorktimeTypeID").val();
+
+                var DepartmentID = formSelects.value('DepartmentID', 'valStr');
+                var JobTitleID = formSelects.value('JobTitleID', 'valStr');
+                DayFun({
+                    StartDate: workMonth.split(' ~ ')[0],
+                    EndDate: workMonth.split(' ~ ')[1],
+                    DepartmentID: DepartmentID == '' ? '' : DepartmentID,
+                    JobTitleID: JobTitleID == '' ? '' : JobTitleID,
+                    UserName: UserName,
+                    WorktimeTypeID:WorktimeTypeID,   
+                    
+                })
+                window.selData = {
+                    StartDate: workMonth.split(' ~ ')[0],
+                    EndDate: workMonth.split(' ~ ')[1],
+                    DepartmentID: DepartmentID == '' ? '' : DepartmentID,
+                    JobTitleID: JobTitleID == '' ? '' : JobTitleID,
+                    UserName: UserName,
+                    WorktimeTypeID:WorktimeTypeID,   
+                    
+                }
+            })
+            $("#closeLayerPH").on("click", function () {
+                var workMonth = year + '-' + month + '-0' + 1 + ' ~ ' + year + '-' + month + '-' + dayEnd;
+                var DepartmentID = formSelects.value('DepartmentID', 'valStr');
+                var JobTitleID = formSelects.value('JobTitleID', 'valStr');
+
+                $('#workMonth').val(workMonth);
+                $('#UserName').val('');
+                $('#WorktimeTypeID').val('-1');
+                formSelects.value('DepartmentID', []);
+                formSelects.value('JobTitleID', []);
+                form.render()
+
+                DayFun({
+                    StartDate: '' + year + '-' + month + '-0' + 1 + '',
+                    EndDate: year + '-' + month + '-' + dayEnd,
+                    DepartmentID: '',
+                    JobTitleID: '',
+                    UserName: '',
+                    WorktimeTypeID:'',   
+                })
+            })
+        })
+    </script>
+
+</body>
+
+</html>

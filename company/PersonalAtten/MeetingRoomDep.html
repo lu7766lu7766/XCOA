@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>会议室添加</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" layui-card">
+            <div class="layui-card-header">
+                会议室设置
+                <div class="layui-inline ml-10 fr">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" id="addRecrui">添加会议室</a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <table id="userFileTable" lay-filter="userFileTable" class="layui-table">
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script id="RecruiCont" type="text/html">
+    <div class="layui-card-body">
+        <div class="layui-form" lay-filter="MeetingRoom">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">会议室名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="required" name="MeetingName" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">可容纳人数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="required" name="peopleCount" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">会议室描述</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="roomDesc"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">设备情况</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="equipmentDesc"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn layui-btn">提交</button>
+                    <button id="backFeek" class="layui-btn layui-btn-primary layui-btn">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    $(function () {
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'table', 'laydate', 'form', 'laypage'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                router = layui.router(),
+                layer = layui.layer;
+            element.render();
+            var table = layui.table,
+                laypage = layui.laypage,
+                form = layui.form,
+                laydate = layui.laydate;
+
+            table.render({
+                elem: '#table-checkbox',
+                page: true,
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            });
+
+            // 生成表格
+            var RecruiList = table.render({
+                elem: '#userFileTable',
+                url: urls + "/gateway/meetingroom/list",
+                where:{
+                    status:3
+                },
+                method: 'post',
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                page: true, //开启分页
+                text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //标题栏
+                        {
+                            field:'id',
+                            title:'ID',
+                            minWidth:80
+                        },{
+                            field: 'name',
+                            title: '名称',
+                            minWidth:100,
+                        },{
+                            field: 'people_counting',
+                            title: '可容纳人数',
+                            minWidth:100,
+                        },{
+                            field: 'desc',
+                            title: '会议室描述',
+                            minWidth:160,
+                        }, {
+                            field:'equipment_desc',
+                            title:'设备情况'
+                        },{
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            width:130,
+                            templet:function(d){
+                                return '<a class="layui-btn layui-btn-sm" lay-event="edit">编辑</a><a class="layui-btn layui-btn-warm layui-btn-sm" lay-event="del">删除</a>'
+                            },
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {
+
+                }
+            })
+            // 详情和删除
+            table.on('tool(userFileTable)', function(obj){
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event
+                if(layEvent == 'edit'){
+                    layer.open({
+                        title:'会议室编辑',
+                        type: 1, 
+                        content: $('#RecruiCont').html(),
+                        area:['60%', '60%'],
+                        success:function(layero,index){
+                            form.val("MeetingRoom", {
+                                "MeetingName": data.name // "name": "value"
+                                ,"peopleCount": data.people_counting
+                                ,"roomDesc": data.desc
+                                ,"equipmentDesc": data.equipment_desc
+                            })
+                            var dataCont = data;
+                            form.on('submit(subFeek)', function(data){
+                                $.fetch({
+                                    url:'/gateway/meetingroom/edit',
+                                    type: 'post',
+                                    data:{
+                                        meetingRoomId:dataCont.id,
+                                        name:data.field.MeetingName,
+                                        peopleCount:data.field.peopleCount,
+                                        roomDesc:data.field.roomDesc,
+                                        equipmentDesc:data.field.equipmentDesc
+                                    },
+                                    cb:function(rs){
+                                        layer.msg("编辑成功");
+                                        layer.close(index);
+                                        RecruiList.reload({})
+                                    }
+                                })
+                            })
+                            // 关闭
+                            $("#backFeek").on('click',function(){
+                                layer.close(index);
+                            })
+                        }
+                    })
+                }else if(layEvent == 'del'){
+                    layer.confirm('确定删除?', function (layero,index) {
+                        $.fetch({
+                            url:'/gateway/meetingroom/del',
+                            type: 'post',
+                            data:{
+                                meetingRoomId:data.id
+                            },
+                            cb:function(rs){
+                                layer.msg("删除成功");
+                                RecruiList.reload({});
+                                layer.close(index);
+                            }
+                        })
+                    })
+                }
+            })
+
+            // 提交申请
+            $("#addRecrui").on('click',function(){
+                layer.open({
+                    title:'添加会议室',
+                    type: 1, 
+                    content: $('#RecruiCont').html(),
+                    area:['60%', '60%'],
+                    success:function(layero,index){
+                        form.on('submit(subFeek)', function(data){
+                            console.log(data)
+                            $.fetch({
+                                url:'/gateway/meetingroom/add',
+                                type: 'post',
+                                data:{
+                                    name:data.field.MeetingName,
+                                    peopleCount:data.field.peopleCount,
+                                    roomDesc:data.field.roomDesc,
+                                    equipmentDesc:data.field.equipmentDesc
+                                },
+                                cb:function(rs){
+                                    layer.msg("申请成功");
+                                    layer.close(index);
+                                    RecruiList.reload({})
+                                }
+                            })
+                        })
+                        // 关闭
+                        $("#backFeek").on('click',function(){
+                            layer.close(index);
+                        })
+                        form.render();
+                    }
+                })
+            })
+            
+        });
+    })
+</script>
+
+</html>

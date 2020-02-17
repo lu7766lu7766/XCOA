@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>工资审批导入</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-row layui-col-space10 layui-card-body">
+                <div class="layui-tab layui-tab-brief" lay-filter="component-tabs-brief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">工资设置</li>
+                        <li>工资导入(菲籍)</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <form class="layui-form" lay-filter="">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">下载导入模板：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <a id="dowmFile" target="blank" class="layui-btn"><i
+                                                class="iconfont icon-xiazai"></i>工资设置模板下载</a>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">选择导入文件：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <button type="button" class="layui-btn" id="uploadExl">
+                                            <i class="layui-icon">&#xe67c;</i>导入
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <fieldset class="layui-elem-field">
+                                <legend>说明：</legend>
+                                <div class="layui-field-box red">
+                                    <p>工资设置模板请使用下载的Excel文件导入； </p>
+                                    <!-- <p>2、工资审批模板的公司名称、部门、角色必须在OA系统的系统管理中存在，余下的列必须与员工基本信息相对应；</p> -->
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="layui-tab-item">
+                            <form class="layui-form" lay-filter="">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">下载导入模板：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <a id="FilipinoDowmFile" target="blank" class="layui-btn"><i
+                                                class="iconfont icon-xiazai"></i>(菲籍)工资设置模板下载</a>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">选择导入文件：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <button type="button" class="layui-btn" id="FilipinoUploadExl">
+                                            <i class="layui-icon">&#xe67c;</i>(菲籍)导入
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <fieldset class="layui-elem-field">
+                                <legend>说明：</legend>
+                                <div class="layui-field-box red">
+                                    <p>(菲籍)工资设置模板请使用下载的Excel文件导入； </p>
+                                </div>
+                            </fieldset>
+                            <br><hr><br>
+                            <!-- 假期模板 -->
+                            <form class="layui-form" lay-filter="">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">下载导入模板：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <a id="VacationDowmFile" target="blank" class="layui-btn"><i
+                                                class="iconfont icon-xiazai"></i>(菲籍)假期模板下载</a>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">选择导入文件：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <button type="button" class="layui-btn" id="VacationUploadExl">
+                                            <i class="layui-icon">&#xe67c;</i>(菲籍)假期导入
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <fieldset class="layui-elem-field">
+                                <legend>说明：</legend>
+                                <div class="layui-field-box red">
+                                    <p>(菲籍)假期模板请使用下载的Excel文件导入； </p>
+                                </div>
+                            </fieldset>
+                            <br><hr><br>
+                            <!-- 补贴SSS -->
+                            <form class="layui-form" lay-filter="">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">下载导入模板：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <a id="SubsidiesDowmFile" target="blank" class="layui-btn"><i
+                                                class="iconfont icon-xiazai"></i>(菲籍)补贴SSS模板下载</a>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label modify-form-label">选择导入文件：</label>
+                                    <div class="layui-input-block modify-input-cont">
+                                        <button type="button" class="layui-btn" id="SubsidiesUploadExl">
+                                            <i class="layui-icon">&#xe67c;</i>(菲籍)补贴SSS导入
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <fieldset class="layui-elem-field">
+                                <legend>说明：</legend>
+                                <div class="layui-field-box red">
+                                    <p>(菲籍)补贴SSS模板请使用下载的Excel文件导入； </p>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    $(function(){
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index','table','laydate','upload'], function(){
+            var $ = layui.$
+            ,admin = layui.admin
+            ,element = layui.element
+            ,router = layui.router()
+            ,layer = layui.layer;
+            element.render();
+        
+            var table = layui.table,laydate = layui.laydate;
+        
+            table.render({
+            elem: '#table-checkbox',
+            //,page: true
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            });
+            var upload = layui.upload;
+            var upurls =window.urls;
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#uploadExl' //绑定元素
+                ,accept:"file"
+                ,exts: "xlsx"
+                ,url:""+upurls+"/gateway/usersalary/mnl/import2" //上传接口
+                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                ,done: function(res, index, upload){
+                    //上传完毕回调
+                    layer.closeAll('loading'); //关闭loading
+                    if(res.status_code==200){
+                        var rs =res.data;
+                    
+                        layer.msg("导入完成");
+                        var phtml='';
+                        if(rs.fail_message&&rs.fail_message.length>0){
+                            for(var i=0;i<rs.fail_message.length;i++){
+                                phtml +=' <p>'+rs.fail_message[i]+'</p>'
+                            }
+                        }
+        
+                        var fileMsgHt='<div class="layui-card">'
+                                    +' <div class="layui-card-body">'
+                                        +' <fieldset class="layui-elem-field">'
+                                            +' <legend>导入信息</legend>'
+                                            +' <div class="layui-field-box red">'
+                                                + '您共导入了'+ rs.total_count+'条信息，错误了'+rs.fail_count+'条，成功了'+rs.success_count+'条。'
+                                            +' </div>'
+                                        +' </fieldset>'
+                                    +' </div>'
+                                    +' <div class="layui-card-body">'
+                                        +' <blockquote class="layui-elem-quote layui-quote-nm">'
+                                                +phtml
+                                                +'(提示信息)'
+                                        +' </blockquote>'
+                                    +' </div>'
+                                +' </div>'
+        
+                        var fileMsg= layer.open({//新增排班人员弹窗
+                            title:' ',
+                            content:fileMsgHt,
+                            type:1,
+                            id:'dailWorkUrs',
+                            area:['60%','60%'],
+                            btn:['确定']
+                        })
+                    }else{
+                        layer.msg(res.message);
+                    }
+                
+                }
+                ,error: function(index, upload){
+                    //请求异常回调
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+            $("a#dowmFile").attr("href",""+upurls+"/gateway/usersalary/mnl/download2")
+
+            //（菲籍）工资执行实例
+            var uploadInst = upload.render({
+                elem: '#FilipinoUploadExl' //绑定元素
+                ,accept:"file"
+                ,exts: "xlsx"
+                ,url:""+upurls+"/gateway/usersalary/ph/importsalaryset" //上传接口
+                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                ,done: function(res, index, upload){
+                    //上传完毕回调
+                    layer.closeAll('loading'); //关闭loading
+                    if(res.status_code==200){
+                        var rs =res.data;
+                    
+                        layer.msg("导入完成");
+                        var phtml='';
+                        if(rs.fail_message&&rs.fail_message.length>0){
+                            for(var i=0;i<rs.fail_message.length;i++){
+                                phtml +=' <p>'+rs.fail_message[i]+'</p>'
+                            }
+                        }
+        
+                        var fileMsgHt='<div class="layui-card">'
+                                    +' <div class="layui-card-body">'
+                                        +' <fieldset class="layui-elem-field">'
+                                            +' <legend>导入信息</legend>'
+                                            +' <div class="layui-field-box red">'
+                                                + '您共导入了'+ rs.total_count+'条信息，错误了'+rs.fail_count+'条，成功了'+rs.success_count+'条。'
+                                            +' </div>'
+                                        +' </fieldset>'
+                                    +' </div>'
+                                    +' <div class="layui-card-body">'
+                                        +' <blockquote class="layui-elem-quote layui-quote-nm">'
+                                                +phtml
+                                                +'(提示信息)'
+                                        +' </blockquote>'
+                                    +' </div>'
+                                +' </div>'
+        
+                        var fileMsg= layer.open({//新增排班人员弹窗
+                            title:' ',
+                            content:fileMsgHt,
+                            type:1,
+                            id:'FilipinoDailWorkUrs',
+                            area:['60%','60%'],
+                            btn:['确定']
+                        })
+                    }else{
+                        layer.msg(res.message);
+                    }
+                
+                }
+                ,error: function(index, upload){
+                    //请求异常回调
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+            $("a#FilipinoDowmFile").attr("href",""+upurls+"/gateway/usersalary/ph/salarysetdownload")
+
+            //（菲籍）假期执行实例
+            var uploadInst = upload.render({
+                elem: '#VacationUploadExl' //绑定元素
+                ,accept:"file"
+                ,exts: "xlsx"
+                ,url:""+upurls+"/gateway/usersalary/ph/holidayimport" //上传接口
+                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                ,done: function(res, index, upload){
+                    //上传完毕回调
+                    layer.closeAll('loading'); //关闭loading
+                    if(res.status_code==200){
+                        var rs =res.data;
+                    
+                        layer.msg("导入完成");
+                        var phtml='';
+                        if(rs.fail_message&&rs.fail_message.length>0){
+                            for(var i=0;i<rs.fail_message.length;i++){
+                                phtml +=' <p>'+rs.fail_message[i]+'</p>'
+                            }
+                        }
+        
+                        var fileMsgHt='<div class="layui-card">'
+                                    +' <div class="layui-card-body">'
+                                        +' <fieldset class="layui-elem-field">'
+                                            +' <legend>导入信息</legend>'
+                                            +' <div class="layui-field-box red">'
+                                                + '您共导入了'+ rs.total_count+'条信息，错误了'+rs.fail_count+'条，成功了'+rs.success_count+'条。'
+                                            +' </div>'
+                                        +' </fieldset>'
+                                    +' </div>'
+                                    +' <div class="layui-card-body">'
+                                        +' <blockquote class="layui-elem-quote layui-quote-nm">'
+                                                +phtml
+                                                +'(提示信息)'
+                                        +' </blockquote>'
+                                    +' </div>'
+                                +' </div>'
+        
+                        var fileMsg= layer.open({//新增排班人员弹窗
+                            title:' ',
+                            content:fileMsgHt,
+                            type:1,
+                            id:'VacationDailWorkUrs',
+                            area:['60%','60%'],
+                            btn:['确定']
+                        })
+                    }else{
+                        layer.msg(res.message);
+                    }
+                
+                }
+                ,error: function(index, upload){
+                    //请求异常回调
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+            $("a#VacationDowmFile").attr("href",""+upurls+"/gateway/usersalary/ph/holidaytmpdownload")
+
+             //（菲籍）补贴SSS执行实例
+            var uploadInst = upload.render({
+                elem: '#SubsidiesUploadExl' //绑定元素
+                ,accept:"file"
+                ,exts: "xlsx"
+                ,url:""+upurls+"/gateway/usersalary/ph/sssimport" //上传接口
+                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                ,done: function(res, index, upload){
+                    //上传完毕回调
+                    layer.closeAll('loading'); //关闭loading
+                    if(res.status_code==200){
+                        var rs =res.data;
+                    
+                        layer.msg("导入完成");
+                        var phtml='';
+                        if(rs.fail_message&&rs.fail_message.length>0){
+                            for(var i=0;i<rs.fail_message.length;i++){
+                                phtml +=' <p>'+rs.fail_message[i]+'</p>'
+                            }
+                        }
+        
+                        var fileMsgHt='<div class="layui-card">'
+                                    +' <div class="layui-card-body">'
+                                        +' <fieldset class="layui-elem-field">'
+                                            +' <legend>导入信息</legend>'
+                                            +' <div class="layui-field-box red">'
+                                                + '您共导入了'+ rs.total_count+'条信息，错误了'+rs.fail_count+'条，成功了'+rs.success_count+'条。'
+                                            +' </div>'
+                                        +' </fieldset>'
+                                    +' </div>'
+                                    +' <div class="layui-card-body">'
+                                        +' <blockquote class="layui-elem-quote layui-quote-nm">'
+                                                +phtml
+                                                +'(提示信息)'
+                                        +' </blockquote>'
+                                    +' </div>'
+                                +' </div>'
+        
+                        var fileMsg= layer.open({//新增排班人员弹窗
+                            title:' ',
+                            content:fileMsgHt,
+                            type:1,
+                            id:'SubsidiesDailWorkUrs',
+                            area:['60%','60%'],
+                            btn:['确定']
+                        })
+                    }else{
+                        layer.msg(res.message);
+                    }
+                
+                }
+                ,error: function(index, upload){
+                    //请求异常回调
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+            $("a#SubsidiesDowmFile").attr("href",""+upurls+"/gateway/usersalary/ph/downloadsss")
+        });
+    })
+</script>
+</html>

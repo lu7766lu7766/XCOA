@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绩效评分设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" demo-list layui-card">
+            <div class="layui-card-header">
+                绩效评分设置
+            </div>
+         
+            <div class="layui-card-body layui-row layui-col-space10">
+                <div class="layui-col-sm4 layui-col-md3 layui-col-lg3">
+                    <div class="departMenu">
+                        <div id="main">
+                            <button class="layui-btn layui-btn-normal layui-btn-sm layTopBtn" lay-event="add" style="margin-left: 16px;">添加</button>
+                            <button class="layui-btn layui-btn layui-btn-sm layTopBtn" lay-event="edit">重命名</button>
+                            <button class="layui-btn layui-btn-danger layui-btn-sm layTopBtn" lay-event="Del">删除</button>
+                            <div id="performanceTree" class="mt-5"></div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="layui-col-sm8 layui-col-md9 layui-col-lg9">
+                        <table class="layui-table" id="performance" lay-filter="performance"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190218"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','laydate','table','upload','dtree'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        ,dtree=layui.dtree
+        ,form = layui.form
+        ,upload = layui.upload
+        ,layer = layui.layer
+        ,table=layui.table;
+        //var paramTree;//记录树节点
+        
+           
+        var cateTreeTableFun=function(param){//1 2级右侧列表
+                    $.fetch({
+                        url:"/gateway/performance/cateTree",
+                        type: 'post',
+                        data:{
+                            level:3,
+                        },
+                        cb:function(rs){
+                            var levesData=[];
+                            // //console.log(rs,param.node_id)
+                            if(param.level==1){
+                                 
+                                for(var i=0;i<rs.length;i++){
+                                    if(param.node_id==rs[i].id){
+                                        levesData=rs[i].children;
+                                        var toolbar='<div>类型列表 ('+rs[i].cate_name+')</div>';
+                                    }
+                                }
+                            }else if(param.level==2){
+                                for(var i=0;i<rs.length;i++){
+                                    if(rs[i].children&&rs[i].children.length>0){
+                                        for(var k=0;k<rs[i].children.length;k++){
+                                            if(param.node_id==rs[i].children[k].id){
+                                                levesData=rs[i].children[k].children;
+                                                var toolbar='<div>考核主题列表 ('+rs[i].children[k].cate_name+')</div>';
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            levesData=!levesData?[]:levesData;
+                            var performance = table.render({
+                                elem: '#performance',
+                                // url: urls+'/gateway/performance/cateTree', //数据接口
+                                page: false, //开启分页
+                                // method: 'post',
+                                // where:{
+                                //     level:parseFloat(param.level)+1,
+                                // },
+                                toolbar:toolbar,
+                                defaultToolbar:'',
+                                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                                // contentType: 'application/json',
+                                text: {
+                                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                },
+                                data:levesData,
+                                cols: [
+                                    [ //表头
+                                    {
+                                            field: 'cate_name',
+                                            title: '名称',
+                                            minWidth:100,
+                                        },{
+                                            field: 'created_at',
+                                            title: '填写日期',
+                                            minWidth:160,
+                                        },
+                                        {
+                                            field: '',
+                                            fixed: 'right',
+                                            unresize: true,
+                                            title: '操作',
+                                            minWidth:260,
+                                            templet:function(d){
+                                                var btn ='<a class="layui-btn layui-btn-sm" lay-event="editleve">修改</a><a class="layui-btn layui-btn-sm" lay-event="delleve">删除</a>'
+                                                return btn
+                                            },
+                                        }
+                                    ]
+                                ],
+                                // request: {
+                                //     pageName: 'currentIndex' //页码的参数名称，默认：page
+                                //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                                // },
+                                // parseData: function (res) { //res 即为原始返回的数据
+                                //     return {
+                                //         "status_code": res.status_code, //解析接口状态
+                                //         "message": res.message, //解析提示文本
+                                //         "count": res.data.total_count, //解析数据长度
+                                //         "data": res.data, //解析数据列表
+                                //         "curr": res.data.page_index
+                                //     };
+                                    
+                                // },
+                                done: function (res) {
+                                    // //console.log(res)
+                                }
+                            });
+                        }
+                    });
+        }
+        var performanceTree = dtree.render({
+            elem: "#performanceTree",
+            url:urls+"/gateway/performance/cateTree",
+            request:{level:3},
+            response : {
+                statusName:'status_code',
+                statusCode: 200,
+                message: "message",
+                rootName: "data",
+                parentId: "parent_id",
+                childName: "children",
+                nodeId: "id", 
+                treeId: "id",//节点ID
+                title: "cate_name", 
+                basicData:"data"
+            },
+            firstIconArray: {
+                "0": {
+                    "open": "icon-set-sm1",
+                    "close": "icon-favor"
+                }
+            }, //用户自定义一级图标集合，node
+            nodeIconArray: {
+                "0": {
+                    // "open": "icon-shuye1",
+                    // "close": "icon-wenjianjiazhankai"
+                    "open": "icon-",
+                    "close": "icon-"
+                }
+            }, //用户自定义二级级图标集合，node
+            leafIconArray:{"8":"1"},// 自定义扩展的二级最后一级图标，从8开始
+            icon: ["0","8"],
+            dataStyle:"layuiStyle",
+            success:function(data, obj){
+                // //console.log(data, obj)
+            },
+            done:function(data, obj){
+                 //console.log(data, obj,data.data)
+                 if(data.data==null||data.data.length==0){
+                    $("#performanceTree").html('暂无数据');
+                }else if(data.data&&data.data.length>0){
+                    var nowid= data.data[0].id;
+                    dtree.dataInit("performanceTree", ''+nowid+'');
+                    // var param = dtree.getNowParam('performanceTree',''+nowid+'');
+                    // //console.log(param);
+                    // paramTree={
+                    //     context: data.data[0].cate_name
+                    //     ,isLeaf: false
+                    //     ,level: "1"
+                    //     ,node_id: data.data[0].id
+                    //     ,parentId: "0"
+                    //     ,spread: true
+                    // }; 
+                    $.fetch({
+                        url:"/gateway/performance/cateTree",
+                        type: 'post',
+                        data:{
+                            level:3,
+                        },
+                        cb:function(rs){
+                            var levesData=[];
+                            for(var i=0;i<rs.length;i++){
+                                levesData=rs[0].children;
+                            }
+                            // levesData=[{'noData':'暂无数据'}];
+                            // //console.log(levesData);
+                            levesData=!levesData?[]:levesData;
+                            var performance = table.render({
+                                elem: '#performance',
+                                // url: urls+'/gateway/performance/cateTree', //数据接口
+                                page: false, //开启分页
+                                // method: 'post',
+                                // where:{
+                                //     level:parseFloat(param.level)+1,
+                                // },
+                                toolbar:'<div>类型列表 ('+data.data[0].cate_name+')</div>',
+                                defaultToolbar:'',
+                                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                                // contentType: 'application/json',
+                                text: {
+                                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                                },
+                                data:levesData,
+                                cols: [
+                                    [ //表头
+                                    {
+                                            field: 'cate_name',
+                                            title: '名称',
+                                            minWidth:100,
+                                        },{
+                                            field: 'created_at',
+                                            title: '填写日期',
+                                            minWidth:160,
+                                        },
+                                        {
+                                            field: '',
+                                            fixed: 'right',
+                                            unresize: true,
+                                            title: '操作',
+                                            minWidth:260,
+                                            templet:function(d){
+                                                var btn ='<a class="layui-btn layui-btn-sm" lay-event="editleve">修改</a><a class="layui-btn layui-btn-sm" lay-event="delleve">删除</a>'
+                                                return btn
+                                            },
+                                        }
+                                    ]
+                                ],
+                                // request: {
+                                //     pageName: 'currentIndex' //页码的参数名称，默认：page
+                                //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                                // },
+                                // parseData: function (res) { //res 即为原始返回的数据
+                                //     // //console.log(levesData,res);
+                                    
+                                //     return {
+                                //         "status_code": res.status_code, //解析接口状态
+                                //         "message": res.message, //解析提示文本
+                                //         "count": res.data.total_count, //解析数据长度
+                                //         "data": res.data, //解析数据列表
+                                //         "curr": res.data.page_index
+                                //     };
+                                // },
+                                done: function (res) { //res 即为原始返回的数据
+                                    // //console.log(res);
+                                },
+                                
+                            });
+                        }
+                    });
+                }
+
+                    $("#main").off("click").on("click",'.layTopBtn',function(){
+                        var tdata ={};       
+                     //console.log(data,obj)             
+                        var layEvent =$(this).attr('lay-event')
+                        tdata.cate_name= dtree.getNowParam('performanceTree').context;
+                        tdata.id= dtree.getNowParam('performanceTree').node_id;
+                        tdata.parentId= dtree.getNowParam('performanceTree').parentId;
+                        tdata.level= dtree.getNowParam('performanceTree').level;
+                        // //console.log(tdata,dtree.getNowParam('performanceTree'))
+                        
+                        if(tdata.id==undefined){
+                            tdata =data.data?data.data[0]:false;  
+                        }
+                        
+                        if(layEvent === 'Del'){//删除
+                            if(!tdata){
+                                layer.msg('暂无可删除项');
+                                return false                                
+                            }
+                            layer.confirm('确定删除 "'+tdata.cate_name+'"', {title:' '},function(index){
+                                $.fetch({
+                                    url:'/gateway/performance/delCate',
+                                    data:{
+                                        cateId:tdata.id,
+                                    },
+                                    type: 'post',
+                                    cb:function(rs){
+                                        layer.msg('删除成功');
+                                        layer.close(index);
+                                        // dtree.reload(performanceTree)
+                                        location.reload();
+
+                                    }
+                                })
+                            })
+                        }else if(layEvent === 'edit'){//修改
+                            if(!tdata){
+                                layer.msg('暂无可修改项')
+                                return false
+                            }
+                            var layerConntent='<div class="layui-fluid">'
+                                            +'<div class="layui-card">'
+                                                    +'<div class="layui-row layui-col-space15">'
+                                                        +'<div class="layui-form">'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<div class="layui-form-item">'
+                                                                    +'<label class="layui-form-label">名称：</label>'
+                                                                    +'<div class="layui-input-inline">'
+                                                                        +'<input id="appDacText" name="suggestion" class="layui-input" value="'+tdata.cate_name+'">'
+                                                                    +'</div>'
+                                                                +'</div>'
+                                                                +'<div class="layui-form-item">'
+                                                                    +'<div class="layui-input-block">'
+                                                                        +'<button id="sub" class="layui-btn" lay-filter="">保存</button>'
+                                                                        +'<button id="back" class="layui-btn layui-btn-primary">关闭</button>'
+                                                                    +'</div>'
+                                                            +'</div>'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                            layer.open({
+                                title:'修改',
+                                type: 1, 
+                                content:layerConntent,
+                                area:['atuo', 'atuo'],
+                                success:function(layero,index){
+                                    $("#sub").on("click",function(){
+                                        var name =$("#appDacText").val();
+                                        $.fetch({
+                                            url:"/gateway/performance/renameCate",
+                                            type: 'post',
+                                            data:{
+                                                cateName:name,
+                                                cateId:tdata.id,
+                                            },
+                                            cb:function(rs){
+                                                layer.msg('保存成功');
+                                                layer.close(index);
+                                                // dtree.reload(performanceTree, {request:{level:3}})
+                                                location.reload();
+                                            }
+                                        });
+                                    })
+                                    $("#back").on("click",function(){
+                                        layer.close(index);
+                                    })
+                                    
+                                }
+                            })
+                        }else if(layEvent === 'add'){//添加
+                            var select1='',select2='<option></option>';
+                            if(data.data&&data.data.length>0){
+                                for(var i =0;i<data.data.length;i++){
+                                    select1+='<option value="'+data.data[i].id+'">'+data.data[i].cate_name+'</option>';
+                                    select2+='<optgroup label="'+data.data[i].cate_name+'">'
+                                            
+                                        if(data.data[i].children&&data.data[i].children.length>0){
+                                            for(var j =0;j<data.data[i].children.length;j++){
+                                                select2+='<option value="'+data.data[i].children[j].id+'">'+data.data[i].children[j].cate_name+'</option>'
+                                            }
+                                        }
+                                    select2+='</optgroup>'
+                                }
+                            }
+                            var layerConntent='<div class="layui-fluid">'
+                                                +'<div class="layui-card">'
+                                                        +'<div class="layui-row layui-col-space15">'
+                                                            +'<div class="layui-form">'
+                                                                    +'<div class="layui-form-item">'
+                                                                        +'<label class="layui-form-label">名称：</label>'
+                                                                        +'<div class="layui-input-inline">'
+                                                                            +'<input id="appDacText" name="suggestion" class="layui-input" value="">'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                    +'<div class="layui-form-item">'
+                                                                        +'<label class="layui-form-label">添加类型：</label>'
+                                                                        +'<div class="layui-input-inline">'
+                                                                            +'<input type="radio" name="level" value="1"  lay-filter="level" title="审批流程" checked><input type="radio" name="level"  lay-filter="level" value="2" title="类型" ><input type="radio" name="level" value="3"  lay-filter="level" title="考核主题" >'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                    +'<div id="levelType-itme" class="layui-form-item layui-hide">'
+                                                                        +'<label class="layui-form-label">添加至：</label>'
+                                                                        +'<div class="layui-input-inline">'
+                                                                            +'<select id="levelType" name="levelType" lay-filter="levelType">'+select1+'</select>'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                    +'<div class="layui-form-item">'
+                                                                        +'<div class="layui-input-block">'
+                                                                            +'<button id="sub" class="layui-btn" lay-filter="">保存</button>'
+                                                                            +'<button id="back" class="layui-btn layui-btn-primary">关闭</button>'
+                                                                        +'</div>'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                +'</div>'
+                                            +'</div>'
+                            layer.open({
+                                title:'添加审批流程',
+                                type: 1, 
+                                content:layerConntent,
+                                area:['50%', '40%'],
+                                success:function(layero,index){
+                                    form.render();
+                                    form.on('radio(level)', function(data){
+                                        // //console.log(data.elem); //得到radio原始DOM对象
+                                        // //console.log(data.value); //被点击的radio的value值
+                                        if(data.value==2){
+                                            $("#levelType-itme").addClass('layui-show').removeClass('layui-hide');
+                                            $("#levelType").html(select1);
+                                        }else if(data.value==3){
+                                            $("#levelType-itme").addClass('layui-show').removeClass('layui-hide');
+                                            $("#levelType").html(select2);
+                                        }else if(data.value==1){
+                                            $("#levelType-itme").addClass('layui-hide').removeClass('layui-show');
+                                            $("#levelType").html('');
+                                        }
+                                        form.render();
+                                        
+                                    });
+                                    $("#sub").on("click",function(){
+                                        var name =$("#appDacText").val();
+                                        var parentId =$("#levelType").val();
+                                        var level =$("input[name='level']:checked").val();
+                                        if(level==1){
+                                            parentId=0;
+                                        }
+                                        if(name==''){
+                                            layer.msg('名称不能为空');
+                                            return false
+                                        }
+                                        $.fetch({
+                                            url:"/gateway/performance/addCate",
+                                            type: 'post',
+                                            data:{
+                                                cateName:name,
+                                                parentId:parentId,
+                                                level:level
+                                            },
+                                            cb:function(rs){
+                                                layer.msg('保存成功');
+                                                layer.close(index);                                           // 
+                                                // dtree.reload(performanceTree)
+                                                location.reload()
+                                                
+                                            }
+                                        });
+                                    })
+                                    $("#back").on("click",function(){
+                                        layer.close(index);
+                                    })
+                                    
+                                }
+                            })
+                        }
+                    })
+                
+                table.on('tool(performance)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data; //获得当前行数据
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var tr = obj.tr; //获得当前行 tr 的DOM对象
+                
+                   if(layEvent === 'del'){//删除
+                        layer.confirm('确定删除', {title:' '},function(index){
+                            $.fetch({
+                                url:'/gateway/performance/delScore',
+                                data:{
+                                    scoreId:data.id,
+                                },
+                                type: 'post',
+                                cb:function(rs){
+                                    layer.msg('删除成功');
+                                    layer.close(index);
+                                    location.reload();
+                                    // dtree.reload(performanceTree)
+                                }
+                            })
+                        })
+                    }else if(layEvent === 'edit'){//修改
+                        var layerConntent='<div class="layui-fluid">'
+                                        +'<div class="layui-card">'
+                                                +'<div class="layui-row layui-col-space15">'
+                                                    +'<div class="layui-form">'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<label class="layui-form-label">评分事项：</label>'
+                                                                +'<div class="layui-input-inline">'
+                                                                    +'<input id="addScoreTitle" name="suggestion" class="layui-input" value="'+data.title+'">'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<label class="layui-form-label">分数：</label>'
+                                                                +'<div class="layui-input-inline">'
+                                                                    +'<input id="score" name="suggestion" class="layui-input" value="'+data.score+'">'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<div class="layui-input-block">'
+                                                                    +'<button id="sub" class="layui-btn" lay-filter="">保存</button>'
+                                                                    +'<button id="back" class="layui-btn layui-btn-primary">关闭</button>'
+                                                                +'</div>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                        layer.open({
+                            title:'编辑评分事项',
+                            type: 1, 
+                            content:layerConntent,
+                            area:['atuo', 'atuo'],
+                            success:function(layero,index){
+                                $("#sub").on("click",function(){
+                                    var title =$("#addScoreTitle").val();
+                                    var score = $("#score").val();
+                                    var upperCase = function(value){//用户只能输入正负数与小数
+                                        if(isNaN(value) && !/^-$/.test(value)){
+                                            return false
+                                        }else{
+                                            return true
+                                        }
+                                    }
+                                    if(!upperCase(score)){
+                                        layer.msg('请输入正确格式的分数,如"10"或"-10"');
+                                        $("#score").val('');
+                                        return false
+                                    }
+                                    $.fetch({
+                                        url:"/gateway/performance/editScore",
+                                        type: 'post',
+                                        data:{
+                                            title:title,
+                                            score:score,
+                                            scoreId:data.id
+                                        },
+                                        cb:function(rs){
+                                            layer.msg('保存成功');
+                                            location.reload();
+                                            // dtree.reload(performanceTree)
+                                            layer.close(index);
+                                        }
+                                    });
+                                })
+                                $("#back").on("click",function(){
+                                    layer.close(index);
+                                })
+                                
+                            }
+                        })
+                    }else if(layEvent === 'editleve'){//类型编辑
+                        var layerConntent='<div class="layui-fluid">'
+                                +'<div class="layui-card">'
+                                        +'<div class="layui-row layui-col-space15">'
+                                            +'<div class="layui-form">'
+                                                +'<div class="layui-form-item">'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<label class="layui-form-label">名称：</label>'
+                                                        +'<div class="layui-input-inline">'
+                                                            +'<input id="appDacText" name="suggestion" class="layui-input" value="'+data.cate_name+'">'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<div class="layui-input-block">'
+                                                            +'<button id="sub" class="layui-btn" lay-filter="">保存</button>'
+                                                            +'<button id="back" class="layui-btn layui-btn-primary">关闭</button>'
+                                                        +'</div>'
+                                                   +'</div>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            layer.open({
+                                title:'修改',
+                                type: 1, 
+                                content:layerConntent,
+                                area:['atuo', 'atuo'],
+                                success:function(layero,index){
+                                    $("#sub").on("click",function(){
+                                        var name =$("#appDacText").val();
+                                        $.fetch({
+                                            url:"/gateway/performance/renameCate",
+                                            type: 'post',
+                                            data:{
+                                                cateName:name,
+                                                cateId:data.id,
+                                            },
+                                            cb:function(rs){
+                                                layer.msg('保存成功');
+                                                // dtree.reload(performanceTree);
+                                                location.reload();
+                                                layer.close(index);
+                                            }
+                                        });
+                                    })
+                                    $("#back").on("click",function(){
+                                        layer.close(index);
+                                    })
+                                    
+                                }
+                            })
+                    }else if(layEvent === 'delleve'){//类型删除
+                        layer.confirm('确定删除', {title:' '},function(index){
+                            $.fetch({
+                                url:'/gateway/performance/delCate',
+                                data:{
+                                    cateId:data.id,
+                                },
+                                type: 'post',
+                                cb:function(rs){
+                                    layer.msg('删除成功');
+                                    location.reload();
+                                    // dtree.reload(performanceTree);
+                                    layer.close(index);
+
+                                }
+                            })
+                        })
+                    }
+                })
+                table.on('toolbar(performance)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    var s ="onkeyup =\"upperCase(this)\""
+                    var layerConntent='<div class="layui-fluid">'
+                                        +'<div class="layui-card">'
+                                                +'<div class="layui-row layui-col-space15">'
+                                                    +'<div class="layui-form">'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<label class="layui-form-label">评分事项：</label>'
+                                                                +'<div class="layui-input-inline">'
+                                                                    +'<input id="addScoreTitle" name="suggestion" class="layui-input">'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<label class="layui-form-label">分数：</label>'
+                                                                +'<div class="layui-input-inline">'
+                                                                    +'<input id="score" name="suggestion" class="layui-input">'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                            +'<div class="layui-form-item">'
+                                                                +'<div class="layui-input-block">'
+                                                                    +'<button id="sub" class="layui-btn" lay-filter="">保存</button>'
+                                                                    +'<button id="back" class="layui-btn layui-btn-primary">关闭</button>'
+                                                                +'</div>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                    switch(obj.event){
+                        case 'add':
+                        layer.open({
+                            title:'添加评分事项',
+                            type: 1, 
+                            content:layerConntent,
+                            area:['atuo', 'atuo'],
+                            success:function(layero,index){
+                                $("#sub").on("click",function(){
+                                    var cateId= dtree.getNowParam('performanceTree').node_id
+                                    var title =$("#addScoreTitle").val();
+                                    var score = $("#score").val();
+                                    var upperCase = function(value){//用户只能输入正负数与小数
+                                        if(isNaN(value) && !/^-$/.test(value)){
+                                            return false
+                                        }else{
+                                            return true
+                                        }
+                                    }
+                                    if(!upperCase(score)){
+                                        layer.msg('请输入正确格式的分数,如"10"或"-10"');
+                                        $("#score").val('');
+                                        return false
+                                    }
+                                    // //console.log(1+score)
+                                    // return false
+                                    $.fetch({
+                                        url:"/gateway/performance/addScore",
+                                        type: 'post',
+                                        data:{
+                                            title:title,
+                                            score:score,
+                                            cateId:cateId
+                                        },
+                                        cb:function(rs){
+                                            layer.msg('保存成功');                                    
+                                            // dtree.reload(performanceTree);   
+                                            location.reload();
+                                            layer.close(index);
+                                        }
+                                    });
+                                })
+                                $("#back").on("click",function(){
+                                    layer.close(index);
+                                })
+                                
+                            }
+                        })
+                        break;
+                    };
+                });
+
+            }
+        })
+        dtree.on("node('performanceTree')",function(param){
+            //paramTree=param;     // 回调刷新表格
+            if(param.level==3){
+             
+                var performance = table.render({
+                    elem: '#performance',
+                    url: urls+'/gateway/performance/listScore',
+                    page: true, //开启分页
+                    method: 'post',
+                    where:{
+                        cateId:param.node_id
+                    },
+                    toolbar:'<div>绩效评分标准列表 ('+param.context+')<a id="addScore" class="ml-10 layui-btn layui-btn-sm" lay-event="add">新增</a></div>',
+                    defaultToolbar:'',
+                    limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                    contentType: 'application/json',
+                    text: {
+                        none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    },
+                    cols: [
+                        [ //表头
+                          {
+                                field: 'title',
+                                title: '评分事项',
+                                minWidth:480,
+                            },{
+                                field: 'score',
+                                title: '分数',
+                                minWidth:80,
+                            },{
+                                field: 'created_at',
+                                title: '填写日期',
+                                minWidth:160,
+                            },
+                            {
+                                field: '',
+                                fixed: 'right',
+                                unresize: true,
+                                title: '操作',
+                                minWidth:140,
+                                templet:function(d){
+                                    var btn ='<a class="layui-btn layui-btn-sm" lay-event="edit">修改</a><a class="layui-btn layui-btn-sm" lay-event="del">删除</a>'
+                                    return btn
+                                },
+                            }
+                        ]
+                    ],
+                    request: {
+                        pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    parseData: function (res) { //res 即为原始返回的数据
+                        return {
+                            "status_code": res.status_code, //解析接口状态
+                            "message": res.message, //解析提示文本
+                            "count": res.data.total_count, //解析数据长度
+                            "data": res.data.data_list, //解析数据列表
+                            "curr": res.data.page_index
+                        };
+                    },
+                    done: function () {
+                        
+                    }
+                });  
+
+            }else{
+                cateTreeTableFun(param);
+            }
+        })
+        
+    })
+</script>
+
+</html>

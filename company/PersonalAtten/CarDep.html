@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>车辆添加</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" layui-card">
+            <div class="layui-card-header">
+                车辆添加
+                <div class="layui-inline ml-10 fr">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" id="addRecrui">添加车辆信息</a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="pz-10 layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-inline">
+                                <select id="RecruiSelect" lay-filter="RecruiSelect">
+                                    <option value="5">全部</option>
+                                    <option value="1">正常</option>
+                                    <option value="2">维护中</option>
+                                    <option value="3">损坏</option>
+                                    <option value="4">报废</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="userFileTable" lay-filter="userFileTable" class="layui-table">
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script id="RecruiCont" type="text/html">
+    <div class="layui-card-body">
+        <div class="layui-form" lay-filter="MeetingRoom">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">品牌型号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="carBrand" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">出厂日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="productionDate" id="FactoryTime" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">购买日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="buyDate" id="BuyTime" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">车主：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="carOwner" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">牌照号码：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="carNo" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">牌照号码(新)：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="carNoNew" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">座位数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="seatNum" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label modify-form-label">状态：</label>
+                    <div class="layui-input-inline">
+                        <select id="CarStatus" lay-filter="CarStatus">
+                            <option value="1">正常</option>
+                            <option value="2">维护中</option>
+                            <option value="3">损坏</option>
+                            <option value="4">报废</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" id="form">
+                <div class="layui-inline">
+                    <label class="layui-form-label">车辆照片</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="0" id="CarUpload">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_0" class="UploadNames-box"></div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">注册证书</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="1" id="Registration">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_1" class="UploadNames-box"></div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">购入收据</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="2" id="Purchase">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_2" class="UploadNames-box"></div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">租约</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="3" id="lease">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_3" class="UploadNames-box"></div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">秘书</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="4" id="secretary">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_4" class="UploadNames-box"></div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">保险</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="5" id="Insurance">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_5" class="UploadNames-box"></div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">GPS合约</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn up" attachType="6" id="GPS">
+                            <i class="layui-icon">&#xe67c;</i>附件上传
+                        </button>
+                        <div id="mailFiles_6" class="UploadNames-box"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="remark"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn layui-btn">提交</button>
+                    <button id="backFeek" class="layui-btn layui-btn-primary layui-btn">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    $(function () {
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'table', 'laydate', 'form', 'laypage','upload'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                router = layui.router(),
+                layer = layui.layer;
+            element.render();
+            var table = layui.table,
+                laypage = layui.laypage,
+                form = layui.form,
+                upload = layui.upload,
+                laydate = layui.laydate;
+
+            table.render({
+                elem: '#table-checkbox',
+                page: true,
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            });
+            var fileArr=[],files='';
+            // 生成表格
+            var RecruiList = table.render({
+                elem: '#userFileTable',
+                url: urls + "/gateway/car/list",
+                where:{
+                    status:5
+                },
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                method: 'post',
+                page: true, //开启分页
+                text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //标题栏
+                       {
+                            field: 'car_no',
+                            title: '车牌号',
+                            minWidth:160,
+                        },{
+                            field: 'car_brand',
+                            title: '品牌型号',
+                            minWidth:100,
+                        },{
+                            field: 'production_date',
+                            title: '出厂日期',
+                            minWidth:160,
+                        },{
+                            field: 'buy_date',
+                            title: '购买日期',
+                            minWidth:160,
+                        },{
+                            field: 'car_owner',
+                            title: '车主',
+                            minWidth:80,
+                        },{
+                            field: '',
+                            title: '状态',
+                            minWidth:90,
+                            templet:function(d){
+                                return d.car_status==1?'正常':(d.car_status==2?'维护中':d.car_status==3?'损坏':d.car_status==4?'报废':' ')
+                            }
+                        },{
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            minWidth:130,
+                            // templet:function(d){
+                            //     return d.approval_result==1?'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a>':(d.approval_result==2?'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a>':'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-warm layui-btn-sm" lay-event="appr">审核</a>')
+                            // },
+                            toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="edit">编辑</a><a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="del">删除</a></div>'
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {}
+                
+            })
+            form.on('select(RecruiSelect)', function(data){
+                RecruiList.reload({
+                    where:{
+                        status:data.value,
+                    }
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                })
+                
+            });   
+            // 上传
+            var AttachCont=[];
+            var upUFun=function(id,attach){
+                upload.render({
+                    elem: id//绑定元素
+                    ,url: urls+'/gateway/carAttach/add' //上传接口
+                    ,accept:"file"
+                    ,data:{
+                        attachType:attach
+                    }
+                    ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                        layer.load('上传中'); //上传loading
+                    }
+                    ,done: function (res) {
+                        //上传完毕回调
+                        console.log(res);
+                        layer.closeAll('loading'); //关闭loading 
+                        $("#mailFiles_"+attach+"").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'"  data-attach="'+attach+'" class="del iconfont icon-guanbi"></i></a>')
+                        AttachCont.push(res.data.attachId);
+                    }
+                    ,error: function () {
+                        //请求异常回调
+                    }
+                });
+            }
+
+            // 提交申请
+            $("#addRecrui").on('click',function(){
+                AttachCont=[];
+                layer.open({
+                    title:'车辆添加',
+                    type: 1, 
+                    content: $('#RecruiCont').html(),
+                    area:['80%', '80%'],
+                    success:function(layero,index){ 
+                        // 出厂日期
+                        laydate.render({
+                            elem:'#FactoryTime',
+                            type:'date',
+                        })
+                        // 购买日期
+                        laydate.render({
+                            elem:'#BuyTime',
+                            type:'date',
+                        })
+                        // 附件上传
+                        $("#form").find(".up").each(function(){
+                            var attach = $(this).attr("attachType");
+                            var upid = $(this).attr("id");
+                            upUFun("#"+upid+"",attach);
+                        })
+                        //删除附件
+                        $("#form").on("click",'i.del',function(){
+                            var delId =$(this).attr("data-file");
+                            var elem = $(this).parent("a");
+                            $.fetch({
+                                url: '/gateway/carAttach/del',
+                                type: 'post',
+                                data:{
+                                    attachId:delId
+                                },
+                                cb:function(rs){
+                                    AttachCont.splice($.inArray(delId,AttachCont),1);
+                                    elem.remove();
+                                } 
+                            });
+                        })
+
+                        
+                        form.on('submit(subFeek)', function(data){
+                            var status = $("#CarStatus").val();
+                            var attachIds =AttachCont.join(",");
+                            
+                            $.fetch({
+                                url:'/gateway/car/add',
+                                type: 'post',
+                                data:{
+                                    carNo:data.field.carNo,
+                                    attachIds:attachIds,
+                                    carNoNew:data.field.carNoNew,
+                                    carBrand:data.field.carBrand,
+                                    productionDate:data.field.productionDate,
+                                    buyDate:data.field.buyDate,
+                                    carOwner:data.field.carOwner,
+                                    seatNum:data.field.seatNum,
+                                    status:status,
+                                    remark:data.field.remark
+                                },
+                                cb:function(rs){
+                                    layer.closeAll();
+                                    layer.msg("添加完成");
+                                    RecruiList.reload({})
+                                }
+                            })
+                        })
+                        form.render();
+
+                        // 关闭
+                        $("#backFeek").on('click',function(){
+                            layer.close(index);  
+                        })
+                    }
+                })
+            })
+            
+            //查看信息
+            table.on('tool(userFileTable)', function(obj){
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event
+                console.log(data)
+                if(layEvent=='edit'){
+                    layer.open({
+                        title:'车辆编辑',
+                        type: 1, 
+                        content: $('#RecruiCont').html(),
+                        area:['80%', '80%'],
+                        success:function(layero,index){
+                            console.log(data)
+                            for(var i in data.attach){
+                                var AttachID=data.attach[i].attach_type;
+                                var imgData = '<a title="点击下载" target="_blank" href="/gateway/carAttach/download?attachId='+data.attach[i].id+'"><span class="currentName">'+data.attach[i].original_name+'</span><i data-file="'+data.attach[i].id+'"  data-attach="'+AttachID+'" data-carId="'+data.attach[i].car_id+'" class="del iconfont icon-guanbi"></i></a>'
+                                $("#mailFiles_"+AttachID+"").append(imgData)
+                            }
+                            
+                            // 附件上传
+                            $("#form").find(".up").each(function(){
+                                var attach = $(this).attr("attachType");
+                                var upid = $(this).attr("id");
+                                upUFun("#"+upid+"",attach);
+                            })
+                            //  状态
+                            $("#CarStatus").val(data.car_status);
+                            //删除附件
+                            $("#form").on("click",'i.del',function(){
+                                var delId =$(this).attr("data-file");
+                                var elem = $(this).parent("a");
+                                var carIDCont = $(this).attr("data-carId")
+
+                                if(carIDCont==undefined){
+                                    var prama={
+                                        attachId:delId
+                                    }
+                                }else{
+                                    var prama={
+                                        carId:carIDCont,
+                                        attachId:delId
+                                    }
+                                }
+                                
+                                $.fetch({
+                                        url: '/gateway/carAttach/del',
+                                        type: 'post',
+                                        data:prama,
+                                        cb:function(rs){
+                                            AttachCont.splice($.inArray(delId,AttachCont),1);
+                                            elem.remove();
+                                        } 
+                                    });
+                            })
+                            form.val("MeetingRoom", {
+                                "carNo": data.car_no_old,
+                                "carNoNew": data.car_no_new,
+                                "carBrand":data.car_brand,
+                                "productionDate": data.production_date,
+                                "buyDate":data.buy_date,
+                                "carOwner": data.car_owner,
+                                "seatNum": data.car_seat_num,
+                                "remark":data.remark
+                            })
+                            var DataCont=data;
+                            form.on('submit(subFeek)', function(data){
+                                var status = $("#CarStatus").val();
+                                // var attachIds =$("#mailFiles i.del").attr("data-file");
+                                var attachIds =AttachCont.join(",");
+                                console.log(data)
+                                $.fetch({
+                                    url:'/gateway/car/edit',
+                                    type: 'post',
+                                    data:{
+                                        carId:DataCont.id,
+                                        carNo:data.field.carNo,
+                                        attachIds:attachIds,
+                                        seatNum:data.field.seatNum,
+                                        carBrand:data.field.carBrand,
+                                        status:status,
+                                        remark:data.field.remark,
+                                        carNoNew:data.field.carNoNew,
+                                        productionDate:data.field.productionDate,
+                                        buyDate:data.field.buyDate,
+                                        carOwner:data.field.carOwner,
+                                    },
+                                    cb:function(rs){
+                                        layer.msg("编辑成功");
+                                        layer.close(index);
+                                        RecruiList.reload({})
+                                    }
+                                })
+                            })
+                            // 关闭
+                            $("#backFeek").on("click",function(){
+                                layer.close(index);
+                            })
+                        }
+                    })
+                }else if(layEvent=='del'){
+                    layer.confirm('确定删除?',function(index){
+                        layer.close(index);
+                        $.fetch({
+                            url:"/gateway/car/del",
+                            type: 'post',
+                            data:{
+                                carId:data.id,
+                            },
+                            cb:function(rs){
+                                RecruiList.reload({});
+                            }
+                        });
+                    })  
+                }
+            })
+            
+
+        });
+    })
+</script>
+
+</html>

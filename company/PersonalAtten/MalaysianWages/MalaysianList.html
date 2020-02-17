@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>马来西亚工资列表</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/iconFont/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../../../layui/css/layui.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/formSelects-v4.css">
+	<link rel="stylesheet" type="text/css" href="../../../layui/css/admin.css">
+	<script src="../../../js/jquery.min.js"></script>
+	<script src="../../../js/jquery.table2excel.min.js"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<div class="layui-form" lay-filter="FormText" style="margin-bottom: 10px;">
+					<div class="layui-form-item">
+						<div class="layui-inline" style="min-width:45%">
+							<label class="layui-form-label">
+								部门
+							</label>
+							<div class="layui-input-block">
+								<select type="text" xm-select="DepartmentID" id="DepartmentID" name="DepartmentID"
+									placeholder="请选择部门" autocomplete="off" class="xm-input xm-select"
+									xm-select-search="">
+									<option value="">请选择部门</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline" style="min-width:45%">
+							<label class="layui-form-label">
+								岗位
+							</label>
+							<div class="layui-input-block">
+								<select type="text" xm-select="JobTitleID" id="JobTitleID" name="JobTitleID"
+									placeholder="请选择岗位" autocomplete="off" class="xm-input xm-select"
+									xm-select-search="">
+									<option value="">请选择岗位</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label" >已确认工资</label>
+							<div class="layui-input-inline">
+								<select name="IsConfirm" id="IsConfirm"><option value="-1">全部</option><option value="1">是</option><option value="0">否</option></select>
+							</div> 
+						</div> 
+						<div class="layui-inline">
+							<label class="layui-form-label">工资月份</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" id="monTime">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<label class="layui-form-label">姓名</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" id="UserName">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<button class="layui-btn" id="IqProject" title="搜索"><i
+									class="iconfont icon-sousuo"></i></button>
+						</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发放日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="dateTime">
+                            </div>
+                            <button class="layui-btn" id="subList" title="">发放</button>
+                            <button class="layui-btn" id="previewList" title="">工资预览</button>
+                            <button class="layui-btn" id="newList" title="">重新生成数据</button>
+                        </div>
+                    </div>
+				</div>
+				<table id="projectTable" lay-filter="projectTable"></table>
+			</div>
+		</div>
+	</div>
+	<!-- 用于复杂表头导出的 隐藏table -->
+	<table id="report-table" cellpadding=1 cellspacing=1 border=1 style="display: none"></table>
+</body>
+<style>
+	th[data-field="jia"] {
+		background: #dcdb2b;
+		color: #fff;
+		/*  #5FB878; #009688*/
+	}
+
+	th[data-field="lingqu"] {
+		color: #fff;
+		background: #01AAED;
+	}
+
+	dl.xm-select-dl {
+		width: 400px;
+	}
+</style>
+<script src="../../../layui/layui.js"></script>
+<script src="../../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+	layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['element', 'index', 'table', 'laydate', 'formSelects'], function () {
+		var $ = layui.$,
+			table = layui.table,
+			laydate = layui.laydate,
+			formSelects = layui.formSelects,
+			element = layui.element;
+		var d = new Date();
+		var year = lay.digit(d.getMonth() + 1) == 1 ? d.getFullYear() - 1 : d.getFullYear();
+		var month = lay.digit(d.getMonth() + 1) == 1 ? 12 : (d.getMonth() + 1);
+        var maxDate = d.getDate();
+		// if (month == 1) {
+		// 	month = 12;
+		// 	// year = year - 1;
+		// } else {
+		// 	month = month - 1;
+        // }
+		month = month < 10 ? '0' + month : month;
+        var companyTW = false;
+        
+
+		//渲染下拉框 mnl
+		//部门下拉
+		$.fetch({ //部门树列表
+			url: "/gateway/department/tree",
+			type: 'post',
+			cb: function (rs) {
+				//	console.log(rs)
+				var formSelectsArr = rs[0].children[0].children;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('DepartmentID', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentID', 'local', {
+					radio: true,
+					arr: formSelectsArr
+				});
+
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		$.fetch({ //岗位树列表
+			url: "/gateway/jobTitle/tree",
+			type: 'post',
+			cb: function (rs) {
+				//	console.log(rs)
+				var formSelectsArr = rs;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('JobTitleID', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleID', 'local', {
+					radio: true,
+					arr: formSelectsArr
+				});
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+
+		var usersalaryFun = function (month, btn) {
+			if (btn) {
+				var sdata = {
+					// IsDemission: 0,
+                    Month: month,
+                    UserName:'',
+					DepartmentID: '',
+					JobTitleIDStr: '',
+					IsSearch: 0,
+					IsConfirm:-1,	
+				}
+			} else {
+				var UserName = $("#UserName").val()
+				var DepartmentID = formSelects.value('DepartmentID');
+				var JobTitleID = formSelects.value('JobTitleID');
+				var IsConfirm =$('#IsConfirm').val();
+				var arrDep = [],
+					subDpr;
+				if (DepartmentID.length > 0) {
+					for (var i = 0; i < DepartmentID.length; i++) {
+						arrDep.push(DepartmentID[i].id);
+					}
+					subDpr = arrDep.join(',');
+				} else {
+					subDpr = '';
+				}
+
+				var arrJob = [],
+					JobTitleIDStr;
+				if (JobTitleID.length > 0) {
+					for (var i = 0; i < JobTitleID.length; i++) {
+						arrJob.push(JobTitleID[i].id);
+					}
+					JobTitleIDStr = arrJob.join(',');
+				} else {
+					JobTitleIDStr = '';
+				}
+				var sdata = {
+					Month: month,
+					UserName: UserName,
+					DepartmentID: subDpr,
+					JobTitleID: JobTitleIDStr,
+					// IsDemission: 0,
+					IsSearch: 1,					
+					IsConfirm:IsConfirm,
+				}
+
+			}
+            // var indexs=layer.load(1);
+            // 初始化 调用列表
+            $.fetch({
+                url: "/gateway/usersalary/my/index",
+                type: 'post',
+                data: sdata,
+                cb: function (rs) {
+                    // console.log(rs)
+                    var assign = rs.assign;
+                    var addCols = [{
+                        sort: true,
+                        align: "center",
+                        field: "shijia_jian",
+                        title: "事假",
+                        minWidth: 128,
+                        // edit: "text"
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "other_jian",
+                        title: "其他",
+                        edit: "text",
+                        minWidth: 170
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "full_attend_jia",
+                        title: "全勤",
+                        minWidth: 128,
+                        edit: "text"
+                    },  {
+                        sort: true,
+                        align: "center",
+                        field: "traffic_subsidy_jia",
+                        title: "交通补贴",
+                        minWidth: 128,
+                        edit: "text"
+                    },  {
+                        sort: true,
+                        align: "center",
+                        field: "banci_subsidy_jia",
+                        title: "班次补贴",
+                        minWidth: 128,
+                        edit: "text"
+                    },  {
+                        sort: true,
+                        align: "center",
+                        field: "overtime_subsidy_jia",
+                        title: "加班",
+                        minWidth: 128,
+                        edit: "text"
+                    },  {
+                        sort: true,
+                        align: "center",
+                        field: "year_end_awards_salary_jia",
+                        title: "年终花红",
+                        minWidth: 128,
+                        edit: "text"
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "other_jia",
+                        title: "其他",
+                        edit: "text",
+                        minWidth: 160
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "epf_yuan",
+                        title: "EPF公积金(員)",
+                        minWidth: 128,
+                        // edit: "text"
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "socso_yuan",
+                        title: "SOCSO社会保险(員)",
+                        minWidth: 128,
+                        // edit: "text"
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "eis_yuan",
+                        title: "EIS失业保险(員)",
+                        minWidth: 128,
+                        // edit: "text"
+                    }, {
+                        sort: true,
+                        align: "center",
+                        field: "pcb_yugushui",
+                        title: "PCB预估税",
+                        minWidth: 128,
+                        edit: "text"
+                    }
+                ];
+                var colSpanjia = 13;
+                var colSpanhb = 13;
+                var colSpanjian = 19;
+                var colsTowLe = []; //删选后的表头
+                var subNoneData = []; //隐藏掉的数据
+                for (var i = 0; i < addCols.length; i++) {
+                    var fieldStr = addCols[i].field;
+                    cutfieldStr = fieldStr.replace("_jian", "_cut");
+                    cutfieldStr = cutfieldStr.replace("_rmb", "");
+                    cutfieldStr = cutfieldStr.replace("_hb", "");
+                    cutfieldStr = cutfieldStr.replace("_jia", "");
+                    cutfieldStr = cutfieldStr.replace("_cut", "_jian");
+                    var nocolumnsArr = true;
+                    for (var j = 0; j < rs.list.length; j++) {
+                        if (cutfieldStr == rs.list[j].column_name) { //在设置列表的动态表头
+                            if (rs.list[j].is_display == 0) {
+                                    //隐藏的
+                                if (fieldStr.indexOf("_jia") != -1 && fieldStr.indexOf("_jian") == -1) { 
+                                    //加 存在_jia不存在_jian
+                                    colSpanjia--;
+                                } else if (fieldStr.indexOf("_hb") != -1) { //回补
+                                    colSpanhb--;
+                                } else if (fieldStr.indexOf("_jian") != -1) { 
+                                    //减
+                                    colSpanjian--;
+                                } subNoneData.push( fieldStr);
+                            } else { //显示的
+                                console.log(rateD[rs.list[j].currency_unit_id]);
+                                if (fieldStr.indexOf( "_rmb") == -1) { //不包含 _rmb
+                                    addCols[i].title = addCols[i].title + '（' + rateD[rs.list[j].currency_unit_id] + '）'
+                                }
+                                colsTowLe.push(addCols[i])
+                            }
+                            // //console.log(fieldStr)
+                            //如果当前列 不在动态设置表里 则nocolumnsArr为true
+                            nocolumnsArr = false
+                        }
+                    }
+                    if (nocolumnsArr) {
+                        colsTowLe.push(addCols[i]);
+                    }
+                }
+                var cols = [
+                    [{
+                            field: 'user_name',
+                            // type: 'numbers',
+                            title: '員工姓名',
+                            minWidth: 100,
+                            rowspan: 2,
+                            fixed: 'left',
+                            unresize: true
+                        }, {
+                            sort: true,
+                            field: 'dpt_name',
+                            title: '部門',
+                            minWidth: 100,
+                            rowspan: 2,
+                            fixed: 'left',
+                            unresize: true
+                        }, {
+                            sort: true,
+                            field: 'title_name',
+                            title: '崗位',
+                            minWidth: 90,
+                            rowspan: 2,
+                            fixed: 'left',
+                            unresize: true,
+
+                        }, {
+                            sort: true,
+                            field: 'due_date',
+                            title: '转正日期',
+                            minWidth: 100,
+                            rowspan: 2,
+                            fixed: 'left',
+                            unresize: true,
+                            templet:function(d){
+                                return d.due_date==null?'暂无':d.due_date
+                            }
+                        }, {
+                            sort: true,
+                            field: 'is_confirm_desc',
+                            title: '是否確認',
+                            minWidth: 100,
+                            unresize: true,
+                            rowspan: 2,
+                            fixed: 'left',
+                            totalRowText: '合计：'
+                        },{
+                            sort:true,
+                            field: 'basic_salary',
+                            title: '基本薪资',
+                            minWidth: 140,
+                            rowspan: 2,
+                            fixed: 'left',
+                            unresize: true
+                        },{
+                            sort: true,
+                            align: "center",
+                            field: "jia",
+                            title: "扣项",
+                            minWidth: 128,
+                            colspan: colSpanjia,
+                            colspan: 2
+                            // edit: "text"
+                        }, {
+                            sort: true,
+                            align: "center",
+                            field: "lingqu",
+                            title: "加项",
+                            colspan: 6,
+                            minWidth: 160
+                        },{
+                            sort: true,
+                            field: 'total_salary',
+                            title: '总薪资',
+                            unresize: true,
+                            rowspan: 2,
+                            minWidth: 140
+                        },  {
+                            sort: true,
+                            align: "center",
+                            field: "jia",
+                            title: "扣项 （二)",
+                            minWidth: 128,
+                            colspan: 4
+                            // edit: "text"
+                        }, {
+                            sort: true,
+                            field: 'epf_gong',
+                            title: 'EPF公积金(公)',
+                            unresize: true,
+                            rowspan: 2,
+                            // edit: "text",
+                            minWidth: 140
+                        },{
+                            align: 'center',
+                            field: 'socso_gong',
+                            title: 'SOCSO社会保险(公)',
+                            rowspan: 2,
+                            unresize: true,
+                            // edit: "text",
+                            minWidth: 160
+                            // colspan: colSpanjia
+                        },{
+                            align: 'center',
+                            field: 'eis_gong',
+                            title: 'EIS失业保险(公)',
+                            rowspan: 2,
+                            unresize: true,
+                            // edit: "text",
+                            minWidth: 160
+                        }, {
+                            align: 'center',
+                            field: 'jing_salary',
+                            title: '薪资',
+                            rowspan: 2,
+                            minWidth: 100,
+                            unresize: true,
+                            // colspan: colSpanhb
+                        }, {
+                            align: 'center',
+                            field: 'koukuan_huibu',
+                            title: '扣款、回补',
+                            rowspan: 2,
+                            edit: "text",
+                            minWidth: 100
+                            // colspan: colSpanjian
+                        }, {
+                            // align: 'center',
+                            field: 'jixiao',
+                            title: '绩效奖金',
+                            rowspan: 2,
+                            edit: "text",
+                            minWidth: 120
+                        }, {
+                            // align: 'center',
+                            field: 'yingfa_salary',
+                            rowspan: 2,
+                            title: '应发薪资',
+                            minWidth: 160
+                        }
+                    ], colsTowLe
+                ]
+                table.render({
+                    elem: '#projectTable'
+                        // ,url:  window.urls+"/gateway/usersalary/index "
+                        ,
+                    toolbar: true,
+                    totalRow: true,
+                    defaultToolbar: [
+                            'filter',
+                            'print',
+                            'exports'
+                        ]
+                        // ,where:{
+                        // 	Month:year+'-'+month,
+                        // }
+                        ,
+                    text: {
+                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    },
+                    data: rs.list
+                        // ,cellMinWidth: 100
+                        ,
+                    limit: 100000
+                        // ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                        ,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: false,
+                    loading: true,
+                    size: 'sm',
+                    height: 'full-250' //高度最大化减去差值
+                        // ,parseData: function(res){ //res 即为原始返回的数据
+                        // 	return {
+                        // 		"status_code":res.status_code,//解析接口状态
+                        // 		"message": res.message, //解析提示文本
+                        // 		// "count": res.data.total_count, //解析数据长度
+                        // 		"data": res.data.list, //解析数据列表
+                        // 		// "curr":res.data.page_index
+                        // 		"assign":res.data.assign,
+                        // 		"pay_date":res.data.pay_date
+                        // 	};
+                        // 	// var assign res.assign?'':'text',
+                        // }
+                        ,
+                    cols: cols,
+                    request: {
+                        // pageName: 'currentIndex' //页码的参数名称，默认：page
+                        // ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    done: function (res) {
+                        // console.log(assign,rs.pay_date)
+                        if (assign) {
+                            $("div[lay-id='projectTable']").find('td').each(function () {
+                                $(this).removeAttr('data-edit');
+                            })
+                            $("#dateTime").val(rs.pay_date).attr("disabled","disabled");
+                            $("#subList").attr("disabled","disabled").addClass(" layui-btn-disabled").text("已发放");
+                            $("#previewList").hide();
+                            $("#newList").hide();
+                        } else {
+                            $("#dateTime").val('').removeAttr("disabled","disabled").removeClass("layui-disabled");
+                            $("#subList").removeAttr("disabled","disabled").removeClass(" layui-btn-disabled").text("发放");
+                            $("#previewList").show();
+                            $("#newList").show();
+                        }
+                        for (key in rs.summarize) {
+                            $(".layui-table-total td[data-field='" + key + "']>div").text(rs.summarize[ key]);
+                            // //console.log($(".layui-table-total td[data-field='"+key.split('sum_')[1]+"']>div"),rs.summarize[key])
+                        }
+
+                        $('div[lay-event="LAYTABLE_EXPORT"]').attr('lay-event','layevent-eport-table')
+                        $('div[lay-event="layevent-eport-table"]').off('click').on('click',function () {
+                            var repTh =$("div[lay-id='projectTable'] .layui-table-box .layui-table-header>table").html();
+                            var repTb =$("div[lay-id='projectTable'] .layui-table-box .layui-table-body.layui-table-main>table").html();
+                            $('#report-table') .html(repTh + repTb);
+                                    // var table2excel = new Table2Excel();
+                                    // table2excel.export($('#report-table'));
+
+                            $('#report-table').table2excel({
+                                fileext: ".xls",
+                                filename: "" + month + " 工资列表"
+                            })
+                        })
+                    }
+                });
+                // table.reload('projectTable',{cols: cols});
+                table.resize('projectTable');
+                }
+            })
+					
+
+		}
+        
+        laydate.render({
+			elem: '#monTime',
+			type: 'month',
+			value: year + '-' + month,
+			max: -maxDate,
+			done: function (value, date, endDate) {
+				usersalaryFun(value);
+				table.resize('projectTable');
+			}
+		});
+		laydate.render({
+			elem: '#dateTime',
+			type: 'date',
+		});
+		var subData = {
+			Month: d.getFullYear() + '-' + lay.digit(d.getMonth() + 1),
+			PayDate: '',
+			UserSalary: [],
+		}
+        var dval = $('#monTime').val();
+		usersalaryFun(year + '-' + month, true)
+
+
+		$("#IqProject").on("click", function () {
+			var dval = $('#monTime').val();
+			usersalaryFun(dval);
+			table.resize('projectTable');
+		})
+
+		//监听表格编辑
+		table.on('edit(projectTable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+
+			if (obj.field !== "zhi_deng") {
+				if (isNaN(obj.value)) {
+					layer.msg('请输入正确值');
+					$(this).val('');
+					return false
+				}
+			}
+            var dval = $('#monTime').val();
+            // 编辑
+            var UserID = obj.data.user_id;
+            var ShijiaJian = obj.data.shijia_jian; //事假
+            var OtherJian = obj.data.other_jian; //其他扣款
+            var FullAttendJia = obj.data.full_attend_jia; //全勤奖
+            var TrafficSubsidyJia = obj.data.traffic_subsidy_jia; //交通补贴
+            var BanciSubsidyJia = obj.data.banci_subsidy_jia; //班次补贴
+            var OvertimeSubsidyJia = obj.data.overtime_subsidy_jia; //加班补贴
+            var YearEndAwardsSalaryJia = obj.data.year_end_awards_salary_jia; //年终奖
+            var OtherJia = obj.data.other_jia;  //加项其他
+            var EpfYuan = obj.data.epf_yuan; //员工EPF
+            var SocsoYuan = obj.data.socso_yuan; //员工SOCSO
+            var EisYuan = obj.data.eis_yuan; //员工EIS
+            var PcbYugushui = obj.data.pcb_yugushui; //PCB预估税
+            var EpfGong = obj.data.epf_gong;　//公司EPF
+            var SocsoGong = obj.data.socso_gong;  //公司SOCSO
+            var EisGong = obj.data.eis_gong;  //公司EIS
+            var KoukuanHuibu = obj.data.koukuan_huibu;  //扣款回补
+            var Jixiao = obj.data.jixiao;   //绩效
+           
+
+            var DepartmentID = formSelects.value('DepartmentID');
+            var JobTitleID = formSelects.value('JobTitleID');
+            var arrDep = [],
+                subDpr;
+            if (DepartmentID.length > 0) {
+                for (var i = 0; i < DepartmentID.length; i++) {
+                    arrDep.push(DepartmentID[i].id);
+                }
+                subDpr = arrDep.join(',');
+            } else {
+                subDpr = '';
+            }
+
+            var arrJob = [],
+                JobTitleIDStr;
+            if (JobTitleID.length > 0) {
+                for (var i = 0; i < JobTitleID.length; i++) {
+                    arrJob.push(JobTitleID[i].id);
+                }
+                JobTitleIDStr = arrJob.join(',');
+            } else {
+                JobTitleIDStr = '';
+            }
+            var UserName = obj.data.user_name;
+            var IsConfirm = obj.data.is_confirm;
+            
+            var upData = {
+                UserID: UserID, //用户ID
+                ShijiaJian:ShijiaJian, //事假
+                OtherJian:OtherJian, //其他扣款
+                FullAttendJia:FullAttendJia, //全勤奖
+                TrafficSubsidyJia:TrafficSubsidyJia, //交通补贴
+                BanciSubsidyJia:BanciSubsidyJia, //班次补贴
+                OvertimeSubsidyJia:OvertimeSubsidyJia, //加班补贴
+                YearEndAwardsSalaryJia:YearEndAwardsSalaryJia, //年终奖
+                OtherJia:OtherJia,  //加项其他
+                EpfYuan:EpfYuan, //员工EPF
+                SocsoYuan:SocsoYuan, //员工SOCSO
+                EisYuan:EisYuan, //员工EIS
+                PcbYugushui:PcbYugushui, //PCB预估税
+                EpfGong:EpfGong,　//公司EPF
+                SocsoGong:SocsoGong,  //公司SOCSO
+                EisGong:EisGong,  //公司EIS
+                KoukuanHuibu:KoukuanHuibu,  //扣款回补
+                Jixiao:Jixiao   //绩效
+            }
+            var subData = {
+                Month: dval,
+                UserSalary: [upData],
+                UserName: UserName, //用户名
+                DepartmentID:subDpr, //部门ID
+                JobTitleID:JobTitleIDStr, //岗位ID
+                IsConfirm:IsConfirm,  //是否确认
+            }
+
+            obj.update(obj.data);
+            $.fetch({
+                url: "/gateway/usersalary/my/updatesalary",
+                type: 'post',
+                data: subData,
+                cb: function (rs) {
+                    var dval = $('#monTime').val();
+                    obj.update({
+                        'shijia_jian':rs.data.shijia_jian,
+                        'other_jian':rs.data.other_jian,
+                        'full_attend_jia':rs.data.full_attend_jia,
+                        'traffic_subsidy_jia':rs.data.traffic_subsidy_jia,
+                        'banci_subsidy_jia':rs.data.banci_subsidy_jia,
+                        'overtime_subsidy_jia':rs.data.overtime_subsidy_jia,
+                        'year_end_awards_salary_jia':rs.data.year_end_awards_salary_jia,
+                        'other_jia':rs.data.other_jia,
+                        'pcb_yugushui':rs.data.pcb_yugushui,
+                        'koukuan_huibu':rs.data.koukuan_huibu,
+                        'jixiao':rs.data.jixiao,
+                        'epf_gong':rs.data.epf_gong,
+                        'socso_gong':rs.data.socso_gong,
+                        'eis_gong':rs.data.eis_gong
+                    });
+                    usersalaryFun(dval, true);
+                    table.resize('projectTable');
+                    
+                    for (key in rs.summarize) {
+                        $(".layui-table-total td[data-field='" + key.split('sum_')[1] + "']>div").text(rs.summarize[key]);
+                    }
+
+                }
+            })
+		})
+        
+
+        // 发放
+		$("#subList").on("click", function () {
+
+			var dval = $('#monTime').val();
+			var PayDate = $('#dateTime').val();
+			// var patt = '\d{4}-\d{2}-\d{2}';
+			// var pmtt = '\d{4}-\d{2}';
+			// patt.test(PayDate);
+			// //console.log(patt.test(PayDate))
+			// pmtt.test(dval);
+			if (PayDate == '') {
+				layer.msg('请输入发放日期');
+				$(this).val('');
+				return false
+            }
+            layer.confirm(
+                '确定发放？<br>发放日期:<span style="color:#FF5722">' + PayDate +
+                '</span><br>工资月份:<span style="color:#FF5722">' + dval +
+                '</span>', {
+                    title: false,
+                    closeBtn: false
+                },
+                function (index) {
+                    $.fetch({
+                        url: "/gateway/usersalary/my/assignsalary",
+                        type: 'post',
+                        data: {
+                            Month: dval,
+                            PayDate: PayDate,
+                        },
+                        cb: function (rs) {
+                            layer.msg('发放成功.');
+                            layer.close(index);
+                            //tableIndex.reload({
+                            // 	where:{
+                            // 		Month:dval
+                            // 	},
+                            //});
+                            usersalaryFun(dval, true);
+                            table.resize('projectTable');
+                        }
+                    })
+                }
+            )
+		})
+		// 预览工资
+		$("#previewList").on("click", function () {
+			var dval = $('#monTime').val();
+			var Month = $("#dateTime").val();
+			var MonthTime = Month.substring(0, 7);
+			// if (Month == '') {
+			// 	layer.msg('请输入预览的日期');
+			// 	$(this).val('');
+			// 	return false
+			// }
+            layer.confirm(
+                // 预览日期:<span style="color:#FF5722">' + Month +
+                // '</span><br>
+                '工资月份:<span style="color:#FF5722">' + dval +
+                '</span>', {
+                    title: false,
+                    closeBtn: false
+                },
+                function (index) {
+                    $.fetch({
+                        url: "/gateway/usersalary/my/setview",
+                        type: 'post',
+                        data: {
+                            Month: dval,
+                            // IsDemission: 0,
+                        },
+                        cb: function (rs) {
+                            layer.msg('预览成功.');
+                            layer.close(index);
+                            usersalaryFun(dval, true);
+                            table.resize('projectTable');
+                        }
+                    })
+                }
+            )
+		})
+        // 重新生成数据
+        $("#newList").on("click", function () {
+			var dval = $('#monTime').val();
+			if (dval == '') {
+				layer.msg('请输入清除年月');
+				$(this).val('');
+				return false
+			}
+            layer.confirm(
+                '确定清除 <span style="color:#FF5722">' + dval + '</span> 的工资数据?', {
+                    title: false,
+                    closeBtn: false
+                },
+                function (index) {
+                    $.fetch({
+                        url: "/gateway/usersalary/my/cleardata",
+                        type: 'post',
+                        data: {
+                            Month: dval,
+                            // IsDemission: 0,
+                        },
+                        cb: function (rs) {
+                            layer.msg('清除成功.');
+                            layer.close(index);
+                            usersalaryFun(dval, true);
+                            table.resize('projectTable');
+                        }
+                    })
+                }
+            )
+		})
+	});
+</script>
+
+</html>

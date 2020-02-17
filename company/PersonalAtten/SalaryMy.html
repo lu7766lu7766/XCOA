@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的工资</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+
+</head>
+	
+<body class="statiBox">
+	<div class="layui-fluid">
+		<div class="layui-card layui-col-space15">
+			<div class="layui-card-body">
+                <div class="pz-10 layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">年-月</label>
+                            <div class="layui-inline">
+                                <input class="layui-input" type="text" id="SalaryTiem" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="SalaryCont" style="display: none">
+						<div class="layui-block  layui-card-body">
+							<div class="pz-10 layui-form">
+								<h3 class="layui-bg-black tc">员工信息</h3>
+								<div class="layui-block py-10">
+									<div class="layui-row">
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">用户名：</label>
+												<span class="salspan user_name nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">性别：</label>
+												<span class="salspan gender_desc nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">部门：</label>
+												<span class="salspan dpt_name nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">工资月份：</label>
+												<span class="salspan basic_month nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">岗位：</label>
+												<span class="salspan title_name nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">雇佣类型：</label>
+												<span class="salspan employ_type_desc nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">入职日期：</label>
+												<span class="salspan join_date nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">转正日期：</label>
+												<span class="salspan due_date nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">合同期开始：</label>
+												<span class="salspan contract_startdate nullHide"></span>
+											
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">合同期结束：</label>
+												<span class="salspan contract_enddate nullHide"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">合同期：</label>
+												<span class="salspan contract_time nullHide"></span>
+												<span class=" nullHide">月</span>
+											</div>
+										</div>
+										<!-- <div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">银行账号：</label>
+												<span class="salspan"></span>
+											</div>
+										</div> -->
+									</div>
+								</div>
+								<h3 class="layui-bg-black tc">工资</h3>
+								<div class="layui-block py-10">
+									<div class="layui-row">
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">基本工资：</label>
+												<span class="salspan basic_salary_ying nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">工作天数：</label>
+												<span class="salspan workdays nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">基本工资货币：</label>
+												<span class="salspan basic_salary_currency_name nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">9G押金(已押)：</label>
+												<span class="salspan visa_total_deposit nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="layui-block py-10">
+									<div class="layui-row">
+										<div class="layui-col-sm4 layui-col-xs12  layui-col-md4">
+											<h3 class="layui-bg-blue tc">加项目</h3>
+											<div class="layui-row">
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">加班时数：</label>
+														<span class="salspan overtime_hours_jia nullHide"></span>
+														<span class=" nullHide">(小时)</span>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">房屋补贴：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan housing_subsidy_jia nullHide" data-name="housing_subsidy"></span> -->
+															<span class="salspan housing_subsidy_rmb_jia nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">加班费：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan overtime_subsidy_jia nullHide" data-name="overtime_subsidy"></span> -->
+															<span class="salspan overtime_subsidy_rmb_jia nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">退款：</label>
+														<span class="salspan refund_jia nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">全勤：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan full_attend_jia" data-name="full_attend"></span> -->
+															<span class="salspan full_attend_rmb_jia nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">提成：</label>
+														<span class="salspan commission_jia nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">岗位补贴：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan job_subsidy_jia nullHide" data-name="job_subsidy"></span> -->
+															<span class="salspan job_subsidy_rmb_jia nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">年终奖：</label>
+														<span class="salspan year_end_awards_jia nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">其它：</label>
+														<span class="salspan other_jia nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="layui-col-sm4 layui-col-xs12  layui-col-md4">
+											<h3 class=" tc" style=" background-color: #8bb7e8;color: #fff">加项目-回补</h3>
+											<div class="layui-row">
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">加班时数：</label>
+														<span class="overtime_hours_hb nullHide"></span>
+														<span class=" nullHide">(小时)</span>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">房屋补贴：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan housing_subsidy_hb nullHide" data-name="housing_subsidy"></span> -->
+															<span class="salspan housing_subsidy_rmb_hb nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">加班费：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan overtime_subsidy_hb nullHide" data-name="overtime_subsidy"></span> -->
+															<span class="salspan overtime_subsidy_rmb_hb nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">退款：</label>
+														<span class="salspan refund_hb nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">全勤：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan full_attend_hb nullHide"  data-name="full_attend"></span> -->
+															<span class="salspan full_attend_rmb_hb nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">提成：</label>
+														<span class="salspan commission_hb nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">岗位补贴：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan job_subsidy_hb nullHide" data-name="job_subsidy"></span> -->
+															<span class="salspan job_subsidy_rmb_hb nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">年终奖：</label>
+														<span class="salspan year_end_awards_hb nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">其它：</label>
+														<span class="salspan other_hb nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="layui-col-sm4 layui-col-xs12  layui-col-md4">
+											<h3 class="layui-bg-orange tc">扣除项目</h3>
+											<div class="layui-row">
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">迟到：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan late_jian nullHide" data-name="late_jian"></span> -->
+															<span class="salspan late_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">早退：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan leave_early_jian" data-name="leave_early_jian"></span> -->
+															<span class="salspan leave_early_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">旷工：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan kuang_gong_jian" data-name="special_shijia_jian"></span> -->
+															<span class="salspan kuang_gong_jian_rmb nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">特殊事假：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan special_shijia_jian nullHide" data-name="special_shijia_jian"></span> -->
+															<span class="salspan special_shijia_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+															
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">事假：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan shijia_jian nullHide" data-name="shijia_jian"></span> -->
+															<span class="salspan shijia_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+														
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">外宿租赁费：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan rental_fees_jian nullHide" data-name="rental_fees_jian"></span> -->
+															<span class="salspan rental_fees_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+														
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">外宿水电费：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan water_electricity_jian nullHide" data-name="water_electricity_jian"></span> -->
+															<span class="salspan water_electricity_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+														
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">错款：</label>
+														<div class="saldiv">
+															<!-- <span class="salspan wrong_money_jian nullHide" data-name="wrong_money_jian"></span> -->
+															<span class="salspan wrong_money_rmb_jian nullHide"></span>
+															<!-- <span class="nullHide">人民币</span>  -->
+														
+														</div>
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">9G押金：</label>
+														<span class="salspan visa_deposit_jian nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+												<div class="layui-col-sm12 layui-col-xs12  layui-col-md12">
+													<div class="layui-input-lineHeight layui-line">
+														<label class="layui-bg-title">其它：</label>
+														<span class="salspan other_jian nullHide"></span>
+														<!-- <span class="nullHide">人民币</span>  -->
+														
+													</div>
+												</div>
+											
+											</div>
+										</div>
+									</div>
+								</div>
+								<h3 class="layui-bg-orange tc">应发工资</h3>
+								<div class="layui-block py-10">
+									<div class="layui-row">
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">基本工资：</label>
+												<span class="salspan basic_salary_ying nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">加项目加总：</label>
+												<span class="salspan sum_subsidy_jia nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">回补项目加总：</label>
+												<span class="salspan sum_subsidy_hb nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">扣除项目加总：</label>
+												<span class="salspan sum_subsidy_jian nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">2%调整：</label>
+												<span class="salspan percent2_ying nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">调整后工资：</label>
+												<span class="salspan adjustment_ying nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">应发工资：</label>
+												<span class="salspan yingfa_ying nullHide"></span> 
+												<!-- <span class="nullHide">人民币</span>  -->
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">领取：</label>
+												<span class="salspan first_currency_amount nullHide"></span>
+												<!-- <span class="nullHide">，折合</span>
+												<span  class="salspan first_currency_rmb_amount nullHide"></span> -->
+												<span class="salspan first_currency_name nullHide"></span>
+												<!-- <span class="nullHide "> 人民币</span> -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">打回：</label>
+												<span class="salspan second_currency_amount nullHide"></span>
+												<span class="salspan second_currency_name nullHide"></span>
+											</div>
+										</div>
+									
+										
+									</div>
+								</div>
+								<h3 class="layui-bg-black tc">调整工资</h3>
+								<div class="layui-block py-10">
+									<div class="layui-row">
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">基本工资：</label>
+												<span class="salspan basic_salary_ying nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												<!-- <span class="salspan basic_currency_name nullHide"></span> -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">调幅：</label>
+												<span class="nullHide tiaofu_tiao"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+												
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">调整后金额：</label>
+												<span class="salspan amount_tiao nullHide"></span>
+												<!-- <span class="nullHide">人民币</span>  -->
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">调幅%：</label>
+												<span class="nullHide tiaofuper_tiao"></span>
+											</div>
+										</div>
+										<div class="layui-col-sm3 layui-col-xs12  layui-col-md3">
+											<div class="layui-input-lineHeight layui-line">
+												<label class="layui-bg-title">调整月份：</label>
+												<span class="salspan  month_tiao"></span>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="SalaryTW" style="display: none">
+						<div class="layui-block  layui-card-body">
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										基本信息
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">部门：</label>
+										<span class="salspan dept_name"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">員工姓名：</label>
+										<span class="salspan user_name"></span>
+									</div>
+								</div>
+								<!-- <div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">銀行帳號：</label>
+											<span class="salspan title_name"></span>
+									</div>
+								</div> -->
+
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">薪資月份：</label>
+										<span class="salspan month"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">給付日期：</label>
+										<span class="salspan pay_date"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">健保投保額：</label>
+										<span class="salspan jian_bao_amount"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞保投保額：</label>
+										<span class="salspan lao_bao_amount"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞退提繳額：</label>
+										<span class="salspan lao_tui_amount"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">提撥 %：</label>
+										<span class="salspan laotui_per"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞退(公)：</label>
+										<span class="salspan gs_lt_tw"></span>
+									</div>
+								</div>
+							</div><hr>
+
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										① 應付項目
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">本薪(應)：</label>
+										<span class="salspan basic_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">班別津貼(應)：</label>
+										<span class="salspan ban_bie_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">加班費(應)：</label>
+										<span class="salspan overtime_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">短付薪資(應)：</label>
+										<span class="salspan duan_fu_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">退職所得(應)：</label>
+										<span class="salspan li_zhi_salary_ying"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">禮金(應)：</label>
+										<span class="salspan li_jin_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">獎金(應)：</label>
+										<span class="salspan reward_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">年終獎金(應)：</label>
+										<span class="salspan year_end_awards_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">伙食津貼(免)：</label>
+										<span class="salspan meal_subsidy"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">加班費(免)：</label>
+										<span class="salspan overtime_salary_mian"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">退職所得(免)：</label>
+										<span class="salspan li_zhi_salary_mian"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">合計：</label>
+										<span class="salspan ying_fu_sum"></span>
+									</div>
+								</div>
+							</div><hr>
+
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										② 應扣項目
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">請假扣款(應)：</label>
+										<span class="salspan shijia_deduction"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">溢付薪資(應)：</label>
+										<span class="salspan yi_fu_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">合計：</label>
+										<span class="salspan ying_kou_sum"></span>
+									</div>
+								</div>
+							</div><hr>
+
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										③ 代扣項目
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">薪資代扣繳：</label>
+										<span class="salspan xin_zi_dai_kou"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">獎金代扣繳：</label>
+										<span class="salspan reward_dai_kou"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">退職所得代扣繳：</label>
+										<span class="salspan li_zhi_suo_de_dai_kou"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">健保費(員)：</label>
+										<span class="salspan gr_jb_tw"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞保費(員)：</label>
+										<span class="salspan gr_lb_tw"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞退(員)：</label>
+										<span class="salspan gr_lt_tw"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">二代健保(員)：</label>
+										<span class="salspan gr_er_dai_jb_tw"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">合計：</label>
+										<span class="salspan dai_kou_sum"></span>
+									</div>
+								</div>
+								
+							</div><hr>
+
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										④ 調整項目
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞健保調整(加)：</label>
+										<span class="salspan ljb_jia"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">勞健保調整(減)：</label>
+										<span class="salspan ljb_jian"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">其他調整(加)：</label>
+										<span class="salspan qita_jia"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">其他調整(減)：</label>
+										<span class="salspan qita_jian"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">已付禮金(減)：</label>
+										<span class="salspan yifu_lijin_jian"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">合計：</label>
+										<span class="salspan tiao_zheng_sum"></span>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<div class="layui-row">
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">實際支付薪資金額 ①-②-③+④：</label>
+										<span class="salspan real_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">應稅總額：</label>
+										<span class="salspan ying_shui_sum"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">免稅總額：</label>
+										<span class="salspan mian_shui_sum"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="SalarySG" style="display: none">
+						<div class="layui-block  layui-card-body">
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										基本信息
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">部门：</label>
+										<span class="salspan dpt_name"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">員工姓名：</label>
+										<span class="salspan user_name"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">崗位：</label>
+										<span class="salspan title_name"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">转正日期：</label>
+										<span class="salspan join_date"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">是否確認：</label>
+										<span class="salspan is_confirm_desc"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">基本薪资：</label>
+										<span class="salspan basic_salary"></span>
+									</div>
+								</div>
+							</div><hr>
+							<div class="layui-row">
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">总薪资：</label>
+										<span class="salspan total_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">SDL(公)：</label>
+										<span class="salspan sdl_gong"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">CPF(公)：</label>
+										<span class="salspan cpf_gong"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">净薪资：</label>
+										<span class="salspan jing_salary"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">报销：</label>
+										<span class="salspan baoxiao"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">季度奖金：</label>
+										<span class="salspan quarter_awards"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">应发薪资：</label>
+										<span class="salspan salary_ying"></span>
+									</div>
+								</div>
+							</div><hr>
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										扣项
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">請假扣款：</label>
+										<span class="salspan leave_jian"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">其他：</label>
+										<span class="salspan other_jian"></span>
+									</div>
+								</div>
+							</div><hr>
+
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										加项
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">季度无病假：</label>
+										<span class="salspan jidu_no_sick_jia"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">年終獎金：</label>
+										<span class="salspan year_end_awards_salary_jia"></span>
+									</div>
+								</div>
+							</div><hr>
+
+							<div class="layui-row">
+								<div class="layui-col-sm12">
+									<h3 class="">
+										扣项（二）
+									</h3>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">CPF(員)：</label>
+										<span class="salspan cpf_yuan"></span>
+									</div>
+								</div>
+								<div class="layui-col-sm6 layui-col-xs12  layui-col-md4">
+									<div class="layui-input-lineHeight layui-lineHeigh layui-line">
+										<label class="layui-bg-title">CDAC(員)：</label>
+										<span class="salspan cdac_yuan"></span>
+									</div>
+								</div>
+							</div><hr>
+						</div>
+					</div>
+                </div>
+			</div>
+		</div>
+	</div>
+<style>
+	.saldiv{
+		display: inline-block;
+	}
+	.saldiv span{
+		display: inline-block
+	}
+</style>
+</body>
+<script src="../../layui/layui.js"></script>
+<!-- <script src="../../js/sub/sets.js?v=201812240"></script> -->
+
+<script>
+	
+$(function(){
+    layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','form','laydate','laypage','table','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,laydate = layui.laydate
+        ,router = layui.router()
+        ,table = layui.table;
+       
+		
+
+        var d = new Date();
+		var year = lay.digit(d.getMonth() + 1)==1?d.getFullYear()-1:d.getFullYear();
+		var month = lay.digit(d.getMonth() + 1)==1?12:(d.getMonth() + 0);
+		var maxDate=d.getDate();
+		// month=month-1
+		   month = month<10?'0'+month:month;
+		
+		   
+		
+        var mysalaryFun=function(m,ismnl){
+			var isNullFun=function(val){
+				return (val==null||undefined)?' ':val;
+			}
+			if(ismnl=='/mnl'){
+				var sdata={
+					Month:m,
+					IsTemp:1,
+				}
+			}else if(ismnl=='/sg'){
+				var sdata={
+					Month:m,
+				}
+			}else{
+				var sdata={
+					Month:m,
+				}
+			}
+			$.fetch({
+				url: "/gateway/usersalary"+ismnl+"/mysalary",
+				type: 'post',
+				data:sdata,
+				dataType: 'JSON',
+				cb:function(rs){
+					
+					if(ismnl=='tw'){
+						
+						if(rs.my_salary!==null&&rs.my_salary!==undefined&&rs.my_salary!==''&&rs.length!==0){
+							for(var key in rs.my_salary) {
+								$('#SalaryTW .'+key+'').html(isNullFun(rs.my_salary[key]));
+							}
+							for(var key in rs.pay_roll) {
+								$('#SalaryTW .'+key+'').html(isNullFun(rs.pay_roll[key]));
+							}
+						}else{
+							$("#SalaryTW .salspan").html('');
+						}
+					}else if(ismnl=='/sg'){
+						if(rs!=null&&rs!=undefined&&rs!=''){
+							for(var key in rs) {
+								$('#SalarySG .'+key+'').html(isNullFun(rs[key]));
+							}
+						}else{
+							$("#SalaryTW .salspan").html('');
+						}
+					}else{
+						$.fetch({
+							url: "/gateway/usersalary/mnl/subsidycolumns",
+							type: 'post',
+							dataType: 'JSON',
+							cb:function(ran){
+								
+								$("#SalaryCont .salspan").html('');
+								$('#SalaryCont .basic_month').html(isNullFun(m));
+								var ran=ran.columns;
+								if(rs!==null&&rs!==undefined&&rs!==''&&rs.length!==0){
+									for(var key in rs) {
+										$('#SalaryCont .'+key+'').html('<b> '+isNullFun(rs[key])+'</b>');
+									}
+								}else{
+									$("#SalaryCont .salspan").html('');
+								}
+								$('#SalaryCont').find("div.saldiv").each(function(){
+									var cname=$(this).find('span').attr('data-name');
+									var isCname=false;
+									for(var i=0;i<ran.length;i++){
+										if(cname&&cname==ran[i].column_name){
+											isCname=true
+											$(this).find('span[data-name="'+ran[i].column_name+'"]').append(' '+ran[i].currency_unit_name);
+											
+											$(this).find('span[data-name="'+ran[i].column_name+'"]').siblings('span').prepend(' ，折合 ')
+											$(this).find('span[data-name="'+ran[i].column_name+'"]').append(' 人民币 ')
+										}
+									}
+									if(cname&&!isCname){
+										$(this).find('span:first').append(' 比索')
+										$(this).find('span:first').siblings('span').prepend(' ，折合 ')
+										$(this).find('span').append('人民币')
+									}
+								})
+								if(rs==null){
+									$("#SalaryCont .nullHide").hide();
+									layer.msg(''+m+'工资未发放')
+								}else{
+									$("#SalaryCont .nullHide").show();									
+								}
+							}
+						})
+					}
+					
+					// var HtmlSalary = 
+					// $("#SalaryCont").html(HtmlSalary);
+				}
+			})
+		}
+		$.fetch({
+			url:"/gateway/usersalary/getcode",
+			type:'post',
+			cb:function(rs){
+				var rs=rs[0];
+				if(!rs){
+					layer.msg('请先进行工资设置');
+					var ismnl=''
+					
+				}else if(rs=='mnl'){  
+					var ismnl='/mnl'
+					$("#SalaryTW").hide();
+					$("#SalarySG").hide();
+					$("#SalaryCont").show();
+				}else if(rs=='sg'){
+					var ismnl='/sg'
+					$("#SalaryTW").hide();
+					$("#SalarySG").show();
+					$("#SalaryCont").hide();
+				}else{
+					$("#SalaryTW").show();
+					$("#SalaryCont").hide();
+					$("#SalarySG").hide();
+					var ismnl=''
+					
+				}
+				mysalaryFun(year+'-'+month,ismnl);
+				laydate.render({
+					elem: '#SalaryTiem'
+					,type: 'month'
+					,value: year+'-'+month
+					,max: -maxDate
+					,change: function(value, date, endDate){
+						mysalaryFun(value,ismnl);
+					}
+				});
+			}
+		})
+		   
+		
+	})
+})
+</script>
+</html>

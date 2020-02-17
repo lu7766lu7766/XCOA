@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>人事变动详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                人事变动详情
+            </div>     
+            <div class="layui-card-body">
+                    <div class=" layui-form"  lay-filter="performanceForm" id="performanceForm">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">标题：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="change_title"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">员工名字：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="changer_name"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">变动选项：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="change_type_name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">原部门：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="oldDept_name"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">原职位：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="oldTitle_name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">新部门：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="newDept_name"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">新职位：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="newTitle_name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">变动原因：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="change_cause"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">调岗日期：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="change_date"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">生效日期：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="effective_date"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline  isJsShow">
+                                    <label class="layui-form-label" style="width: 106px;">是否需要实习：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="is_practice_name"></div>
+                                </div>
+                                <div class="layui-inline  isJsShow isSxShow">
+                                    <label class="layui-form-label" style="width: 106px;">开始实习日期：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="practice_startdate"></div>
+                                </div>
+                                <div class="layui-inline  isJsShow isSxShow">
+                                    <label class="layui-form-label" style="width: 106px;">预计实习周期：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="practice_month"></div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 106px;">提交人：</label>
+                                    <div class="layui-input-inline layui-input-lineHeight" id="creater_name"></div>
+                                </div>
+                            </div>
+                             <!-- 审批 -->
+                             <!-- <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·审批/否决情况</blockquote>   -->   
+                                                
+                             <div class="layui-form-item">   
+                                 <table class="layui-table" id="approvalTable"></table>
+                             </div> 
+                            <div class="layui-fluid" id="DetailAudit">
+                                <div class="layui-form">
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block layui-input-lineHeight">
+                                            <input type="radio" name="ApprYn" lay-filter="ApprYn" value="2" title="审批"
+                                                checked>
+                                            <input type="radio" name="ApprYn" lay-filter="ApprYn" value="1"
+                                                title="否决">
+                                            </div>
+                                        </div>
+                                    <div class="layui-form-item contentApprBox" style="display:none">
+                                        <label class="layui-form-label modify-layui-label">否决原因</label>
+                                        <div class="layui-input-block layui-input-lineHeight">
+                                            <textarea id="contentAppr" name="contentAppr"
+                                                class="layui-textarea"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button id="subFinanApprForm" lay-submit class="layui-btn"
+                                                lay-filter="subFinanApprForm">提交</button>
+                                            <button id="backApprList" class="layui-btn layui-btn-primary">取消</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-layout-admin">
+                                <div class="layui-input-block">
+                                    <div class="layui-footer" style="left: 0;">
+                                        <button id="resetPage" class="layui-btn layui-btn-primary">刷新</button>
+                                        <button class="layui-btn" id="closePage">关闭</button>
+                                    </div>
+                                </div>
+                            </div>                     
+                        </div>
+            </div>       
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190218"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','laydate','table'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        // ,dtree=layui.dtree
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table;
+        if(window.detailData){
+            $.fetch({
+                url:"/gateway/userChange/detail",
+                type: 'post',
+                data:window.detailData,
+                // data:{
+                //     creater: 6,
+                //     recordId:75
+                // },
+                cb:function(rs){
+                    console.log(rs);
+                    // var attachs ='';
+                    // if(rs.attach&&rs.attach.length>0){//接口附件数据
+                    //     for(var k=0;k<rs.attach.length;k++){
+                    //         attachs+='<a title="点击下载" class="seeXqOutIn" href="/gateway/performance/downloadAttach?attachId='+rs.attach[k].id+'&&recordId='+rs.attach[k].performance_record_id+'" >'+rs.attach[k].original_name+'</a>'    
+                    //     }
+                    // }else{
+                    //     attachs='无附件';
+                    // }
+                    var approval ='';
+                    if(rs.approval&&rs.approval.length>0){//接口附件数据
+                        approval +='<thead><tr><th>审批人</th><th>审批人部门</th><th>开始时间</th><th>状态</th><th>否决原因</th><th>审批备注</th></tr></thead><tbody>'
+                        for(var k=0;k<rs.approval.length;k++){
+                            approval+='<tr><td>'+rs.approval[k].approval_name+'</td><td>'+(rs.approval[k].approval_deptname==null?'暂无':rs.approval[k].approval_deptname)+'</td><td>'+rs.approval[k].created_at+'</td><td>'+['--','已否决','已审批'][rs.approval[k].approval_result]+'</td><td>'+(rs.approval[k].content==null?'--':rs.approval[k].content)+'</td><td>'+(rs.approval[k].remark==null?'--':rs.approval[k].remark)+'</td></tr>'    
+                        }
+                        approval +='</tbody>'
+                        
+                    }else{
+                        approval='暂无';
+                    }
+
+                    $("#change_title").html(rs.change_title);
+                    $("#changer_name").html(rs.changer_name);
+                    $("#change_type_name").html(rs.change_type_name);
+                    $("#oldDept_name").html(rs.oldDept_name);
+                    $("#oldTitle_name").html(rs.oldTitle_name);
+
+                    $("#newDept_name").html(rs.newDept_name);
+                    $("#newTitle_name").html(rs.newTitle_name);
+                    $("#change_cause").html(rs.change_cause);
+                    // 岗位
+                    // console.log(rs.recorder_title_name?'暂无岗位':rs.recorder_title_name)
+                    // $("#recorderTitleId").html(rs.recorder_title_name==null?'暂无岗位':rs.recorder_title_name);
+                    $("#change_date").html(rs.change_date);
+                    $("#effective_date").html(rs.effective_date);
+                    $("#is_practice_name").html(rs.is_practice_name);
+                    $("#practice_startdate").html(rs.practice_startdate);
+                    $("#practice_month").html(rs.practice_month);
+                    $("#approvalTable").html(approval);
+                    $("#creater_name").html(rs.creater_name);
+                    //根据变动 实习 判断隐藏项
+                    // isJsShow isSxShow
+                    if(rs.change_type==2){
+                        $(".isJsShow ").show();
+                        if(rs.is_practice==1){
+                            $(".isSxShow ").show();
+                            
+                        }else{
+                            $(".isSxShow ").hide();
+                        }
+                    }else{
+                        $(".isJsShow ").hide();
+                    }
+                }
+            });
+            
+            if(window.detailData.approvalResult==0&&window.detailData.changeStatus==0){
+                $("#DetailAudit").show();
+            }else{
+                $("#DetailAudit").hide();
+            }
+            form.on('radio(ApprYn)', function(data){
+                console.log(data.elem); //得到radio原始DOM对象
+                console.log(data.value); //被点击的radio的value值+
+                if(data.value==1){
+                    
+                    $(".contentApprBox").show();
+                    $("#contentAppr").attr('lay-verify',"required");
+                }else{
+                    $(".contentApprBox").hide();
+                    $("#contentAppr").removeAttr('lay-verify');
+                    
+                }
+            });
+            $("#backApprList").on("click",function(){
+                var index = parent.layer.getFrameIndex(window.name)
+                parent.layer.close(index)
+            })
+            $("#subFinanApprForm").on("click",function(){
+                var result=$("input[name='ApprYn']:checked").val();
+                if(result ==1){
+                    var content =$("#contentAppr").val();
+                    if(content!=''&&content!=undefined){
+                        $.fetch({
+                            url:'/gateway/userChange/approval',
+                            data:{
+                                changeId:window.detailData.changeId,
+                                approvalId:window.detailData.changeApprovalID,
+                                result:result,
+                                content:content,
+                            },
+                            type: 'post',
+                            cb:function(rs){
+                                layer.msg('提交成功');
+                                var index = parent.layer.getFrameIndex(window.name)
+                                parent.layer.close(index)
+                                // performance.reload({
+                                //     page: {
+                                //         curr: 1 //重新从第 1 页开始
+                                //     }
+                                // });
+                            }
+                        })
+                        // lay.msg("请填写否决原因")
+                        // return false
+                    }
+                }else{
+                    $.fetch({
+                            url:'/gateway/userChange/approval',
+                            data:{
+                                changeId:window.detailData.changeId,
+                                approvalId:window.detailData.changeApprovalID,
+                                result:result,
+                            },
+                            type: 'post',
+                            cb:function(rs){
+                                layer.msg('提交成功');
+                                var index = parent.layer.getFrameIndex(window.name)
+                                parent.layer.close(index)
+                                //  performance.reload({
+                                //     page: {
+                                //         curr: 1 //重新从第 1 页开始
+                                //     }
+                                // });
+                            }
+                        })
+                }
+            })
+            // 消息表格
+        }
+        $("#closePage").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭        
+        })
+        $("#resetPage").on("click",function(){
+            location.reload();      
+        })
+        
+    })
+</script>
+
+</html>

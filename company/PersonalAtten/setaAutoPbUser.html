@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增排班人员</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="fashion-red">
+	<div  class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-card">
+				<div class="settingCont layui-card-body layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">倒班名称: </label>
+                        <div class="layui-input-block">
+                                <div class="layui-form-mid layui-word-aux" id="work_time_name">
+                            </div>    
+                        </div>    
+                    </div>  
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">班次详情: </label>
+                        <div class="layui-input-block">
+                                <div class="layui-form-mid layui-word-aux" id="work_time_type_arr">
+                            </div>    
+                        </div>    
+                    </div>  
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名: </label>
+                        <div class="layui-input-block" id="userCheck"></div>    
+                    </div>                
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作: </label>
+                        <div class="layui-input-block" id="userCheck">
+                            <div class="layui-form-mid layui-word-aux">
+                                <button id="add" class="layui-btn layui-btn-xs">添加成员</button>
+                                <button id="del" class="layui-btn layui-btn-xs">删除成员</button>
+                                <button id="earlyclose" class="layui-btn layui-btn-xs">提前结束</button>
+                                <!-- <button id="move" class="layui-btn layui-btn-xs">移动到其他班次</button> -->
+                                <!-- <button id="" class="layui-btn layui-btn-xs">变动日期</button> -->
+                            </div>    
+                        </div>    
+                    </div>     
+                    <div class="layui-form-item">
+                        <div class="layui-input-block"> 
+                            <button id="closeSet" class="layui-btn">关闭</button>
+                        </div>
+                    </div>    
+                    
+                </div>                
+		    </div>
+		</div>
+	</div>
+    <script src="../../js/common.js?v=20181222"  type="text/javascript"></script>
+    <script src="../../layui/layui.js"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','laydate','form','laypage','laytpl'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,router = layui.router()
+    ,layer = layui.layer;
+    element.render();
+    var table = layui.table
+        ,laydate = layui.laydate
+        ,laypage = layui.laypage
+        ,laytpl = layui.laytpl
+        ,form = layui.form
+        //console.log(window.res)
+        //人员复选框 
+    $.fetch({
+        url:"/gateway/worktimetypeuser/daobandetail",
+        type: 'post',
+        data:{
+           AutoKey:window.res.auto_key
+        },
+        cb:function(rs){
+            //console.log(rs)
+            var workTimeHtml=''
+            for(var i=0;i<rs.work_time_type_arr.length;i++){
+                workTimeHtml+=''+rs.work_time_type_arr[i].name+': '+rs.work_time_type_arr[i].time1+' ~ ' +rs.work_time_type_arr[i].time2+'<br>'
+            }
+            
+            $("#work_time_type_arr").html(workTimeHtml)
+            
+            $("#work_time_name").html(rs.work_time_name)
+            var user_list= rs.user_list;
+            if(user_list&&user_list.length>0){
+                var uHtml='';
+                for(var i =0;i<user_list.length;i++){
+                    uHtml+='<input type="checkbox" name="'+user_list[i].id+'" title="'+user_list[i].name+'" lay-skin="primary">';
+                }
+                $("#userCheck").html(uHtml);
+                form.render();
+            }
+            $("#add").on("click",function(){
+            var cont='<div class="popUpsCont layui-card layui-form layui-fluid">'
+                +'    <div class="layui-form-item">'
+                +'      <label class="layui-form-label">倒班用户</label>'
+                +'        <div class="layui-input-block">'
+                +'            <ul class="layui-small-static" id="workUserList" style="display:none;"></ul>'
+                +'            <textarea name="workUserList" lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea  layui-input-inline" style="width: 100%;"></textarea>'
+                +'            <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>'
+                +'            <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>'
+                +'        </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'      <label class="layui-form-label">生效日期</label>'
+                    
+                +'         <div class="layui-inline">'
+                +'             <input type="text" class="layui-input" autocomplete="off" id="SelectDates">'
+                +'         </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'    <div class="layui-input-block">'
+                +'          <button id="subAdd" class="layui-btn">确定</button>'
+                +'          <button id="close" class="layui-btn">取消</button>'
+                +'        </div>'
+                +'    </div>'
+                +'</div>'
+                layer.open({
+                    title:'添加',
+                    type: 1, 
+                    content:cont,
+                    area:['90%', '90%'],
+                    success:function(layero,index){
+                        $("a.addDesc").on("click", function () {
+                            selMemberFun($(this));
+                        });
+                        $("a.emptyDesc").on("click", function () {
+                            $(this).siblings("ul").html("");
+                            $(this).siblings("ul").attr("data-val", "");
+                            $(this).siblings(".layui-textarea").html("");
+                        })
+                        
+                        laydate.render({ 
+                            elem: '#SelectDates'
+                            ,type: 'date'
+                            ,min: window.res.start_date
+                            ,max: window.res.end_date
+                        });
+                        $("#subAdd").on("click",function(){
+                            // layer.close(index)
+                            var userStr=$("#workUserList").attr('data-val');
+                            var SelectDate=$("#SelectDates").val();
+                            if(!userStr){
+                                layer.msg('添加的用户不能为空!');
+                                return false
+                            }
+                            $.fetch({
+                                url:"/gateway/worktimetypeuser/movedaoban",
+                                type: 'post',
+                                data:{
+                                    FromAutoKey:window.res.auto_key,
+                                    Action:'add',
+                                    UserID:userStr,
+                                    SelectDate:SelectDate,
+                                },
+                                cb:function(rs){
+                                    layer.msg('添加成功.');
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                    form.render();
+                                    layer.close(index);
+                                }
+                            })
+                        })
+                        $("#close").on("click",function(){
+                            layer.close(index)
+                        })
+                    }
+
+                })
+            })
+            $("#del").on("click",function(){
+                var userDelArr=[],userNameDelArr=[];
+                // var SelectDate=$("#SelectDates").val();
+                
+                $("#userCheck input[type='checkbox']:checked").each(function(){
+                    userDelArr.push($(this).attr('name'));
+                    userNameDelArr.push($(this).attr('title'))
+                })
+                if(userDelArr.length===0){
+                    layer.msg('请选择要从排班中删除的人.');
+                    return false;
+                }
+                layer.confirm('确定从自动倒班"'+window.res.work_time_name +'"中删除:'+userNameDelArr.join(',') +'?',  { title:' '},function(index){
+                //do something
+                $.fetch({
+                        url:"/gateway/worktimetypeuser/movedaoban",
+                        type: 'post',
+                        data:{
+                            FromAutoKey:window.res.auto_key,
+                            Action:'del',
+                            UserID:userDelArr.join(','),
+                            // SelectDate:SelectDate,
+                        },
+                        cb:function(rs){
+                            layer.msg('删除成功.');
+                            // for(var i =0;i<userDelArr.length;i++){
+                            //     $("#userCheck input[name='"+userDelArr[i]+"']").next('div.layui-form-checkbox').remove();
+                                
+                            //     $("#userCheck input[name='"+userDelArr[i]+"']").remove();
+                            // }
+
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            form.render();
+                            layer.close(index);
+                        }
+                    })
+                });       
+    
+            })
+            $("#earlyclose").on("click",function(){
+                var userDelArr=[],userNameDelArr=[];            
+                $("#userCheck input[type='checkbox']:checked").each(function(){
+                    userDelArr.push($(this).attr('name'));
+                    userNameDelArr.push($(this).attr('title'))
+                })
+                if(userDelArr.length===0){
+                    layer.msg('请选择要提前结束的人.');
+                    return false;
+                }
+
+                var cont='<div class="popUpsCont layui-card layui-form layui-fluid">'
+                +'    <div class="layui-form-item">'
+                +'      <label class="layui-form-label">用户名</label>'
+                +'        <div class="layui-input-block">'
+                +'          <div class="layui-form-mid layui-word-aux">'
+                +userNameDelArr.join(',')
+                +'          </div>'
+                    
+                +'        </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'      <label class="layui-form-label">生效日期</label>'
+                +'         <div class="layui-inline">'
+                +'             <input type="text" class="layui-input" autocomplete="off" id="SelectDates">'
+                +'         </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'         <div class="layui-input-block">'
+                +'          <button id="subAdd" class="layui-btn">确定</button>'
+                +'          <button id="close" class="layui-btn">取消</button>'
+                +'        </div>'
+                +'    </div>'
+                +'</div>'
+                layer.open({
+                    title:'提前结束',
+                    type: 1, 
+                    content:cont,
+                    area:['90%', '90%'],
+                    success:function(layero,index){
+                        laydate.render({ 
+                            elem: '#SelectDates'
+                            ,type: 'date'
+                            ,min: window.res.start_date
+                            ,max: window.res.end_date
+                        });
+                        $("#subAdd").on("click",function(){
+                            var SelectDate=$("#SelectDates").val();
+                            
+                            $.fetch({
+                                url:"/gateway/worktimetypeuser/movedaoban",
+                                type: 'post',
+                                data:{
+                                    FromAutoKey:window.res.auto_key,
+                                    Action:'earlyclose',
+                                    UserID:userDelArr.join(','),
+                                    SelectDate:SelectDate,
+                                },
+                                cb:function(rs){
+                                    layer.msg('提交成功.');
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                    form.render();
+                                    layer.close(index);
+                                
+                                }
+                            })
+                        })
+                        $("#close").on("click",function(){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            form.render();
+                            layer.close(index);
+                        })
+                    },
+                })
+            })        
+            $("#move").on("click",function(){
+                var userDelArr=[],userNameDelArr=[];            
+                $("#userCheck input[type='checkbox']:checked").each(function(){
+                    userDelArr.push($(this).attr('name'));
+                    userNameDelArr.push($(this).attr('title'))
+                })
+                if(userDelArr.length===0){
+                    layer.msg('请选择要移动的人.');
+                    return false;
+                }
+
+                var cont='<div class="popUpsCont layui-card layui-form layui-fluid">'
+                +'    <div class="layui-form-item">'
+                +'      <label class="layui-form-label">用户名</label>'
+                +'        <div class="layui-input-block">'
+                +'          <div class="layui-form-mid layui-word-aux">'
+                +userNameDelArr.join(',')
+                +'          </div>'
+                    
+                +'        </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'          <label class="layui-form-label">移动到</label>'
+                +'          <div class="layui-input-block">'
+                +'              <input type="radio"  lay-filter="ToType" name="ToType" value="0" title="倒班" checked>'
+                +'              <input type="radio"  lay-filter="ToType" name="ToType" value="1" title="普通班">'
+                +'          </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item ToAutoKey_0">'
+                +'          <label class="layui-form-label">倒班列表</label>'
+                +'         <div class="layui-inline">'
+                +'             <select id="ToAutoKey" name="ToAutoKey" lay-filter="ToAutoKey"></select>'
+                +'         </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item ToAutoKey_1" style="display:none">'
+                +'          <label class="layui-form-label">普通班列表</label>'
+                +'         <div class="layui-inline">'
+                +'             <select id="ToAutoKey_1" name="ToAutoKey_1" lay-filter="ToAutoKey_1"></select>'
+                +'         </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'      <label class="layui-form-label">生效日期</label>'
+                +'         <div class="layui-inline">'
+                +'             <input type="text" class="layui-input" autocomplete="off" id="SelectDates">'
+                +'         </div>'
+                +'    </div>'
+                +'    <div class="layui-form-item">'
+                +'         <div class="layui-block">'
+                +'          <button id="subAdd" class="layui-btn">确定</button>'
+                +'          <button id="close" class="layui-btn">取消</button>'
+                +'        </div>'
+                +'    </div>'
+                +'</div>'
+                layer.open({
+                    title:'移动',
+                    type: 1, 
+                    content:cont,
+                    area:['90%', '90%'],
+                    success:function(layero,index){
+                        laydate.render({ 
+                            elem: '#SelectDates'
+                            ,type: 'date'
+                            ,min: window.res.start_date
+                            ,max: window.res.end_date
+                        });
+                        form.on('radio(ToType)', function(data){
+                            //console.log(data.elem); //得到radio原始DOM对象
+                            //console.log(data.value); //被点击的radio的value值
+                            if(data.value==='1'){
+                                $(".ToAutoKey_0").hide();
+                                $(".ToAutoKey_1").show();
+                            }
+                            if(data.value==='0'){
+                                $(".ToAutoKey_1").hide();
+                                $(".ToAutoKey_0").show();
+                            }
+                        }); 
+
+                            $.fetch({
+                                url:"/gateway/worktimetypeuser/daobanlist",
+                                type: 'post',
+                                data:{
+                                    ApprovalResult:'-1',
+                                    pageSize:'100000000000000'
+                                },
+                                cb:function(rs){
+                                    //console.log(rs.data_list)
+                                    if(rs.data_list&&rs.data_list.length>0){
+                                        var ToAutoKeyHtml=''
+                                        for(var i=0;i<rs.data_list.length;i++){
+                                            ToAutoKeyHtml+='<option value="'+rs.data_list[i].auto_key+'">'+rs.data_list[i].work_time_name+'</option>'
+                                        }
+                                    }
+                                    $("#ToAutoKey").html(ToAutoKeyHtml).val('');
+                                    $("#ToAutoKey").find("option[value='"+window.res.auto_key+"']").attr('disabled','disabled');
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                    form.render();
+                                    layer.close(index);
+                                }
+                            })    
+                            $.fetch({
+                                url:"/gateway/worktime/list",
+                                type: 'post',
+                              
+                                cb:function(rs){
+                                    //console.log(rs)
+                                    if(rs&&rs.length>0){
+                                        var ToAutoKeyHtml=''
+                                        for(var i=0;i<rs.length;i++){
+                                            ToAutoKeyHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                        }
+                                    }
+                                    // $("#ToAutoKey").html(ToAutoKeyHtml);
+                                    $("#ToAutoKey_1").html(ToAutoKeyHtml).val('');
+                                    // $("#ToAutoKey").find("option[value='"+window.res.auto_key+"']").attr('disabled','disabled');
+                                    form.render();
+                                }
+                            })   
+
+                        $("#subAdd").on("click",function(){
+                            var SelectDate=$("#SelectDates").val();
+                            var ToType=$("input[name='ToType']:checked").attr('value');
+                            if(ToType==='1'){//普通
+                                var ToAutoKey=$("#ToAutoKey_1").val();
+                                if(ToAutoKey==null){
+                                    layer.msg('请选择班次');
+                                    return false
+                                }
+                                var pr={
+                                    FromAutoKey:window.res.auto_key,
+                                    WorkTimeTypeID:ToAutoKey,
+                                    Action:'move',
+                                    IsAuto:0,
+                                    UserID:userDelArr.join(','),
+                                    SelectDate:SelectDate,
+                                }
+                            }
+                            if(ToType==='0'){//倒
+                                var ToAutoKey=$("#ToAutoKey").val();
+                                if(ToAutoKey==null){
+                                    layer.msg('请选择班次');
+                                    return false
+                                }
+                                var pr={
+                                    FromAutoKey:window.res.auto_key,
+                                    ToAutoKey:ToAutoKey,
+                                    Action:'move',
+                                    IsAuto:1,                                    
+                                    UserID:userDelArr.join(','),
+                                    SelectDate:SelectDate,
+                                }
+                            }
+                            
+                            $.fetch({
+                                url:"/gateway/worktimetypeuser/movedaoban",
+                                type: 'post',
+                                data:pr,
+                                cb:function(rs){
+                                    layer.msg('提交成功.');
+                                    // for(var i =0;i<userDelArr.length;i++){
+                                    //     $("#userCheck input[name='"+userDelArr[i]+"']").next('div.layui-form-checkbox').remove();
+                                    //     $("#userCheck input[name='"+userDelArr[i]+"']").remove();
+                                    // }
+                                    layer.close(index);
+                                }
+                            })
+                        })
+                        $("#close").on("click",function(){
+                            layer.close(index)
+                        })
+                    },
+                })
+            })  
+            $("#closeSet").on("click",function(){
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            })
+        }
+    })
+})
+</script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设置岗位薪资规则</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card ">
+            <div class="layui-card-body layui-row layui-col-space15">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-block">
+                            <label class="layui-form-label">规则名称：</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline" style="line-height: 38px" id="salaryName"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-block">
+                            <label class="layui-form-label">选择岗位：</label>
+                            <div class="layui-input-block">
+                                <!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTitleID"></select> -->
+                                <select type="text"  id="JobTitleID" name="JobTitleID" placeholder="请选择岗位" autocomplete="off" class="layui-input"  xm-select="JobTitleID"  xm-select-search="" xm-select=""><option value="">请选择岗位</option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style=" margin-top: 80px;">
+                        <div class="layui-block">
+                            <!-- <label class="layui-form-label">选择岗位：</label> -->
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="salaryJob" id="salary">保存</button>
+                                <button class="layui-btn" id="closeEdit">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','table', 'laydate','form','formSelects'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,table = layui.table
+    ,form = layui.form
+    ,formSelects = layui.formSelects
+    ,router = layui.router()
+    ,layer = layui.layer;
+    element.render();
+    var rulesJob=window.res;
+    // console.log(rulesJob);
+    var rulisJobArr=[];
+    for(var i=0;i<rulesJob.length;i++){
+        rulisJobArr.push(rulesJob[i].job_title_id);
+    }
+    $.fetch({//岗位树列表
+		url: "/gateway/jobTitle/tree",
+		type: 'post',
+		cb:function(rs){
+		//	console.log(rs)
+			var formSelectsArr=rs;
+			// formSelectsArr.unshift({'name':'全部','id':'-1'})
+			formSelects.config('JobTitleID', {
+				keyName: 'title_name',
+				keyVal: 'id'
+			})
+			formSelects.data('JobTitleID', 'local', {
+				// check: false,
+				arr:formSelectsArr
+            });
+            
+            layui.formSelects.value('JobTitleID', rulisJobArr); 
+            
+		}
+    });
+    form.on('submit(salaryJob)', function(data){
+        // console.log(data)
+        $.fetch({//
+            url: "/gateway/usersalaryautoupdate/mnl/setjobtitlerule",
+            type: 'post',
+            data:{
+                RuleNameID:window.RuleNameID,
+                JobTitleID:data.field.JobTitleID,
+            },
+            cb:function(rs){
+                layer.msg('设置成功.');
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            }
+        });
+
+    })
+    $("#closeEdit").on("click",function(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭   
+    })
+    
+    //以下 编辑内容 回显
+    
+    
+})
+</script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>财务总统计</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid" id="" data-cgid="0">
+        <div class="layui-card">
+            <div class="layui-card-header pz-10">
+                <label for="" class="mx-10">
+                    <i class=""></i>
+                    财务总统计
+                </label>
+                <div class="layui-inline ml-5">
+                    <input type="text" class="layui-input caiwu-wihdt" id="GroupStatisticsTime" placeholder="请选择统计时间">
+                </div>
+            </div>
+            <div class="layui-card-body" id="">
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+   layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'laydate'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form;
+
+        form.render(null, 'component-form-group');
+
+        laydate.render({
+            elem: '#GroupStatisticsTime'
+            ,range: '~'
+        });
+    });
+</script>
+
+</html>

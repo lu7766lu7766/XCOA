@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新增问题</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card layui-row layui-col-space10">
+            <div class="layui-card-header">
+                <i class=""></i>
+                问题管理
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form" lay-filter="add-suQan-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">排序编号：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <input id="qNumber" name="qNumber"  lay-verify="required" type="tel" autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">  
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label modify-layui-label layui-maxInput-12">主题：</label>
+                        <div class="layui-input-block modify-input-cont16">
+                            <input id="topic" name="topic" type="text" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label modify-layui-label layui-maxInput-12">描述：</label>
+                        <div class="layui-input-block modify-input-cont16">
+                            <input id="remarks" name="remarks" type="text" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">是否必填：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <select name="required" id="required">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">是否其他反馈：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <select name="hasFeedback" id="hasFeedback">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                                <label class="layui-form-label modify-layui-label layui-maxInput-12">可读权限：</label>
+                                <div class="layui-input-block modify-input-cont16" id="readRange">
+                                    <input type="checkbox" name="readRange[2]"  lay-verify="required" lay-skin="primary" title="集团" checked="">
+                                    <input type="checkbox" name="readRange[1]"  lay-verify="required" lay-skin="primary" title="公司" checked="">
+                                </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">问题类型：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <select name="qstatus" id="qstatus" lay-filter="qstatus">
+                                    <option value="1">单选</option>
+                                    <option value="2">多选</option>
+                                    <option value="3">文本</option>
+                                    <option value="4">评分</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- ↓↓↓↓类型为评分时显示↓↓↓↓-->
+                        <div class="layui-inline" id="scoreRepeatSH" style="display: none">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">是否允许相同评分：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <select name="isScoreRepeat" id="isScoreRepeat">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- ↑↑↑↑类型为评分时显示↑↑↑↑-->
+                        
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">是否包含子问题：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <select name="subquestionYn" id="subquestionYn"  lay-filter="subquestionYn">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline" id="subquestionStypeSH" style="display: none">
+                            <label class="layui-form-label modify-layui-label layui-maxInput-12">子问题展示方式：</label>
+                            <div class="layui-input-block modify-input-cont16">
+                                <select name="subquestionStype" id="subquestionStype">
+                                    <option value="0">加选</option>
+                                    <option value="1">全部展示</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" id="qSelectBox" style="display: none;">
+                        <label class="layui-form-label modify-layui-label layui-maxInput-12">子问题设置：</label>
+                        <div class="layui-input-block modify-input-cont16">
+
+                            <table class="layui-table" id="subquestion_list">
+                                <thead>
+                                    <tr>
+                                        <th>问题序号</th>
+                                        <th>描述</th>
+                                        <th>
+                                            操作
+                                            <button id="addSubquestion" class="layui-btn layui-btn-xs ml-5">新增</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3" class="tc">暂无</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" id="qSelectAnsList">
+                        <label class="layui-form-label modify-layui-label layui-maxInput-12">问题选项：</label>
+                        <div class="layui-input-block modify-input-cont16">
+                            <table class="layui-table" id="q_ansList">
+                                <thead>
+                                    <tr>
+                                        <th>选项序号</th>
+                                        <th>选项</th>
+                                        <th>备注</th>
+                                        <th>
+                                            操作
+                                            <button id="addOption" class="layui-btn layui-btn-xs ml-5">新增</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" class="tc">暂无</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block modify-input-cont16">
+                            <button class="layui-btn" id="subQan"  lay-submit lay-filter="subQan">确定</button>
+                            <button class="layui-btn layui-btn-primary" id="backPar">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script id="optionLayer" type="text/html">
+    <div class="layui-fluid">
+        <div class="layui-form layui-card layui-card-body" lay-filter="option-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选项序号：</label>
+                <div class="layui-input-block">
+                    <input name="optionNum" id="optionNum" type="text" class="layui-input" maxlength="1" onkeyup="value=value.replace(/[^A-Z]/g,'');" />
+                </div>
+                <div class="layui-form-mid layui-word-aux">*仅支持输入大写英文字母(A~Z)</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">选项内容：</label>
+                <div class="layui-input-block">
+                    <input name="optionContent" type="text" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注：</label>
+                <div class="layui-input-block">
+                    <input name="optionRemarks" type="text" class="layui-input">
+                </div>
+            </div>
+            <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">选项分数：</label>
+                    <div class="layui-input-block modify-input-cont">
+                        <input id="opFraction" name="opFraction" type="text" class="layui-input">
+                    </div>
+                </div> -->
+            <div class="layui-form-item">
+                <div class="layui-input-block modify-input-cont">
+                    <button class="layui-btn" id="subOption" lay-submit lay-filter="subOption">确定</button>
+                    <button class="layui-btn" id="backClose">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="subqueLayer" type="text/html">
+    <div class="layui-fluid">
+        <div class="layui-form layui-card layui-card-body" lay-filter="subque-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">子问题序号：</label>
+                <div class="layui-input-block">
+                    <input name="subqueNum" id="subqueNum"  lay-verify="required" type="tel" autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
+                </div>
+                <div class="layui-form-mid layui-word-aux">*请输入阿拉伯数字</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">内容：</label>
+                <div class="layui-input-block">
+                    <input name="subqueContent" type="text" class="layui-input">
+                </div>
+            </div>
+            <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">选项分数：</label>
+                    <div class="layui-input-block modify-input-cont">
+                        <input id="opFraction" name="opFraction" type="text" class="layui-input">
+                    </div>
+                </div> -->
+            <div class="layui-form-item">
+                <div class="layui-input-block modify-input-cont">
+                    <button class="layui-btn" id="subquetion" lay-submit lay-filter="subquetion">确定</button>
+                    <button class="layui-btn" id="backClose">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,layer = layui.layer
+        ,form = layui.form;
+        form.render();
+        var isNew =$("body").attr("data-new");
+        //编辑问题 填充页面star.
+        if(isNew==0){//修改
+            form.val('add-suQan-form',{
+                'topic':daiData.topic,
+                'remarks':daiData.remarks,
+                'qstatus':daiData.question_type,
+                'qNumber':daiData.question_no,
+                'is_required':daiData.is_required,
+                'hasFeedback':daiData.has_feedback,//是否其他反馈
+                'subquestionYn':daiData.has_subquestion,//是否包含子问题
+                'subquestionStype':daiData.subquestion_show_type,//子问题类型
+                'isScoreRepeat':daiData.is_score_repeat//是否相同评分
+            });
+            $("#readRange input").prop("disabled",true);
+           
+            if(daiData.read_range==1){
+                form.val("add-suQan-form", {
+                    "readRange[1]": true,
+                    "readRange[2]": false,                    
+                })
+            }else if(daiData.read_range==2){
+                form.val("add-suQan-form", {
+                    "readRange[2]": true,
+                    "readRange[1]": false                                        
+                })
+            }else if(daiData.read_range==3){
+                form.val("add-suQan-form", {
+                    "readRange[1]": true,
+                    "readRange[2]": true                    
+                })
+            }
+            
+            var optionObj=daiData.option;//储存当前问题选项状态
+            var subqueObj=daiData.subQuestion;//储存当前问题选项状态
+            if(daiData.question_type==3){
+                $("#qSelectAnsList").hide()
+            }else{
+                $("#qSelectAnsList").show();
+            }
+            if(daiData.question_type==4){
+                $("#scoreRepeatSH").show();
+            }else{
+                $("#scoreRepeatSH").hide();
+            }
+            // //console.log(daiData)
+            if(daiData.has_subquestion==1){
+                //有子类
+                $("#subquestionStypeSH").show();
+                $("#qSelectBox").show();
+            }else if(daiData.has_subquestion==0){
+                $("#subquestionStypeSH").hide();
+                $("#qSelectBox").hide();
+            }
+            // if(daiData.is_score_repeat==1){
+            //     $("#scoreRepeatSH").show();
+            // }else{
+            //     $("#scoreRepeatSH").hide()
+            // }
+        }else{//删除
+            var optionObj=[];
+            var subqueObj=[];
+        }
+        form.on('select(qstatus)', function(data){
+            // //console.log(data.value);
+            if(data.value==4){
+                $("#scoreRepeatSH").show();
+            }else{
+                $("#scoreRepeatSH").hide()
+            }
+            if(data.value==3){//文本隐藏问题选项
+                $("#qSelectAnsList").hide();
+            }else{
+                $("#qSelectAnsList").show();
+            }
+        });
+        form.on('select(subquestionYn)', function(data){
+            // //console.log(data.value);
+            if(data.value==0){//是否包含子问题
+                $("#subquestionStypeSH").hide();
+                $("#qSelectBox").hide();
+            }else{
+                $("#subquestionStypeSH").show();
+                $("#qSelectBox").show();
+            }
+        });
+        var optonSub=[];//用于储存 提交的选项状态
+        var subqueArr =[];//储存子问题
+        var optionListFun=function(option){
+            var opHtml = '';
+            if(option&&option.length>0){//
+                for(var i=0;i<option.length;i++){
+                    var isadd= ("isAdd" in option[i])?''+option[i].isAdd:'0';
+                    var isdel= ("isDel" in option[i])?''+option[i].isDel:'0';
+                    var opId= ("option_id" in option[i])?''+option[i].option_id:'0';
+                    if(isdel =='0'){
+                        opHtml+='<tr>'
+                                // +'<td>'+(option[i].option_id==null?'':option[i].option_id)+'</td>'
+                                +'<td>'+(option[i].option_no==null?'':option[i].option_no)+'</td>'
+                                +'<td>'+(option[i].option_content==null?'':option[i].option_content)+'</td>'
+                                +'<td>'+(option[i].option_remarks==null?'':option[i].option_remarks)+'</td>'
+                                +'<td data-isadd="'+isadd+'" data-opid="'+opId+'" data-isdel="'+isdel+'"  data-subn="'+i+'">'
+                                    +'<button class="opEdit layui-btn layui-btn-xs layui-btn-normal">编辑</button>'
+                                    +'<button class="opDel layui-btn layui-btn-xs layui-btn-danger">删除</button>'   
+                                +'</td>'
+                            +'<tr>'
+                    }
+                    optonSub[i]={};
+                    optonSub[i].optionNo=option[i].option_no;
+                    optonSub[i].optionContent=option[i].option_content;
+                    optonSub[i].optionRemarks=option[i].option_remarks;
+                    if(isNew==0){
+                        optonSub[i].isDelete=isdel;
+                        optonSub[i].isAdd=isadd;
+                        optonSub[i].optionId=opId;
+                    }
+                }
+               
+            }
+            if(opHtml == ''){
+                opHtml+='<tr><td colspan="4">无</td></tr>'
+            }
+            $("#q_ansList tbody").html(opHtml);
+        }
+        var subqueListFun=function(option){
+            var opHtml = '';
+            //console.log(option);
+            if(option&&option.length>0){//
+                for(var i=0;i<option.length;i++){
+                    var isadd= ("isAdd" in option[i])?''+option[i].isAdd:'0';
+                    var isdel= ("isDel" in option[i])?''+option[i].isDel:'0';
+                    var opId= ("subquestion_id" in option[i])?''+option[i].subquestion_id:'0';
+                    if(isdel =='0'){
+                        opHtml+='<tr>'
+                                // +'<td>'+(option[i].option_id==null?'':option[i].option_id)+'</td>'
+                                +'<td>'+(option[i].subquestion_no==null?'':option[i].subquestion_no)+'</td>'
+                                +'<td>'+(option[i].subquestion_topic==null?'':option[i].subquestion_topic)+'</td>'
+                                +'<td data-isadd="'+isadd+'" data-opid="'+opId+'" data-isdel="'+isdel+'"  data-subn="'+i+'">'
+                                    +'<button class="opEdit layui-btn layui-btn-xs layui-btn-normal">编辑</button>'
+                                    +'<button class="opDel layui-btn layui-btn-xs layui-btn-danger">删除</button>'   
+                                +'</td>'
+                            +'<tr>'
+                    }
+                    subqueArr[i]={};
+                    subqueArr[i].subquestionNo=option[i].subquestion_no;
+                    subqueArr[i].subquestionTopic=option[i].subquestion_topic;
+                    if(isNew==0){
+                        subqueArr[i].isDelete=isdel;
+                        subqueArr[i].isAdd=isadd;
+                        subqueArr[i].subquestionId=opId;
+                    }
+                }
+               
+            }
+            if(opHtml == ''){
+                opHtml+='<tr><td colspan="4">无</td></tr>'
+            }
+            $("#subquestion_list tbody").html(opHtml);
+        }
+        optionListFun(optionObj);
+        subqueListFun(subqueObj);
+        //监控是否文本
+
+        //编辑问题 填充页面end
+
+        //选项新增 修改 删除
+       
+        var optionLayer = ''
+        $("#q_ansList #addOption").on("click",function(){//新增
+            //弹出框
+            layer.open({
+	    		type: 1,
+	    		title:'新增选项',
+	    		area: ['auto'],
+                content:$("#optionLayer").html(),
+                success: function(layero, index){
+                    form.render()
+                    form.on('submit(subOption)', function(data){
+                        var NewOptionAttr={};
+                        NewOptionAttr.option_no =data.field.optionNum;
+                        NewOptionAttr.option_content =data.field.optionContent;
+                        NewOptionAttr.option_remarks =data.field.optionRemarks;
+                        if(isNew==0){
+                            NewOptionAttr.isDel="0";
+                            NewOptionAttr.isAdd="1";
+                            NewOptionAttr.option_id='0';
+                        }
+                        optionObj.push(NewOptionAttr);
+                        optionListFun(optionObj);
+                        layer.close(index);
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
+                    $("#backClose").on("click",function(){
+                        layer.close(index);
+                    })
+                },
+	    	});
+        })
+        $("#subquestion_list #addSubquestion").on("click",function(){//新增
+            //弹出框
+            layer.open({
+	    		type: 1,
+	    		title:'新增子问题',
+	    		area: ['auto'],
+                content:$("#subqueLayer").html(),
+                success: function(layero, index){
+                    form.render()
+                    form.on('submit(subquetion)', function(data){
+                        var NewsubqueAttr={};
+                        NewsubqueAttr.subquestion_no =data.field.subqueNum;
+                        NewsubqueAttr.subquestion_topic =data.field.subqueContent;
+                        if(isNew==0){
+                            NewsubqueAttr.isDel="0";
+                            NewsubqueAttr.isAdd="1";
+                            NewsubqueAttr.subquestion_id='0';
+                        }
+                        subqueObj.push(NewsubqueAttr);
+                        subqueListFun(subqueObj);
+                        layer.close(index);
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
+                    $("#backClose").on("click",function(){
+                        layer.close(index);
+                    })
+                },
+	    	});
+        })
+        $("#q_ansList").on("click",".opDel",function(){//删除
+            //弹出框
+            var arrSub =$(this).parent("td").attr("data-subn");
+            var arradd =$(this).parent("td").attr("data-isadd");
+            layer.confirm('确定删除吗？', function(index){
+                if(arradd==1){
+                    optionObj.splice(arrSub,1);
+                }else{
+                    optionObj[arrSub].isDel='1';
+                }
+                optionListFun(optionObj); 
+                layer.close(index);
+            });
+            
+        })
+        $("#subquestion_list").on("click",".opDel",function(){//删除
+            //弹出框
+            var arrSub =$(this).parent("td").attr("data-subn");
+            var arradd =$(this).parent("td").attr("data-isadd");
+            layer.confirm('确定删除吗？', function(index){
+                if(arradd==1){
+                    subqueObj.splice(arrSub,1);
+                }else{
+                    subqueObj[arrSub].isDel='1';
+                }
+                subqueListFun(subqueObj); 
+                layer.close(index);
+            });
+            
+        })
+        $("#q_ansList").on("click",".opEdit",function(){//编辑
+            //弹出框
+            var elem =$(this);
+            layer.open({
+	    		type: 1,
+	    		title:'编辑选项',
+	    		area: ['auto'],
+                content:$("#optionLayer").html(),
+                success: function(layero, index){
+                    form.render()
+                    var arrSub =elem.parent("td").attr("data-subn");
+                    form.val('option-form',{
+                        'optionNum':optionObj[arrSub].option_no,
+                        'optionContent':optionObj[arrSub].option_content,
+                        'optionRemarks':optionObj[arrSub].option_remarks,
+                    })
+                    form.on('submit(subOption)', function(data){
+                        optionObj[arrSub]={};
+                        optionObj[arrSub].option_no =data.field.optionNum;
+                        optionObj[arrSub].option_content =data.field.optionContent;
+                        optionObj[arrSub].option_remarks =data.field.optionRemarks;
+                        if(isNew==0){
+                            var tisdel =elem.parent("td").attr("data-isdel");
+                            var tisadd =elem.parent("td").attr("data-isadd");
+                            var topId =elem.parent("td").attr("data-opid");
+                            optionObj[arrSub].isDel=tisdel;
+                            optionObj[arrSub].isAdd=tisadd;
+                            optionObj[arrSub].option_id=topId;
+                        }
+                        optionListFun(optionObj);
+                        layer.close(index);
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
+                    $("#backClose").on("click",function(){
+                        layer.close(index);
+                    })
+                },
+	    	});
+        })
+        $("#subquestion_list").on("click",".opEdit",function(){//编辑
+            //弹出框
+            var elem =$(this);
+            layer.open({
+	    		type: 1,
+	    		title:'编辑选项',
+	    		area: ['auto'],
+                content:$("#subqueLayer").html(),
+                success: function(layero, index){
+                    form.render()
+                    var arrSub =elem.parent("td").attr("data-subn");
+                    form.val('subque-form',{
+                        'subqueNum':subqueObj[arrSub].subquestion_no,
+                        'subqueContent':subqueObj[arrSub].subquestion_topic,
+                    })
+                    form.on('submit(subquetion)', function(data){
+                        //console.log(subqueObj)
+                        subqueObj[arrSub]={};
+                        //console.log(subqueObj)
+                        subqueObj[arrSub].subquestion_no =data.field.subqueNum;
+                        subqueObj[arrSub].subquestion_topic =data.field.subqueContent;
+                        if(isNew==0){
+                            var tisdel =elem.parent("td").attr("data-isdel");
+                            var tisadd =elem.parent("td").attr("data-isadd");
+                            var topId =elem.parent("td").attr("data-opid");
+                            subqueObj[arrSub].isDel=tisdel;
+                            subqueObj[arrSub].isAdd=tisadd;
+                            subqueObj[arrSub].subquestion_id=topId;
+                        }
+                        //console.log(subqueObj)
+                        subqueListFun(subqueObj);
+                        layer.close(index);
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
+                    $("#backClose").on("click",function(){
+                        layer.close(index);
+                    })
+                },
+	    	});
+        })
+        // //console.log(daiData);
+        //选项新增 修改 删除 end
+        
+        //问题管理提交 0：编辑 1：新建
+        // //console.log(daiData.option)
+        form.on('submit(subQan)', function(data){
+            
+            if(data.field['readRange[1]']==undefined&&data.field['readRange[2]']==undefined){
+                layer.msg("请选择可读权限",{icon:5,anim: 6});
+                return false
+            }else if(data.field['readRange[1]']!=undefined&&data.field['readRange[2]']!=undefined){
+                var readRange=3;
+            }else if(data.field['readRange[1]']==undefined&&data.field['readRange[2]']!=undefined){
+                var readRange=2;
+            }else if(data.field['readRange[1]']!=undefined&&data.field['readRange[2]']==undefined){
+                var readRange=1;
+            }
+            // console.log(readRange);
+            // return false;
+            if(isNew==0){
+                var proUrl="/gateway/question/update";
+                questionSub={
+                    questionId:daiData.id,
+                    questionNo:data.field.qNumber,
+                    questionType:data.field.qstatus,
+                    questionRequired:data.field.required,
+                    questionTopic:data.field.topic,
+                    remarks:data.field.remarks,
+                    hasSubquestion:data.field.subquestionYn,
+                    subquestionShowType:data.field.subquestionStype,
+                    hasFeedback:data.field.hasFeedback,
+                    isScoreRepeat:data.field.isScoreRepeat,
+                    readRange:readRange,
+                }
+            }else{
+                var proUrl="/gateway/question/add";
+                var suveId =$("body").attr("data-suve");
+                questionSub={
+                    surveyId:suveId,
+                    questionNo:data.field.qNumber,
+                    questionType:data.field.qstatus,
+                    questionRequired:data.field.required,
+                    questionTopic:data.field.topic,
+                    remarks:data.field.remarks,
+                    hasSubquestion:data.field.subquestionYn,
+                    subquestionShowType:data.field.subquestionStype,
+                    hasFeedback:data.field.hasFeedback,
+                    isScoreRepeat:data.field.isScoreRepeat,
+                    readRange:readRange,                    
+                }
+            }
+            var prama ={
+                option:optonSub,
+                question:questionSub,
+                subquestion:subqueArr,
+            }
+            //console.log(prama)
+            $.fetch({
+                url:proUrl,
+                type: 'post',
+                data:prama,
+                cb:function(rs){
+                    layer.msg("保存成功");
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭 
+                }
+            });
+            return false;
+        });
+        //关闭
+        $("#backPar").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭 
+        })
+    });
+  </script>
+</html>

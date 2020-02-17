@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>问卷调查（个人）</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header py-5" style="height: auto;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">开始日期：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="SurveyItemStart">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结束日期：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="SurveyItemEnd">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">问卷名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="SurveyTit">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button id="InquireSur" class="layui-btn" title="查询"><i class="iconfont icon-sousuo"></i></button>
+                    <button id="InquireSurBack" class="layui-btn layui-btn-primary">返回</button>
+                    <!--<button id="addSurvey" class="layui-btn">新增</button> -->
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table" id="SurveyLiet" lay-filter="SurveyLiet">
+                    <!-- <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>发布范围</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="limit-width">
+                                <a class="toTitle">惺惺惜惺惺惺惺惜惺惺惺惺惜惺惺惺惺惜惺惺惺惺惜惺惺</a>
+                            </td>
+                            <td>2018-10-01 15:39:45</td>
+                            <td>2018-10-31 15:39:45</td>
+                            <td>2018-10-27 15:39:59</td>
+                            <td>
+                                <button class="layui-btn layui-btn-normal layui-btn-xs">填写问卷</button>
+                            </td>
+                        </tr>
+                    </tbody> -->
+                </table>
+                <!-- <div id="SurveyLietPage"></div> -->
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'laydate', 'table', 'laypage'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            layer = layui.layer,
+            table = layui.table,
+            laypage = layui.laypage,
+            laydate = layui.laydate
+
+        laydate.render({
+            elem: '#SurveyItemStart',
+            type: 'date'
+        });
+        laydate.render({
+            elem: '#SurveyItemEnd',
+            type: 'date'
+        });
+        var tableNowPage = {
+            startTime: '',
+            endTime: '',
+            currentIndex: 1,
+            pageSize: 10,
+        }
+        var surveyTableHtml = function (list) {
+            // console.log(list);
+            table.render({
+                elem: '#SurveyLiet',
+                cellMinWidth: 100,
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                page: true, //开启分页
+                text: {
+                    none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //标题栏
+                        {
+                            field: 'id',
+                            title: 'ID',
+                            width: 100
+                        }, {
+                            field: 'survey_title',
+                            title: '名称'
+                        }, {
+                            field: 'survey_starttime',
+                            title: '开始时间',
+                            sort: true,
+                            width: 180
+                        }, {
+                            field: 'survey_endtime',
+                            title: '结束时间',
+                            sort: true,
+                            width: 180
+                        }, {
+                            field: 'created_at',
+                            title: '创建时间',
+                            sort: true,
+                            width: 180
+                        }, {
+                            fixed: 'right',
+                            field: 'is_answer',
+                            title: '操作',
+                            width: 80,
+                            templet: function (d) {
+                                // console.log(d)
+                                if (d.is_answer == 0) { //未答
+                                    return '<div><a class="layui-btn layui-btn-xs" lay-event="writ">填写问卷</a></div>'
+                                } else if (d.is_answer == 1) { //已答
+                                    return '<div><a class="layui-btn layui-btn-xs" lay-event="seeit">查看问卷</a></div>'
+                                }
+                                // return 'ID：'+ d.id +'，标题：<span style="color: #c00;">'+ d.title +'</span>'
+                            }
+                        }
+                    ]
+                ],
+                data: list
+                //,…… //其他参数
+            });
+        }
+        var allsurveyTable = function (o = {}) { //用户table接口
+            var objs = o;
+            $.fetch({
+                url: "/gateway/mySurvey/list",
+                type: 'post',
+                data: objs,
+                cb: function (rs) {
+                    var list = rs.data_list;
+                    surveyTableHtml(list);
+                    laypage.render({
+                        elem: 'SurveyLietPage' //注意，这里是 ID，不用加 # 号
+                            ,
+                        count: rs.total_count //数据总数，从服务端得到
+                            ,
+                        curr: objs.currentIndex,
+                        jump: function (obj, first) {
+                            //obj包含了当前分页的所有参数，比如：
+                            //得到当前页，以便向服务端请求对应页的数据。
+                            var eData = objs;
+                            eData.currentIndex = obj.curr;
+                            tableNowPage = eData;
+                            if (!first) { //得到每页显示的条数
+                                // var eData =$.extend(obj,{currentIndex:curr,pageSize:10,})
+                                $.fetch({
+                                    url: "/gateway/mySurvey/list",
+                                    type: 'post',
+                                    data: eData,
+                                    cb: function (rs) {
+                                        surveyTableHtml(rs.data_list);
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                }
+            })
+        };
+        allsurveyTable(tableNowPage);
+        table.on('tool(SurveyLiet)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var tdata = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            // console.log(tdata);
+            if (layEvent === 'writ') { //问题管理
+                var index = layer.open({
+                    title: '',
+                    type: 2,
+                    // content: 'ProblemAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    content: 'FillInSurvey.html?v=2018120501', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    area: ['100%', '100%'],
+                    maxmin: false,
+                    closeBtn: 0,
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.window.surveyId = tdata.id;
+                        iframeWin.window.isWrit = true;
+                        iframeWin.window.isSee = false;
+                        iframeWin.window.ansUserId = userInfo.userId;
+                        // $(body).attr("data-new","0");
+
+                        // iframeWin.window.ctableNowPage={
+                        //     surveyId:tdata.id,
+                        //     topic:'',
+                        //     currentIndex:1,
+                        //     pageSize:10,
+                        // }
+                        // console.log(iframeWin.window.layui);
+                        // iframeWin.window.formData = tdata;
+                    },
+                    end: function () {
+                        //关闭层后刷新列表
+                        allsurveyTable(tableNowPage);
+                    }
+                })
+            } else if (layEvent === 'seeit') {
+                var index = layer.open({
+                    title: '',
+                    type: 2,
+                    // content: 'ProblemAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    content: 'FillInSurvey.html?v=2018120501', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    area: ['100%', '100%'],
+                    maxmin: false,
+                    closeBtn: 0,
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.window.surveyId = tdata.id;
+                        iframeWin.window.isSee = true;
+                        iframeWin.window.isWrit = false;
+                        iframeWin.window.ansUserId = userInfo.userId;
+                        // $(body).attr("data-new","0");
+
+                        // iframeWin.window.ctableNowPage={
+                        //     surveyId:tdata.id,
+                        //     topic:'',
+                        //     currentIndex:1,
+                        //     pageSize:10,
+                        // }
+                        // console.log(iframeWin.window.layui);
+                        // iframeWin.window.formData = tdata;
+                    },
+                    end: function () {
+                        //关闭层后刷新列表
+                        allsurveyTable(tableNowPage);
+                    }
+                })
+            }
+        });
+
+        $("#InquireSur").on("click", function () {
+            var starT = $("#SurveyItemStart").val();
+            var endT = $("#SurveyItemEnd").val();
+            var title = $("#SurveyTit").val();
+            tableNowPage.startTime = starT;
+            tableNowPage.endTime = endT;
+            tableNowPage.title = title;
+            allsurveyTable(tableNowPage);
+            if (starT !== "" || endT !== "" || title !== "") {
+                $("#InquireSurBack").css('display', 'inline-block');
+            } else {
+                $("#InquireSurBack").css('display', 'none');
+            }
+        });
+        $("#InquireSurBack").css('display', 'none');
+        $("#InquireSurBack").on("click", function () {
+            $("#SurveyItemStart").val("");
+            $("#SurveyItemEnd").val("");
+            $("#SurveyTit").val("");
+            tableNowPage = {
+                currentIndex: 1,
+                pageSize: 10,
+            }
+            allsurveyTable(tableNowPage);
+            $(this).css('display', 'none');
+        })
+    });
+</script>
+
+</html>

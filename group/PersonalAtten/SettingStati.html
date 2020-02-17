@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>考勤统计</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+
+</head>
+	
+<body class="statiBox">
+	<div class="layui-fluid">
+		<div class="layui-card layui-col-space15">
+			<div class="layui-row layui-tab layui-tab-brief" lay-filter="attendanceTabBrief">
+				<ul class="layui-tab-title">
+					<li class="layui-this"  lay-id="1">上下班统计</li>
+					<li  lay-id="2">请假记录</li>
+					<li  lay-id="3">外出记录</li>
+					<li  lay-id="4">加班记录</li>
+					<li  lay-id="5">补录记录</li>
+				</ul>
+				<div class="layui-tab-content layui-form">
+					<div class="layui-tab-item layui-form layui-show">
+						<div class="layui-form-item" style="margin-bottom:0;">
+							<div class="layui-inline">
+								<label class="layui-form-label">公司：</label>
+								<div class="layui-input-inline">
+									<select  id="statiComSel-0" name="interest" class="statiComSel" lay-filter="statiComSel-0"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">部门：</label>
+								<div class="layui-input-inline">
+									<select  id="statiDepSel-0" name="interest" class="statiDepSel" lay-filter="aihao-desp"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">用户名：</label>
+								<div class="layui-input-inline">
+									<input type="text" id="userName-0" name="userName" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline"> 
+								<label class="layui-form-label">日期：</label>
+								<div class="layui-input-inline">
+									<input id="StartItem-0" lay-verify="startItem" type="text" autocomplete="off" name="" placeholder="开始日期~截止日期" class="layui-input" value="">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button id="statiBtn-0" lay-filter="statiBtn-0"  lay-submit class="statiBotton layui-btn">查询</button>
+							</div>
+						</div>
+						<table class="layui-table" lay-filter="allStaList" id="allStaList"></table>
+					</div>
+					<div class="layui-tab-item layui-form ">
+						<div class="layui-form-item" style="margin-bottom:0;">
+							<div class="layui-inline">
+								<label class="layui-form-label">公司：</label>
+								<div class="layui-input-inline">
+									<select  id="statiComSel-1" name="interest" class="statiComSel" lay-filter="statiComSel-1"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">部门：</label>
+								<div class="layui-input-inline">
+								<select  id="statiDepSel-1" name="interest" class="statiDepSel" lay-filter="aihao-desp"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">用户名：</label>
+								<div class="layui-input-inline">
+									<input type="text" id="userName-1" name="userName" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline"> 
+							 	<label class="layui-form-label">日期：</label>
+								<div class="layui-input-inline">
+									<input id="StartItem-1" lay-verify="startItem" type="text" autocomplete="off" name="" placeholder="开始日期~截止日期" class="layui-input" value="">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button id="statiBtn-1" lay-filter="statiBtn-1"  lay-submit class="statiBotton layui-btn">查询</button>
+							</div>
+						</div>
+						<table class="layui-table" lay-filter="allStaList1" id="allStaList1"></table>
+					</div>
+					<div class="layui-tab-item layui-form ">
+						<div class="layui-form-item" style="margin-bottom:0;">
+							<div class="layui-inline">
+								<label class="layui-form-label">公司：</label>
+								<div class="layui-input-inline">
+									<select  id="statiComSel-2" name="interest" class="statiComSel" lay-filter="statiComSel-2"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">部门：</label>
+								<div class="layui-input-inline">
+									<select  id="statiDepSel-2" name="interest" class="statiDepSel" lay-filter="aihao-desp"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">用户名：</label>
+								<div class="layui-input-inline">
+									<input type="text" id="userName-2" name="userName" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline"> 
+								<label class="layui-form-label">日期：</label>
+								<div class="layui-input-inline">
+									<input id="StartItem-2" lay-verify="startItem" type="text" autocomplete="off" name="" placeholder="开始日期~截止日期" class="layui-input" value="">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button id="statiBtn-2" lay-filter="statiBtn-2"  lay-submit class="statiBotton layui-btn">查询</button>
+							</div>
+						</div>
+						<table class="layui-table" lay-filter="allStaList2" id="allStaList2"></table>
+					</div>
+					<div class="layui-tab-item layui-form ">
+						<div class="layui-form-item" style="margin-bottom:0;">
+							<div class="layui-inline">
+								<label class="layui-form-label">公司：</label>
+								<div class="layui-input-inline">
+									<select  id="statiComSel-3" name="interest" class="statiComSel" lay-filter="statiComSel-3"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">部门：</label>
+								<div class="layui-input-inline">
+									<select  id="statiDepSel-3" name="interest" class="statiDepSel" lay-filter="aihao-desp"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">用户名：</label>
+								<div class="layui-input-inline">
+									<input type="text" id="userName-3" name="userName" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline"> 
+								<label class="layui-form-label">日期：</label>
+								<div class="layui-input-inline">
+									<input id="StartItem-3" lay-verify="startItem" type="text" autocomplete="off" name="" placeholder="开始日期~截止日期" class="layui-input" value="">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button id="statiBtn-3" lay-filter="statiBtn-3"  lay-submit class="statiBotton layui-btn">查询</button>
+							</div>
+						</div>
+						<table class="layui-table" lay-filter="allStaList3" id="allStaList3"></table>
+
+					</div>
+					<div class="layui-tab-item layui-form ">
+						<div class="layui-form-item" style="margin-bottom:0;">
+							<div class="layui-inline">
+								<label class="layui-form-label">公司：</label>
+								<div class="layui-input-inline">
+									<select  id="statiComSel-4" name="interest" class="statiComSel" lay-filter="statiComSel-4"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">部门：</label>
+								<div class="layui-input-inline">
+									<select  id="statiDepSel-4" name="interest" class="statiDepSel" lay-filter="aihao-desp"></select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">用户名：</label>
+								<div class="layui-input-inline">
+									<input type="text" id="userName-4" name="userName" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline"> 
+								<label class="layui-form-label">日期：</label>
+								<div class="layui-input-inline">
+									<input id="StartItem-4" lay-verify="startItem" type="text" autocomplete="off" name="" placeholder="开始日期~截止日期" class="layui-input" value="">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button id="statiBtn-4" lay-filter="statiBtn-4"  lay-submit class="statiBotton layui-btn">查询</button>
+							</div>
+						</div>
+						<table class="layui-table" lay-filter="allStaList3" id="allStaList4"></table>
+
+					</div>
+				</div>
+					<!-- <div class="layui-col-xs2"></div>
+					<div class="layui-col-xs8">
+					</div>
+					<div class="layui-col-xs2"></div> -->
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../layui/layui.js"></script>
+<!-- <script src="../../js/sub/sets.js?v=201812240"></script> -->
+
+<script>
+	
+$(function(){
+    layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','form','laydate','laypage','table','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        element.on('tab(component-tabs-brief)', function(obj){});
+
+		var laydate = layui.laydate,form = layui.form,layer = layui.layer,laypage = layui.laypage,table=layui.table, form = layui.form;
+        var isgroup =true;	
+        var iscompanies;
+	    // 起始，截止时间选择
+        var d = new Date();
+        var StartTime=  d.getFullYear() + '-' + lay.digit(d.getMonth()+1) + '-01';
+		var EndTime = d.getFullYear() + '-' + lay.digit(d.getMonth() + 1) + '-' + lay.digit(d.getDate());
+		var usercheckTime=StartTime;
+        laydate.render({
+            elem: '#StartItem-0'
+            ,range: '~'
+			,value:StartTime+' ~ '+EndTime
+			,max: EndTime
+
+		});
+		laydate.render({
+            elem: '#StartItem-1'
+            ,range: '~'
+			,value:StartTime+' ~ '+EndTime
+			,max: EndTime
+
+		});
+		laydate.render({
+            elem: '#StartItem-2'
+            ,range: '~'
+			,value:StartTime+' ~ '+EndTime
+			,max: EndTime
+
+		});
+		laydate.render({
+            elem: '#StartItem-3'
+            ,range: '~'
+			,value:StartTime+' ~ '+EndTime
+			,max: EndTime
+
+		});
+		laydate.render({
+            elem: '#StartItem-4'
+            ,range: '~'
+			,value:StartTime+' ~ '+EndTime
+			,max: EndTime
+
+        });
+        form.verify({
+            startItem:function(value){
+                if(!value.match(/\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}/)){
+                    return '请选择正确日期';
+                };
+            },
+		})
+        // element.on('tab(attendanceTabBrief)', function(data){
+        //     switch(data.index){
+        //         case 0:
+        //             //上下班统计
+
+        //         break;
+        //     }
+        // });
+        var now= new Date();
+        var year = now.getFullYear(),
+            month = now.getMonth() + 1,
+            date = now.getDate(),
+            wHtml = "",
+            zmonth ='',zdate='';
+            if(month<10){
+                zmonth = "0"+month;
+            }else{
+                zmonth = month;
+            }
+            if(date<10){
+                zdate = "0"+date;
+            }else{
+                zdate = date;
+			}
+		var companySlecFun = function(obj,elem){
+			var html = ' ',o=obj;
+			
+            if(o&&o.length>0){
+                for(var i =0; i<o.length;i++){
+                 html+= '<option value="'+o[i].id+'" data-num="'+i+'">'+o[i].name+'</option>'
+                }
+            }
+            
+            elem.html(html);
+			
+		}
+        var groupSlecFun=function(obj,elem,comp){
+            var html = ' ';
+            var ss=''; 
+            html+= '<option value="null">全部</option>'		
+            function deparOpsle(o,jj){
+                jj+='&nbsp;';
+				var nn=jj;
+                if(o&&o.length>0){			
+                    for(var i =0; i<o.length;i++){
+                        if(o[i].children&&o[i].children.length>0){
+                            html+= '<option  value="'+o[i].id+'">'+jj+''+o[i].name+'</option>'
+                            deparOpsle(o[i].children,jj);
+                        }else{
+                            html+= '<option value="'+o[i].id+'">'+nn+''+o[i].name+'</option>'
+                        }
+                        
+                    }
+                }else{
+                    // html+= '<option value="null">全部</option>'
+                }
+            
+            }
+            deparOpsle(obj.children,ss);
+			elem.html(html);
+			form.render('select');
+        }
+
+        $.fetch({
+            url: "/gateway/department/tree",
+            type: 'post',
+            dataType: 'JSON',
+            cb:function(rs){
+                var depatmetsle=rs;
+                var html = ""
+				companySlecFun(rs[0].children, $(".statiComSel"),isgroup);
+				groupSlecFun(rs[0].children[0], $(".statiDepSel"),isgroup);				
+				form.render('select'); 
+				form.on('select(statiComSel-0)', function(data){
+					var thisN = $(data.elem).find("option[value='"+data.value+"']").attr('data-num');
+					groupSlecFun(rs[0].children[thisN], $("#statiDepSel-0"),true);				
+				});
+				form.on('select(statiComSel-1)', function(data){
+					var thisN = $(data.elem).find("option[value='"+data.value+"']").attr('data-num');
+					groupSlecFun(rs[0].children[thisN], $("#statiDepSel-1"),true);				
+				});
+				form.on('select(statiComSel-2)', function(data){
+					var thisN = $(data.elem).find("option[value='"+data.value+"']").attr('data-num');
+					groupSlecFun(rs[0].children[thisN], $("#statiDepSel-2"),true);				
+				});
+				form.on('select(statiComSel-3)', function(data){
+					var thisN = $(data.elem).find("option[value='"+data.value+"']").attr('data-num');
+					groupSlecFun(rs[0].children[thisN], $("#statiDepSel-3"),true);				
+				});
+				form.on('select(statiComSel-4)', function(data){
+					var thisN = $(data.elem).find("option[value='"+data.value+"']").attr('data-num');
+					groupSlecFun(rs[0].children[thisN], $("#statiDepSel-4"),true);				
+				});
+
+
+				var	comp=$("#statiComSel-0").val();
+				var	depr=$("#statiDepSel-0").val()=="null"?'':$("#statiDepSel-0").val();
+				
+				var times = $("#StartItem-0").val();
+				var  star = times.slice(0,10);
+				var  end  = times.slice(13,23);
+				var userName = $("#userName-0").val();
+						
+				var groupstatisticsFun=function(o){
+					var index = layer.load(1)
+					$.fetch({
+						url: '/gateway/checkinout/groupstatistics',
+						type: 'post',
+						data:o,
+						cb:function(rs){
+							var tableData =rs;
+							var allStaList = table.render({
+								elem: '#allStaList',
+								// url: urls+,
+								// where:{
+								// 	CompanyID:comp,
+								// 	DepartmentID:depr,
+								// 	StartTime:star,
+								// 	EndTime:end,
+								// 	UserName:userName,
+								// },
+								data:tableData,
+								limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+								// method: 'post',
+								// contentType: 'application/json',
+								page:true,
+								// loading: true,
+								// toolbar:,
+								toolbar: ['filter', 'print', 'exports'],
+								// defaultToolbar: ['filter', 'print', 'exports'],
+								text: {
+									none: '暂无' 
+								},
+								// size:'sm',
+								even:true,
+								// height: 'full-175',
+								cols: [[
+									{field:'department_name',title:'部门',minWidth:100,sort:true},
+									{field:'name',title:'姓名',minWidth:100,sort:true},
+									{field:'quanqin_count',title:'全勤（天）',minWidth:100,sort:true},
+									{field:'work_time_long',title:'时长',minWidth:80,sort:true},
+									{field:'check_in_times',title:'打卡次数',minWidth:100,sort:true},
+									{field:'chidao_count',title:'迟到',minWidth:80,sort:true},
+									{field:'no_checkin_count',title:'上班未登记',minWidth:100,sort:true},
+									{field:'zaotui_count',title:'早退',minWidth:80,sort:true},
+									// {field:'bulu_times',unresize:true,title:'补录次数',minWidth:100,sort:true},
+
+									{field:'bulu_times',unresize:true,title:'补录次数',minWidth:100,sort:true,templet: function (d) {
+									return '<a class="toTitle" lay-event="bulu">'+d.bulu_times+'</a>'
+									}},
+									
+									{field:'goout_hours',title:'外出小时数',minWidth:100,sort:true,templet: function (d) {
+									return '<a class="toTitle" lay-event="outgo">'+d.goout_hours+'</a>'
+									}},
+									{field:'overtime_hours',title:'加班小时数',minWidth:100,sort:true,templet: function (d) {
+									return '<a class="toTitle" lay-event="overTime">'+d.overtime_hours+'</a>'
+									}},
+									{field:'event',unresize:true,title:'请假天数',minWidth:100,sort:true,templet: function (d) {
+									return '<a class="toTitle" lay-event="leave">'+d.leave_day_count+'</a>'
+									}},
+									
+									
+									
+									{fixed:'right',field:'id',title:'操作',unresize:true,width:170,templet: function (d) {
+									return '<div><a class="layui-btn layui-btn-xs" data-id="'+d.id+'" lay-event="detail">打卡详情</a><a class="layui-btn layui-btn-xs" lay-event="kqdetail"  data-id="'+d.id+'">考勤详情</a></div>'
+									}}
+								]]
+								// ,request: {
+								//     pageName: 'currentIndex' //页码的参数名称，默认：page
+								//     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								// }
+								// ,parseData: function(res){ //res 即为原始返回的数据
+								// 	return {
+								// 		"status_code":res.status_code, //解析接口状态
+								// 		"message": res.message, //解析提示文本
+								// 	// "count": res.data.total_count, //解析数据长度
+								// 		"data": res.data, //解析数据列表
+								// 	// "curr":res.data.page_index
+								// 	};
+								// }
+							})
+							layer.close(index)
+						} 
+					});
+						
+				}
+				groupstatisticsFun({
+					CompanyID:comp,
+					DepartmentID:depr,
+					StartTime:star,
+					EndTime:end,
+					UserName:userName,
+				})
+				form.on('submit(statiBtn-0)', function(data){//提交
+				
+					var	comp=$("#statiComSel-0").val();
+					var	depr=$("#statiDepSel-0").val()=="null"?'':$("#statiDepSel-0").val();
+					
+					var times = $("#StartItem-0").val();
+					var star = times.slice(0,10);
+					var end  = times.slice(13,23);
+					var userName=$("#userName-0").val();
+					usercheckTime=star;
+					// table.reload('allStaList',{
+					// 	where: { //设定异步数据接口的额外参数，任意设
+					
+					// 	}
+					// });
+					groupstatisticsFun({
+						CompanyID:comp,
+						DepartmentID:depr,
+						StartTime:star,
+						EndTime:end,
+						UserName:userName,
+					})
+					return false;
+				})
+			$('#statiBtn-0').on('click', function(){//提交
+				
+				var	comp=$("#statiComSel-0").val();
+				var	depr=$("#statiDepSel-0").val()=="null"?'':$("#statiDepSel-0").val();
+				
+				var times = $("#StartItem-0").val();
+				var star = times.slice(0,10);
+				var end  = times.slice(13,23);
+				var userName=$("#userName-0").val();
+				usercheckTime=star;
+				table.reload('allStaList',{
+					where: { //设定异步数据接口的额外参数，任意设
+						CompanyID:comp,
+						DepartmentID:depr,
+						StartTime:star,
+						EndTime:end,
+						UserName:userName,
+					}
+				});
+				// return false;
+			})
+				//请假记录
+				var	comp1=$("#statiComSel-1").val();
+				var	depr1=$("#statiDepSel-1").val()=="null"?'':$("#statiDepSel-1").val();
+				var times1 = $("#StartItem-1").val();
+				var  star1 = times1.slice(0,10);
+				var  end1 = times1.slice(13,23);
+				var userName1 = $("#userName-1").val();
+
+				var allStaList1 = table.render({
+					elem: '#allStaList1',
+					url: urls+'/gateway/userleave/userleavedetail',
+					where:{
+						CompanyID:comp1,						
+						DepartmentID:depr1,
+						StartTime:star1,
+						EndTime:end1,
+						UserName:userName1,
+					},
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					method: 'post',
+					contentType: 'application/json',
+					page:true,
+					loading: true,
+					// toolbar:,
+					toolbar: ['filter', 'print', 'exports'],
+					// defaultToolbar: ['filter', 'print', 'exports'],
+					text: {
+						none: '暂无数据' 
+					},
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					size:'sm',
+					even:true,
+					// height: 'full-175',
+					cols: [[
+						{field:'company_name',title:'公司名称',sort:true},
+						{field:'dept_name',title:'部门名称',sort:true},
+						{field:'user_name',title:'姓名',sort:true},
+						{field:'leave_type_desc',title:'请假类型',sort:true},
+						{field:'apply_time',title:'申请时间',sort:true},
+						{field:'start_time',title:'开始时间',sort:true},
+						{field:'end_time',title:'结束时间',sort:true},
+						{field:'content',title:'描述',sort:true},
+						{field:'day_count',title:'请假天数',sort:true},
+						// {field:'is_cancel_desc',title:'取消状态',sort:true}
+						
+						// {field:'zaotui_count',title:'早退',sort:true},
+						// {field:'leave_day_count',title:'请假天数',sort:true}
+						// {fixed:'right',field:'event',title:'操作',toolbar: '<div><a class="layui-btn layui-btn-xs" lay-event="detail">详情信息</a></div>'},
+					]]
+					,request: {
+					    pageName: 'currentIndex' //页码的参数名称，默认：page
+					    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					}
+					,parseData: function(res){ //res 即为原始返回的数据
+						return {
+							"status_code":res.status_code, //解析接口状态
+							"message": res.message, //解析提示文本
+							"count": res.data.total_count, //解析数据长度
+							"data": res.data.data_list, //解析数据列表
+							"curr":res.data.page_index
+						};
+					}
+				})
+				
+				form.on('submit(statiBtn-1)', function(data){//提交
+					var	comp1=$("#statiComSel-1").val();
+					var	depr1=$("#statiDepSel-1").val()=="null"?'':$("#statiDepSel-1").val();
+					var times1 = $("#StartItem-1").val();
+					var star1 = times1.slice(0,10);
+					var end1  = times1.slice(13,23);
+					var userName1=$("#userName-1").val();
+					allStaList1.reload({
+						where: { //设定异步数据接口的额外参数，任意设
+							CompanyID:comp1,						
+							DepartmentID:depr1,
+							StartTime:star1,
+							EndTime:end1,
+							UserName:userName1,
+						}
+						,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+					});
+					return false;
+				})
+				//外出
+				var	comp2=$("#statiComSel-2").val();
+				var	depr2=$("#statiDepSel-2").val()=="null"?'':$("#statiDepSel-2").val();
+				var times2 = $("#StartItem-2").val();
+				var  star2 = times2.slice(0,10);
+				var  end2 = times2.slice(13,23);
+				var userName2 = $("#userName-2").val();
+
+				var allStaList2 = table.render({
+					elem: '#allStaList2',
+					url: urls+'/gateway/goout/gooutdetail',
+					where:{
+						CompanyID:comp2,						
+						DepartmentID:depr2,
+						StartTime:star2,
+						EndTime:end2,
+						UserName:userName2,
+					},
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					method: 'post',
+					contentType: 'application/json',
+					page:true,
+					loading: true,
+					// toolbar:,
+					toolbar: ['filter', 'print', 'exports'],
+					// defaultToolbar: ['filter', 'print', 'exports'],
+					text: {
+						none: '暂无数据' 
+					},
+					size:'sm',
+					even:true,
+					// height: 'full-275',
+					cols: [[
+						{field:'company_name',title:'公司名称',sort:true},
+						{field:'dept_name',title:'部门',sort:true},
+						
+						{field:'user_name',title:'姓名',sort:true},
+						{field:'apply_time',title:'申请时间',sort:true},
+						
+						// {field:'leave_type_desc',title:'请假类型',sort:true},
+						{field:'start_time',title:'开始时间',sort:true},
+						{field:'end_time',title:'结束时间',sort:true},
+						{field:'location',title:'外出地点',sort:true},
+						{field:'go_out_hours',title:'外出时长',sort:true},
+						// {field:'is_cancel_desc',title:'取消状态',sort:true}
+						// {field:'zaotui_count',title:'早退',sort:true},
+						// {field:'leave_day_count',title:'请假天数',sort:true}
+						// {fixed:'right',field:'event',title:'操作',toolbar: '<div><a class="layui-btn layui-btn-xs" lay-event="detail">详情信息</a></div>'},
+					]]
+					,request: {
+					    pageName: 'currentIndex' //页码的参数名称，默认：page
+					    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					}
+					,parseData: function(res){ //res 即为原始返回的数据
+						return {
+							"status_code":res.status_code, //解析接口状态
+							"message": res.message, //解析提示文本
+							"count": res.data.total_count, //解析数据长度
+							"data": res.data.data_list, //解析数据列表
+							"curr":res.data.page_index
+						};
+					}
+				})
+				
+				form.on('submit(statiBtn-2)', function(data){//提交
+					var	comp2=$("#statiComSel-2").val();
+					var	depr2=$("#statiDepSel-2").val()=="null"?'':$("#statiDepSel-2").val();
+					var times2 = $("#StartItem-2").val();
+					var star2 = times2.slice(0,10);
+					var end2  = times2.slice(13,23);
+					var userName2=$("#userName-2").val();
+					allStaList2.reload({
+						where: { //设定异步数据接口的额外参数，任意设
+							CompanyID:comp2,						
+							DepartmentID:depr2,
+							StartTime:star2,
+							EndTime:end2,
+							UserName:userName2,
+						}
+						,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+					});
+					return false;
+				})
+
+				//加班
+				var	comp3=$("#statiComSel-3").val();
+				var	depr3=$("#statiDepSel-3").val()=="null"?'':$("#statiDepSel-3").val();
+				var times3 = $("#StartItem-3").val();
+				var star3 = times3.slice(0,10);
+				var end3 = times3.slice(13,23);
+				var userName3 = $("#userName-3").val();
+
+				var allStaList3 = table.render({
+					elem: '#allStaList3',
+					url: urls+'/gateway/overtime/overtimedetail',
+					where:{
+						CompanyID:comp3,						
+						DepartmentID:depr3,
+						StartTime:star3,
+						EndTime:end3,
+						UserName:userName3,
+					},
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					method: 'post',
+					contentType: 'application/json',
+					page:true,
+					loading: true,
+					// toolbar:,
+					toolbar: ['filter', 'print', 'exports'],
+					// defaultToolbar: ['filter', 'print', 'exports'],
+					text: {
+						none: '暂无数据' 
+					},
+					size:'sm',
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					even:true,
+					// height: 'full-375',
+					cols: [[
+						{field:'company_name',title:'公司名称',sort:true},
+						{field:'dept_name',title:'部门',sort:true},
+						{field:'user_name',title:'姓名',sort:true},
+						{field:'apply_time',title:'申请时间',sort:true},
+						{field:'overtime_type_desc',title:'加班类型',sort:true},						
+						// {field:'leave_type_desc',title:'请假类型',sort:true},
+						{field:'start_time',title:'开始时间',sort:true},
+						{field:'end_time',title:'结束时间',sort:true},
+						{field:'content',title:'描述',sort:true},
+						{field:'overtime_hours',title:'加班时长',sort:true},
+						// {field:'is_cancel_desc',title:'取消状态',sort:true}
+						// {field:'zaotui_count',title:'早退',sort:true},
+						// {field:'leave_day_count',title:'请假天数',sort:true}
+						// {fixed:'right',field:'event',title:'操作',toolbar: '<div><a class="layui-btn layui-btn-xs" lay-event="detail">详情信息</a></div>'},
+					]]
+					,request: {
+					    pageName: 'currentIndex' //页码的参数名称，默认：page
+					    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					}
+					,parseData: function(res){ //res 即为原始返回的数据
+						return {
+							"status_code":res.status_code, //解析接口状态
+							"message": res.message, //解析提示文本
+							"count": res.data.total_count, //解析数据长度
+							"data": res.data.data_list, //解析数据列表
+							"curr":res.data.page_index
+						};
+					}
+				})
+				
+				form.on('submit(statiBtn-3)', function(data){//提交
+					var	comp3=$("#statiComSel-3").val();
+					var	depr3=$("#statiDepSel-3").val()=="null"?'':$("#statiDepSel-3").val();
+					var times3 = $("#StartItem-3").val();
+					var star3 = times3.slice(0,10);
+					var end3  = times3.slice(13,23);
+					var userName3=$("#userName-3").val();
+					var compid3 = $("#statiDepSel-3").val();
+					allStaList3.reload({
+						where: { //设定异步数据接口的额外参数，任意设
+							CompanyID:comp3,						
+							DepartmentID:depr3,
+							StartTime:star3,
+							EndTime:end3,
+							UserName:userName3,
+						}
+						,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+					});
+					return false;
+				})
+            
+       //补录
+				var	comp4=$("#statiComSel-4").val();
+				var	depr4=$("#statiDepSel-4").val()=="null"?'':$("#statiDepSel-4").val();
+				var times4 = $("#StartItem-4").val();
+				var star4 = times4.slice(0,10);
+				var end4 = times4.slice(13,23);
+				var userName4 = $("#userName-4").val();
+
+				var allStaList4 = table.render({
+					elem: '#allStaList4',
+					url: urls+'/gateway/checkinoutapply/checkinoutdetail',
+					where:{
+						CompanyID:comp4,						
+						DepartmentID:depr4,
+						StartTime:star4,
+						EndTime:end4,
+						UserName:userName4,
+					},
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					method: 'post',
+					contentType: 'application/json',
+					page:true,
+					loading: true,
+					// toolbar:,
+					toolbar: ['filter', 'print', 'exports'],
+					// defaultToolbar: ['filter', 'print', 'exports'],
+					text: {
+						none: '暂无数据' 
+					},
+					size:'sm',
+					limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+					even:true,
+					// height: 'full-375',
+					cols: [[
+						{field:'company_name',title:'公司名称',sort:true},
+						{field:'dept_name',title:'部门',sort:true},
+						{field:'name',title:'姓名',sort:true},
+						{field:'apply_time',title:'申请时间',sort:true},
+						
+						// {field:'leave_type_desc',title:'请假类型',sort:true},
+						{field:'check_in_out_time',title:'补录时间',sort:true,minWidth:280},
+						// {field:'end_time',title:'',sort:true},
+						{field:'content',title:'描述',sort:true},
+						{field:'bu_lu_times',title:'补录次数',sort:true}
+						
+						// {field:'overtime_hours',title:'加班时长',sort:true},
+						//{field:'is_cancel_desc',title:'取消状态',sort:true}
+						// {field:'zaotui_count',title:'早退',sort:true},
+						// {field:'leave_day_count',title:'请假天数',sort:true}
+						// {fixed:'right',field:'event',title:'操作',toolbar: '<div><a class="layui-btn layui-btn-xs" lay-event="detail">详情信息</a></div>'},
+					]]
+					,request: {
+					    pageName: 'currentIndex' //页码的参数名称，默认：page
+					    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					}
+					,parseData: function(res){ //res 即为原始返回的数据
+						return {
+							"status_code":res.status_code, //解析接口状态
+							"message": res.message, //解析提示文本
+							"count": res.data.total_count, //解析数据长度
+							"data": res.data.data_list, //解析数据列表
+							"curr":res.data.page_index
+						};
+					}
+				})
+				
+				form.on('submit(statiBtn-4)', function(data){//提交
+					var	comp4=$("#statiComSel-4").val();
+					var	depr4=$("#statiDepSel-4").val()=="null"?'':$("#statiDepSel-4").val();
+					var times4 = $("#StartItem-4").val();
+					var star4 = times4.slice(0,10);
+					var end4  = times4.slice(13,23);
+					var userName4=$("#userName-4").val();
+					var compid4 = $("#statiDepSel-4").val();
+					allStaList4.reload({
+						where: { //设定异步数据接口的额外参数，任意设
+							CompanyID:comp4,						
+							DepartmentID:depr4,
+							StartTime:star4,
+							EndTime:end4,
+							UserName:userName4,
+						}
+						,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+					});
+					return false;
+				})
+		
+				var allStaList = table.on('tool(allStaList)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+					var data = obj.data; //获得当前行数据
+					var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+					var tr = obj.tr; //获得当前行 tr 的DOM对象
+					var times = $("#StartItem-0").val();
+					var  star = times.slice(0,10);
+					var  end  = times.slice(13,23);
+					if(layEvent === 'detail'){ //查看
+						// console.log()
+						//do somehing
+						var sat ={
+							UserID:$(this).attr('data-id'),
+							StartTime:star,
+							EndTime:end,
+						}
+						$.fetch({
+							url: "/gateway/checkinout/statdetail",
+							type: 'post',
+							data: sat,
+							cb:function(rs){
+								// $(".statiDetBox .username").text();
+								var oList =rs;
+								var html ='';
+								if(oList&&oList.length==0){
+									html ='<tr><td colspan="2" class="tc">无记录</td></tr>' //添加一个类名
+								}
+								$.each(oList,function(key,val){
+									var s='',c='',p='';
+
+									if(oList[key].list.length>1){
+										s = oList[key].list.length;
+									}
+
+									if(oList[key].list[0].desc=='迟到'){
+										c='class="cd red"'
+										p = '/<b class="">'+oList[key].list[0].desc+'</b>';
+									}
+									if(oList[key].list[0].desc=='早退'){
+										c='class="zt red"'
+										p = '/<b class="">'+oList[key].list[0].desc+'</b>';
+									}
+									if(oList[key].list[0].desc=='正常'){
+										c=''
+										p = '/'+oList[key].list[0].desc;
+									}
+									var q = oList[key].list[0].source==0?'同步':'补录';
+
+									html+='<tr><td rowspan="'+s+'">'+key+'</td><td  '+c+'>'+oList[key].list[0].check_time+'（'+q+''+p+'）</td></tr>'
+									for(var i=1;i<oList[key].list.length;i++){
+										if(oList[key].list[i].desc=='迟到'){
+											c='class="cd red"'
+											p = '/<b class="">'+oList[key].list[i].desc+'</b>';
+										}
+										if(oList[key].list[i].desc=='早退'){
+											c='class="zt red"'
+											p = '/<b class="">'+oList[key].list[i].desc+'</b>';
+										}
+										if(oList[key].list[i].desc=='正常'){
+											c=''
+											p = '/'+oList[key].list[i].desc;
+										}
+										var q = oList[key].list[i].source==0?'同步':'补录';
+										html+='<tr><td '+c+'>'+oList[key].list[i].check_time+'（'+q+''+p+'）</td></tr>'
+									}
+								});
+								layer.open({
+									title:'用户名:' +data.name+'',
+									type:1,
+									content:'<div class="stati statiDetBox layui-fluid layui-card"><div class="layui-card-header"><i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>上下班考勤统计（从【<span class="starTimeShow">'+star+'</span>】至【<span class="endTimeShow">'+end+'</span>】）<span class=username></span></div><div class="AllStati"><table class="layui-table"><thead><tr><th>日期</th><th>打卡记录</th></tr></thead><tbody id="statiDetailList">'+html+'</tbody></table></div></div>',
+									area:['50%', '50%'],
+									btn:['返回'],
+								}) 
+							}
+						})
+					} else if(layEvent === 'leave'){
+						var times = $("#StartItem-0").val();
+						var  star = times.slice(0,10);
+						var  end  = times.slice(13,23);
+						$("#StartItem-1").val(times);
+						$("#userName-1").val(data.name);
+						$("#statiDepSel-1").val(data.department_id);
+						form.render("select");
+						element.tabChange('attendanceTabBrief', 2);
+						allStaList1.reload({
+							where: { //设定异步数据接口的额外参数，任意设
+								CompanyID:data.company_id,						
+								DepartmentID:data.department_id,
+								StartTime:star,
+								EndTime:end,
+								UserName:data.name,
+							}
+							,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+						});
+					}else if(layEvent === 'outgo'){
+						var times = $("#StartItem-0").val();
+						var  star = times.slice(0,10);
+						var  end  = times.slice(13,23);
+						$("#StartItem-2").val(times);
+						$("#userName-2").val(data.name)
+						$("#statiDepSel-2").val(data.department_id);
+						form.render("select");
+						
+						element.tabChange('attendanceTabBrief', 3);
+						allStaList2.reload({
+							where: { //设定异步数据接口的额外参数，任意设
+								CompanyID:data.company_id,						
+								DepartmentID:data.department_id,
+								StartTime:star,
+								EndTime:end,
+								UserName:data.name,
+							}
+							,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+						});
+					}else if(layEvent === 'overTime'){
+						var times = $("#StartItem-0").val();
+						var  star = times.slice(0,10);
+						var  end  = times.slice(13,23);
+						$("#StartItem-3").val(times);
+						$("#userName-3").val(data.name);
+						$("#statiDepSel-3").val(data.department_id);
+						form.render("select");
+						element.tabChange('attendanceTabBrief', 4);
+						allStaList3.reload({
+							where: { //设定异步数据接口的额外参数，任意设
+								CompanyID:data.company_id,						
+								DepartmentID:data.department_id,
+								StartTime:star,
+								EndTime:end,
+								UserName:data.name,
+							}
+							,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+						});
+					}else if(layEvent === 'kqdetail'){
+						var userId=$(this).attr('data-id');
+						layer.open({
+							title:false,
+							type:2,
+							content:'AllAttendance.html',
+							area:['100%', '100%'],
+							closeBtn:false,
+							success: function(layero, index){
+								
+								var body = layer.getChildFrame('body', index);
+								var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+								body.find("#userInfor").html('部门:'+data.department_name+'  用户名:'+data.name)
+								var timeArr =usercheckTime.split("-");
+								iframeWin.userData={
+									UserID:userId,
+									Year:timeArr[0],
+									Month:timeArr[1],
+								}
+							}
+						}) 
+					}else if(layEvent === 'bulu'){
+						var times = $("#StartItem-0").val();
+						var  star = times.slice(0,10);
+						var  end  = times.slice(13,23);
+						$("#StartItem-4").val(times);
+						$("#userName-4").val(data.name);
+						$("#statiDepSel-4").val(data.department_id);
+						form.render("select");
+						element.tabChange('attendanceTabBrief', 5);
+						allStaList4.reload({
+							where: { //设定异步数据接口的额外参数，任意设
+								CompanyID:data.company_id,						
+								DepartmentID:data.department_id,
+								StartTime:star,
+								EndTime:end,
+								UserName:data.name,
+							}
+							,page: {
+								curr: 1 //重新从第 1 页开始
+							}
+						});
+					}
+				});
+				// table.on('toolbar(allStaList)', function(obj){
+				//     var checkStatus = table.checkStatus(obj.config.id);
+				//     switch(obj.event){
+				//     case 'back':
+				//         layer.close(index);
+				//     break;
+				//     }
+					
+				// });
+			}
+		})
+    })
+})
+</script>
+</html>

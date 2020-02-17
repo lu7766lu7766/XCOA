@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OA办公管理系统</title>
+<link rel="shortcut icon" href="img/favicon.ico" />
+<script src="js/jquery.min.js"></script><!-- 1.11.3 -->
+<script>
+	$(function () {
+            //防止页面后退
+        	history.pushState(null, null, document.URL);
+        	window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    })
+</script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/jquery.i18n.properties.min.js"></script>
+<script src="js/language.js"></script>
+<link rel="stylesheet" type="text/css" href="css/total.css">
+</head>
+	
+<body>
+	<form class="loginForm">
+		<div class="loginbox">
+			<div class="loginlogo">
+				<img src="img/logo.jpg">
+			</div>
+			<div class="loginbg">
+				<div class="logininput">
+					<input type="text" name="userName" id="userName" tabindex="1"  data-lang-placeholder="string_lang11"  placeholder="请输入用户名">
+				</div>
+				<div class="logininput">
+					<input type="password" name="userPassword" id="userPassword" data-lang-placeholder="string_lang12"  placeholder="请输入密码"  value="" tabindex="2">
+				</div>
+				<div class="bthLogin">
+					<button type="button" data-lang="string_lang0" id="btnLogin">登 陆</button>
+				</div>
+			</div>
+		</div>
+		<div class="translation">
+			<a id="J_lang_en"  href="javascript:void(0)" data-lang="string_lang9">English</a>
+			<span> / </span>
+			<a id="J_lang_cn" href="javascript:void(0)" data-lang="string_lang10">中文</a>
+		</div>
+	</form>
+<script>
+	$('#J_lang_en').click(function(){
+		language_pack.loadProperties(1);
+    });
+    $('#J_lang_cn').click(function(){
+		language_pack.loadProperties(0);
+	});
+</script>
+<script src="js/login.js"></script>
+</body>
+</html>

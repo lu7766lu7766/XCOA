@@ -1,0 +1,220 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工资规则(MNL)</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+               工资规则列表
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table"  id="salaryTab" lay-filter="salaryTab"></table>
+            </div>
+        </div>
+       
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','table', 'laydate'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,table = layui.table
+    ,router = layui.router()
+    ,layer = layui.layer;
+    element.render();
+
+    table.render({
+		elem: '#salaryTab'
+		,url:  urls + "/gateway/usersalaryautoupdate/mnl/rulenames"
+		,toolbar:'<div><button class="layui-btn layui-btn-sm" lay-event="add">新增规则</button></div>'
+		// ,totalRow:true
+		,defaultToolbar: []
+		,text: {
+			none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+        }
+        ,page: true //开启分页
+        
+		,limit:10
+		,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+		,method:'post'
+		,contentType: 'application/json'
+		,loading:true
+		,request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        ,parseData: function(res){ //res 即为原始返回的数据
+            return {
+                "status_code":res.status_code, //解析接口状态
+                "message": res.message, //解析提示文本
+                "count": res.data.total_count, //解析数据长度
+                "data": res.data.data_list, //解析数据列表
+                "curr":res.data.page_index
+            };
+        }
+		,cols:[[ //标题栏
+            {type:'numbers', title: '序号',width:80}        
+            ,{sort: true,field: 'rule_name', title: '规则名称'}
+            ,{sort: true,field: 'creator', title: '创建人'}
+            ,{
+                fixed: 'right'
+                ,title:'操作'
+                ,width:280
+                ,templet:function(d){
+                    return '<div><button class="layui-btn layui-btn-sm" lay-event="Details">详情</button><button class="layui-btn layui-btn-sm" lay-event="edit">编辑</button><button class="layui-btn layui-btn-sm" lay-event="job">设置岗位</button><button class="layui-btn layui-btn-sm" lay-event="del">删除</button></div>'    
+                }
+            }
+        ]]  
+		,done:function(res){
+        }	
+    });
+    //监听事件
+    table.on('toolbar(salaryTab)', function(obj){
+        //var checkStatus = table.checkStatus(obj.config.id);
+        switch(obj.event){
+            case 'add':
+            layer.open({
+                type: 2, 
+                title:'工资规则设置',
+                area:['90%','85%'],                
+                content: 'SalaryRuleForm.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                end:function(){
+                    table.reload('salaryTab');
+                }
+            }); 
+            break;
+        };
+    });
+    table.on('tool(salaryTab)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        // var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+        
+        if(layEvent === 'Details'){ //查看
+            //do somehing
+            $.fetch({
+                url:"/gateway/usersalaryautoupdate/mnl/rulenamedetail",
+                type:'post',
+                data:{
+                    RuleNameID:obj.data.id
+                },
+                cb:function(rs){
+                 //   console.log(rs)
+                    layer.open({
+                        type: 2
+                        , title:'工资规则详情'
+                        , area:['90%','85%']               
+                        ,content: 'SalaryRuleDetail.html'
+                        ,success:function(layero,index){
+                            // console.log(data);//id 
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin.res=rs;
+                        }
+                        ,end:function(){
+                            table.reload('salaryTab');
+                        }
+                    }); 
+                }
+            })
+        } else if(layEvent === 'del'){ //删除
+            layer.confirm('会删除下面所有的关联数据,确定删除"'+obj.data.rule_name+'"?',{title:' '}, function(index){
+                //删除对应行（tr）的DOM结构，并更新缓存
+                $.fetch({
+                    url:"/gateway/usersalaryautoupdate/mnl/delrulename",
+                    type:'post',
+                    data:{
+                        RuleNameID:obj.data.id
+                    },
+                    cb:function(rs){
+                        layer.close(index);
+                        table.reload('salaryTab');
+                      
+                    }
+                })
+                //向服务端发送删除指令
+            });
+        } else if(layEvent === 'edit'){ //编辑
+            //do something
+            // $.fetch({
+            //     url:"/gateway/usersalaryautoupdate/mnl/rulenamedetail",
+            //     type:'post',
+            //     data:{
+            //         RuleNameID:obj.data.id
+            //     },
+            //     cb:function(rs){
+                 //   console.log(rs)
+                    layer.open({
+                        type: 2
+                        , title:'工资规则编辑'
+                        , area:['90%','85%']               
+                        ,content: 'SalaryRuleForm.html'
+                        ,success:function(layero,index){
+                            // console.log(data);//id 
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            // iframeWin.res=rs;
+                            iframeWin.RuleNameID=obj.data.id;
+                        }
+                        ,end:function(){
+                            table.reload('salaryTab');
+                        }
+                    }); 
+            //     }
+            // })
+            
+        } else if(layEvent === 'job'){ //编辑
+            //do something
+            $.fetch({
+                url:"/gateway/usersalaryautoupdate/mnl/getrulejobtitle",
+                // url:'/gateway/usersalaryautoupdate/mnl/setjobtitlerule',
+                type:'post',
+                data:{
+                    // JobTitleID:obj.data.id
+                    RuleNameID:obj.data.id,
+                    // JobTitleID:'1,5,14'
+                },
+                cb:function(rs){
+                    // console.log(rs)
+                    layer.open({
+                        type: 2
+                        ,title:'设置岗位薪资规则'
+                        ,area:['90%','60%']               
+                        ,content: 'SalaryRuleJob.html'
+                        ,success:function(layero,index){
+                            // console.log(data);//id 
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#salaryName").text(obj.data.rule_name);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin.res=rs;
+                            iframeWin.RuleNameID=obj.data.id;
+                        }
+                        ,end:function(){
+                            table.reload('salaryTab');
+                        }
+                    }); 
+                }
+            })
+            
+        }
+    });
+    
+})
+</script>
+</html>

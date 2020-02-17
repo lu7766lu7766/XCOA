@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色权限管理</title>
+<link rel="stylesheet" type="text/css" href="../../css/Attendance.css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+
+<link rel="stylesheet" type="text/css" href="../../layui/css/modules/layer/default/layer.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<!-- <script src="../js/jquery.treeview.js" type="text/javascript"></script>
+<script src="../js/jquery.treeview.edit.js" type="text/javascript"></script> -->
+<!-- <script type="text/javascript" src="../../js/vue.js"></script> -->
+
+
+</head>
+	
+<body layadmin-themealias="default">
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-tab layui-tab-brief" lay-filter="component-tabs-brief">
+				<ul class="layui-tab-title">
+					<li class="layui-this">
+						角色管理
+					</li>
+					<li>
+						新建角色
+					</li>
+					<li>
+						新建菜单
+					</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<table class="layui-table" id="roleListTable">
+				
+						</table>
+					</div>
+					<div class="layui-tab-item">
+						<form class="layui-form modify-style "  id="profileRole" action="" lay-filter="profileRole">
+							<div class="layui-form-item">
+								<label class="layui-form-label modify-form-label">角色名称：</label>
+								<div class="layui-input-block item-modify">
+									<input type="text" id="role_name" class="layui-input">
+									<span class="red">*</span>
+								</div>
+							</div>
+							<div class="layui-form-item tc">
+								<button id="submitRole" type="button" class="layui-btn">保存</button>
+							</div>
+						</form>
+					</div>
+					 <!-- 新建菜单 -->
+					<div class="layui-tab-item CloneNew" id="AddPremData">
+							<div class="title">
+								<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+								新建菜单
+							</div>
+							<table  class="table table-bordered">
+								<tr>
+									<td>菜单名称：</td>
+									<td><input id="Perm_name" type="text" class="form-control"></td>
+								</tr>
+								<tr>
+									<td>菜单英文名：</td>
+									<td><input id="Perm_enname" type="text" class="form-control"></td>
+								</tr>
+								<tr>
+									<td>路由地址：</td>
+									<td><input id="route_name" type="text" class="form-control"></td>
+								</tr>
+								<tr>
+									<td>静态档目录：</td>
+									<td><input id="Perm_file" type="text" class="form-control"></td>
+								</tr>
+								
+								<tr>
+									<td>是否集团：</td>
+									<td>
+										<div>
+											<input type="radio"  checked="true" id="isGroup" name="opGroup" value="1">
+											<label for="isGroup">是</label>
+										</div>
+										<div>
+											<input type="radio" id="noGroup"  name="opGroup" value="0">
+											<label for="noGroup">否</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>所在类目：</td>
+								
+									<td>
+										<!-- <div>请优先选择是否集团</div> -->
+										<select  name="" id="Perm_select">
+											<!-- <option value="">请优先选择是否集团</option> -->
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>输入icon：</td>
+									<td><input id="Perm_Icon" type="text" class="form-control"></td>									
+								</tr>
+								<tr>
+									<td>是否菜单：</td>
+									<td>
+										<div>
+											<input type="radio" id="menuShow" name="opreation" value="1">
+											<label for="menuShow">是</label>
+										</div>
+										<div>
+											<input type="radio" id="menuHide"  name="opreation" value="0">
+											<label for="menuHide">否</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>是否显示：</td>
+									<td>
+										<div>
+											<input type="radio" id="show" name="showHide" value="1">
+											<label for="show">是</label>
+										</div>
+										<div>
+											<input type="radio" id="hide" name="showHide" value="0">
+											<label for="hide">否</label>
+										</div>
+									</td>
+								</tr>
+								<!-- <tr>
+									<td>添加icon：</td>
+									<td>
+										
+									</td>
+								</tr> -->
+								<tr>
+									<td colspan="2">
+									<button id="submiPerm" type="button">保存</button>
+									<!-- <button type="button">返回</button> -->
+								</td>
+								</tr>
+							</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <ul class="nav nav-tabs" id="myTabRole">
+	  <li class="active"><a href="#homeRole">角色管理</a></li>
+	  <li><a href="#profileRole">新建角色</a></li>
+	</ul> -->
+
+	<div class="tab-content tab-Role">
+		<!-- 角色管理开始 -->
+	  <!-- <div class="tab-pane Character active" id="homeRole">
+	  	<div class="title">
+	  		<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+	  		管理角色
+	  	</div>
+		<div class="CharacterCont"> -->
+			<!-- <div class="cont">
+				<div class="total">
+					每页
+					<select id="selectPageSize">
+						<option value="20">20</option>
+						<option value="10">10</option>
+						<option value="30">30</option>
+						<option value="40">40</option>
+					</select>
+					条
+				</div>
+				<div class="Pagination" id="app">
+					<span class="jump" :class="{disabled:pstart}" @click="min">上一页</span>
+					<span class="jumpinp"><input type="number" v-model="current_page" @input="pageInput">页/共{{pages}}页</span>
+					<span :class="{disabled:pend}" class="jump" @click="add">下一页</span>
+				</div>
+				<div class="Refresh">
+					<i class="iconfont icon-refresh"></i>
+				</div>
+			</div> -->
+			<!-- <table class="table table-bordered" id="roleListTable">
+				
+			</table> -->
+			<!-- <div class="pagTop">
+				<span><i class="iconfont icon-triangle-left leftIcon"></i></span>
+				<ul class="pag">
+					<li><a href="" class="active">1</a></li>
+					<li><a href="">2</a></li>
+					<li><a href="">3</a></li>
+					<li><a href="">4</a></li>
+					<li><a href="">...</a></li>
+					<li><a href="">13</a></li>
+					<li><a href="">14</a></li>
+				</ul>
+				<a href=""><i class="iconfont icon-triangle-left"></i></a>
+			</div> 
+		</div>-->
+		<!-- 角色管理->编辑权限 -->
+		<div id="oneSetRoleId" class="permission" style="display: none;">
+			<div class="title">
+				<i class="iconfont icon-jiaosequanxianguanli"></i>
+				编辑角色权限 -<span class="roleNamet"></span>
+				<div class="SaveReturn">
+					<button type="button" class="layui-btn layui-btn-normal" id="subRoleTree">保存</button>
+					<button type="button" class="layui-btn layui-btn-primary" onclick="$('#oneSetRoleId').hide();">返回</button>
+				</div>
+			</div>
+			<ul class="organTop">
+			
+			</ul>
+		</div>
+	  </div>
+		<!-- 角色管理开结束 -->
+
+		<!-- 新建角色开始 -->
+	  <!-- <div class="tab-pane CloneNew" id="profileRole">
+	  	<div class="title">
+	  		<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+	  		新建角色
+	  	</div> -->
+	  	<!-- <div class="prompt">
+				<i class="iconfont icon-tishi"></i>
+				<span>
+					<p>提示</p>
+					请合理设置角色序号，它决定了用户的排列位置，也代表了一种管理层次，序号越小，管理层次越高
+				</span>
+			</div> -->
+			
+			<!-- <table class="table table-bordered">
+				<tr> -->
+					<!-- <td>角色排序号：</td>
+					<td>
+						<input id="role_number" type="text" class="form-control"><span class="red">*</span>
+					</td> -->
+				<!-- </tr>
+				<tr>
+					<td>角色名称：</td>
+					<td>
+						<input  id="role_name" type="text" class="form-control"><span class="red">*</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button id="submitRole" type="button">保存</button>
+						<button type="button">返回</button>
+					</td>
+				</tr>
+			</table>
+		</div> -->
+		<!-- 新建角色结束-->
+	  <!-- <div class="tab-pane AddDelete" id="messagesRole">
+	  	<div class="title">
+			<i class="iconfont icon-jiaosequanxianguanli"></i>
+			添加/删除权限
+			<div class="SaveReturn">
+				<button id="" type="button" class="btn btn-default">保存</button>
+				<button type="button" class="btn btn-default">返回</button>
+			</div>
+		</div>
+		<table class="table table-bordered">
+			<tr>
+				<td>操作：</td>
+				<td>
+					<div>
+						<input type="radio" name="OPERATION" value="0" id="addRoute" checked="">
+						<label for="OPERATION0">添加权限</label>
+					</div>
+					<div>
+						<input type="radio" name="OPERATION" value="1" id="delRoute">
+						<label for="OPERATION1">删除权限</label>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>角色：</b>
+					<a href="">全选</a>
+				</td>
+				<td>
+					 <div>
+					 	<input type="checkbox" id="user_priv1" name="user_priv" value="1">
+					 	<label for="user_priv1">OA 管理员</label>
+					 </div>
+					 <div>
+					 	<input type="checkbox" id="user_priv331" name="user_priv" value="331">
+					 	<label for="user_priv331">体验</label>
+					 </div>
+					 <div>
+					 	<input type="checkbox" id="user_priv309" name="user_priv" value="309">
+					 	<label for="user_priv309">总经理</label>
+					 </div>
+					 <div>
+					 	<input type="checkbox" id="user_priv335" name="user_priv" value="335">
+					 	<label for="user_priv335">主管</label>
+					 </div>
+					 <div>
+					 	<input type="checkbox" id="user_priv333" name="user_priv" value="333">
+					 	<label for="user_priv333">客服</label>
+					 </div>
+					 <div>
+					 	<input type="checkbox" id="user_priv322" name="user_priv" value="322">
+					 	<label for="user_priv322">财务</label>
+					 </div>
+					 <div>
+					 	<input type="checkbox" id="user_priv328" name="user_priv" value="328">
+					 	<label for="user_priv328">员工</label>
+					 </div>
+				</td>
+			</tr>
+		</table>
+		<ul class="organTop" id="">
+			<li>
+				<i class="iconfont icon-40"></i>
+				<i class="iconfont icon-zy_qunzuduoren"></i>
+				<input type="checkbox" name="">
+				<a href="">行政事务</a>
+				<ul class="organSecondary active">
+					<li>
+						<i class="iconfont icon-40"></i>
+						<i class="iconfont icon-zy_qunzuduoren"></i>
+						<input type="checkbox" name="">
+						<a href="">图书管理</a>
+						<ul class="organThird">
+							<li>
+								<i class="iconfont icon-40"></i>
+								<i class="iconfont icon-zy_qunzuduoren"></i>
+								<input type="checkbox" name="">
+								<a href="">借用还书</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	  </div> -->
+	 
+	</div>
+</body>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script src="../../js/sub/role.js?0.1" type="text/javascript"></script>
+<script src="../../layui/layui.js"></script>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理排班类型</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+</head>
+	
+<body layadmin-themealias="fashion-red">
+	<div  class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<!-- 新建排班 -->
+			<div id="cloneNew" class=" CloneNew  layui-card " >
+				<div class="layui-card-header">
+					<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+					编辑上下班时间
+				</div>
+				<div class="layui-row layui-col-space10">
+					<div class="layui-col-xs2"></div>
+					<div class="layui-col-xs8">
+						<div class="SetingTable layui-card-body">
+							<fieldset class="layui-elem-field">
+								<legend><i class="iconfont icon-tishi"></i>说明</legend>					
+								
+								<div class="layui-field-box">
+									上下班登记时间范围在00:00:00至23:59:59之间，请按时间顺序指定
+								</div>
+							</fieldset>
+							<form class="layui-form" lay-filter="component-form-newwork">
+								<div class="layui-form-item">
+									<label class="layui-form-label modify-form-label">排班类型说明：</label>
+									<div class="layui-input-inline">
+										<input lay-verify="name" name="newName"  type="text" class="layui-input">
+									</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label modify-form-label">第1次登记：</label>
+									<div class="layui-input-inline">
+										<input type="text" name="setTime1" id="setTime1"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+									</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label modify-form-label">第2次登记：</label>
+									<div class="layui-input-inline">
+										<input type="text" name="setTime2" id="setTime2"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+									</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label modify-form-label">第3次登记：</label>
+									<div class="layui-input-inline">
+										<input type="text" name="setTime3" id="setTime3"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+									</div>
+								</div>
+								<div class="layui-form-item">
+									<label class="layui-form-label modify-form-label">第4次登记：</label>
+									<div class="layui-input-inline">
+										<input type="text" name="setTime4" id="setTime4"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+									</div>
+								</div>
+								<div class="layui-form-item">
+									<div class="layui-input-block">
+										<button class="layui-btn"  lay-submit lay-filter="form-newwork"  id="subSetTimes">确定</button>
+										<button class="layui-btn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+										<button class="layui-btn" type="reset" id="delSetVal" >关闭</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../../layui/layui.js">
+	</script>
+	<script>
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'table', 'laydate', 'form','layer' ], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                router = layui.router(),
+                layer = layui.layer;
+            element.render();
+            var table = layui.table,
+                laypage = layui.laypage,
+                form = layui.form,
+                laydate = layui.laydate;
+			
+			var now= new Date();
+			var year = now.getFullYear(),
+			month = now.getMonth() + 1,
+			zmonth ='';
+			if(month<10){
+				zmonth = "0"+month;
+			}else{
+				zmonth = month;
+			};
+			laydate.render({ 
+				elem: '#setTime1'
+				,type: 'time'
+			});
+			laydate.render({ 
+				elem: '#setTime2'
+				,type: 'time'
+			});
+			laydate.render({ 
+				elem: '#setTime3'
+				,type: 'time'
+			});
+			laydate.render({ 
+				elem: '#setTime4'
+				,type: 'time'
+			});
+			if(window.diate){
+				form.val("component-form-newwork", {
+                    "newName": window.diate.name // "name": "value"
+                    ,"setTime1": window.diate.time1
+                    ,"setTime2": window.diate.time2
+                    ,"setTime3": window.diate.time3
+                    ,"setTime4": window.diate.time4
+				})
+				form.render()
+				form.on('submit(form-newwork)', function(data){//外出提交
+					var param ={
+						ID:window.diate.id,
+						Name  :data.field.newName, 
+						Time1 :data.field.setTime1, 
+						Time2 :data.field.setTime2, 
+						Time3 :data.field.setTime3, 
+						Time4 :data.field.setTime4, 
+					}
+					$.fetch({
+						url: "/gateway/worktime/update",
+						type: 'post',
+						data: param,
+						cb:function(rs){
+							layer.msg("保存成功");
+							var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+							parent.layer.close(index); //再执行关闭    	
+						}
+					})
+					return false;
+				});
+			}else{
+				form.on('submit(form-newwork)', function(data){//外出提交
+					var param ={
+						Name  :data.field.newName, 
+						Time1 :data.field.setTime1, 
+						Time2 :data.field.setTime2, 
+						Time3 :data.field.setTime3, 
+						Time4 :data.field.setTime4, 
+					}
+					$.fetch({
+						url: "/gateway/worktime/add",
+						type: 'post',
+						data: param,
+						cb:function(rs){
+							layer.msg("保存成功");
+							var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+							parent.layer.close(index); //再执行关闭    
+						}
+					})
+					return false;
+				});
+			}
+			$("#delSetVal").on("click",function(){
+				var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+				parent.layer.close(index); //再执行关闭    
+			})
+			// 生成表格
+			
+          
+    })
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>公司费用预支审批列表</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="iconfont mr-5 icon-xinjianbianhui"></i>公司费用预支审批列表</div>
+            <div class="layui-card-body">
+                <!-- <div class=" layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline">
+                                <select name="myfinaGrouprSel" lay-filter="myfinaGrouprSel"  id="myfinaGrouprSel">
+                                    <option value="-1">全部</option>
+                                    <option value="0">待审批</option>
+                                    <option value="1">未通过</option>
+                                    <option value="2">已通过</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+               <table class="layui-table"  id="finaGroupTable" lay-filter="finaGroupTable"></table>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=2019012403"></script>
+<script>
+  
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        ,upload=layui.upload
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+        // 数据表格
+        var finaGroupTable = table.render({
+            elem: '#finaGroupTable',
+            url: urls + "/gateway/finagroupapply/companyapprovallist ",
+            contentType: 'application/json',
+            method: 'post',
+            toolbar:true,
+            defaultToolbar: ['filter', 'print', 'exports'],
+            where: {
+                ApplyResult: 0
+            },
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            page: true, //开启分页
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+            cols: [[ //标题栏
+                    {sort:true,
+                        field: 'creator',
+                        title: '申请人',
+                        minWidth: 100
+                    }, 
+                    {sort:true,
+                        field: 'created_at',
+                        title: '申请时间',
+                        minWidth: 160
+                    }, {sort:true,
+                        field: 'apply_subject',
+                        title: '标题',
+                        minWidth: 160
+                    },{sort:true,
+                        field: 'apply_content2',
+                        title: '描述',
+                        minWidth: 160
+                    },{sort:true,
+                        field: 'zh_name',
+                        title: '申请币种',
+                        minWidth: 160,
+                        templet:function(d){
+                            return d.zh_name==null?' ':d.zh_name+'('+d.short_code+')'
+                        }
+                    },{sort:true,
+                        field: 'amount',
+                        title: '申请金额',
+                        minWidth: 100,
+                        templet:function(d){ 
+                            return d.amount == null?'暂无':parseFloat(d.amount)
+                        }
+                    },
+                    // {sort:true,
+                    //     field: 'approval_currency_name',
+                    //     title: '审批币种',
+                    //     minWidth: 160,
+                    //     templet:function(d){
+                    //         return d.approval_currency_name==null?' ':d.approval_currency_name+'('+d.approval_currency_short_code+')'
+                    //     }
+                    // }, 
+                    {sort:true,
+                        field: 'approval_amount',
+                        title: '审批金额',
+                        minWidth: 100,
+                        templet:function(d){
+                            return d.approval_amount == null?'暂无':d.approval_amount == 0?'暂无':parseFloat(d.approval_amount)
+                        }
+                    }, {sort:true,
+                        field: 'apply_result_desc',
+                        title: '状态',
+                        width: 130,
+                        templet: function (d) {
+                            return d.apply_result == 0 ? '<button class="layui-btn layui-btn-primary layui-btn-xs">未审核</button>' : 
+                                    d.apply_result == 1 ? '<button class="layui-btn layui-btn-primary layui-btn-xs">未通过</button>' :
+                                    d.apply_result == 2 ? '<button class="layui-btn layui-btn-normal layui-btn-xs">已通过'+(d.is_receive==1?'-[已接收]':'')+'</button>' : " "
+                        }
+                    }, {
+                        fixed: 'right',
+                        title: '操作',
+                        minWidth: 120,
+                        templet:function(d){
+                            var apprSh = ''
+                            var approval_history= d.approval_history;
+                            var apprUseridArr=[];
+                            if(approval_history&&approval_history.length>0){
+                                for(var i=0;i<approval_history.length;i++){
+                                    apprUseridArr.push(approval_history[i].approval_userid)
+                                }
+                            }
+
+                            if (d.apply_result == 0&&apprUseridArr.indexOf(window.userInfo.userId)== -1&&d.apply_user_id!=window.userInfo.userId) {
+                                apprSh = '<button class="layui-btn layui-btn-xs" lay-event="edit">详情</button><button class="appr layui-btn layui-btn-warm layui-btn-xs apprAlert" lay-event="Approval">审核</button>'
+                            } else {
+                                apprSh = '<button data-appr="' + d.id + '" class="layui-btn layui-btn-xs" lay-event="edit">详情</button>'
+                            }
+                            return apprSh
+                            // return d.apply_result==0?'<button class="layui-btn layui-btn-xs"  lay-event="edit">详情</button><button class="layui-btn layui-btn-xs layui-btn-warm"  lay-event="Approval">审批</button>':'<button class="layui-btn layui-btn-xs"  lay-event="edit">详情</button>'
+                        },
+                        
+                    }
+                ]
+            ],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                    ,
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr": res.data.page_index
+                };
+            },
+            done: function () {
+                
+            }
+        })
+        form.on('select(myfinaGrouprSel)', function(data){
+            finaGroupTable.reload({
+                where:{
+                    ApplyResult:data.value,
+                },page:{
+                    curr:1,
+                }
+            });
+        });    
+        
+        //新建
+        $("#newinaGroup").on("click",function(){
+            layer.open({
+                title:' ',
+                type: 2,
+                content: 'FinanceGroupForm.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                area:['85%', '85%'],                                
+                maxmin: false,
+                // closeBtn: 0,
+                // success: function(layero, index){
+                //     var body = layer.getChildFrame('body', index);
+                //     var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                //     body.find('#userFileForm').attr('data-uid',uid)
+                // },
+                end:function(){
+                    var val = $("#myfinaGrouprSel").val();
+                    finaGroupTable.reload({
+                        where:{
+                            ApplyResult:val,
+                        },page:{
+                                curr:1,
+                            }
+                    });
+                } 
+            })
+        })
+        
+        // 详情和修改
+        table.on('tool(finaGroupTable)', function(obj){
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 
+            // console.log(data)
+            if(layEvent=="Approval"){
+                var htmlS = '<div class="">'
+                            +'<div class="reviewCont layui-card-body">'
+                                +'<div class="layui-form" action="">'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">审批意见：</label>'
+                                        +'<div class="layui-input-block">'
+                                            +'<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                                        +'</div>'
+                                    +'</div>'
+                                    // +'<div class="layui-form-item">'
+                                    //     +'<label class="layui-form-label">审批币种：</label>'
+                                    //     +'<div class="layui-input-block">'
+                                    //         +'<select type="text" id="ApprovalCurrencyUnitID" class="layui-input " name="ApprovalCurrencyUnitID"></select>'
+                                    //     +'</div>'
+                                    // +'</div>'
+                                    // +'<div class="layui-form-item">'
+                                    //     +'<label class="layui-form-label">审批金额：</label>'
+                                    //     +'<div class="layui-input-block">'
+                                    //         +'<input type="text" id="Amount" class="layui-input receiptCount" name="Amount">'
+                                    //     +'</div>'
+                                    // +'</div>'
+                                    +'<div class="layui-form-item" id="approvalNo">'
+                                        +'<label class="layui-form-label">是否同意：</label>'
+                                        +'<div class="layui-input-block">'
+                                            +'<input type="radio" name="approvalYn" value="2" title="同意" checked>'
+                                            +'<input type="radio" name="approvalYn" value="1" title="不同意">'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<div class="layui-input-block">'
+                                            +' <button class="appOk layui-btn" data-item="'+data.id+'">确认</button>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                        +'</div>'
+                layer.open({
+                    title:'审批',
+                    type: 1, 
+                    content: htmlS,
+                    id:'ApprovalAdd',
+                    area:['50%', 'auto'],
+                    success:function(){
+                        
+                        // $.fetch({
+                        //     url:'/gateway/financial/currency',
+                        //     type: 'post',
+                        //     cb:function(res){
+                        //         var option='';    
+                        //         for(var i=0;i<res.length;i++){
+                        //             option+='<option value="'+res[i].id+'">'+res[i].zh_name+'('+res[i].short_code+')</option>'
+                        //         }       
+                                
+                        //         $("#ApprovalCurrencyUnitID").html(option);
+                        //         form.render();
+                        //     }
+                        // })
+                        $("#ApprovalAdd").on('keyup','.receiptCount',function () {
+                            $(this).val(NumberCheck($(this).val()));
+                        }).on("paste", '.receiptCount',function (e) {  //CTR+V事件处理
+                            var pastedText = undefined;
+                            if (window.clipboardData && window.clipboardData.getData) { // IE
+                                pastedText = window.clipboardData.getData('Text');
+                            } else {
+                                pastedText = e.originalEvent.clipboardData.getData('Text');//e.clipboardData.getData('text/plain');
+                            }
+                            // alert(pastedText);
+                            setTimeout(() => {
+                                this.value=NumberCheck(pastedText.replace(/^\D*([1-9]\d*\.?\d{0,3})?.*$/,'$1'));   
+                                var sum = 0;
+                                $(".receiptCount").each(function(){
+                                    var num = $(this).val();
+                                    if (num == "" || num == null) {
+                                        num = 0;
+                                    }
+                                    // sum =sum+
+                                    sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                                })
+                                $("#totalPrice").val(NumberCheck(''+sum));
+                                var b_totalPrice = changeMoneyToChinese(sum);
+                                $("#b_totalPrice").text(b_totalPrice);
+                            }, 0);    
+                        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+                    }
+                })
+                // 审核确认
+                $("#ApprovalAdd .appOk").off("click").on("click",function(){
+                    var content = $("#appDacText").val();
+                    var isAgree = $("#approvalNo").find(" input[name='approvalYn']:checked").val();
+                    // var Amount = $("#Amount").val();
+                    // var ApprovalCurrencyUnitID = $("#ApprovalCurrencyUnitID").val();
+                    if(content==''){
+                        layer.msg("意见不能为空!");
+                        return false
+                    }
+                    $.fetch({
+                        url:'/gateway/finagroupapply/companyapproval',
+                        type: 'post',
+                        data:{
+                            ID:data.id,
+                            IsAgree:isAgree,
+                            Content:content,
+                            // ApprovalAmount:Amount,
+                            // ApprovalCurrencyUnitID:ApprovalCurrencyUnitID
+                        },
+                        cb:function(rs){
+                            layer.msg("提交审批成功！");
+                            var ApplyResult=$("#myfinaGrouprSel").val();   
+                            // console.log(data.value,ApplyResult)
+                            var compID=$("#CompanyIdList").val();  
+
+                            finaGroupTable.reload({
+                                where:{
+                                    // ID:'',
+                                    ApplyResult:0,
+                                    // CompanyID:compID,   
+                                },page: {
+                                    curr: 1 //重新从第 1 页开始
+                                },done:function(){
+
+                                }
+                            });
+                            layer.closeAll();
+                        }
+                    })
+                })
+                form.render();
+            }else if(layEvent=="edit"){
+                 $.fetch({
+                    url:'/gateway/finagroupapply/detail',
+                    type: 'post',
+                    data:{
+                        ID:data.id
+                    },
+                    cb:function(rs){
+                        // console.log(rs)
+                        var finaFiles=''
+                        if(rs.attaches!=''){
+                            for(var i=0; i<rs.attaches.length;i++){
+                                finaFiles+='<a class="seeXqOutIn mr-5" target="_blank" href="/gateway/finagroupapply/download/'+rs.attaches[i].id+'">'+rs.attaches[i].original_name+'</a>'
+                            }
+                        }else{
+                            finaFiles+='<span>暂无附件</span>'
+                        }
+                        var applyCont =  data.apply_content==''?"暂无描述":data.apply_content==null?"暂无描述":data.apply_content
+                         // 审批反馈意见
+                        var spfk = '';
+                        var res ='';
+                        var classList ='';
+                        if(rs&&rs!=''){
+                            if(rs.apply_result==1){
+                                res ="未通过";
+                                classList = "red";
+                            }else if(rs.apply_result==2){
+                                res ="已通过";
+                                classList = 'green';
+                            }else if(rs.apply_result==0){
+                                res ="待审批";
+                                classList = 'gray';
+                            }
+                            
+                            
+                            var contEnt = rs.approval_content==null?'暂无意见':rs.approval_content
+                            var UserName= rs.approval_user_name==null?'暂无审批人':rs.approval_user_name
+
+                            var CompanyContEnt ='', CompanyUserName= '';
+                            if(rs.apply_result==0&&rs.approval_history.length==0){
+                                spfk+='<p><span> 【 '+UserName+' <em class='+classList+'>'+res+'</em> 】</span>'+contEnt+'</p>'
+                            }
+                            for(var i=0; i<rs.approval_history.length; i++){
+                                if(rs.approval_history[i].approval_result==1){
+                                    Res ="未通过";
+                                    ClassList = "red";
+                                }else if(rs.approval_history[i].approval_result==2){
+                                    Res ="已通过";
+                                    ClassList = 'green';
+                                }else if(rs.approval_history[i].approval_Result==0){
+                                    Res ="待审批";
+                                    ClassList = 'gray';
+                                }
+                                CompanyUserName=rs.approval_history[i].username
+                                CompanyContEnt=rs.approval_history[i].content
+                                spfk+='<p><span> 【 '+CompanyUserName+' <em class='+ClassList+'>'+Res+'</em> 】</span>'+CompanyContEnt+'</p>'
+                            }
+                            
+                            if(UserName!='暂无审批人'){
+                                spfk+='<p><span> 【 '+UserName+' <em class='+classList+'>'+res+'</em> 】</span>'+contEnt+'</p>'
+                            }
+                        }else{
+                            spfk+='<span>暂无反馈</span>'
+                        }
+
+                        // 审批金额
+                        var AppAmou =  rs.approval_amount==0?' ':parseFloat(rs.approval_amount);
+                        var htmlsAppr=''
+                        
+                            $.fetch({
+                                url:'/gateway/financial/currency',
+                                type: 'post',
+                                cb:function(res){
+                                    var option='';    
+                                    for(var i=0;i<res.length;i++){
+                                        option+='<option value="'+res[i].id+'">'+res[i].zh_name+'('+res[i].short_code+')</option>'
+                                    }       
+                                    
+                                    // $("#ApprovalCurrencyUnitID").html(option);
+                                    
+                                
+                                if(data.apply_result==0&&rs.approval_history.length==0){
+                                    htmlsAppr = '<div class="layui-card" id="ApprovalAdd">'
+                                        +'<div class="reviewCont layui-card-body">'
+                                            +'<div class="layui-form" action="">'
+                                                +'<div class="layui-form-item">'
+                                                    +'<label class="layui-form-label">审批意见：</label>'
+                                                    +'<div class="layui-input-block">'
+                                                        +'<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                                                    +'</div>'
+                                                +'</div>'
+                                                // +'<div class="layui-form-item">'
+                                                //     +'<label class="layui-form-label">审批币种：</label>'
+                                                //     +'<div class="layui-input-block">'
+                                                //         +'<select type="text" id="ApprovalCurrencyUnitID" class="layui-input " name="ApprovalCurrencyUnitID">'+option+'</select>'
+                                                //     +'</div>'
+                                                // +'</div>'
+                                                // +'<div class="layui-form-item">'
+                                                //     +'<label class="layui-form-label">审批金额：</label>'
+                                                //     +'<div class="layui-input-block">'
+                                                //         +'<input type="text" id="Amount" class="layui-input receiptCount" name="Amount">'
+                                                //     +'</div>'
+                                                // +'</div>'
+                                                +'<div class="layui-form-item" id="approvalNo">'
+                                                    +'<label class="layui-form-label">是否同意：</label>'
+                                                    +'<div class="layui-input-block">'
+                                                        +'<input type="radio" name="approvalYn" value="2" title="同意" checked>'
+                                                        +'<input type="radio" name="approvalYn" value="1" title="不同意">'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="layui-form-item">'
+                                                    +'<div class="layui-input-block">'
+                                                        +' <button class="appOk layui-btn" data-item="'+data.id+'">确认</button>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                              
+                                }
+                               
+
+                                var htmls ='<div class="layui-card-body"><div class="layui-form">'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">姓名:</label>'
+                                                +'<div class="layui-input-block cateID">'
+                                                    +'<span>'+rs.apply_user_name+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'  
+                                                +'<label class="layui-form-label">所在部门:</label>'
+                                                +'<div class="layui-input-block cateID">'
+                                                    +'<span>'+rs.dpt_name+'</span>'
+                                                +'</div>'   
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">申请币种:</label>'
+                                                +'<div class="layui-input-block cateID">'
+                                                    +'<span>'+((data.zh_name==' '||data.zh_name==null)?'暂无':data.zh_name)+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">申请金额:</label>'
+                                                +'<div class="layui-input-block cateID">'
+                                                    +'<span>'+parseFloat(rs.amount)+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">审批币种:</label>'
+                                                +'<div class="layui-input-block cateID">'
+                                                    +'<span>'+((rs.approval_currency_name==' '||rs.approval_currency_name==null)?'暂无':rs.approval_currency_name)+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">审批金额:</label>'
+                                                +'<div class="layui-input-block cateID">'
+                                                    +'<span>'+(AppAmou==' '?'暂无':AppAmou)+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<fieldset class="layui-elem-field">'
+                                            +'<legend>标题</legend>'
+                                            +'<div class="layui-field-box">'
+                                                    +rs.apply_subject
+                                            +'</div>'
+                                        +'</fieldset>'
+                                        +'<fieldset class="layui-elem-field">'
+                                            +'<legend>描述</legend>'
+                                            +'<div class="layui-field-box">'
+                                                    +applyCont
+                                            +'</div>'
+                                        +'</fieldset>'
+                                        +'<fieldset class="layui-elem-field">'
+                                            +'<legend>附件</legend>'
+                                            +'<div class="layui-field-box">'
+                                                    +finaFiles
+                                            +'</div>'
+                                        +'</fieldset>'
+                                        +'<fieldset class="layui-elem-field">'
+                                            +'<legend>审批意见</legend>'
+                                            +'<div class="layui-field-box ">'+spfk+'</div>'
+                                        +'</fieldset>'
+                                        +htmlsAppr
+                                    +'</div></div>'
+                                layer.open({
+                                    title:'详情',
+                                    type: 1, 
+                                    content: htmls,
+                                    area:['80%', '80%'],
+                                    success:function(layero,index){
+                                        // 详情审核确认
+                                        form.render();
+                                        $("#ApprovalAdd .appOk").off("click").on("click",function(){
+                                            var content = $("#appDacText").val();
+                                            var isAgree = $("#approvalNo").find(" input[name='approvalYn']:checked").val();
+                                            // var Amount = $("#Amount").val();
+                                            // var ApprovalCurrencyUnitID = $("#ApprovalCurrencyUnitID").val();
+                                            if(content==''){
+                                                layer.msg("意见不能为空!");
+                                                return false
+                                            }
+                                            $.fetch({
+                                                url:'/gateway/finagroupapply/companyapproval',
+                                                type: 'post',
+                                                data:{
+                                                    ID:data.id,
+                                                    IsAgree:isAgree,
+                                                    Content:content,
+                                                    // ApprovalAmount:Amount,
+                                                    // ApprovalCurrencyUnitID:ApprovalCurrencyUnitID
+                                                },
+                                                cb:function(rs){
+                                                    layer.msg("提交审批成功！");
+                                                    var ApplyResult=$("#myfinaGrouprSel").val();   
+                                                    var compID=$("#CompanyIdList").val();  
+
+                                                    finaGroupTable.reload({
+                                                        where:{
+                                                            // ID:'',
+                                                            ApplyResult:ApplyResult,
+                                                            // CompanyID:compID,   
+                                                        },page: {
+                                                            curr: 1 //重新从第 1 页开始
+                                                        }
+                                                    });
+                                                    layer.closeAll();
+                                                }
+                                            })
+                                        })
+                                        form.render();
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    });
+    
+</script> 
+</html>

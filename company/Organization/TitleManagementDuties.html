@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>创建职责</title>
+    <link rel="stylesheet" type="text/css" href="../../css/Attendance.css">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/bootstrap-treeview.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+    <!-- <script src="../../js/bootstrap.min.js"></script> -->
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space10 demo-list layui-card">
+            <div class="layui-card-header">
+                <i class=""></i>
+                创建职责
+            </div>
+            <div class="layui-col-sm4 layui-col-md3 layui-col-lg3">
+                <div class="departMenu ManagDuti" id="toolbarDiv">
+                    <div id="main">
+                        <ul id="ManagDuti" class="dtree" data-id="0"></ul>
+                    </div>
+                </div>
+             
+            </div>
+            <!-- <div class="layui-col-sm8 layui-col-md9 layui-col-lg9">
+                <div>点击右侧菜单查看对应岗位职责.</div>
+            </div> -->
+            <div class="layui-col-sm8 layui-col-md9 layui-col-lg9" id="seeDuit">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend ><span id="ManagTextName"></span>岗位职责</legend>
+                </fieldset>
+                <div id="dutiStaius"></div>
+                <div id="DutiContent" style="min-height: 480px;">
+                        点击左侧查看
+                </div>
+                <!-- <div class="layui-form-item" id="DuitDaitBtn" style="display: none;">
+                    <div class="layui-input-block">
+                        <button id="backDuti" type="button" class="layui-btn layui-btn-primary">返回</button>
+                        <button id="editDuti" type="button" class="layui-btn layui-btn-primary">修改</button>
+                    </div>
+                </div> -->
+
+            </div>
+            <div class="layui-col-sm8 layui-col-md9 layui-col-lg9" id="editDuit" style="display: none;">
+                <form class="layui-form layui-card-body" action="" lay-filter="component-form-depar">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">岗位名称：</label>
+                            <div class="layui-input-inline">
+                                <div id="editDuitName" style="line-height: 36px;"></div>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">审批人：</label>
+                            <div class="layui-input-inline">
+                                <select name="apprDuti" id="apprDuti"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <label class="layui-form-label">岗位职责：</label>
+                            <!-- <div class="layui-input-block"> -->
+                                <div  class="layui-input-block" id="editor"></div>
+                                <!-- <textarea name="ManagText" id="ManagText" style="display: none;"></textarea> -->
+                            <!-- </div> -->
+                    </div>
+                    <div class="layui-form-item ">
+                        <div class="layui-input-block">
+                            <button id="subDuti" type="button" class="layui-btn layui-btn-normal">提交审批</button>
+                            <button id="empetyDuti" type="button" class="layui-btn layui-btn-primary">清空</button>                            
+                            <button id="backSeeDuit" type="button" class="layui-btn layui-btn-primary">返回</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/common.js?0.1" type="text/javascript"></script>
+    <script type="text/javascript" src="../../js/wangEdit.js?v=20181201"></script>
+    <!-- <script src="../../js/sub/dpar.js?0.1" type="text/javascript"></script> -->
+    <script>
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'form','layedit','dtree'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                layer = layui.layer,
+                dtree=layui.dtree,
+                form = layui.form,
+                layedit = layui.layedit;
+                router = layui.router(),
+                element.render();
+                var E = window.wangEditor
+                var editor = new E('#editor')
+                // 或者 var editor = new E( document.getElementById('editor') )
+                editor.customConfig.uploadImgShowBase64 = true ;
+                editor.customConfig.zIndex = 0;
+                editor.create()
+
+            // var index = layedit.build("ManagText",{
+            //     height:400,
+            //     tool: [
+            //         'strong' //加粗
+            //         ,'italic' //斜体
+            //         ,'underline' //下划线
+            //         ,'del' //删除线
+            //         ,'|' //分割线
+            //         ,'left' //左对齐
+            //         ,'center' //居中对齐
+            //         ,'right' //右对齐
+            //         ,'link' //超链接
+            //         ,'unlink' //清除链接
+            //         // ,'face' //表情
+            //         // ,'image' //插入图片
+            //         // ,'help' //帮助
+            //     ]
+            // })
+            //获取审批人列表
+            $.fetch({
+                    url:"/gateway/companyrule/getuser",
+                    type: 'post',
+                    cb:function(rs){
+                        var opHtml='';
+                        for(var i=0;i<rs.length;i++){
+                            opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                        }
+                        $("#apprDuti").html(opHtml);
+                        form.render("select")
+                    }
+                });
+            var seeDuitFun =function(obj={}){
+                $("#ManagTextName").text(obj.context+' · ');
+                $("#editDuitName").text(obj.context);
+                $.fetch({
+                    url:"/gateway/jobDuty/detail",
+                    type: 'post',
+                    data:{
+                        titleId:obj.node_id,
+                    },
+                    cb:function(rs){
+                        console.log(rs)
+                        if(rs&&rs!=''){
+                            var s = '<p class="yellow"><label class="fl"> 状态：</label><span class="ml-5 '+['Colororange','Colororange','Colorgreen','Colorred'][rs.approval_status]+'">'+['公司待批','集团待批','已批准','未批准'][rs.approval_status] +'</span></p> <div class="layui-layer-punch my-10"><label class="fl"> 审核历史：</label> <div class="fr-width">'        
+                            if(rs.approval&&rs.approval.length>0){
+                                for(var i=0;i<rs.approval.length;i++){
+                                    var not = rs.approval[i].company_id==1?'【集团】':'【公司】';
+                                    s+='<p>审核人：'+rs.approval[i].approval_name +' 【'+['审核中','未批准','已批准'][rs.approval[i].approval_result] +'】'+not+'</p>'
+                                    if(rs.approval[i].approval_result!=0){
+                                        s+='<p>审核意见：'+(rs.approval[i].content==null?'暂无':''+rs.approval[i].content+'')+'</p>'
+                                    }
+                                }
+                                s+='</div></div>'
+                            }
+
+                            if(rs.approval_status==0||rs.approval_status==1){
+                                if(rs.job_duty==''){
+                                    $("#DutiContent").html('')
+                                    $("#dutiStaius").html('<blockquote  class="layui-elem-quote leftgray">暂无岗位职责 :<a id="addDuit" class="layui-btn layui-btn-sm layui-btn-normal ml-10">添加</a></blockquote>')
+                                }else{
+                                    // $("#DuitDaitBtn").show();
+                                    $("#dutiStaius").html('<blockquote class="layui-elem-quote '+['leftorange','leftorange','leftgreen','leftred'][rs.approval_status]+'">'+ s+'</blockquote>');
+                                    $("#DutiContent").html('<div class="w-e-text" style=" overflow-y: auto;">'+rs.job_duty+'</div>');
+                                }
+                                // $("#DuitDaitBtn").show();
+                                $("#editDuti").hide();
+                                
+                                // layedit.setContent(index,"暂无岗位职责,在此编辑.");
+                            }else if(rs.approval_status==3){
+                                $("#dutiStaius").html('<blockquote class="layui-elem-quote leftred">'+ s+'<button id="backDuti" type="button" class="layui-btn layui-btn-primary layui-btn-sm">返回</button><button id="editDuti" type="button" class="layui-btn layui-btn-normal layui-btn-sm">重新编辑</button></blockquote>');
+                                $("#DutiContent").html('<div class="w-e-text" style=" overflow-y: auto;">'+rs.job_duty+'</div>');
+                                // $("#DuitDaitBtn").hide();
+                            }else if(rs.approval_status==2){//审核通过
+                                $("#dutiStaius").html('<blockquote class="layui-elem-quote">'+ s+'<button id="backDuti" type="button" class="layui-btn layui-btn-primary layui-btn-sm">返回</button><button id="editDuti" type="button" class="layui-btn layui-btn-sm">修改</button></blockquote>');
+                                $("#DutiContent").html('<div class="w-e-text" style=" overflow-y: auto;">'+rs.job_duty+'</div>');
+                                // $("#DuitDaitBtn").show();
+                                $("#editDuti").show();                            
+                            }
+                        }else{
+                            $("#DutiContent").html('')
+                            $("#dutiStaius").html('<blockquote  class="layui-elem-quote leftgray">暂无岗位职责 :<a id="addDuit" class="layui-btn layui-btn-sm layui-btn-normal ml-10">添加</a></blockquote>')
+                        }
+                    }
+                });
+            }
+            dtree.render({
+                elem: "#ManagDuti",
+                url:urls+'/gateway/jobTitle/tree',
+                response : {
+                    statusName:'status_code',
+                    statusCode: 200,
+                    message: "message",
+                    rootName: "data",
+                    parentId: "parent_id",
+                    childName: "children",
+                    nodeId: "id", 
+                    treeId: "id",//节点ID
+                    title: "title_name", 
+                    basicData:"data"
+                },
+                firstIconArray: {
+                    "0": {
+                        "open": "icon-set-sm1",
+                        "close": "icon-favor"
+                    }
+                }, //用户自定义一级图标集合，node
+                nodeIconArray: {
+                    "0": {
+                        "open": "icon-shuye1",
+                        "close": "icon-wenjianjiazhankai"
+                    }
+                }, //用户自定义二级级图标集合，node
+                dataStyle:"layuiStyle",
+            });
+            // 点击节点触发回调
+            dtree.on("node('ManagDuti')" ,function(param){
+                // console.log(JSON.stringify(param));
+                $("#seeDuit").show();
+                $("#editDuit").hide();
+                $("#subDuti").attr("data-id",param.node_id);
+                seeDuitFun(param)
+
+            });
+            $("#dutiStaius").on("click","#addDuit",function(){//添加
+                $("#seeDuit").hide();
+                $("#editDuit").show();
+                // $("#ManagText").val('');
+                editor.txt.html('');         
+                
+                // index = layedit.build("ManagText",{
+                //     height:400,
+                //     tool: [
+                //         'strong' //加粗
+                //         ,'italic' //斜体
+                //         ,'underline' //下划线
+                //         ,'del' //删除线
+                //         ,'|' //分割线
+                //         ,'left' //左对齐
+                //         ,'center' //居中对齐
+                //         ,'right' //右对齐
+                //         ,'link' //超链接
+                //         ,'unlink' //清除链接
+                //         // ,'face' //表情
+                //         // ,'image' //插入图片
+                //         // ,'help' //帮助
+                //     ]
+                // })
+            })
+            // $("#seeDuit").on("click","#editDuti",function(){
+
+            // })
+            $("#seeDuit").on("click","#backDuti",function(){
+                location.reload();
+            })
+            $("#seeDuit").on("click","#editDuti",function(){//修改
+                $("#seeDuit").hide();
+                $("#editDuit").show();
+                var ManagDutiText =$("#DutiContent").html();
+                // $("#ManagText").val(ManagDutiText);
+                editor.txt.html(ManagDutiText);         
+                
+                // index = layedit.build("ManagText",{
+                //     height:400,
+                //     tool: [
+                //         'strong' //加粗
+                //         ,'italic' //斜体
+                //         ,'underline' //下划线
+                //         ,'del' //删除线
+                //         ,'|' //分割线
+                //         ,'left' //左对齐
+                //         ,'center' //居中对齐
+                //         ,'right' //右对齐
+                //         ,'link' //超链接
+                //         ,'unlink' //清除链接
+                //         // ,'face' //表情
+                //         // ,'image' //插入图片
+                //         // ,'help' //帮助
+                //     ]
+                // })
+            })
+            $("#subDuti").on("click",function(){
+                var text  =editor.txt.html();
+                var tid = $(this).attr("data-id");
+                var apprId = $("#apprDuti").val();
+                $.fetch({
+                    url:"/gateway/jobDuty/submit",
+                    type: 'post',
+                    data:{
+                        jobTitleId:tid,
+                        approvalUserId:apprId,
+                        jobDuty:text,
+                    },
+                    cb:function(rs){
+                        layer.msg("提交成功");
+                        setTimeout(function(){
+                        location.reload();
+                        }, 800 )
+                    }
+                });
+            })
+            $("#backSeeDuit").on("click",function(){
+                $("#seeDuit").show();
+                $("#editDuit").hide();
+            })
+            $("#empetyDuti").on("click",function(){//清空
+                $("#ManagText").val('');
+                editor.txt.html('');         
+                
+                // index = layedit.build("ManagText",{
+                //     height:400,
+                //     tool: [
+                //         'strong' //加粗
+                //         ,'italic' //斜体
+                //         ,'underline' //下划线
+                //         ,'del' //删除线
+                //         ,'|' //分割线
+                //         ,'left' //左对齐
+                //         ,'center' //居中对齐
+                //         ,'right' //右对齐
+                //         ,'link' //超链接
+                //         ,'unlink' //清除链接
+                //         // ,'face' //表情
+                //         // ,'image' //插入图片
+                //         // ,'help' //帮助
+                //     ]
+                // })
+            })
+        })
+    </script>
+</body>
+
+</html>

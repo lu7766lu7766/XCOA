@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>费用部门设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/common.js?0.1" type="text/javascript"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+        <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                            费用部门设置
+                    </div>
+                    <div class="layui-card-body">
+                        <table id="finandeptlist" lay-filter="finandeptlist" ></table>
+                    </div>
+                </div>
+            </div>
+</body>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+      <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+      <!-- <button class="layui-btn layui-btn-sm" lay-event="del">删除</button> -->
+    </div>
+  </script>
+<script src="../../layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+        ,version:'20190223'
+        
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','form'],function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            form = layui.form,
+            table=layui.table,
+            router = layui.router();
+            element.render();
+
+           var tableIndex = table.render({
+                elem: '#finandeptlist',
+                url: urls+'/gateway/financial/finandeptlist', //数据接口
+                page: true, //开启分页
+                method: 'post',
+                toolbar: '#toolbarDemo',
+                // where:{
+                //     status:3
+                // },
+                defaultToolbar:[],
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                contentType: 'application/json',
+                text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //表头
+                        // {checkbox:true},
+                        {
+                            field: 'id',
+                            title: '编号',
+                            minWidth:80,
+                        },{
+                            field: 'department_name',
+                            title: '名称',
+                            minWidth:80,
+                        },{
+                            field: 'creator',
+                            title: '创建人',
+                            minWidth:80,
+                        },{
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            minWidth:260,
+                            templet:function(d){
+                                var btn ='<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change">修改</a><a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del">删除</a>'
+                                return btn
+                            }
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {
+                }
+            });
+            table.on('toolbar(finandeptlist)', function(obj){
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event){
+                    case 'add':
+                    // layer.msg('添加');
+                        var bjHtml='<div class="tab-pane active layui-form pr-40 mt-10" id="partUserForm" lay-filter="part-User">'
+                    +'<div class="layui-form-item">'
+                        +'<label class="layui-form-label modify-layui-label">名称</label>'
+                        +'<div class="layui-input-block">'
+                            +'<input id="depar" lay-verify="required"  type="text" name="depar" class="layui-input " placeholder="请输入名称">'
+                        +'</div>'
+                    +'</div>'
+                    +'<div class="layui-form-item">'
+                        +'<div class="layui-input-block">'
+                            +'<button id="subMitParForm" lay-submit class="layui-btn" lay-filter="UserModify">提交</button>'
+                            +'<button id="ParFormBack" class="layui-btn layui-btn-primary">取消</button>'
+                        +'</div>'
+                    +'</div>'
+                +'</div>'
+                    var index=layer.open({
+                            title:'新增费用部门',
+                            content:bjHtml,
+                            area:['365px','560px'],
+                            btn:'',
+                            type:1,
+                            success:function(layero, index){
+                                
+                                form.on('submit(UserModify)', function(data){
+                                    var depar = $("#depar").val();
+                                
+                                    $.fetch({
+                                        url: "/gateway/financial/addfinandept",
+                                        type: 'post',
+                                        data: {
+                                            DeptName:depar,
+                                        },
+                                        cb:function(rs){
+                                            tableIndex.reload({page: {
+                                                curr: 1 //重新从第 1 页开始
+                                            }});
+                                            layer.msg('新建成功');
+                                            layer.close(index);
+                                        }
+                                    })
+                                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                                });
+                                $("#ParFormBack").on("click",function(){
+                                    layer.close(index);
+                                })
+                            }
+
+                    })
+                    break;
+                    // case 'delete':
+                    // layer.msg('删除');
+                    // break;
+                    // case 'update':
+                    // layer.msg('编辑');
+                    // break;
+                };
+            });
+        table.on('tool(finandeptlist)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            
+           if(layEvent === 'del'){ //删除
+                layer.confirm('确定删除：'+data.department_name+'？',{title:' '}, function(index){
+                    $.fetch({
+                        url: "/gateway/financial/deldept",
+                        type: 'post',
+                        data: {
+                            ID:data.id,
+                        },
+                        cb:function(rs){
+                            tableIndex.reload({page: {
+                                curr: 1 //重新从第 1 页开始
+                            }});
+                            layer.msg('删除成功');
+                            layer.close(index);
+                        }
+                    })
+                    return false
+                    layer.close(index);
+                //向服务端发送删除指令
+                });
+            } else if(layEvent === 'change'){ //编辑
+                //do something
+                
+                //同步更新缓存对应的值
+                var bjHtml='<div class="tab-pane active layui-form pr-40 mt-10" id="partUserForm" lay-filter="part-User">'
+                    +'<div class="layui-form-item">'
+                        +'<label class="layui-form-label modify-layui-label">名称</label>'
+                        +'<div class="layui-input-block">'
+                            +'<input id="depar" lay-verify="required" value="'+data.department_name+'" type="text" name="depar" class="layui-input " placeholder="请输入名称">'
+                        +'</div>'
+                    +'</div>'
+                    +'<div class="layui-form-item">'
+                        +'<div class="layui-input-block">'
+                            +'<button id="subMitParForm" lay-submit class="layui-btn" lay-filter="UserModifys">提交</button>'
+                            +'<button id="ParFormBack" class="layui-btn layui-btn-primary">取消</button>'
+                        +'</div>'
+                    +'</div>'
+                +'</div>'
+                    var index=layer.open({
+                            title:'编辑费用部门',
+                            content:bjHtml,
+                            area:['auto','auto'],
+                            btn:'',
+                            type:1,
+                            success:function(layero, index){
+                                
+                                form.on('submit(UserModifys)', function(data){
+                                    var depar = $("#depar").val();
+                                    $.fetch({
+                                        url: "/gateway/financial/updatedept",
+                                        type: 'post',
+                                        data: {
+                                            ID:obj.data.id,
+                                            DeptName:depar,
+                                        },
+                                        cb:function(rs){
+                                            tableIndex.reload({page: {
+                                                curr: 1 //重新从第 1 页开始
+                                            }});
+                                            layer.msg('编辑成功');
+                                            layer.close(index);
+                                        }
+                                    })
+                                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                                });
+                                $("#ParFormBack").on("click",function(){
+                                    layer.close(index);
+                                })
+                            }
+
+                    });
+            }
+        });
+    })
+</script>
+
+</html>

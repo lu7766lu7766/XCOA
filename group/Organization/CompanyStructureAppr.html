@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>公司制度审核</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/wang.css">    
+    
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-header">架构审批</div>
+                     <div class="layui-card-body layui-form">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">
+                                        公司名称：
+                                </label>
+                                <div class="layui-input-inline">
+                                        <select  id="CompanyIdList" name="CompanyID" lay-filter="CompanyIdList"></select>
+                                </div>
+                                <label class="layui-form-label">
+                                        状态：
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select  id="ApplyResult" name="ApplyResult" lay-filter="ApplyResult">
+                                        <option value="-1">全部</option>                                        
+                                        <option value="0">未审核</option>
+                                        <option value="1">不通过</option>
+                                        <option value="2">已通过</option>
+                                    </select>
+                                </div>
+                            </div>
+                        <table id="mycompanyrules" class="layui-table modify-layui-table" lay-filter="mycompanyrules"></table>
+                    </div>
+                </div>
+            </div>
+    
+</body>
+
+<script type="text/html" id="allUserTbTool">
+    {{#  if(d.apply_result==2) { }}     
+		<a class="layui-btn layui-btn-xs" lay-event="editUserClick">审批</a>
+		<a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="delClick">删除</a>   
+	{{#  }else { }}
+		<a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUserClick">查看详情</a>
+		<a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="delClick">删除</a>        
+	{{#  } }} 
+
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'layedit', 'table','laytpl'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            form = layui.form,
+            layedit = layui.layedit,
+            element = layui.element,
+            laytpl=layui.laytpl,            
+            router = layui.router();
+        var table = layui.table;
+        var datameno = [];
+        // 表格 
+        var listTab;
+        $.fetch({
+            url: "/gateway/company/list",
+            dataType: 'json',
+            type: 'post',
+            cb:function(rs){
+                var op='<option value="-100">全部</option>'
+                for(var i = 0; i<rs.length;i++){
+                    op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                }
+                $("#CompanyIdList").html(op);
+                form.render();
+            }
+        })
+        form.on("select(CompanyIdList)",function(data){
+            compID= data.value=="-100"?'':data.value;
+            var ApplyResult=$("#ApplyResult").val();
+            mycompanyrules.reload({
+                where:{
+                    CompanyID:compID,
+                    ApplyResult:ApplyResult,
+                }
+            })
+        })
+        form.on("select(ApplyResult)",function(data){
+            var compID=$("#CompanyIdList").val();           
+            compID= compID=="-100"?'':data.value;                     
+            mycompanyrules.reload({
+                where:{
+                    CompanyID:compID,                    
+                    ApplyResult:data.value,
+                }
+            })
+        })
+        var mycompanyrules = table.render({
+            elem: '#mycompanyrules',
+            url: urls+'/gateway/companystructure/groupapprovallist',
+            page: true,
+            where:{
+                ApplyResult:-1,
+            },
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            method: 'post',
+            contentType: 'application/json',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+            cols: [
+                [ {
+                    field: 'company_name',
+                    title: '公司名称',
+                },{
+                    field: 'dpt_name',
+                    title: '架构名称',
+                },{
+                    field: 'structure_name',
+                    title: '架构类型',
+                },{
+                    field: 'apply_user_name',
+                    title: '申请人',
+                },{
+                    field: 'apply_result_desc',
+                    title: '审批状态',
+                }, {
+                    field: 'approval_user_name',
+                    title: '审批人',
+                },   {
+                    fixed: 'right',
+                    minWidth:135,
+                    title: '操作',
+                    toolbar: '#allUserTbTool'
+                }]
+            ],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr": res.data.page_index
+                };
+            },
+            done:function(){
+                // if(this.where.ApplyResult!=0){
+                //     $("a.layui-btn[lay-event='editUserClick']").text('查看详情');
+                // }
+            }
+        })
+            //监听事件
+        table.on('tool(mycompanyrules)', function(obj){
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+           
+            if(layEvent === 'editUserClick'){ //审批
+                var openHtml='';
+                if(data.dpt_root_node_id==0){
+                    openHtml='StructureAppr.html';
+                }else{
+                    openHtml='DeprStructureAppr.html';                    
+                }
+                layer.open({
+                    title:false,
+                    closeBtn: 0,
+                    content:openHtml,
+                    area: ['100%', '100%'],
+                    type: 2,
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        if(data.apply_result==2){
+                            body.find("#apprCartForm").show()
+                        }else{
+                            body.find("#apprCartForm").hide()
+                            
+                        }
+                        iframeWin.CompanyData={
+                            ItemID:data.id,
+                            CompanyID:data.company_id,   
+                            ApplyResult:data.apply_result,
+                            dpt_root_node_id:data.dpt_root_node_id
+                        }
+                    },
+                    end:function(){
+                        mycompanyrules.reload();
+                    }
+                });
+            }else  if(layEvent === 'delClick'){
+                layer.confirm('确定删除?',function(index){
+                    layer.close(index);
+                    $.fetch({
+                        url:"/gateway/companystructure/groupdelstructure",
+                        type: 'post',
+                        data:{
+                            StructureID:data.id
+                        },
+                        cb:function(rs){
+                            layer.msg('删除成功');
+                            mycompanyrules.reload({});
+                        }
+                    });
+                })  
+            }
+        })
+            
+    });
+</script>
+
+</html>

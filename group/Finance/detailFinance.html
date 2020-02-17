@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>预支单详情</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form" id="detailFinanceYz" lay-verify="detailFinanceYz">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script src="../../js/jquery.jqprint-0.3.js?v=201902190"></script>
+
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index', 'laydate', 'table', 'layer','form','upload'], function () {
+    var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+        ,laypage=layui.laypage;
+        var rs=window.res;
+        var attachesUrl='/gateway/financial/download/'
+                        var details ='',attaches='',apprList='';
+                        
+                        for(var i=0;i<rs.details.length;i++){
+                            details+='<tr><td>'+rs.details[i].fee_type_name+'</td><td>'+rs.details[i].remark+'</td><td>'+rs.details[i].receipt_count+'</td><td>'+rs.details[i].amount+'</td></tr>'
+                        }
+                        if(rs.attaches&&rs.attaches.length>0){
+                            for(var j=0;j<rs.attaches.length;j++){
+                                attaches+='<a  title="点击下载" target="_blank" href="'+attachesUrl+''+rs.attaches[j].id+'">'+rs.attaches[j].original_name+'</a>'
+                            }
+                        }else{
+                            attaches='无附件'
+                        }
+                        var approval =rs.approval_history;
+                        if(approval.length==0){
+                        apprList ='暂无';
+                        }else{
+                            for(var k=0;k< approval.length;k++){
+
+                                var res='';
+                                var classList = '';
+                                var approvalCont = approval[k].content==null?' ':approval[k].content
+                                if(approval[k].is_forward ==1){//是转发的
+                                    res ='--转发-->';
+                                apprList+='<p>【'+approval[k].username+''+res+ ''+approval[k].forward_username+''//名字
+                                                //意见
+                                            +'<em class='+classList+'> ' +approval[k].approval_time+'</em>】：'//时间
+                                                +approvalCont+'</p>'//意见内容
+        
+                                }else{//是审批的
+        
+                                    if(approval[k].approval_result==1){
+                                        res ="未批准";
+                                        classList = "red";
+                                    }else if(approval[k].approval_result==2){
+                                        res ="已批准";
+                                        classList = 'green';
+                                    }
+                                apprList+='<p><span> 【'+approval[k].username +'<em class='+classList+'>'+res+' '+approval[k].approval_time+'</em>'+'】</span>'+approvalCont+'</p>'
+                                }
+                            
+                            };
+                        }
+                        var detailPop='<div class="layui-fluid">'
+                                        +'<div class="layui-form" id="printHtml">'
+                                            // +'<div class="layui-form-mid layui-word-aux">IP：'+rs.createor_ip+'</div>'
+                                            // +'<div class="fr layui-word-aux" style="padding: 9px 0!important;">申请时间：'+rs.created_at+'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-inline layui-word-aux">'
+                                                    +'<label class="layui-form-label modify-layui-label ">申请时间</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight">'
+                                                        +'<span>'+rs.created_at+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                        
+                                                detailPop+='</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-inline">'
+                                                    +'<label class="layui-form-label modify-layui-label">流程类型</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight">'
+                                                    +'<span>'+(rs.is_yz_to_bx==1?'预支转':'')+rs.process_type_name+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="layui-inline">'
+                                                    +'<label class="layui-form-label modify-layui-label">类型</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight">'
+                                                        +'<span>'+rs.baoxiao_type_name+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="layui-inline">'
+                                                    +'<label class="layui-form-label modify-layui-label">费用部门</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight">'
+                                                        +'<span>'+(rs.finan_dept_name==null?'暂无':''+rs.finan_dept_name+'')+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label modify-layui-label">支付明细</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<table class="layui-table" id="lzmFormData">'
+                                                        +'<thead><tr></tr></thead>'
+                                                        +'<tbody><tr><td>暂无</td></tr></tbody>'
+                                                    +'</table>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label">费用明细</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<table class="layui-table">'
+                                                        +'<colgroup><col width="150"><col><col width="150"><col width="150"><col width="130"></colgroup>'
+                                                        +'<thead><tr><th>费用类型</th><th>费用摘要</th><th>单据数量</th><th>金额 '+rs.zh_name+'('+rs.short_code+')</th></tr></thead>'
+                                                        +'<tbody>'+details+'</tbody>'
+                                                    +'</table>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<div class="layui-inline">'
+                                                    +'<label class="layui-form-label modify-layui-label">'+(rs.is_yz_to_bx == 1?'预支':'')+'总金额</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight">'
+                                                    +'<span>'+rs.short_code+' '+rs.amount+''+rs.symbol+'，'+rs.capital_amount+''+rs.zh_name+'</span>'
+                                                        
+                                                    +'</div>'
+                                                +'</div>'
+                                                
+                                                +'<div class="layui-inline">'
+                                                    +'<label class="layui-form-label modify-layui-label">单据总数</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight">'
+                                                        +'<span>'+rs.receipt_count+'</span>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            +'</div>'
+                                            if(rs.is_yz_to_bx == 1){
+                                                detailPop+='<div class="layui-form-item">'
+                                                    +'<div class="layui-inline">'
+                                                        +'<label class="layui-form-label modify-layui-label">报销总金额</label>'
+                                                        +'<div class="layui-input-block layui-input-lineHeight">'
+                                                        +'<span>'+rs.short_code+' '+rs.yz_real_amount+''+rs.symbol+'，'+rs.capital_amount+''+rs.zh_name+'</span>'
+                                                      
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-inline">'
+                                                        +'<label class="layui-form-label modify-layui-label">退回金额</label>'
+                                                        +'<div class="layui-input-block layui-input-lineHeight">'
+                                                        +'<span>'+rs.short_code+' '+rs.yz_refund+''+rs.symbol+'，'+rs.zh_name+'</span>'
+                                                       
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-inline">'
+                                                        +'<label class="layui-form-label modify-layui-label">备注</label>'
+                                                        +'<div class="layui-input-block layui-input-lineHeight">'
+                                                            +'<span>'+rs.yz_remark+'</span>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-inline">'
+                                                        +'<button id="toYzDiat" class="layui-btn">查看预支详情</button>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            }
+                                            detailPop+='<div class="layui-form-item">'
+                                                +'<label class="layui-form-label modify-layui-label">附件</label>'
+                                                +'<div class="layui-input-block layui-input-lineHeight UploadNames-box">'
+                                                    +attaches
+                                                +'</div>'
+                                            +'</div>'
+                                            if(rs.cancel_remark!=null){
+                                                detailPop+='<div class="layui-form-item">'
+                                                    +'<label class="layui-form-label modify-layui-label">取消原因</label>'
+                                                    +'<div class="layui-input-block layui-input-lineHeight UploadNames-box">'
+                                                        +rs.cancel_remark
+                                                    +'</div>'
+                                                +'</div>'
+                                            }
+
+                                            detailPop+='<div class="layui-form-item">'
+                                                +'<label class="layui-form-label modify-layui-label">审批记录</label>'
+                                                +'<div class="layui-input-block layui-input-lineHeight layui-overflow-lineHeight">'
+                                                    +apprList
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-form-item">'
+                                                +'<label class="layui-form-label modify-layui-label label-six">出纳审批记录</label>'
+                                                +'<div class="layui-input-block layui-input-lineHeight layui-overflow-lineHeight">'
+                                                    if(rs.cashier_approval == null){
+                                                        detailPop+='暂无'
+                                                    }else{
+                                                        detailPop+='<p><span>【'+rs.cashier_approval.name +':<em class="">'
+                                                        +(rs.cashier_approval.approval_result==0?"待审批":(rs.cashier_approval.approval_result==1?"未通过":(rs.cashier_approval.approval_result==2?"已同意":"")))
+                                                        +''+rs.cashier_approval.approval_time+'</em>】</span>'
+                                                        +rs.cashier_approval.content+'</p>'
+                                                    }
+                                                    detailPop+='</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-form-item" style="margin-left:118px;">'
+                                                    +'<div class="layui-input-blocklayui-input-lineHeight">'
+                                                        +'<button id="printId" class="no-print layui-btn">打印</button><button id="closeId" class=" layui-btn layui-btn-primary">关闭</button>'
+                                                    +'</div>'
+                                                +'</div>'
+                                    +'</div>'
+                                $("#detailFinanceYz").html(detailPop) ;  
+
+                                $("#closeId").on("click",function(){
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭         
+                                });
+                                $("#printId").on("click",function(){
+                                    var index = layer.load(2, {time: 2000});
+                                    $("#printHtml").jqprint({
+                                        debug: false,
+                                        importCSS: true,
+                                        printContainer: true,
+                                        operaSupport: false
+
+                                    });  
+                                })  
+                                $.fetch({
+                                    url:"/gateway/formtpl/getformdata",
+                                    type: 'post',
+                                    data:{
+                                        ItemID:rs.id,
+                                        FormType:2,
+                                    },
+                                    cb:function(rs){
+                                        // console.log(rs);
+                                        if(rs&&rs.length>0){
+                                            var th ='',td=''; 
+                                            for(var i =0;i<rs.length;i++){
+                                               th+='<th>'+rs[i].label+'</th>';
+                                               td+='<td>'+JSON.parse(rs[i].value)+'</td>'
+                                            }
+                                            $("#lzmFormData thead tr").html(th);
+                                            $("#lzmFormData tbody tr").html(td);
+                                        }
+                                    }
+                                })
+});
+
+
+</script> 
+</html>

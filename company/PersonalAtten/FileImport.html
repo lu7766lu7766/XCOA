@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>人事档案导入</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-row layui-col-space10 layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-card-header">导入人事数据</div>
+                </div>
+                <div class="layui-col-xs3"></div>
+                <div class="layui-col-xs6">
+                    <form class="layui-form" lay-filter="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-label">下载导入模板：</label>
+                            <div class="layui-input-block modify-input-cont">
+                                <a id="dowmFile" target="blank" class="layui-btn"><i class="iconfont icon-xiazai"></i>人事档案模板下载</a>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-label">选择导入文件：</label>
+                            <div class="layui-input-block modify-input-cont">
+                                <button type="button" class="layui-btn" id="uploadExl">
+                                    <i class="layui-icon">&#xe67c;</i>导入
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <fieldset class="layui-elem-field">
+                            <legend>说明：</legend>
+                            <div class="layui-field-box red">
+                                <p>1、人事档案模板请使用下载的Excel文件导入； </p>
+                                <p>2、人事档案模板的公司名称、部门、角色必须在OA系统的系统管理中存在，余下的列必须与员工基本信息相对应；</p>
+                            </div>
+                     </fieldset>
+                </div>
+                <div class="layui-col-xs3"></div>
+            </div>
+        </div>
+       
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script src="../../js/sub/filem.js"  type="text/javascript"></script>
+</html>

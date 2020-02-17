@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的档案</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card" id="MyFiles">
+            <div class="layui-block layui-row layui-card-body">
+                <div class="layui-col-sm6">
+                    <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                        <label class="layui-bg-title">用户名：</label>
+                        <span class="user_name"></span>
+                    </div>
+                </div>
+                <div class="layui-col-sm6">
+                    <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                        <label class="layui-bg-title">编号：</label>
+                        <span class="users_id"></span>
+                    </div>
+                </div>
+                <div class="layui-col-sm6">
+                    <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                        <label class="layui-bg-title">性别：</label>
+                        <span class="gender"></span>
+                    </div>
+                </div>
+                <div class="layui-col-sm6">
+                    <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                        <label class="layui-bg-title">公司名称：</label>
+                        <span class="company_name"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">用户基本信息</li>
+                    <!-- <li>绩效信息</li> -->
+                </ul>
+                <div class="layui-tab-content">
+                    <!-- 用户基本信息 -->
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">一级部门：</label>
+                                <span class="one_level_dept_name"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">直接部门：</label>
+                                <span class="department_name"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">职位：</label>
+                                <span class="position"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">入职日期：</label>
+                                <span class="join_date"></span></div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">转正日期： </label>
+                                <span class="due_date"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">雇佣类型：</label>
+                                <span class="employ_type"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">员工状态：</label>
+                                <span class="users_status"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">合同期开始：</label>
+                                <span class="contract_startdate"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">合同期结束：</label>
+                                <span class="contract_enddate"></span>
+                            </div>
+                        </div>                                  
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">合同期/月：</label>
+                                <span class="contract_time"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">合同期续约：</label>
+                                <span class="contract_if_continue"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">工作签类型：</label>
+                                <span class="work_visa"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">工作签号：</label>
+                                <span class="visa_number"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">工作签开始：</label>
+                                <span class="visa_startdate"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">工作签结束：</label>
+                                <span class="visa_enddate"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">工作签年/月：</label>
+                                <span class="visa_time"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">手机号：</label>
+                                <span class="mobile"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">职等：</label>
+                                <span class="title_level"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">职等基数：</label>
+                                <span class="title_level_base_num"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">最后工作日期：</label>
+                                <span class="last_work_time"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">宿舍号：</label>
+                                <span class="dorm_number"></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm12">
+                            <div class="layui-input-lineHeight layui-lineHeigh layui-line">
+                                <label class="layui-bg-title">宿舍地址：</label>
+                                <span class="dorm_address"></span>
+                            </div>
+                        </div>
+                        <fieldset class="layui-elem-field">
+                            <legend>备注</legend>
+                            <div class="layui-field-box pageCont remark"></div>
+                        </fieldset>
+                    </div>
+                    <!-- 绩效信息 -->
+                    <div class="layui-tab-item">
+                        <table id="performance" lay-filter="performance"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190718" type="text/javascript"></script>
+<script type="text/javascript">
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','laydate','laypage','table','formSelects'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        , table = layui.table
+        ,formSelects = layui.formSelects
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+
+        var isNullFun=function(val){
+            return (val==null||undefined)?' ':val;
+        }
+
+        $.fetch({
+            url:"/gateway/archives/detail",
+            type: 'post',
+            data:{
+                userId:window.userInfo.userId,
+            },
+            cb:function(rs){
+                console.log(rs)
+                for(var key in rs) {
+                    $('#MyFiles .'+key+'').html(isNullFun(rs[key]));
+                    $('#MyFiles .employ_type').html(rs.employ_type ==0?('试用期'): rs.employ_type==1?'正式':'');
+                    $('#MyFiles .users_status').html(rs.users_status==0?('正常'):rs.users_status==1?('停职'):rs.users_status==2?('休假'):rs.users_status==3?('离职'):(''));
+                    $('#MyFiles .contract_time').html(rs.contract_time+'月');
+                    $('#MyFiles .contract_if_continue').html(rs.contract_if_continue==0?('不续约'):
+                    rs.contract_if_continue==1?'续约':'不续约')
+                    $('#MyFiles .work_visa').html(rs.work_visa ==0?('临时工签'): rs.work_visa==1?'9G工签':'')
+                    $('#MyFiles .visa_time').html(rs.visa_time+'月')
+                }
+            }
+        })
+        // 表格信息
+        table.render({
+            elem: '#performance',
+            url: urls+'/gateway/performance/list',
+            limit: 10,
+            method: 'post',
+            contentType: 'application/json',
+            page:true,
+            loading: true,
+            defaultToolbar: ['filter', 'print', 'exports'],
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            toolbar:true,
+            where:{
+                recorderUid:window.userInfo.userId
+            },
+            text: {
+                none: '暂无数据' 
+            },
+            cols: [[
+                {sort: true,field:'id',title:'编号',minWidth:80},
+                {sort: true,field:'created_at',title:'填写日期',minWidth:160},
+                {sort: true,field:'creater_name',title:'填写人',minWidth:90},
+                {sort: true,field:'title',title:'标题',minWidth:100},
+                {sort: true,field:'recorder_name',title:'奖惩者姓名',minWidth:120},
+                {sort: true,field:'recorder_dept_name',title:'部门',minWidth:100},
+                {sort: true,field:'recorder_title_name',title:'岗位',minWidth:120},
+                {sort: true,field:'record_datetime',title:'发生日期',minWidth:160},
+                {sort: true,field:'level_two_name',title:'类型',minWidth:120},
+                {sort: true,field:'level_three_name',title:'考核主题',minWidth:120},
+                {sort: true,field:'score_title',title:'评估项目',minWidth:120},
+                {sort: true,field:'standard_score',title:'原加/扣分',minWidth:100
+                //     templet: function (d){
+                //     return d.edited_score==null?d.standard_score:d.edited_score
+                // }
+                },
+                {sort: true,field:'edited_score',title:'修改分',minWidth:90},
+                {sort: true,field:'record_detail',title:'内容细节',minWidth:100},
+                {sort: true,field:'err_money_type_name',title:'错款类型',minWidth:100},
+                {sort: true,field:'err_money_submit',title:'提单金额',minWidth:100},
+                {sort: true,field:'err_money_total',title:'错款金额',minWidth:100},
+                {sort: true,field:'err_money_compensation',title:'赔偿金额',minWidth:100},
+                {sort: true,field:'record_status_name',title:'状态',minWidth:90},
+                {sort: true,field:'is_deleted_name',title:'是否删除',minWidth:100},
+                {sort: true,field:'is_edited_name',title:'是否修改',minWidth:100},
+                {title:'操作',fixed: 'right',minWidth:80,templet: function (d){
+                    var btn ='<a class="layui-btn layui-btn-sm"  lay-event="details">详情</a>'   
+                    return btn
+                }},
+            
+            ]]
+            ,request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "status_code":res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr":res.data.page_index
+                };
+            }
+        })
+
+        table.on('tool(performance)', function(obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            // console.log(data)
+            if (layEvent === 'details') {
+                layer.open({
+                    title:false,
+                    content:'../Performance/PerformanceDetail.html',
+                    type:2,
+                    closeBtn:false,
+                    id:'performanceeDetail',
+                    area:['100%','100%'],
+                    success:function(layero,index){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        iframeWin.detailData={
+                            recordId:data.id,
+                            creater:data.creater,
+                        }
+                    }
+                });
+            }
+        })
+    })
+</script>
+</html>

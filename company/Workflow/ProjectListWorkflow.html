@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>项目列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form" style="margin-bottom: 10px;">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">项目名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  class="layui-input" id="proJName">
+                            </div>
+                        </div>
+                        <!-- <div class="layui-inline">
+                            <label class="layui-form-label">开始时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="jzItem">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="sjItem">
+                            </div>
+                        </div> -->
+                        <div class="layui-inline">
+                            <button class="layui-btn" id="IqProject" title="搜索"><i class="iconfont icon-sousuo"></i></button>
+                            <button class="layui-btn layui-btn-normal" id="AddProject">添加项目</button>
+                        </div>
+                    </div>
+                </div>
+                <table id="projectTable" lay-filter="projectTable"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['element', 'index', 'table', 'laydate'], function () {
+        var $ = layui.$,
+            table = layui.table,
+            laydate = layui.laydate,
+            element = layui.element;
+        laydate.render({
+            elem: '#jzItem',
+            type: 'date',
+            // range: '~'
+        });
+        laydate.render({
+            elem: '#sjItem',
+            type: 'date',
+            // range: '~'
+        });
+        var tableIndex =table.render({
+            elem: '#projectTable'
+            ,url:  window.urls+"/gateway/projectManage/myProList"
+            ,cellMinWidth: 100
+            // ,limit:10
+            ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+            ,method:'post'
+            ,contentType: 'application/json'
+            ,page:true
+            ,loading:true
+            ,cols: [
+                [{
+                    field: 'id',
+                    title: 'ID'
+                    ,fixed:'left'
+                    ,width: 90
+                    , rowspan: 2
+                    ,unresize: true
+                },{
+                    field: 'name',
+                    title: '项目名称'
+                    , rowspan: 2
+                    ,unresize: true
+                }, {
+                    field: 'desc',
+                    title: '项目描述'
+                    , rowspan: 2
+                },
+                //{
+                //     field: 'starttime'
+                //     ,title: '开始时间'
+                //     ,width:180
+                //     ,sort: true
+                //     , rowspan: 2
+                // }, {
+                //     field: 'endtime'
+                //     ,title: '结束时间'
+                //     ,sort: true
+                //     ,width:180
+                //     , rowspan: 2
+                // }, 
+                {
+                    field: 'is_private',
+                    title: '访问控制'
+                    ,rowspan: 2
+                    ,templet: function (d) {
+                        return d.is_private==0?'公有项目':(d.is_private==1?'私有项目':'');
+                    }
+                },
+                {
+                    field: 'status'
+                    ,title: '状态'
+                    ,rowspan: 2
+                    ,templet:function(d){
+                        // console.log(d)
+                        return d.status==0?'<button class="layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled">禁用</button>':(d.status==1?'<button class="layui-btn layui-btn-warm layui-btn-xs">启用</button>':'');
+                    }
+                }, {
+                    field: 'created_at'
+                    ,title: '创建时间'
+                    ,sort: true
+                    ,width:180
+                    , rowspan: 2
+                }, {
+                    align: 'center',
+                    field: '',
+                    title: '项目团队'
+                    ,colspan:3
+
+                }
+                // ,{
+                //     field: '',
+                //     title: '总预计'
+                //     , rowspan: 2
+                // }, {
+                //     field: '',
+                //     title: '总消耗'
+                //     , rowspan: 2
+                // }, {
+                //     field: '',
+                //     title: '总剩余'
+                //     , rowspan: 2
+                // }, {
+                //     field: '',
+                //     title: '进度'
+                //     , rowspan: 2
+                // }
+                , {
+                    field: '',
+                    fixed:'right',                    
+                    width: 190,
+                    title: '操作',
+                    rowspan: 2,
+                    unresize: true,
+                    // <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="datilList">任务列表</a>
+                    toolbar: '<div><a class="layui-btn layui-btn-xs layui-btn-normal " lay-event="editProject">编辑</a><a class="layui-btn layui-btn-xs layui-btn-normal " lay-event="delProject">删除</a></div>'
+                }],[
+                {
+                    field: 'dept_names',
+                    title: '部门名称',
+                    templet:function(d){
+                        return d.is_private==0?'公司成员':(d.is_private==1?(d.dept_names==null?'':d.dept_names):'')
+                    }
+                }, {
+                    field: 'role_names',
+                    title: '角色名称',
+                    templet:function(d){
+                         return d.is_private==0?'公司成员':(d.is_private==1?(d.role_names==null?'':d.role_names):'')
+                    }
+                }, {
+                    field: 'user_names',
+                    title: '用户名称',
+                    templet:function(d){
+                         return d.is_private==0?'公司成员':(d.is_private==1?(d.user_names==null?'':d.user_names):'')
+                    }
+                },
+                ]
+            ]
+            ,request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "status_code":res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr":res.data.page_index
+                };
+            }
+            ,done:function(res){
+               console.log(res)  
+            }
+        });
+        
+        table.on('tool(projectTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        
+            var tdata = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            // console.log(tdata);
+            if(layEvent === 'datilList'){ 
+                var index=layer.open({
+                    title:'暂无',
+                    type: 2,
+                    // content: 'ProblemAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    content: '../../no.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                    area:['80%', '80%'],                                
+                    maxmin: false,
+                    // closeBtn: 0,
+                    success: function(layero, index){
+                        // iframeWin.window.formData = tdata;
+                    },
+                    end:function(){
+                        //关闭层后刷新列表
+                    } 
+                })
+            } else if(layEvent === 'delProject'){ //删除
+                layer.confirm('确定删除该项目？',{title:' '}, function(index){
+                    $.fetch({
+                        url:"/gateway/projectManage/del",
+                        type: 'post',
+                        data:{
+                            projectId: tdata.id,
+                        },
+                        cb:function(rs){
+                            // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.close(index);
+                            // allsurveyTable(tableNowPage);
+                            tableIndex.reload();
+                        }
+                    });
+                });
+            }else if(layEvent === 'editProject'){
+                layer.open({
+                    title:'',
+                    type: 2,
+                    content: 'ProjectWorkflow.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['','no']
+                    area:['100%', '100%'],                                
+                    maxmin: false,
+                    closeBtn: 0,
+                    success: function(layero, index){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; 
+                        $(body).attr("data-new","0");
+                        iframeWin.window.daiData=tdata;
+                        // console.log(iframeWin.window.layui);
+                        // iframeWin.window.formData = tdata;
+                    },
+                    end:function(){
+                        //关闭层后刷新列表
+                        tableIndex.reload();
+                        // QtsurveyTable(ctableNowPage);
+                    } 
+                })
+            }
+        });
+        $("#IqProject").on("click",function(){
+            var name = $("#proJName").val();
+            var jzItem = $("#jzItem").val();
+            var sjItem = $("#sjItem").val();
+            tableIndex.reload({
+                where:{
+                    startTime:jzItem,
+                    endTime:sjItem,
+                    name:name,
+                },
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        })
+        $("#AddProject").on("click",function(){
+            layer.open({
+                title:'',
+                type: 2,
+                content: 'ProjectWorkflow.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['','no']
+                area:['100%', '100%'],                                
+                maxmin: false,
+                closeBtn: 0,
+                success: function(layero, index){
+                    var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; 
+                    $(body).attr("data-new","1");
+                    iframeWin.window.daiData=null;
+                    // console.log(iframeWin.window.layui);
+                    // iframeWin.window.formData = tdata;
+                },
+                end:function(){
+                    //关闭层后刷新列表
+                    tableIndex.reload();
+                    // QtsurveyTable(ctableNowPage);
+                } 
+            })
+        })
+
+    
+    });
+</script>
+
+</html>

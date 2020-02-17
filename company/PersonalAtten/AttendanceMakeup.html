@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>绩效知悉</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">公司考勤申请列表</div>
+                <div class="layui-card-body">
+                    <div class=" layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    审批结果
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="ApplyResult" lay-filter="ApplyResult"  name="ApplyResult" placeholder="" autocomplete="off" class="layui-input">
+                                        <option value="-1">全部</option>
+                                        <option value="1">不通过</option>
+                                        <option value="2">已通过</option>
+                                        <option value="0">待审批</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="performance" class="" lay-filter="performance"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .yellow{
+        color: #FFB800;
+    }
+</style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20181213" type="text/javascript"></script>
+<script type="text/javascript">
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','laydate','laypage','table'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    , table = layui.table
+    ,element = layui.element
+    ,router = layui.router();
+    element.render();
+    element.on('tab(component-tabs-brief)', function(obj){
+
+    });
+
+    var laydate = layui.laydate
+        ,form = layui.form
+        ,laypage =layui.laypage
+        ,layedit = layui.layedit;
+    //消息中心跳转来则传入id
+    // var urlTab = location.href.split('?tab=')[1]?location.href.split('?tab=')[1]:false;
+    // var tabId=urlTab?urlTab.split('?')[0]:false;
+    // var dataId = location.href.split('?id=')[1]?location.href.split('?id=')[1]:false;
+    // console.log(dataId);
+    // if(dataId){
+    //     var tableSub={
+    //         result:3,
+    //         recordId:dataId
+    //     }
+    // }else{
+    //     var tableSub={
+    //         result:3
+    //     }
+    // }
+    var ApplyResult=$("#ApplyResult").val();
+    // 更换为数据表格
+    var performance = table.render({
+        elem: '#performance',
+        url: urls+'/gateway/checkinoutcompanyapply/myapply',
+        where:{
+            ApplyResult:ApplyResult
+        },
+        limit: 10,
+        method: 'post',
+        contentType: 'application/json',
+        page:true,
+        loading: true,
+        toolbar: '<div><button class="layui-btn layui-btn-sm" lay-event="add">新增考勤补录</button></div>',
+        defaultToolbar: '',
+        limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+        text: {
+            none: '暂无数据' 
+        },
+        cols: [[
+            {sort: true,field:'creator',title:'申请人',minWidth:80},
+            {sort: true,field:'check_in_out_time',title:'补录时间',minWidth:80},
+            {field:'content',title:'描述',minWidth:80},
+            {title:'补录用户',minWidth:200,templet: function (d){
+                var applyUser=d.apply_users;
+                var tem = '';
+                for(var i=0;i<applyUser.length;i++){
+                    tem+=applyUser[i].username+';'
+                }
+                return tem
+            }},
+            {sort: true,field:'apply_result_desc',title:'状态',minWidth:100},
+            {field:'apply_result_desc',title:'审批人',minWidth:100,templet: function (d){
+                return d.current_approval_user.username
+            }},
+            {title:'操作',fixed: 'right',minWidth:190,unresize:true,templet: function (d){
+                // return ['已提交','已否决','已通过','待知悉'][d.err_money_type]
+                var btn ='<a class="layui-btn layui-btn-sm"  lay-event="details">详情</a>' 
+                if(d.apply_result==0){
+                    btn+='<a class="layui-btn layui-btn-sm"  lay-event="del">删除</a>'
+                    +'<a class="layui-btn layui-btn-sm"  lay-event="edit">编辑</a>'
+                }
+                return btn
+            }},
+        ]]
+        ,request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        ,parseData: function(res){ //res 即为原始返回的数据
+            return {
+                "status_code":res.status_code, //解析接口状态
+                "message": res.message, //解析提示文本
+                "count": res.data.total_count, //解析数据长度
+                "data": res.data.data_list, //解析数据列表
+                "curr":res.data.page_index
+            };
+        },
+        done: function () {
+            // if(dataId&&this.where.recordId!=''){
+            //     $('.layui-table-body.layui-table-main a[lay-event="details"]').click();
+            // }
+        }
+        
+    })
+    form.on('select(ApplyResult)', function(data){
+        performance.reload({
+            where: { //设定异步数据接口的额外参数，任意设
+                ApplyResult: data.value,  
+            }
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }
+        });
+    }); 
+ 
+ 
+    table.on('tool(performance)', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        if (layEvent === 'details') {
+            var applyUser=data.apply_users;
+            var tem = '';
+            for(var i=0;i<applyUser.length;i++){
+                tem+=applyUser[i].username+';'
+            }
+            var histry = '';
+                    var res = '';
+                    var classList = '';
+                    if (data.current_approval_user.is_forward == 1) { //是转发的
+                        res = '--转发-->';
+                        histry += '<p>【' + data.current_approval_user.username + '' + res + '' + data.current_approval_user.forward_username + '' //名字
+                        +'<em class=' + classList + '> ' +data.current_approval_user.approval_time + '</em>】：<span class="list" title=' + data.current_approval_user.content + '>' //时间
+                        +data.current_approval_user.content + '</p>' //意见内容
+                    } else { //是审批的
+                        if (data.current_approval_user.approval_result == 1) {
+                            res = '未通过';
+                            classList = "red";
+                        } else if (data.current_approval_user.approval_result == 2) {
+                            res = '已通过';
+                            classList = "green";
+                        }else if (data.current_approval_user.approval_result == 0) {
+                            res = '待审批';
+                            classList = "yellow";
+                        }
+
+                        histry += '<p>【' + data.current_approval_user.username + '<em class=' + classList + '>' //名字
+                        +res + '' //意见
+                        +data.current_approval_user.approval_time + '</em>】：<span class="list" title=' +data.current_approval_user.content + '>' //时间
+                        +data.current_approval_user.content + '</p>' //意见内容
+                    }
+          
+            var cont='<div class="layui-form layui-card-body">'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">补录用户</label>'
+                                +'<div class="layui-input-block departTable" data-title="设置补录用户">'
+                                    +'<textarea id="userName" name="userName" required lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea layui-block">'+tem+'</textarea>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">描述</label>'
+                                +'<div class="layui-input-block">'
+                                    +'<textarea name="Content" readonly="readonly" id="Content" placeholder="请输入内容" class="layui-textarea">'+data.content+'</textarea>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">补录时间</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<input value="'+data.check_in_out_time+'" readonly="readonly"  class="layui-input" type="text" id="DateTime" name="DateTime">'
+                                +'</div>'
+                            +'</div>'
+                            +'<fieldset class="layui-elem-field">'
+                                +'<legend>审批历史</legend>'
+                                +'<div class="layui-field-box">'+histry+'</div>'
+                            +'</fieldset>'
+                            +'<div class="layui-form-item">'
+                                +'<div class="layui-input-block">'
+                                    +'<button id="backTypeList" class="layui-btn layui-btn-primary">返回</button>'
+                                +'</div>'
+                            +'</div>'                        
+                        +'</div>'
+            layer.open({
+                title:'考勤补录详情',
+                content:cont,
+                type:1,
+                id:'performanceeDetail',
+                area:['70%','70%'],
+                success:function(layero, index){
+                    $("#backTypeList").on("click",function(){
+                        layer.close(index)
+                    })
+                }
+             
+            });
+        }else if (layEvent === 'del') {
+                layer.confirm('确定删除?', {title:' '},function(index){
+                    $.fetch({
+                        url:'/gateway/checkinoutcompanyapply/delete',
+                        data:{
+                            ID:data.id,
+                        },
+                        type: 'post',
+                        cb:function(rs){
+                            layer.msg('删除成功');
+                            layer.close(index);
+                            performance.reload({
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                },
+                                done: function () {}
+                            });
+                        }
+                    })
+                })
+            
+        }else if (layEvent === 'edit') {
+            var applyUser=data.apply_users;
+            var tem = '',temIdArr=[],temId='',liHtml='';
+            for(var i=0;i<applyUser.length;i++){
+                tem+=applyUser[i].username+','
+                temIdArr.push(applyUser[i].user_id)
+                liHtml+='<li class="pick" data-user="'+applyUser[i].user_id+'" data-titlename="测试444555" data-department="质检部">'+applyUser[i].username+'</li>'
+            }
+            temId=temIdArr.join(',');
+            var cont='<div class="layui-form layui-card-body">'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">补录用户</label>'
+                                +'<div class="layui-input-block departTable" data-title="设置补录用户">'
+                                    +'<textarea id="userName" name="userName" required lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea layui-block">'+tem+'</textarea>'
+                                    +'<ul id="appUserList" class="layui-small-static" data-val="'+temId+'" style="display: none">'+liHtml+'</ul>'
+                                    +'<a class="addDesc"><i class="iconfont icon-40"></i>添加</a>'
+                                    +'<a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清除</a>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">描述</label>'
+                                +'<div class="layui-input-block">'
+                                    +'<textarea name="Content" id="Content" placeholder="请输入内容" class="layui-textarea">'+data.content+'</textarea>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">补录时间</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<input  class="layui-input" type="text" id="DateTime" name="DateTime" value="'+data.check_in_out_time+'">'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">审批人</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<select name="NextApprovalUserID" id="NextApprovalUserID" lay-verify="required"></select>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<div class="layui-input-block">'
+                                    +'<button id="subBjType" lay-filter="subBjType" class="layui-btn">确定</button>'
+                                    +'<button id="backTypeList" class="layui-btn layui-btn-primary">返回</button>'
+                                +'</div>'
+                            +'</div>'                        
+                        +'</div>'
+                layer.open({
+                    type: 1,
+                    content: cont, //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    title:'编辑考勤补录',
+                    area:['70%','70%'],
+                    success: function(layero, index){
+                        $("#backTypeList").on("click",function(){
+                            layer.close(index)
+                        })
+                        laydate.render({ 
+                            elem:'#DateTime'
+                            ,type:'datetime'
+                        });
+                        
+                        $(".addDesc").on("click",function(){
+                            selMemberFun($(this));
+                        });
+
+                        $(".emptyDesc").on("click",function(){
+                            $(this).siblings("ul").html("");
+                            $(this).siblings("ul").attr("data-val","");
+                            $(this).siblings(".layui-textarea").html("");
+                        })
+
+                        $.fetch({
+                            url:"/gateway/attend/attendapprovalusers",
+                            type: 'post',
+                            cb:function(rs){
+                                var op='';
+                                if(rs&&rs.length>0){
+                                    for(var i=0;i<rs.length;i++){
+                                        op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                    }
+
+                                }else{
+                                    op='<option value=" ">暂无</option>';
+                                }
+                                $("#NextApprovalUserID").html(op); 
+                                form.render();
+                            }
+                        })
+
+                        $("#subBjType").on("click",function(){
+                            var textStr =$("ul#appUserList").attr("data-val");
+                            var DateTime =$("#DateTime").val();
+                            var NextApprovalUserID =$("#NextApprovalUserID").val();
+                            var Content =$("#Content").val();
+                            if(!textStr){
+                                layer.msg("请选择补录用户.");
+                                return false
+                            }
+                            if(!DateTime){
+                                layer.msg("请选择补录时间.");
+                                return false
+                            }
+                            if(!NextApprovalUserID){
+                                layer.msg("请选审批人.");
+                                return false
+                            }
+                            $.fetch({
+                                url:"/gateway/checkinoutcompanyapply/edit",
+                                type: 'post',
+                                data:{
+                                    ID:data.id,
+                                    UserID:textStr,
+                                    DateTime:DateTime,
+                                    NextApprovalUserID:NextApprovalUserID,
+                                    Content:Content,
+                                },
+                                cb:function(rs){
+                                    layer.msg("新增成功")
+                                    layer.close(index);
+                                    var ApplyResult=$("#ApplyResult").val();
+                                    performance.reload({
+                                        where: { //设定异步数据接口的额外参数，任意设
+                                            ApplyResult: ApplyResult,  
+                                        }
+                                        ,page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                }
+                            })
+                        })
+                    }
+                });      
+            
+        }
+    })
+
+   
+    table.on('toolbar(performance)', function(obj){
+        var checkStatus = table.checkStatus(obj.config.id);
+        switch(obj.event){
+            case 'add':
+                //layer.msg('添加');
+                
+                var cont='<div class="layui-form layui-card-body">'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">补录用户</label>'
+                                +'<div class="layui-input-block departTable" data-title="设置补录用户">'
+                                    +'<textarea id="userName" name="userName" required lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea layui-block"></textarea>'
+                                    +'<ul id="appUserList" class="layui-small-static" style="display: none"></ul>'
+                                    +'<a class="addDesc"><i class="iconfont icon-40"></i>添加</a>'
+                                    +'<a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清除</a>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">描述</label>'
+                                +'<div class="layui-input-block">'
+                                    +'<textarea name="Content" id="Content" placeholder="请输入内容" class="layui-textarea"></textarea>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">补录时间</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<input  class="layui-input" type="text" id="DateTime" name="DateTime">'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<label class="layui-form-label">审批人</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<select name="NextApprovalUserID" id="NextApprovalUserID" lay-verify="required"></select>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="layui-form-item">'
+                                +'<div class="layui-input-block">'
+                                    +'<button id="subBjType" lay-filter="subBjType" class="layui-btn">确定</button>'
+                                    +'<button id="backTypeList" class="layui-btn layui-btn-primary">返回</button>'
+                                +'</div>'
+                            +'</div>'                        
+                        +'</div>'
+                layer.open({
+                    type: 1,
+                    content: cont, //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    title:'新增考勤补录',
+                    area:['70%','70%'],
+                    success: function(layero, index){
+                        $("#backTypeList").on("click",function(){
+                            layer.close(index)
+                        })
+                        laydate.render({ 
+                            elem:'#DateTime'
+                            ,type:'datetime'
+                        });
+                        
+                        $(".addDesc").on("click",function(){
+                            selMemberFun($(this));
+                        });
+
+                        $(".emptyDesc").on("click",function(){
+                            $(this).siblings("ul").html("");
+                            $(this).siblings("ul").attr("data-val","");
+                            $(this).siblings(".layui-textarea").html("");
+                        })
+
+                        $.fetch({
+                            url:"/gateway/attend/attendapprovalusers",
+                            type: 'post',
+                            cb:function(rs){
+                                var op='';
+                                if(rs&&rs.length>0){
+                                    for(var i=0;i<rs.length;i++){
+                                        op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                    }
+
+                                }else{
+                                    op='<option value=" ">暂无</option>';
+                                }
+                                $("#NextApprovalUserID").html(op); 
+                                form.render();
+                            }
+                        })
+
+                        $("#subBjType").on("click",function(){
+                            var textStr =$("ul#appUserList").attr("data-val");
+                            var DateTime =$("#DateTime").val();
+                            var NextApprovalUserID =$("#NextApprovalUserID").val();
+                            var Content =$("#Content").val();
+                            if(!textStr){
+                                layer.msg("请选择补录用户.");
+                                return false
+                            }
+                            if(!DateTime){
+                                layer.msg("请选择补录时间.");
+                                return false
+                            }
+                            if(!NextApprovalUserID){
+                                layer.msg("请选审批人.");
+                                return false
+                            }
+                            $.fetch({
+                                url:"/gateway/checkinoutcompanyapply/add",
+                                type: 'post',
+                                data:{
+                                    UserID:textStr,
+                                    DateTime:DateTime,
+                                    NextApprovalUserID:NextApprovalUserID,
+                                    Content:Content,
+                                },
+                                cb:function(rs){
+                                    layer.msg("新增成功")
+                                    layer.close(index);
+                                    var ApplyResult=$("#ApplyResult").val();
+                                    performance.reload({
+                                        where: { //设定异步数据接口的额外参数，任意设
+                                            ApplyResult: ApplyResult,  
+                                        }
+                                        ,page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                }
+                            })
+                        })
+                    }
+                });       
+            break;
+        };
+    });
+   
+   // $('#performance').on("mouseenter", '.limit-width',function(){
+    //     var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">'+$(this).text();+'</div>'
+    //     var that = this;
+    //     layer.tips(tipsCont1, that,{
+    //           tips:[1,'#999']
+    //           ,maxWidth: 'auto'
+    //     });
+    // });
+})
+</script>
+</html>

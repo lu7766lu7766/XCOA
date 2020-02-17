@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="finaName" name="finaName" class="layui-input layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所在部门</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="finaDepa" name="finaDepa" class="layui-input layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="lzMon" name="lzMon" placeholder="yyyy-MM" lay-verify="data" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">流程类型</label>
+                            <div class="layui-inline">
+                                <select id="finaStepType" name="finaStepType" lay-filter="finaStepType"  class="layui-input-inline"></select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-inline">
+                                <select id="finaType"  lay-filter="finaType" name="finaType" class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                    <!-- </div>
+                    <div class="layui-form-item"> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">子类型</label>
+                            <div class="layui-inline">
+                                <select lay-verify="required" id="payType" name="payType" lay-filter="payType"  class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                        <!-- </div>
+                        <div class="layui-form-item"> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">货币单位</label>
+                            <div class="layui-inline">
+                            <select id="currencyUnitrd" name="currencyUnitrd" lay-filter="currencyUnitrd" class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">费用部门</label>
+                            <div class="layui-inline">
+                            <select lay-verify="required" id="FinanDeptId" name="FinanDeptId" lay-filter="FinanDeptId" class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: flex;
+align-items: center; justify-content: flex-start;">
+                        <label class="layui-form-label" style="flex: 0 0 80px; float: none;">支付明细</label>
+                        <div class="layui-input-block"  id="payDetailsForm">
+                            <!-- <table  class="layui-table">
+                                <tbody>
+                                    <tr><td>姓名</td><td><input type="text"></td></tr>
+                                    <tr><td>阿萨斯</td><td><input type="text"></td></tr>
+                                </tbody>
+                            </table> -->
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">费用明细</label>
+                        <div class="layui-input-block">
+                            <table class="layui-table" id="FinancialFeeList">
+                                <colgroup>
+                                    <col>
+                                    <col width="350">
+                                    <col width="150">
+                                    <col width="150">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <!-- <th>费用类型</th> -->
+                                        <th>费用摘要</th>
+                                        <th>金额 <span id="currencyUnit"></span></th>
+                                        <th>单据数量</th>
+                                        <th>
+                                            <button id="addFeeDetail" class="layui-btn layui-btn-xs ml-5">新增</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="FeeDetail">
+                                        <!-- <td>
+                                            <select lay-verify="required" class="payType" name="" lay-filter="payType"></select>
+                                        </td> -->
+                                        <td>
+                                            <textarea lay-verify="required" class="layui-textarea textarea-modify Remark" ></textarea>
+                                        </td>
+                                        <td>
+                                            <input lay-verify="required" type="tel" autocomplete="off" class="layui-input receiptCount"  value="">
+                                        </td>
+                                        <td>
+                                            <input lay-verify="required" type="tel"  autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" >
+                                        </td>
+                                        <td>
+                                            <button class="layui-btn layui-btn-danger delFee layui-disabled" disabled>删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" id="fkxxForm" style="display: none;">
+                        <label class="layui-form-label">付款信息</label>
+                        <div class="layui-input-block">
+                            <table class="layui-table" id="">
+                                <tr>
+                                    <td>
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"><span class="red"> ＊</span> 银行</label>
+                                                <div class="layui-input-block">
+                                                    <input  type="text" class="layui-input" name="BankName"   value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">开户支行</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text"  name="Branch" class="layui-input" value="">
+                                                    </div>
+                                                </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"><span class="red"> ＊</span> 银行账号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text"  name="BankAccount" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"><span class="red"> ＊</span> 开户人</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text"  name="AccountName" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">省份</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Province" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">城市</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="City" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                <tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">总金额</label>
+                            <div class="layui-input-block">
+                                <span id="symbolMoneyP"></span>
+                                <input id="totalPrice" lay-verify="required" name="totalPrice" readonly type="text" class="layui-input layui-input-change"  value="0">
+                                <span id="symbolMoneyN"></span> （大写：<span id="b_totalPrice">零元</span>
+                                <span id="symbolMoneyZname">元</span>）
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单据总数</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" id="totalAmount" name="totalAmount" class="layui-input" readonly value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">附件</label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn fl" id="finaAttach" style="text-align: center;">
+                                <i class="layui-icon">&#xe67c;</i>上传
+                            </button>
+                            <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                            <div id="finaFiles" class="UploadNames-box" style=" float: left;width: 100%;"></div>   
+                            
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline"  style="display:none;">
+                            <label class="layui-form-label">指定审核人</label>
+                            <div class="layui-input-block">
+                                <select id="finanApprList"  lay-filter='finanApprList' lay-verify="required" name="finanApprList">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">集团审批</label>
+                            <div class="layui-input-block">
+                                <input type="radio"  lay-filter='toIsGroup' name="toIsGroup" value="1" title="是">
+                                <input type="radio"  lay-filter='toIsGroup' name="toIsGroup" value="0" title="否" checked>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="layui-form-item temporarily" style="display: none">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">固定费用</label>
+                            <div class="layui-input-block">
+                                <input type="radio"  lay-filter='IsFixedCosts' name="IsFixedCosts" value="0" title="不固定" checked>
+                                <input type="radio"  lay-filter='IsFixedCosts' name="IsFixedCosts" value="1" title="固定">
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field IsFixedCostsShow" style="display: none">
+                        <legend style="font-size: 14px">固定费用设置</legend>
+                        <div class="layui-field-box">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">开始月份</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="FixedCostStartMonth" name="FixedCostStartMonth" placeholder="" lay-verify="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">结束月份</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="FixedCostEndMonth" name="FixedCostEndMonth" placeholder="" lay-verify="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">生成日期</label>
+                                <div class="layui-form-mid" >每月/</div>
+                                <div class="layui-input-inline" style="width: 148px;" >
+                                    <select id="FixedCostJobDate"  lay-filter='FixedCostJobDate' lay-verify="" name="FixedCostJobDate">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset> -->
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button id="subFinanForm"  lay-submit class="layui-btn" lay-filter="subFinanForm">提交审批</button>
+                                <button id="resetFinanForm" class="layui-btn layui-btn-primary">重置</button>
+                                <button id="closeFinanForm" class="layui-btn layui-btn-primary">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190212"></script>
+<script>
+$(function(){
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','form','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+        ,upload = layui.upload;
+        laydate.render({
+            elem: '#lzMon'
+            ,type: 'month'
+            ,value: new Date()
+        });
+        var FixedCostJobFun=function(mon){
+            var option=''
+            for(var i=1;i<=mon;i++){
+                option+='<option value="'+i+'">'+i+' 日</option>'
+            }
+            $("#FixedCostJobDate").html(option);
+            form.render();
+        }
+        var d = new Date();
+        d.setMonth(d.getMonth()+1);
+        d.setDate(0);
+        var lastDay = new Date(d).getDate();
+        FixedCostJobFun(lastDay);
+        // var FixedCostStartMonth=laydate.render({
+        //     elem: '#FixedCostStartMonth'
+        //     ,type: 'month'
+        //     ,value: new Date()
+        //     ,done: function(value, date, endDate){
+        //         FixedCostEndMonth.config.min = {
+        //             year: date.year,
+        //             month: date.month-1,
+        //             // date: date.date,
+        //         };
+        //         var endMonth=$("#FixedCostEndMonth").val();
+        //         if(value>endMonth){
+        //             $("#FixedCostEndMonth").val(value)
+        //         }
+        //         // console.log(value); //得到日期生成的值，如：2017-08-18
+        //         // console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+        //         // console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+        //         var mon =laydate.getEndDate(date.month, date.year);
+        //         //console.log(mon);
+        //         FixedCostJobFun(mon);
+        //     }
+        // });
+        // FixedCostStartMonth.config.min = {//初始化限制最小月份
+        //     year:d.getFullYear(),
+        //     month: d.getMonth(),
+        //     // date:d.getDate(),
+        // };
+
+        // var FixedCostEndMonth=laydate.render({
+        //     elem: '#FixedCostEndMonth'
+        //      ,type: 'month'
+        //     ,value: new Date()
+        //     ,done: function(value, date, endDate){
+        //         FixedCostStartMonth.config.max = {//动态限制范围
+        //             year: date.year,
+        //             month: date.month,
+        //             // date: date.date,
+        //         }
+        //     }
+        // });
+        // FixedCostEndMonth.config.min = {
+        //     year:d.getFullYear(),
+        //     month: d.getMonth(),
+        //     // date:d.getDate(),
+        // };
+        // laydate.render({
+        //     elem: '#FixedCostJobDate'
+        //     // ,type: 'time'
+        //     ,value: new Date()
+        // });
+        var subFormDatas=[];//保存自定义表单提交字段
+        var delFinancialFeeAttr=[];//保存自定义表单提交字段
+        var financialObj={//保存财务相关数据的对象
+            finanTypesArr:[],
+            FeeDetail:'<tr class="FeeDetail">'
+                            // +'<td><select lay-verify="required" class="payType" name="" lay-filter="payType"></select></td>'
+                            +'<td><textarea lay-verify="required" class="layui-textarea textarea-modify Remark" ></textarea></td>'
+                            +'<td><input lay-verify="required" type="tel" autocomplete="off" class="layui-input receiptCount"  value=""></td>'
+                            +'<td><input lay-verify="required" type="tel"  autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\\d]/.test(String.fromCharCode(event.keyCode)))" ></td>'
+                            +'<td><button class="layui-btn layui-btn-danger delFee">删除</button></td>'
+                        +'</tr>', //保存新增html用
+           
+            NextApprovalStep:'',//下一步审批人所属环节
+            finaFiles:[],//附件id数组
+        }
+        var payTypeFormFun = function(ItemID,formVal){
+            $.fetch({
+                url:"/gateway/formtpl/getform",
+                type: 'post',
+                data:{
+                    ItemID:ItemID,
+                    FormType:1,
+                },
+                cb:function(rs){
+                    if(rs.form_page!=null){
+                        $("#subFinanForm").attr('data-FormId',rs.form_page.id);
+
+                    }
+                    var rs = rs.form_template;
+                    subFormDatas=[];//切换子类时清空
+                    var formTypeFun=function(type,n){
+                        var formHtml='';
+                        switch (type.component_type){
+                            case 'text':
+                                formHtml=' <input type="text" '+ (type.required==0?'lay-verify="required"':'')+' value="'+((type.attr&&type.attr.textVal)?type.attr.textVal:'')+'" name="text_'+n+'" placeholder="请输入" autocomplete="off" class="layui-input">'
+                                
+                            break;
+                            case 'select':
+                                var arr=type.attr?type.attr.option:[];
+                                formHtml='<select name="select_'+n+'" lay-filter="aihao">';
+                                for(var k=0;k<arr.length;k++){
+                                    formHtml+='<option value="'+arr[k]+'">'+arr[k]+'</option>'
+                                }
+                                formHtml+='</select>';
+                            break;
+                            case 'checkbox':
+                                var arr=type.attr?type.attr.option:[];
+                                for(var k=0;k<arr.length;k++){
+                                    formHtml+='<input type="checkbox" name="checkbox_'+n+'" title="'+arr[k]+'" lay-skin="primary">'
+                                }
+                            break;
+                            case 'radio':
+                                var arr=type.attr?type.attr.option:[];
+                                for(var k=0;k<arr.length;k++){
+                                    formHtml+='<input type="radio" name="radio_'+n+'" value="'+arr[k]+'" title="'+arr[k]+'" '+(k==0?'checked':'')+'>'
+                                }
+                            break;
+                            case 'textarea':
+                                formHtml='<textarea name="textarea_'+n+'" '+ (type.required==0?'lay-verify="required"':'')+' placeholder="请输入内容" class="layui-textarea">'+((type.attr&&type.attr.textVal)?type.attr.textVal:'')+'</textarea>'
+                            break;
+                            case 'datetime':
+                                formHtml='<input type="text"  '+ (type.required==0?'lay-verify="required"':'')+' name="datetime_'+n+'" class="layui-input datetime" id="test_'+n+'">';
+                            break;
+                        }
+                        return formHtml
+                    }
+                    // var forDataFormFun=function(rs,ors){
+                        if(rs&&rs.length>0){
+                            var tr='';
+                            
+                            for(var i=0;i<rs.length;i++){
+                                if(typeof(rs[i].attr)=='string'&&rs[i].attr!=''){
+                                    rs[i].attr=JSON.parse(rs[i].attr);
+                                }
+                                subFormDatas.push({
+                                    name:rs[i].component_type+'_'+i,
+                                    FormTemplateID:rs[i].template_id,
+                                    component_type:rs[i].component_type,
+                                    label:rs[i].label,
+                                })
+                                tr+='<div class="layui-inline" data-temp="'+rs[i].template_id+'"><label class="layui-form-label">'+ (rs[i].required==0?'<b class="red">*</b>':'')+rs[i].label+'</label><div class="modify-layui layui-input-inline"  >'+ formTypeFun(rs[i],i)+'</div>'+((rs[i].attr&&rs[i].attr.formode)?'<div class="layui-form-mid layui-word-aux">'+rs[i].attr.formode+'</div>':'')+'</div>'
+                            }
+                            $("#payDetailsForm").html('<div class="layui-fluid"><div class="layui-form"><div class="layui-form-item">'+tr+'</div></div></div>');
+                                //处理时间控件 
+                            $("#payDetailsForm").find(".datetime").each(function(){
+                                var tid=$(this).attr("id");
+                                var arrindex =parseInt(tid.split('_')[1]);
+                                var  dateIsRange=false,datetype='date';
+                                if(typeof(rs[arrindex].attr)=='string'){
+                                    rs[arrindex].attr=JSON.parse(rs[arrindex].attr);
+                                }
+                                if(rs[arrindex].attr){
+                                   dateIsRange= rs[arrindex].attr.dateIsRange==0?'~':false;
+                                   datetype= ['date','month','year','datetime'][rs[arrindex].attr.dateFormType];
+                                }
+                                laydate.render({
+                                    elem: '#'+tid+'' //指定元素
+                                    ,range: dateIsRange 
+                                    ,type: datetype
+                                });
+                            })
+                            form.render();
+                            $.fetch({
+                                url:"/gateway/formtpl/getformdata",
+                                type: 'post',
+                                data:{
+                                    ItemID:window.listId,
+                                    FormType:2,
+                                },
+                                cb:function(rs){
+                                    if(rs&&rs.length>0){
+                                        for(var i =0;i<rs.length;i++){
+                                            if(rs[i].component_type=='radio'){
+                                                $("*[name='"+rs[i].component_type+"_"+i+"'][value='"+rs[i].value.replace(/^\"|\"$/g,'')+"']").attr('checked', 'checked');
+                                            }else{
+                                                $("*[name='"+rs[i].component_type+"_"+i+"']").val(rs[i].value.replace(/^\"|\"$/g,''));
+                                            }
+                                        }
+                                    }
+                                    form.render();
+                                }
+                            })
+                        }else{
+                            $("#payDetailsForm").html('<tr><td><div style="text-align:center;line-height: 36px;">暂无</div></td></tr>');
+                            
+                        }
+                    // }
+                }
+            })
+        }
+        var payTypeFun =function(val,isNew,dait){//根据类型获取费用类型
+            var payTypeHtml='';
+            $.fetch({
+                url: '/gateway/financialtype/subtypes',
+                type: 'post',
+                data:{
+                    pid:val,
+                },
+                cb:function(rs){
+                    for(var i=0;i<rs.length;i++){
+                        payTypeHtml+='<option value="'+rs[i].id+'" data-spec="'+rs[i].is_special+'">'+rs[i].name+'</option>'
+                    } 
+                    $("#payType").html(payTypeHtml);
+                    if(isNew&&isNew!==''){
+                        $("#payType").val(isNew);
+                        var isSpecial= $("#payType").find('option[value="'+isNew+'"]').attr("data-spec");
+                    }
+                    form.render('select');
+                    financialObj.FeeDetail='<tr class="FeeDetail">'
+                                                // +'<td><select lay-verify="required" class="payType" name="" lay-filter="payType">'
+                                                // +payTypeHtml
+                                                // +'</select></td>'
+                                                +'<td><textarea lay-verify="required" class="layui-textarea textarea-modify Remark" ></textarea></td>'
+                                                +'<td><input lay-verify="required" type="tel" autocomplete="off" class="layui-input receiptCount"  value=""></td>'
+                                                +'<td><input lay-verify="required" type="tel"  autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\\d]/.test(String.fromCharCode(event.keyCode)))" ></td>'
+                                                +'<td><button class="layui-btn layui-btn-danger delFee">删除</button></td>'
+                                            +'</tr>'
+                    //根据子类型调用审批人
+                    var val =$("#payType").val();
+                    // console.log(val)
+                    var isSpecial=isSpecial==undefined?$("#payType").find('option[value="'+val+'"]').attr("data-spec"):isSpecial;
+                   
+                    finanAppr(val,1,isSpecial,dait);
+                                                    
+                    form.on('select(payType)', function(data){
+                        var isSpecial= $(data.elem).find('option[value="'+data.value+'"]').attr("data-spec");
+                        finanAppr(data.value,1,isSpecial,dait);
+                        payTypeFormFun(data.value);
+                    });
+                    payTypeFormFun(val);
+                    //根据子类 获取明细表单
+
+                } 
+            });
+
+        }
+        var finanTypesFun =function(val,isNew,dait){//根据流程类型 获取类型
+            var finaTypeHtml='';
+            for(var i=0;i<financialObj.finanTypesArr.length;i++){
+                if(financialObj.finanTypesArr[i].id == val){
+                    var  subnodess=financialObj.finanTypesArr[i].subnodes;
+                    if(subnodess&&subnodess.length>0){
+                        for(var j=0;j<subnodess.length;j++){
+                            var ischecked = j==0?'checked':'';//第一个默认选中
+                            finaTypeHtml+='<option name="finaType" value="'+subnodess[j].id+'" >'+subnodess[j].name+'</option>'
+                        }
+                    }
+                } 
+            }
+            $("#finaType").html(finaTypeHtml);
+            // $("#finaType").val(finaTypeHtml);
+            if(isNew&&isNew!==''){
+                // $("#payType").val(isNew);
+                $("#finaType").val(dait.baoxiao_type); 
+                form.render('select');
+                
+                payTypeFun(dait.baoxiao_type,dait.fee_type,dait);  
+            }else{
+                var vals=$("#finaType").val();   
+                // console.log(vals)
+                form.render('select');
+                
+                payTypeFun(vals,'',dait);  
+                
+            }
+                 
+            
+            form.on('select(finaType)', function(data){
+                payTypeFun(data.value,'',dait)
+            });
+        }
+        var newfinanForm =function(o,vals){
+            if(o&&o.length>0){
+                financialObj.finanTypesArr=o;
+                var finaStepHtml='';
+                for(var i=0;i<financialObj.finanTypesArr.length;i++){
+                    // var ischecked = i==0?'checked':'';//第一个默认选中
+                    finaStepHtml+='<option   data-code="'+financialObj.finanTypesArr[i].code+'" value="'+financialObj.finanTypesArr[i].id+'">'+financialObj.finanTypesArr[i].name+'</option>'
+                    if(financialObj.finanTypesArr[i].code==='BX'){
+                        var yzId = -financialObj.finanTypesArr[i].id;
+                    }
+                }
+                finaStepHtml += '<option data-code="BX"  value="'+yzId+'">预支</option>'
+                finanTypesFun(vals.process_type,true,vals);
+                $("#finaStepType").html(finaStepHtml);
+                // console.log(vals.is_yz,-vals.process_type)
+                if(vals.is_yz==1){
+                    $("#finaStepType").val(-vals.process_type);  
+                }else{
+                    $("#finaStepType").val(vals.process_type);                      
+                }
+                // payTypeFun(vals.baoxiao_type,vals.details[0].fee_type,vals);    
+                var trHtml='';      
+                for(var i =vals.details.length-1;i>=0;i--){
+                    trHtml+='<tr class="FeeDetail" data-id="'+vals.details[i].id+'">'
+                        +'<td><textarea lay-verify="required" class="layui-textarea textarea-modify Remark" value="'+vals.details[i].remark+'">'+vals.details[i].remark+'</textarea></td>'
+                        +'<td><input lay-verify="required" type="tel" autocomplete="off" class="layui-input receiptCount"  value="'+vals.details[i].amount+'"></td>'
+                        +'<td><input lay-verify="required" type="tel"  autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\\d]/.test(String.fromCharCode(event.keyCode)))"  value="'+vals.details[i].receipt_count+'"></td>'
+                        +'<td><button class="layui-btn layui-btn-danger delFee">删除</button></td>'
+                    +'</tr>'
+                }  
+                $("#totalPrice").val(vals.amount);
+                $("#totalAmount").val(vals.receipt_count);
+                $("#b_totalPrice").html(vals.capital_amount);
+                $("#FinancialFeeList tbody").html(trHtml);
+                
+                if(vals.attaches&&vals.attaches.length>0){
+                    for(var i=0;i<vals.attaches.length;i++){
+                        financialObj.finaFiles.push(vals.attaches[i].id);
+                        $("#finaFiles").append('<a><span class="currentName">'+vals.attaches[i].original_name+'</span><i data-file="'+vals.attaches[i].id+'" class="del iconfont icon-guanbi"></i></a>')
+                    }
+                }
+
+                form.render('select');
+
+                form.on('select(finaStepType)', function(data){
+                    var finaStepTypeVal=data.value<0?-data.value:data.value;
+                    finanTypesFun(finaStepTypeVal,'',vals);
+                    finaStepTypeCode= $("#finaStepType").find("option[value='"+finaStepTypeVal+"']").attr("data-code");
+                    
+                    if(finaStepTypeCode=="FK"){
+                        $("#fkxxForm").show();
+                          
+                        $("#fkxxForm input[name='BankName']").attr('lay-verify','required');
+                        $("#fkxxForm input[name='BankAccount']").attr('lay-verify','required');
+                        $("#fkxxForm input[name='AccountName']").attr('lay-verify','required');
+                    }else{
+                        $("#fkxxForm").hide();
+                        $("#fkxxForm input[name='BankName']").attr('lay-verify','').val('');
+                        $("#fkxxForm input[name='BankAccount']").attr('lay-verify','').val('');
+                        $("#fkxxForm input[name='AccountName']").attr('lay-verify','').val('');
+
+
+                        $("#fkxxForm input[name='Branch']").val('');
+                        $("#fkxxForm input[name='Province']").val('');
+                        $("#fkxxForm input[name='City']").val('');
+                        }
+                });
+            }
+        }
+        var currencyUnitrdFun=function(trs,values){
+            var unit ='';
+            // console.log(values);
+            for(var i =0;i<trs.length;i++){
+                unit+='<option  data-symbolZn="'+trs[i].zh_name+'" data-symboln="'+trs[i].symbol+'" data-symbolp="'+trs[i].short_code+'" value="'+trs[i].id+'" t>'+trs[i].zh_name+'('+trs[i].short_code+')</option>'
+            }
+            // $("input[name='IsFixedCosts']").val();
+            // $("input[name='IsFixedCosts'][value="+values.is_fixed_costs+"]").prop("checked",true)
+            // if(values.is_fixed_costs==1){
+            //     // $(".IsFixedCostsShow").show();
+            //     $("#FixedCostEndMonth").val(values.fixed_cost_end_month);
+            //     $("#FixedCostJobDate").val(values.fixed_cost_job_date);
+            //     $("#FixedCostStartMonth").val(values.fixed_cost_start_month);
+            // }
+            $("#currencyUnitrd").html(unit);
+            // $("#currencyUnitrd option:first").attr('checked', 'checked');
+            $("#currencyUnitrd").val(values.financial_currency_unit_id);
+            form.render('select');
+            var unittext= '<span>'+values.zh_name+'<span>('+values.short_code+')';
+            var symbolP = values.short_code;
+            var symbolN = values.symbol;
+            var symbolZname = values.zh_name;
+            $("#currencyUnit").html(unittext);
+            $("#symbolMoneyP").text(symbolP);
+            $("#symbolMoneyN").text(symbolN);
+            $("#symbolMoneyZname").text(symbolZname);
+
+            form.on('select(currencyUnitrd)', function(data){
+                // console.log(data.elem);
+                unittext= $(data.elem).find("option:selected").text();
+                symbolP=$(data.elem).find("option:selected").attr('data-symbolp');
+                symbolN=$(data.elem).find("option:selected").attr('data-symboln');
+                var symbolZname =$(data.elem).find("option:selected").attr('data-symbolZn');
+                $("#currencyUnit").html(unittext);
+                
+                $("#symbolMoneyZname").text(symbolZname);                
+                $("#symbolMoneyP").text(symbolP);
+                $("#symbolMoneyN").text(symbolN);
+            });
+        }
+        form.on('radio(toIsGroup)', function(data){
+            if(data.value==1){
+                $("#finanApprList").attr("disabled",'disabled');
+            }else{
+                $("#finanApprList").removeAttr("disabled");
+            }
+            form.render();
+        });
+        var finanAppr=function(typrID,step,isSpecial,dait){
+            // console.log(typrID)
+            if(typrID==''||typrID==null){
+                layer.msg("当前费用类型未设置子类型,请先设置子类型。",{icon:5});
+                $("#subFinanForm").attr("disabled","disabled").addClass("layui-disabled");
+            }else{
+                $("#subFinanForm").removeAttr("disabled","disabled").removeClass("layui-disabled");
+                
+                $.fetch({//新建报销预支单初始化数据
+                    url: '/gateway/financial/getapprovaluser',
+                    type: 'post',
+                    data:{
+                        financialTypeId:typrID,
+                        step:step,
+                        itemId:0,
+                        departmentId:window.userInfo.dapartId,
+                        applyuserId:window.userInfo.userId,
+                    },
+                    cb:function(rs){
+                       // console.log(typrID,step,isSpecial,dait)
+                        var apprHtml ='';
+                        if(isSpecial=="0"){
+                            if (rs.dept_list.length == 0) {
+                                apprHtml += '<option value="">无审核人</option>';
+                                layer.msg("未设置审批人或审批人与当前提交用户为同一人,无法提交。", {
+                                    icon: 5
+                                });
+                                $("#subFinanForm").attr("disabled", "disabled").addClass("layui-disabled");
+                            } else {
+                                for (var i = 0; i < rs.dept_list.length; i++) {
+                                    apprHtml += '<option value="' + rs.dept_list[i].id + '">' + rs.dept_list[i].name + '</option>'
+                                }
+                                $("#subFinanForm").removeAttr("disabled", "disabled").removeClass("layui-disabled");
+                            }
+                        }else if(isSpecial=="1"){
+                            if (rs.userList.length == 0) {
+                                apprHtml += '<option value="">无审核人</option>';
+                                layer.msg("未设置审批人或审批人与当前提交用户为同一人,无法提交。", {
+                                    icon: 5
+                                });
+                                $("#subFinanForm").attr("disabled", "disabled").addClass("layui-disabled");
+                            } else {
+                                for (var i = 0; i < rs.userList.length; i++) {
+                                    apprHtml += '<option value="' + rs.userList[i].id + '">' + rs.userList[i].name + '</option>'
+                                }
+                                $("#subFinanForm").removeAttr("disabled", "disabled").removeClass("layui-disabled");
+                            }
+
+
+                        }
+                        $("#finanApprList").html(apprHtml);
+                        if(isSpecial==="1"){
+                            $("#finanApprList").val(dait.approval_userid);
+                        }
+                        form.render('select');
+                        financialObj.NextApprovalStep=rs.step;//下一个审批人所属的审批环节
+                    } 
+                });
+
+            }
+        }
+       
+        var uploadInst = upload.render({//上传附件
+            elem: '#finaAttach' //绑定元素
+            ,url: window.urls+"/gateway/financial/addattach" //上传接口
+            ,accept:'file'
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                //上传完毕回调
+                layer.closeAll('loading'); //关闭loading
+                $("#finaFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                financialObj.finaFiles.push(res.data.attachId);
+            }
+            ,error: function(){
+                layer.closeAll('loading'); //关闭loading
+                //请求异常回调
+            }
+        });
+        $("#finaFiles").on("click",'i.del',function(){//删除附件
+            var delId =$(this).attr("data-file");
+            var elem = $(this).parent("a");
+            //layer.load();
+            $.fetch({
+                url: '/gateway/financial/delattach',
+                type: 'post',
+                data:{AttachId:delId},
+                cb:function(rs){
+                    financialObj.finaFiles.splice($.inArray(delId,financialObj.finaFiles),1);
+                    elem.remove();
+                } 
+            });
+        })
+        //新增费用单
+        $("#addFeeDetail").on("click",function(){
+            var str=financialObj.FeeDetail;
+            $("#FinancialFeeList tbody").append(str);
+            form.render('select')
+            var trNum = $("#FinancialFeeList tbody tr").length;
+            if(trNum>1){
+                $(".FeeDetail .delFee").removeClass('layui-disabled').prop('disabled',false);
+            }
+        })
+        //删除费用单
+        $("#FinancialFeeList").on("click",".delFee",function(){
+            $(this).parents("tr.FeeDetail").remove();
+            var tid = $(this).parents("tr.FeeDetail").attr("data-id");
+            if(tid){
+                delFinancialFeeAttr.push(tid);
+            }
+            var trNum = $("#FinancialFeeList tbody tr").length;
+            if(trNum==1){
+                $(".FeeDetail .delFee").addClass('layui-disabled').prop('disabled',true);
+            }
+            var sum = 0;
+            $(".receiptCount").each(function(){
+                var num = $(this).val();
+                if (num == "" || num == null) {
+                    num = 0;
+                }
+                // sum += parseFloat(num);
+                sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                
+            })
+            
+            $("#totalPrice").val(NumberCheck(''+sum));
+            var b_totalPrice = changeMoneyToChinese(sum);
+            $("#b_totalPrice").text(b_totalPrice);
+
+            var amoun = 0;
+            $(".amountNumber").each(function(){
+                var anum = $(this).val();
+                if (anum == "" || anum == null) {
+                    anum = 0;
+                }
+                // amoun += parseFloat(anum);
+                // console.log(amoun,parseFloat(anum))
+                
+                amoun= parseFloat((amoun + parseFloat(anum)).toFixed(10))
+                // console.log(amoun)
+                
+            })
+            $("#totalAmount").val(NumberAmount(''+amoun));
+
+        })
+        //动态计算单据总金额
+        $("#FinancialFeeList").on("input propertychange",".receiptCount",function(){
+            var sum = 0;
+            $(".receiptCount").each(function(){
+                var num = $(this).val();
+                if (num == "" || num == null) {
+                    num = 0;
+                }
+                // sum =sum+
+                sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+            })
+            $("#totalPrice").val(NumberCheck(''+sum));
+            var b_totalPrice = changeMoneyToChinese(sum);
+            $("#b_totalPrice").text(b_totalPrice);
+            
+        })
+        //动态计算单据总数
+        $("#FinancialFeeList").on("input propertychange",".amountNumber",function(){
+            var sum = 0;
+            $(".amountNumber").each(function(){
+                var num = $(this).val();
+                if (num == "" || num == null) {
+                    num = 0;
+                }
+                // sum += parseFloat(num);
+                sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                
+            })
+            $("#totalAmount").val(NumberAmount(''+sum));
+        })
+
+        //转成大写方法
+        function changeMoneyToChinese(money){
+            var cnNums = new Array("零","壹","贰","叁","肆","伍","陆","柒","捌","玖"); //汉字的数字
+            var cnIntRadice = new Array("","拾","佰","仟"); //基本单位
+            var cnIntUnits = new Array("","万","亿","兆"); //对应整数部分扩展单位
+            var cnDecUnits = new Array("角","分"); //对应小数部分单位
+            var cnIntLast = "元"; //整型完以后的单位
+            var maxNum = 999999999999999.999; //最大处理的数字
+            
+            var IntegerNum; //金额整数部分
+            var DecimalNum; //金额小数部分
+            var ChineseStr=""; //输出的中文金额字符串
+            var parts; //分离金额后用的数组，预定义
+            if( money == "" ){
+                return "";
+            }
+            money = parseFloat(money);
+            if( money >= maxNum ){
+                layer.msg('超出最大处理数字');
+                return "";
+            }
+            if( money == 0 ){
+                ChineseStr = cnNums[0]+cnIntLast;
+                return ChineseStr;
+            }
+            money = money.toString(); //转换为字符串
+            if( money.indexOf(".") == -1 ){
+                IntegerNum = money;
+                DecimalNum = '';
+            }else{
+                parts = money.split(".");
+                IntegerNum = parts[0];
+                DecimalNum = parts[1].substr(0,2);
+            }
+            if( parseInt(IntegerNum,10) > 0 ){//获取整型部分转换
+                zeroCount = 0;
+                IntLen = IntegerNum.length;
+                for( i=0;i<IntLen;i++ ){
+                    n = IntegerNum.substr(i,1);
+                    p = IntLen - i - 1;
+                    q = p / 4;
+                    m = p % 4;
+                    if( n == "0" ){
+                        zeroCount++;
+                    }else{
+                        if( zeroCount > 0 ){
+                            ChineseStr += cnNums[0];
+                        }
+                        zeroCount = 0; //归零
+                        ChineseStr += cnNums[parseInt(n)]+cnIntRadice[m];
+                    }
+                    if( m==0 && zeroCount<4 ){
+                        ChineseStr += cnIntUnits[q];
+                    }
+                }
+                ChineseStr += cnIntLast;
+                //整型部分处理完毕
+            }
+            if( DecimalNum!= '' ){//小数部分
+                decLen = DecimalNum.length;
+                for( i=0; i<decLen; i++ ){
+                    n = DecimalNum.substr(i,1);
+                    if( n != '0' ){
+                        ChineseStr += cnNums[Number(n)]+cnDecUnits[i];
+                    }
+                }
+            }
+            if( ChineseStr == '' ){
+                ChineseStr += cnNums[0]+cnIntLast;
+            }
+            return ChineseStr;
+        }
+        //提交表单
+        /*JQuery 限制文本框只能输入数字*/
+        $("#FinancialFeeList").on('keyup','.receiptCount',function () {
+            $(this).val(NumberCheck($(this).val()));
+        }).on("paste", '.receiptCount',function (e) {  //CTR+V事件处理
+            var pastedText = undefined;
+            if (window.clipboardData && window.clipboardData.getData) { // IE
+                pastedText = window.clipboardData.getData('Text');
+            } else {
+                pastedText = e.originalEvent.clipboardData.getData('Text');//e.clipboardData.getData('text/plain');
+            }
+            // alert(pastedText);
+            setTimeout(() => {
+                this.value=NumberCheck(pastedText.replace(/^\D*([1-9]\d*\.?\d{0,3})?.*$/,'$1'));   
+                var sum = 0;
+                $(".receiptCount").each(function(){
+                    var num = $(this).val();
+                    if (num == "" || num == null) {
+                        num = 0;
+                    }
+                    // sum =sum+
+                    sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                })
+                $("#totalPrice").val(NumberCheck(''+sum));
+                var b_totalPrice = changeMoneyToChinese(sum);
+                $("#b_totalPrice").text(b_totalPrice);
+            }, 0);    
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+        $("#FinancialFeeList").on('keyup','.amountNumber',function () {
+            $(this).val(NumberAmount($(this).val()));
+        }).on("paste",'.amountNumber',function (e) {  //CTR+V事件处理
+            // $(this).val($(this).val());
+            var pastedText = undefined;
+            if (window.clipboardData && window.clipboardData.getData) { // IE
+                pastedText = window.clipboardData.getData('Text');
+            } else {
+                pastedText = e.originalEvent.clipboardData.getData('Text');//e.clipboardData.getData('text/plain');
+            }
+            setTimeout(() => {
+                this.value=NumberCheck(pastedText.replace(/^\D*([1-9]\d*)?.*$/,'$1'));   
+                var sum = 0;
+                $(".amountNumber").each(function(){
+                    var num = $(this).val();
+                    if (num == "" || num == null) {
+                        num = 0;
+                    }
+                    // sum += parseFloat(num);
+                    sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                    
+                })
+                $("#totalAmount").val(NumberAmount(''+sum));
+            }, 0);
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+        
+        form.on('submit(subFinanForm)', function(data){
+            var FinancialFeeTypes=[],AttachID=[];//费用明细,附件
+            var FeeType= $('select#payType').val();
+            var FormDatas=[];
+            if(subFormDatas&&subFormDatas.length>0){
+                for(var i =0;i<subFormDatas.length;i++){
+                    if(subFormDatas[i].component_type=='textarea'){
+                        $("#payDetailsForm").find('textarea[name="'+subFormDatas[i].name+'"]').val();
+                        var values=$("#payDetailsForm").find('textarea[name="'+subFormDatas[i].name+'"]').val();
+                        FormDatas.push({
+                            FormTemplateID:subFormDatas[i].FormTemplateID,
+                            Value:JSON.stringify(values),
+                        })
+                    }else if(subFormDatas[i].component_type=='checkbox'){
+                        var values =[];
+                        $("#payDetailsForm").find('input[name="'+subFormDatas[i].name+'"]:checked').each(function(){
+                            values.push($(this).attr('title'));
+                        })
+                        FormDatas.push({
+                            FormTemplateID:subFormDatas[i].FormTemplateID,
+                            Value:JSON.stringify(values),
+                        })
+                    }else if(subFormDatas[i].component_type=='select'){
+                        var values =  $("#payDetailsForm").find('select[name="'+subFormDatas[i].name+'"]').val();
+                        FormDatas.push({
+                            FormTemplateID:subFormDatas[i].FormTemplateID,
+                            Value:JSON.stringify(values),
+                        })
+                    }else if(subFormDatas[i].component_type=='radio'){
+                        $("#payDetailsForm").find('input[name="'+subFormDatas[i].name+'"]:checked').each(function(){
+                            var  values=$(this).val();
+                            FormDatas.push({
+                                FormTemplateID:subFormDatas[i].FormTemplateID,
+                                Value:JSON.stringify(values),
+                            });
+                        })
+                    }else{
+                        var values=$("#payDetailsForm").find('input[type="text"][name="'+subFormDatas[i].name+'"]').val();
+                        FormDatas.push({
+                            FormTemplateID:subFormDatas[i].FormTemplateID,
+                            Value:JSON.stringify(values),
+                        })
+                    }
+                   //文本域 //复选框
+                    
+                }
+            }
+            $("#FinancialFeeList tbody tr").each(function(key,val){
+                // var FeeType= $(this).find('select.payType').val();
+                var Remark= $(this).find('.Remark').val().replace(/,/ig,'，');;
+                var Amount= $(this).find('.receiptCount').val();
+                var ReceiptCount= $(this).find('.amountNumber').val();
+                
+                var id = $(this).attr("data-id");
+                var ID = id?id:'';
+                FinancialFeeTypes.push({
+                    ID:ID,
+                    Remark:Remark,
+                    Amount:Amount,
+                    ReceiptCount:ReceiptCount,
+                }) 
+            })
+            var DelDetailIds =delFinancialFeeAttr.join(','); 
+            
+            var FormPageID =$("#subFinanForm").attr('data-FormId');
+            var CapitalAmount =$("#b_totalPrice").text();
+            var AttachIDArr=financialObj.finaFiles.join();
+            var NextApprovalUserID= data.field.toIsGroup==1?'':data.field.finanApprList
+            var ProcessType= data.field.finaStepType<0?-data.field.finaStepType:data.field.finaStepType;
+            if(data.field.finaStepType<0){
+                var IsYZ=1;
+                var IsYzToBx=0
+            }else{
+                var IsYZ=0;
+                var IsYzToBx=0
+            }
+            var pram={
+                ID:window.listId,
+                FeeType:FeeType,
+                
+                ProcessType:ProcessType,
+                BaoXiaoType:data.field.finaType,
+                LiezhiMonth:data.field.lzMon,
+                IsGroup:data.field.toIsGroup,
+                FinanDeptId:data.field.FinanDeptId,
+                DelDetailIds:DelDetailIds,
+                // LiezhiKemu:'假装这里有列支科目',
+                Amount:data.field.totalPrice,
+                CapitalAmount:CapitalAmount,    
+                NextApprovalUserID:NextApprovalUserID,       
+                NextApprovalStep:financialObj.NextApprovalStep,
+                ReceiptCount:data.field.totalAmount,
+                AttachIDArr:AttachIDArr,
+                FinancialFeeTypes:FinancialFeeTypes,
+                FinancialCurrencyUnitId:data.field.currencyUnitrd,
+                FormPageID:FormPageID,
+                FormDatas:FormDatas,
+
+                IsYZ:IsYZ,
+                IsYzToBx:IsYzToBx,
+                // IsFixedCosts:data.field.IsFixedCosts,
+                
+                BankName: data.field.BankName,
+                Branch: data.field.Branch,
+                BankAccount: data.field.BankAccount,
+                AccountName: data.field.AccountName,
+                Province: data.field.Province,
+                City: data.field.City,
+            }
+            // if(data.field.IsFixedCosts==1){
+            //     pram['FixedCostStartMonth']=data.field.FixedCostStartMonth;
+            //     pram['FixedCostEndMonth']=data.field.FixedCostEndMonth;
+            //     pram['FixedCostJobDate']=data.field.FixedCostJobDate;
+            // }else{
+            //     pram['FixedCostStartMonth']='';
+            //     pram['FixedCostEndMonth']='';
+            //     pram['FixedCostJobDate']='';
+            // }
+            // console.log(FormDatas);
+            $.fetch({
+                url: '/gateway/financial/editapply',
+                type: 'post',
+                data:pram,
+                cb:function(rs){
+                    layer.msg('提交成功',{anim: 5,time:1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                } 
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $.fetch({
+            url:"/gateway/financial/detail",
+            type: 'post',
+            data:{
+                ID:window.listId,
+            },
+            cb:function(rs){
+                // finanTypesFun(rs.process_type);
+                // $("#finaStepType").val(rs.process_type);
+                // $("#finaType").val(rs.baoxiao_type);
+                // payTypeFun(rs.baoxiao_type,rs.details[0].fee_type);
+                var values = rs;
+                if(values.financial_type_code=='FK'){
+                    $("#fkxxForm").show();
+                    $("#fkxxForm input[name='BankName']").attr('lay-verify','required').val(values.bank_name);
+                    $("#fkxxForm input[name='BankAccount']").attr('lay-verify','required').val(values.bank_account);
+                    $("#fkxxForm input[name='AccountName']").attr('lay-verify','required').val(values.account_name);
+
+                    $("#fkxxForm input[name='Branch']").val(values.branch);
+                    $("#fkxxForm input[name='Province']").val(values.province);
+                    $("#fkxxForm input[name='City']").val(values.city);
+                }
+                 $.fetch({//新建报销预支单初始化数据
+                    url: '/gateway/financial/newfinancialorder',
+                    type: 'post',
+                    cb:function(rs){
+                        var Htmldept='<option  value="">请选择</option>';
+                        for (var i = 0; i < rs.finan_dept_list.length; i++) {
+                            Htmldept += '<option  value="' + rs.finan_dept_list[i].id + '">' + rs.finan_dept_list[i].department_name + '</option>'
+                        }
+                        $("#FinanDeptId").html(Htmldept);
+                        $("#FinanDeptId").val(values.financail_deptid)
+                        form.render('select');
+                        newfinanForm(rs.financialTypes,values);//流程 类型 费用类型
+                        // finanAppr(rs.userList,rs.step);//审核人
+                        currencyUnitrdFun(rs.currency_unit,values);
+                        $("#finaName").val(rs.username);
+                        $("#finaDepa").val(rs.department_name);                
+                        
+                        $("input[name='toIsGroup'][value='"+values.is_group+"']").attr('checked','checked');
+                        if(values.is_group==1){
+                            $("#finanApprList").attr('disabled','disabled')
+                        }
+                        form.render();
+                    } 
+                });
+                
+            }
+        })
+        form.on('radio(IsFixedCosts)', function(data){
+            if(data.value==1){
+                // $(".IsFixedCostsShow").show();
+                $(".IsFixedCostsShow").find('input').each(function(){
+                    $(this).attr('lay-verify','required')
+                })
+            }else{
+                $(".IsFixedCostsShow").hide();         
+                $(".IsFixedCostsShow").find('input').each(function(){
+                    $(this).removeAttr('lay-verify')
+                })       
+            }
+        }); 
+        $("#resetFinanForm").on("click",function(){
+            layer.confirm('确定重置页面？',{"title":" "},function(index){
+                location.reload();
+            })
+        })
+        $("#closeFinanForm").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+             parent.layer.close(index); //再执行关闭
+        })
+    })
+})
+
+
+</script> 
+</html>

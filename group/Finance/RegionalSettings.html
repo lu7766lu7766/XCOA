@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>区域设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">区域设置</div>
+            <div class="layui-card-body layui-row layui-col-space15">
+                <div class="layui-col-xs3 ">
+                    <div id="main">
+                        <ul id="ManagDuti" class="dtree" data-id="0"></ul>
+                    </div>
+                </div>
+                <div class="layui-col-xs9 ">                
+                    <div class=" layui-form" lay-filter="formTest">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">外币转换为当地货币:</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="Enabled" value="0" title="关闭">
+                                <input type="radio" name="Enabled" value="1" title="开启">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">本地货币:</label>
+                            <div class="layui-input-block" id="currencyR">
+
+                            </div>
+                        </div>
+                        <!-- <div class="layui-form-item" id="DisplayArea">
+                            <label class="layui-form-label">当地货币:</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" value="" placeholder="" class="layui-input">
+                            </div>
+                        </div> -->
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                    <button id="subFinanForm"  lay-submit class="layui-btn" lay-filter="subFinanForm">保存</button>
+                                    <!-- <button id="resetFinanForm" class="layui-btn layui-btn-primary">重置</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190215"></script>
+<script>
+    $(function(){
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index','form','dtree'], function(){
+            var $ = layui.$
+            ,admin = layui.admin
+            ,element = layui.element
+		    ,dtree = layui.dtree		
+            ,form = layui.form
+            ,router = layui.router();
+            element.render();
+
+
+            //获取当前公司设置情况
+            var subCid='';//保存选中公司id
+            var groupgetareaFun=function(cid){
+                 $.fetch({
+                    url:'/gateway/financial/groupgetarea',
+                    type: 'post',
+                    data:{
+                        CompanyID:cid,
+                    },
+                    cb:function(rs){
+                      //  console.log(rs)
+                        if(rs==null){
+                            form.val("formTest", {
+                                "Enabled": '0'
+                            });
+                            $("#currencyR input").prop("checked",false)
+                        }else{
+                            if(rs.enabled==0){
+                                form.val("formTest", {
+                                    "currency":''+rs.local_currency_unit_id+'',
+                                    "Enabled": '0'
+                                })
+                            }else if(rs.enabled==1){
+                                form.val("formTest", {
+                                    "currency":''+rs.local_currency_unit_id+'',
+                                    "Enabled":'1',
+                                })
+                            }
+                        }
+                        form.render();
+                    }
+                })
+            }
+            //左侧公司菜单
+            $.fetch({
+                url:'/gateway/financial/currency',
+                type: 'post',
+                cb:function(rs){
+                    var a=''
+                    if(rs.length>0){
+                        for(var i=0;i<rs.length;i++){
+                            a+='<input type="radio" name="currency" value="'+rs[i].id+'" title="'+rs[i].zh_name+'('+rs[i].short_code+')'+'">'
+                        }
+                    }
+                    $("#currencyR").html(a);
+                    form.render();
+                    var dpDtree=dtree.render({
+                        elem: "#ManagDuti",
+                        url:urls+"/gateway/group/tree",
+                        response : {
+                            statusName:'status_code',
+                            statusCode: 200,
+                            message: "message",
+                            rootName: "data",
+                            parentId: "parent_id",
+                            childName: "children",
+                            nodeId: "id", 
+                            treeId: "id",//节点ID
+                            title: "name", 
+                            basicData:"data"
+                        },
+                        firstIconArray: {
+                            "0": {
+                                "open": "icon-set-sm1",
+                                "close": "icon-favor"
+                            }
+                        }, //用户自定义一级图标集合，node
+                        nodeIconArray: {
+                            "0": {
+                                "open": "icon-shuye1",
+                                "close": "icon-wenjianjiazhankai"
+                            }
+                        }, //用户自定义二级级图标集合，node
+                        dataStyle:"layuiStyle",
+                        // heightLight:[],//传入高亮
+                        done:function(obj){
+                            $("#ManagDuti").find('li[data-index="1"]>div.nav-tree-div').attr('d-click','');
+                            $("#ManagDuti>li>ul li:first-child>div.nav-tree-div").attr('d-click','itemNodeClick').addClass('nav-this dtree-theme-item-this');
+                            var cid= $("#ManagDuti>li>ul li:first-child>div.nav-tree-div").attr('data-id');
+                            groupgetareaFun(cid);
+                            subCid=cid;
+
+                        }
+                    });
+                }
+            });
+            dtree.on("node('ManagDuti')" ,function(obj){
+                groupgetareaFun(obj.node_id);
+                subCid=obj.node_id
+            })
+            // 提交
+            $("#subFinanForm").on("click",function(){
+                // var id = $("#RadioSelect input[name='role']:checked").val();
+                var Enabled = $(".layui-input-block input[name='Enabled']:checked").val();
+                var LocalCurrencyUnitId=$(".layui-input-block input[name='currency']:checked").val();
+                if(LocalCurrencyUnitId==''||LocalCurrencyUnitId==undefined){
+                    layer.msg("请选择区域！")
+                    return false
+                }
+                    $.fetch({
+                        url:'/gateway/financial/groupsetarea',
+                        type: 'post',
+                        data:{
+                            CompanyID:subCid,
+                            Enabled:Enabled,
+                            LocalCurrencyUnitId:LocalCurrencyUnitId,
+                        },
+                        cb:function(rs){
+                            // console.log(rs)
+                            layer.msg("提交成功")
+                            // form.val("formTest", {
+                            //     "role": rs.area_name // "name": "value"
+                            //     ,"whether": rs.enabled
+                            // })
+                        }
+                    })
+            })
+        })
+    })
+</script>
+</html>

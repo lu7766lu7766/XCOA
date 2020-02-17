@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建财务</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="iconfont mr-5 icon-xinjianbianhui"></i>新建报销付款预支单</div>
+            <div class="layui-card-body">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="finaName" name="finaName" class="layui-input layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所在部门</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="finaDepa" name="finaDepa" class="layui-input layui-disabled" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="lzMon" name="lzMon" placeholder="yyyy-MM" lay-verify="data" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">流程类型</label>
+                            <div class="layui-inline">
+                                <select id="finaStepType" name="finaStepType" lay-filter="finaStepType"  class="layui-input-inline"></select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-inline">
+                                <select id="finaType"  lay-filter="finaType" name="finaType" class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                    <!-- </div>
+                    <div class="layui-form-item"> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">子类型</label>
+                            <div class="layui-inline">
+                                <select lay-verify="required" id="payType" name="payType" lay-filter="payType"  class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                        <!-- </div>
+                        <div class="layui-form-item"> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">货币单位</label>
+                            <div class="layui-inline">
+                            <select id="currencyUnitrd" name="currencyUnitrd" lay-filter="currencyUnitrd" class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">费用部门</label>
+                            <div class="layui-inline">
+                            <select id="FinanDeptId" lay-verify="required" name="FinanDeptId" lay-filter="FinanDeptId" class="layui-input-inline"></select> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: flex;
+align-items: center; justify-content: flex-start;">
+                        <label class="layui-form-label" style="flex: 0 0 80px; float: none;">支付明细</label>
+                        <div class="layui-input-block"  id="payDetailsForm">
+                            <!-- <table  class="layui-table">
+                                <tbody>
+                                    <tr><td>姓名</td><td><input type="text"></td></tr>
+                                    <tr><td>阿萨斯</td><td><input type="text"></td></tr>
+                                </tbody>
+                            </table> -->
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">费用明细</label>
+                        <div class="layui-input-block">
+                            <table class="layui-table" id="FinancialFeeList">
+                                <colgroup>
+                                    <col>
+                                    <col width="350">
+                                    <col width="150">
+                                    <col width="150">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <!-- <th>费用类型</th> -->
+                                        <th>费用摘要</th>
+                                        <th>金额 <span id="currencyUnit"></span></th>
+                                        <th>本地货币 <span id="localUnit"></span></th>
+                                        <th>单据数量</th>
+                                        <th>
+                                            <button id="addFeeDetail" class="layui-btn layui-btn-xs ml-5">新增</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="FeeDetail">
+                                        <!-- <td>
+                                            <select lay-verify="required" class="payType" name="" lay-filter="payType"></select>
+                                        </td> -->
+                                        <td>
+                                            <textarea lay-verify="required" class="layui-textarea textarea-modify Remark" ></textarea>
+                                        </td>
+                                        <td>
+                                            <input lay-verify="required" type="tel" autocomplete="off" class="layui-input receiptCount"  value="">
+                                        </td>
+                                        <td><div class="localCurrency"></div></td>
+                                        <td>
+                                            <input lay-verify="required" type="tel"  autocomplete="off" class="layui-input amountNumber" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" >
+                                        </td>
+                                        <td>
+                                            <button class="layui-btn layui-btn-danger delFee layui-disabled" disabled>删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" id="fkxxForm" style="display: none;">
+                        <label class="layui-form-label">付款信息</label>
+                        <div class="layui-input-block">
+                            <table class="layui-table" id="">
+                                <tr>
+                                    <td>
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"><span class="red"> ＊</span> 银行</label>
+                                                <div class="layui-input-block">
+                                                    <input  type="text" class="layui-input" name="BankName"   value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">开户支行</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text"  name="Branch" class="layui-input" value="">
+                                                    </div>
+                                                </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"><span class="red"> ＊</span> 银行账号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text"  name="BankAccount" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"><span class="red"> ＊</span> 开户人</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text"  name="AccountName" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">省份</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Province" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">城市</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="City" class="layui-input" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                <tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">总金额</label>
+                            <div class="layui-input-block">
+                                <span id="symbolMoneyP"></span>
+                                <input id="totalPrice" name="totalPrice" readonly type="text" class="layui-input layui-input-change"  value="0">
+                                <span id="symbolMoneyN"></span> （大写：<span id="b_totalPrice">零元</span>
+                                <span id="symbolMoneyZname">元</span>）
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单据总数</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" id="totalAmount" name="totalAmount" class="layui-input" readonly value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                         <label class="layui-form-label">总金额<span id="ExchangeText"></span></label>
+                         <div class="layui-input-block">
+                            <input id="Exchange"  name="totalPrice2" readonly type="text" class="layui-input layui-input-change" value="0">
+                         </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">附件</label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn fl" id="finaAttach" style="text-align: center;">
+                                <i class="layui-icon">&#xe67c;</i>上传
+                            </button>
+                            <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                            <div id="finaFiles" class="UploadNames-box"></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline"  style="display:none;">
+                            <label class="layui-form-label">指定审核人</label>
+                            <div class="layui-input-block">
+                                <select id="finanApprList"  lay-filter='finanApprList' lay-verify="required" name="finanApprList">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">集团审批</label>
+                            <div class="layui-input-block">
+                                <input type="radio"  lay-filter='toIsGroup' name="toIsGroup" value="1" title="是">
+                                <input type="radio"  lay-filter='toIsGroup' name="toIsGroup" value="0" title="否" checked>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">固定费用</label>
+                            <div class="layui-input-block">
+                                <input type="radio"  lay-filter='IsFixedCosts' name="IsFixedCosts" value="0" title="不固定" checked>
+                                <input type="radio"  lay-filter='IsFixedCosts' name="IsFixedCosts" value="1" title="固定">
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field IsFixedCostsShow" style="display: none">
+                        <legend style="font-size: 14px">固定费用设置</legend>
+                        <div class="layui-field-box">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">开始月份</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="FixedCostStartMonth" name="FixedCostStartMonth" placeholder="" lay-verify="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">结束月份</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="FixedCostEndMonth" name="FixedCostEndMonth" placeholder="" lay-verify="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">生成日期</label>
+                                <div class="layui-form-mid" >每月/</div>
+                                <div class="layui-input-inline" style="width: 148px;" >
+                                    <select id="FixedCostJobDate"  lay-filter='FixedCostJobDate' lay-verify="" name="FixedCostJobDate">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset> -->
+                        
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button id="subFinanForm"  lay-submit class="layui-btn" lay-filter="subFinanForm">提交审批</button>
+                                <button id="resetFinanForm" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190215"></script>
+<script src="../../js/sub/financial.js?v=20191127"></script>
+<script>
+    
+
+
+</script> 
+</html>

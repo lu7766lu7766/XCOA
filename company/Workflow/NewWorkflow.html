@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新建任务</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <i class=""></i>
+                新建工作任务
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form"  lay-filter="add-task-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">任务名称</label>
+                        <div class="layui-input-block">
+                            <div class="layui-block">
+                                <input lay-verify="required" id="taskName" name="taskName" lay-filter="taskName" type="text" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                   <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属项目</label>
+                            <div class="layui-input-inline">
+                                <select id="taskProject"  lay-verify="required"  name="taskProject" lay-filter="taskProject" lay-search>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务类型</label>
+                            <div class="layui-input-inline">
+                                <select id="taskType"  lay-verify="required" name="taskType" lay-filter="taskType" lay-search>
+                                </select>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">优先级</label>
+                            <div class="layui-input-inline">
+                                <select id="workPri"  lay-verify="required" name="workPri">
+                                    <option value="1">低</option>
+                                    <option value="2">中</option>
+                                    <option value="3">高</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">指派给</label>
+                            <div class="layui-input-inline">
+                                <select id="workUser"  lay-verify="required" name="workUser" lay-filter="workUser"  lay-search>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 90px;">预计开始时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" lay-verify="required|dates"  class="layui-input" id="starWorkflow" name="starWorkflow">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">截止时间</label>
+                            <div class="layui-input-inline">
+                                <input lay-verify="required|dates"  type="text" class="layui-input" id="endWorkflow" name="endWorkflow">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">任务描述</label>
+                        <!-- <div>
+                            <textarea name="workFlowEit" id="workFlowEit"  style="display: none;"></textarea>
+                        </div> -->
+                        <div  class="layui-input-block" id="editor"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">附件</label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn" id="workFeild">
+                                <i class="layui-icon">&#xe67c;</i>上传附件
+                            </button>
+                            <div id="taskFiles" class="UploadNames-box"></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" id="subWorkForm">
+                        <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="subWorkForm-form">立即提交</button>
+                            <button  id="closeForm" class="layui-btn layui-btn-primary">返回</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script type="text/javascript" src="../../js/wangEdit.js?v=20181201"></script>
+<script>
+     window.onload = function(){
+            
+
+       
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'upload', 'layedit', 'laydate'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            upload = layui.upload,
+            form = layui.form;
+        var layedit = layui.layedit;
+        
+        var E = window.wangEditor
+        var editor = new E('#editor')
+            // 或者 var editor = new E( document.getElementById('editor') )
+        editor.customConfig.uploadImgShowBase64 = true ;
+        editor.customConfig.zIndex = 0;
+        editor.create()
+        form.render(null, 'component-form-group');
+        element.render('breadcrumb', 'breadcrumb');
+
+        laydate.render({
+            elem: '#starWorkflow',
+            type: 'datetime',
+        });
+        laydate.render({
+            elem: '#endWorkflow',
+            type: 'datetime',
+        });
+        form.verify({//验证格式 YYYY-MM-DD ss:mm:ss
+            dates: [
+                /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))([ \t\n\x0B\f\r])(([0-1]{1}[0-9]{1})|([2]{1}[0-4]{1}))([:])(([0-5]{1}[0-9]{1}|[6]{1}[0]{1}))([:])((([0-5]{1}[0-9]{1}|[6]{1}[0]{1})))*$/
+                ,'日期格式不正确'
+            ]
+        })
+        
+        var attachIdArr=[];
+        var uploadInst = upload.render({
+            elem: '#workFeild' //绑定元素
+                
+            ,url: urls+'/gateway/taskAttach/add' //上传接口
+            ,accept:"file"
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load('上传中'); //上传loading
+            }
+            ,done: function (res) {
+                //上传完毕回调
+                console.log(res);
+                layer.closeAll('loading'); //关闭loading
+                $("#taskFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                attachIdArr.push(res.data.attachId);
+
+            }
+            ,error: function () {
+                //请求异常回调
+            }
+        });
+        if(window.dataStati){
+            console.log(dataStati);
+            form.val("add-task-form", {
+                "taskName":dataStati.task_name // "name":dataStati. "value"
+                ,"taskProject":dataStati.task_project_id // "name":dataStati. "value"
+                ,"workPri":dataStati.task_priority_level // "name":dataStati. "value"
+                ,"starWorkflow":dataStati.estimate_starttime// "name":dataStati. "value"
+                ,"endWorkflow":dataStati.estimate_endtime // "name": "value"
+                // ,"workFlowEit":dataStati.task_desc
+            })
+            editor.txt.html(dataStati.task_desc); 
+            //添加附件
+            if(dataStati.task_attach!=null){
+                for(var i=0;i<dataStati.task_attach.length;i++){
+                    $("#taskFiles").append('<a><span class="currentName">'+dataStati.task_attach[i].original_name+'</span><i data-isEdit="ture" data-file="'+dataStati.task_attach[i].attach_id+'" class="del iconfont icon-guanbi"></i></a>')
+                    attachIdArr.push(dataStati.task_attach[i].attach_id);
+                }
+            }
+        }
+        $.fetch({
+            url:"/gateway/taskCategory/list",//任务分类
+            type: 'post',
+            data:{
+                pageSize:1000,
+            },
+            cb:function(rs){
+                var taskTypeHtml ='';
+                for(var i=0;i<rs.data_list.length;i++){
+                    taskTypeHtml+='<option value="'+rs.data_list[i].id+'">'+rs.data_list[i].name+'</option>'
+                }
+                $("#taskType").html(taskTypeHtml);
+                
+                if(window.dataStati){
+                    console.log(dataStati);
+                    form.val("add-task-form", {
+                        "taskType":dataStati.task_cate_id // "name":dataStati. "value"
+                    })
+                    $("#taskType").prop("disabled",true);
+                    $("#taskType").removeAttr("lay-search");
+                    //task_desc
+                }
+                form.render();
+            }
+        });
+        var projectUsers=function(jid){
+            $.fetch({
+                url:"/gateway/projectManage/users",//成员
+                type: 'post',
+                data:{
+                    projectId: jid,
+                },
+                cb:function(rs){
+                    var workUserHtml ='';
+                    if(rs.length==0){
+                        $("#workUser").prop("disabled",true);                     
+                        workUserHtml+='<option value="">暂无该项目成员</option>'                        
+                    }else{
+                        $("#workUser").prop("disabled",false);
+                        for(var i=0;i<rs.length;i++){
+                            workUserHtml+='<option value="'+rs[i].users_id+'">'+rs[i].name+' ('+rs[i].title_name+')</option>'
+                        }
+                    }
+                    $("#workUser").html(workUserHtml);
+                    form.render();
+                    if(window.dataStati){
+                        form.val("add-task-form", {
+                            "workUser":dataStati.assigned_to_uid// "name":dataStati. "value"
+                        })
+                        $("#workUser").prop("disabled",true);
+                        $("#workUser").removeAttr("lay-search");
+                        
+                    }
+                    form.render();
+                }
+            });
+        }
+        $.fetch({
+            url:"/gateway/projectManage/myList",//项目列表
+            type: 'post',
+            cb:function(rs){
+                var projectHtml ='';
+                for(var i=0;i<rs.length;i++){
+                    projectHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                }
+                $("#taskProject").html(projectHtml);
+                if(window.dataStati){
+                    form.val("add-task-form", {
+                        "taskProject":dataStati.task_project_id // "name":dataStati. "value"
+                    })
+                    $("#taskProject").prop("disabled",true);
+                    $("#taskProject").removeAttr("lay-search");
+                    
+                }
+                form.render();
+                projectUsers($("#taskProject").val());
+            }
+        });
+        form.on('select(taskProject)', function(data){
+            projectUsers(data.value);
+        });
+       
+        $("#taskFiles").on("click",'i.del',function(){//删除附件
+           
+            var delId =$(this).attr("data-file");
+            var elem = $(this).parent("a"); 
+            if($(this).attr("data-isEdit")=="ture"){
+               var sub= {
+                    taskId:window.dataStati.id,
+                    attachId:delId
+                }
+            }else{
+                var sub= {
+                    attachId:delId
+                }
+            }
+            $.fetch({
+                url: '/gateway/taskAttach/del',
+                type: 'post',
+                data:sub,
+                cb:function(rs){
+                    attachIdArr.splice($.inArray(delId,attachIdArr),1);
+                    elem.remove();
+                } 
+            });
+        })
+        
+        form.render();
+        // var workFlowEits = layedit.build("workFlowEit", {
+        //     tool: [
+        //         'strong' //加粗
+        //         , 'italic' //斜体
+        //         , 'underline' //下划线
+        //         , 'del' //删除线
+        //         , '|' //分割线
+        //         , 'left' //左对齐
+        //         , 'center' //居中对齐
+        //         , 'right' //右对齐
+        //         , 'link' //超链接
+        //         , 'unlink' //清除链接
+        //         // , 'face' //表情
+        //         // , 'image' //插入图片
+        //         // ,'help' //帮助
+        //     ]
+        // })
+        // $(function(){
+
+        // })
+       
+        //提交
+        form.on('submit(subWorkForm-form)', function(data){
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            var fildId=attachIdArr.toString();
+            var assignedToName=$("#workUser").find("option[value='"+data.field.workUser+"']").text();
+            // var workFlowEitVal=layedit.getContent(workFlowEits);
+            var workFlowEitVal=editor.txt.html();
+            var formData={
+                taskProjectId:data.field.taskProject,
+                taskCateId:data.field.taskType,
+                taskName:data.field.taskName,
+                taskDesc:workFlowEitVal,
+
+                assignedToName:assignedToName,
+                assignedToUid:data.field.workUser,
+
+                estimateStarttime:data.field.starWorkflow,
+                estimateEndtime:data.field.endWorkflow,
+                
+                attachIds:fildId,
+                priorityLevel:data.field.workPri,
+            }
+            if(window.dataStati){
+                var formData={
+                    taskId:dataStati.id,//
+                    // taskProjectId:data.field.taskProject,
+                    taskCateId:data.field.taskType,//
+                    taskName:data.field.taskName,//
+                    taskDesc:workFlowEitVal,//
+
+                    // assignedToName:assignedToName,
+                    // assignedToUid:data.field.workUser,
+
+                    estimateEndtime:data.field.endWorkflow,//
+                    estimateStarttime:data.field.starWorkflow,//
+                    
+                    attachIds:fildId,//
+                    priorityLevel:data.field.workPri,//
+                }
+                $.fetch({
+                    url:"/gateway/task/edit ",//任务分类
+                    type: 'post',
+                    data:formData,
+                    cb:function(rs){
+                        layer.msg('创建成功！',{time:800},function(){
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭   
+                        })
+                    }
+                });
+            }else{
+                $.fetch({
+                    url:"/gateway/task/add",//任务分类
+                    type: 'post',
+                    data:formData,
+                    cb:function(rs){
+                        layer.msg('创建成功！',{time:800},function(){
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭   
+                        })
+                    }
+                });
+            }
+            
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        $("#closeForm").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭   
+        })
+        function hasScrollbar() {
+            var hasScroll = document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
+            if(hasScroll){
+                $("#subWorkForm").addClass('layui-layout-admin')
+            }else{
+                $("#subWorkForm").removeClass('layui-layout-admin')
+            }
+        }
+        hasScrollbar();
+        $('html').resize(function(){
+            hasScrollbar();
+        })
+    }); }
+</script>
+
+</html>

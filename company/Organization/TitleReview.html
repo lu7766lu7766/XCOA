@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>岗位审核</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <link rel="stylesheet" type="text/css" href="../../css/wang.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">岗位职责审批 <span id="approval_c"></span></div>
+            <div class="layui-card-body layui-row layui-col-space10">
+
+                <div class="layui-col-sm4 layui-col-md3 layui-col-lg3">
+
+                    <div class="departMenu ManagDuti" id="toolbarDiv">
+                        <div id="main">
+                            <ul id="ManagDuti" class="dtree" data-id="0"></ul>
+                        </div>
+                    </div>
+                 
+                </div>
+                <!-- <div class="layui-col-sm8 layui-col-md9 layui-col-lg9">
+                    <div>点击右侧菜单查看对应岗位职责.</div>
+                </div> -->
+                <div class="layui-col-sm8 layui-col-md9 layui-col-lg9" id="seeDuit">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend ><span id="ManagTextName"></span>岗位职责</legend>
+                    </fieldset>
+                    <div id="dutiStaius"></div>
+                    <div id="DutiContent" style="min-height: 480px;">
+                            点击左侧查看
+                    </div>
+                    <!-- <div class="layui-form-item" id="DuitDaitBtn" style="display: none;">
+                        <div class="layui-input-block">
+                            <button id="backDuti" type="button" class="layui-btn layui-btn-primary">返回</button>
+                            <button id="editDuti" type="button" class="layui-btn layui-btn-primary">修改</button>
+                        </div>
+                    </div> -->
+    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .higLight.bgc_0{background: #fff4d6;}
+</style>
+<script type="text/html" id="allUserTbTool">
+
+   
+    {{#  if(d.approval_result==0) { }}
+        <div><a class="layui-btn layui-btn-xs" lay-event="diate">查看详情</a><a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="appr">审批</a></div>
+	{{#  }else { }}
+        <div><a class="layui-btn layui-btn-xs" lay-event="diate">查看详情</a></div>
+	{{#  } }} 
+
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        version: true,
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'table', 'laydate', 'form','dtree'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            table = layui.table,
+            laytpl = layui.laytpl,
+            laydate = layui.laydate,
+            form = layui.form,
+            dtree=layui.dtree,
+            element = layui.element,
+            router = layui.router();
+
+            var seeDuitFun =function(obj={},isMy){
+                $("#ManagTextName").text(obj.context+' · ');
+                $("#editDuitName").text(obj.context);
+                // console.log(obj)
+                var basicData = JSON.parse(obj.basicData);
+                $.fetch({
+                    url:"/gateway/jobDuty/detail",
+                    type: 'post',
+                    data:{
+                        titleId:obj.node_id,
+                    },
+                    cb:function(rs){
+                        if(rs&&rs!=''){
+                            if(rs.duty_content==''){
+                                $("#DutiContent").html('')
+                                $("#dutiStaius").html('<blockquote  class="layui-elem-quote leftgray">暂无岗位职责')
+                            }else{
+                                if(isMy==0){//当前用户审批
+                                    var s ='<blockquote class="layui-elem-quote leftyello"><p class="yellow">状态：待审核</p>'
+                                           +'<button id="appr" data-tid="'+rs.duty_id+'" data-apprId="'+rs.approval_id+'" type="button" class="layui-btn layui-btn-sm">审批</button></blockquote>'
+                                    
+                                }else{
+                                    var s ='<blockquote class="layui-elem-quote '+['leftorange','leftorange','leftgreen','leftred'][rs.approval_status]+'"> <p class="yellow"><label class="fl">状态：</label><span class="ml-5 '+['Colororange','Colororange','Colorgreen','Colorred'][rs.approval_status]+'">'+['公司待批','集团待批','已批准','未批准'][rs.approval_status] +'</span></p> <div class="layui-layer-punch"><label class="fl"> 审核历史：</label> <div class="fr-width">'
+                                            if(rs.approval.length>0){
+                                                for(var i =0;i<rs.approval.length;i++){
+                                                    var not = rs.approval[i].company_id==1?'【集团】':'【公司】';
+                                                    s+='<p>审核人：'+rs.approval[i].approval_name +' 【'+['审核中','未批准','已批准'][rs.approval[i].approval_result] +'】'+not+'</p>'
+                                                    if(rs.approval[i].approval_result!=0){
+                                                        s+=(rs.approval[i].content==null?'':'<p>审核意见：'+rs.approval[i].content+'</p>')
+                                                    }
+                                                }
+                                            }
+                                            
+                                            s+='</div></div></blockquote>'
+                                }
+                                $("#dutiStaius").html(s);
+                                $("#DutiContent").html('<div class="w-e-text" style=" overflow-y: auto;">'+rs.job_duty+'</div>');
+                            }
+                            // $("#DuitDaitBtn").show();
+                            // $("#editDuti").hide();
+                            
+                            // layedit.setContent(index,"暂无岗位职责,在此编辑.");
+                        
+                        }else{
+                            $("#DutiContent").html('')
+                            $("#dutiStaius").html('<blockquote  class="layui-elem-quote leftgray">暂无岗位职责')
+                        }
+                    }
+                });
+            }
+            dtree.render({
+                elem: "#ManagDuti",
+                url:urls+'/gateway/jobTitle/tree',
+                response : {
+                    statusName:'status_code',
+                    statusCode: 200,
+                    message: "message",
+                    rootName: "data",
+                    parentId: "parent_id",
+                    childName: "children",
+                    nodeId: "id", 
+                    treeId: "id",//节点ID
+                    title: "title_name", 
+                    basicData:"data"
+                },
+                firstIconArray: {
+                    "0": {
+                        "open": "icon-set-sm1",
+                        "close": "icon-favor"
+                    }
+                }, //用户自定义一级图标集合，node
+                nodeIconArray: {
+                    "0": {
+                        "open": "icon-shuye1",
+                        "close": "icon-wenjianjiazhankai"
+                    }
+                }, //用户自定义二级级图标集合，node
+                dataStyle:"layuiStyle",
+                // heightLight:[],//传入高亮
+                done:function(){
+                    $.fetch({
+                        url:"/gateway/jobDuty/treeApproval",
+                        type: 'post',
+                        cb:function(rs){
+                            console.log(rs);
+                            var num=''
+                            if(rs.length>0){
+                                num=0;
+                                for(var i=0;i<rs.length;i++){
+                                    if(rs[i].approval_result==0){
+                                        num+=1
+                                    }
+                                    $("#ManagDuti div[ data-id='"+rs[i].job_title_id+"']").addClass("higLight bgc_"+rs[i].approval_result+"").attr("data-result",""+rs[i].approval_result+"").append(rs[i].approval_result==0?'<span style="float:right;font-size:12px;padding:0 3px;"><b style="color:#FFB800;">待审核</b></span>':'');//0待审核 1未通过 2公司通过 
+                                }
+                                $("#approval_c").html('(您有 <span class="layui-badge layui-bg-orange">'+num+'</span> 待审核)');
+                            }else{
+                                $("#approval_c").html('<span class="layui-badge layui-bg-orange">暂无待审核岗位职责</span>');                                
+                            }
+
+                            // 点击节点触发回调
+                            dtree.on("node('ManagDuti')" ,function(obj){
+                                // console.log(JSON.stringify(param));
+                               var isMy=  $("#ManagDuti div[ data-id='"+obj.node_id+"']").attr("data-result");
+                                // $("#subDuti").attr("data-id",obj.node_id);
+                                seeDuitFun(obj,isMy);
+                            });
+
+                        }
+                    })
+                }
+            });
+            $("#seeDuit").on("click","#appr",function(){
+                var job_duty_id= $(this).attr("data-tid");
+                var approval_id= $(this).attr("data-apprId");
+                layer.open({
+                    title: '审批',
+                    type: 1,
+                    content:'<div class="layui-card">'
+                            +'<div class="reviewCont layui-card-body">'
+                            +    '<div class="layui-form" action="">'
+                            +        '<div class="layui-form-item">'
+                            +            '<label class="layui-form-label">审批意见：</label>'
+                            +            '<div class="layui-input-block">'
+                            +                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+                            +            '</div>'
+                            +        '</div>'
+                            +        '<div class="layui-form-item">'
+                            +            '<label class="layui-form-label">是否同意：</label>'
+                            +            '<div class="layui-input-block" id="approvPop">'
+                            +                '<input type="radio" name="approvalYn" id="approvalOk" value="2" title="同意">'
+                            +                '<input type="radio" name="approvalYn" id="approvalNo" value="1" title="不同意" checked>'
+                            +            '</div>'
+                            +        '</div>'
+                            +        '<div class="layui-form-item">'
+                            +            '<div class="layui-input-block">'
+                            +               ' <button id="appOk" class="layui-btn">确认</button>'
+                            +            '</div>'
+                            +        '</div>'
+                            +    '</div>'
+                            +'</div>'
+                        +'</div>' , 
+                    area: ['80%', '380px'],
+                    success: function (layero, index) {
+                        form.render();
+                        $("#appOk").on("click",function(){
+                            // URI: /gateway/jobDuty/approval    POST
+                            // 参数：jobDutyId：【必填】，approvalId：【必填】，
+                            // content：【必填】，result：【必填：1：不通过，2：通过】
+                            var isAgree = $("#approvPop").find(" input[name='approvalYn']:checked").val();
+                            var content = $("#appDacText").val();
+                            
+                             if(content){
+                                $.fetch({
+                                    url:'/gateway/jobDuty/approval',
+                                    type: 'post',
+                                    data:{
+                                        approvalId:approval_id,
+                                        jobDutyId:job_duty_id,
+                                        result:isAgree,
+                                        content:content,
+                                    },
+                                    cb:function(rs){
+                                        layer.msg("审批完成");
+                                        layer.close(index);
+                                        setTimeout(function(){
+                                            location.reload();
+                                        }, 800 )
+                                    }
+                                })
+                            }else{
+                                $("#appDacText").focus().addClass('layui-form-danger');
+                                layer.msg('意见不能为空');
+                                return false
+                            }
+                            
+                        });
+                    },
+                })
+            })
+            //监听Tab切换，以改变地址hash值
+            // element.on('tab(TitleReview)', function(data){
+            //     var index = data.index;
+            //     TitleReviewFun(index)
+            // });
+            
+            // var datameno = [];
+            // // 表格
+            // var listTab;
+            // var TitleReviewFun  = function(id){
+            //     listTab = table.render({
+            //         elem: '#TitleReviewTable',
+            //         url: urls+ '/gateway/jobDuty/approvalLists',
+            //         // data: datameno,
+            //         where:{
+            //             status:id,
+            //         },
+            //         page: true //开启分页
+            //         ,method: 'post'
+            //         ,contentType: 'application/json'
+            //         ,text: {
+            //             none: '暂无职责' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            //         },
+            //         cols: [
+            //             [{
+            //                 field: 'creator',
+            //                 title: '审核提交人'
+            //             }, {
+            //                 field: 'title_name',
+            //                 title: '岗位名称'
+            //             }, {
+            //                 field: 'created_at',
+            //                 title: '提交时间'
+            //             }, {
+            //                 fixed: 'right',
+            //                 title: '操作',
+            //                 toolbar:'#allUserTbTool'
+            //             }]
+            //         ]
+            //         ,request: {
+            //             pageName: 'currentIndex' //页码的参数名称，默认：page
+            //             ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            //         }
+            //         ,parseData: function(res){ //res 即为原始返回的数据
+            //             console.log(res);
+            //             return {
+            //                 "status_code":res.status_code, //解析接口状态
+            //                 "message": res.message, //解析提示文本
+            //                 "count": res.data.total_count, //解析数据长度
+            //                 "data": res.data.data_list, //解析数据列表
+            //                 "curr":res.data.page_index
+            //             };
+            //         }
+            //     });
+            //     table.on('tool(TitleReviewTable)', function (obj) {
+            //         var data = obj.data;
+            //         var apprContent='<div class="layui-card"><div class="layui-card-body">'+obj.data.job_duty+'</div></div>';
+            //         if (obj.event === 'diate') {
+            //             // var isResult =(data.approval_result==0);
+            //             layer.open({
+            //                 title: '查看详情',
+            //                 type: 1,
+            //                 content:apprContent , 
+            //                 area: ['80%', '380px'],
+            //             })
+            //         }else if (obj.event === 'appr') {
+            //             layer.open({
+            //                 title: '审批',
+            //                 type: 1,
+            //                 content:'<div class="layui-card">'
+            //                         +'<div class="reviewCont layui-card-body">'
+            //                         +    '<div class="layui-form" action="">'
+            //                         +        '<div class="layui-form-item">'
+            //                         +            '<label class="layui-form-label">审批意见：</label>'
+            //                         +            '<div class="layui-input-block">'
+            //                         +                '<textarea id="appDacText" name="suggestion" class="layui-textarea" cols="50" rows="4" ></textarea>'
+            //                         +            '</div>'
+            //                         +        '</div>'
+            //                         +        '<div class="layui-form-item">'
+            //                         +            '<label class="layui-form-label">是否同意：</label>'
+            //                         +            '<div class="layui-input-block" id="approvPop">'
+            //                         +                '<input type="radio" name="approvalYn" id="approvalOk" value="2" title="同意">'
+            //                         +                '<input type="radio" name="approvalYn" id="approvalNo" value="1" title="不同意" checked>'
+            //                         +            '</div>'
+            //                         +        '</div>'
+            //                         +        '<div class="layui-form-item">'
+            //                         +            '<div class="layui-input-block">'
+            //                         +               ' <button id="appOk" class="layui-btn">确认</button>'
+            //                         +            '</div>'
+            //                         +        '</div>'
+            //                         +    '</div>'
+            //                         +'</div>'
+            //                     +'</div>' , 
+            //                 area: ['80%', '380px'],
+            //                 success: function (layero, index) {
+            //                     form.render();
+            //                     $("#appOk").on("click",function(){
+            //                         // URI: /gateway/jobDuty/approval    POST
+            //                         // 参数：jobDutyId：【必填】，approvalId：【必填】，
+            //                         // content：【必填】，result：【必填：1：不通过，2：通过】
+            //                         var isAgree = $("#approvPop").find(" input[name='approvalYn']:checked").val();
+            //                         var content = $("#appDacText").val();
+            //                          if(content){
+            //                             $.fetch({
+            //                                 url:'/gateway/jobDuty/approval',
+            //                                 type: 'post',
+            //                                 data:{
+            //                                     approvalId:data.approval_id,
+            //                                     jobDutyId:data.job_duty_id,
+            //                                     result:isAgree,
+            //                                     content:content,
+            //                                 },
+            //                                 cb:function(rs){
+            //                                     layer.msg("审批完成");
+            //                                     listTab.reload();
+            //                                     layer.close(index);
+            //                                 }
+            //                             })
+            //                         }else{
+            //                             $("#appDacText").focus().addClass('layui-form-danger');
+            //                             layer.msg('意见不能为空');
+            //                             return false
+            //                         }
+                                    
+            //                     });
+            //                 },
+            //             })
+            //         }
+            //     })
+            // }
+           
+            // TitleReviewFun(0)
+    });
+</script>
+
+</html>

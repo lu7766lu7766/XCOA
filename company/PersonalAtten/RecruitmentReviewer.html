@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>招聘审核人员设定</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/modules/layer/default/layer.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/common.js?0.1" type="text/javascript"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="iconfont icon-paibanrenyuanshezhi"></i>设置招聘审批人员</div>
+            <div class="layui-card-body ">
+                <div class="layui-form" action="" lay-filter="component-form-group">
+                    <div class="layui-form-item">新增招聘审批人</div>
+                    <div class="layui-form-item">
+                        <div class="layui-overflow departTable" data-title="设置招聘审批人员">
+                            <ul class="layui-small-static" id="scheduliList" style="display:none;">
+                            </ul>
+                            <textarea name="" lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea  layui-input-inline"></textarea>
+                            <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                            <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <button id="scheduliUser" type="button" lay-submit class="layui-btn" lay-filter="form-scheduliUser">提交</button>
+                    </div>
+                </div>
+                <hr>
+                 <div class="layui-form" action="" lay-filter="component-form-Non">
+                    <div class="layui-form-item">非新增招聘审批人</div>
+                    <div class="layui-form-item">
+                        <div class="layui-overflow NondepartTable" data-title="设置招聘审批人员">
+                            <ul class="layui-small-static" id="NonscheduliList" style="display:none;">
+                            </ul>
+                            <textarea name="" lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea  layui-input-inline"></textarea>
+                            <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                            <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <button id="NonScheduliUser" type="button" lay-submit class="layui-btn" lay-filter="form-NonScheduliUser">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            router = layui.router(),
+            layer = layui.layer,
+            form = layui.form;
+        element.render();
+        $.fetch({
+            url: "/gateway/hire/approvalUsers",
+            type: 'post',
+            data:{
+                showAll:1,
+            },
+            cb: function (rs) {
+                var html = '',
+                    idstr = '',
+                    nameText = '',
+                    NonHtml = '',
+                    NonIdstr = '',
+                    NonNameText = '';
+                for (var i in rs) {
+                    if(rs[i].is_new_pos==1){
+                        html += '<li class="pick" data-user="' + rs[i].id + '">' + rs[i].name + '</li>';
+                        if (i > 0) {
+                            idstr += ",";
+                        }
+                        idstr += '' + rs[i].id + '';
+                        nameText += '' + rs[i].name + ';';
+                    }else if(rs[i].is_new_pos==0){
+                        NonHtml += '<li class="pick" data-user="' + rs[i].id + '">' + rs[i].name + '</li>';
+                        if (i > 0) {
+                            NonIdstr += ",";
+                        }
+                        NonIdstr += '' + rs[i].id + '';
+                        NonNameText += '' + rs[i].name + ';';
+                    }
+                }
+                $("ul#scheduliList").html(html);
+                $("ul#scheduliList").attr("data-val", idstr);
+                $('ul#scheduliList').siblings(".layui-textarea").html(nameText);
+                $("ul#NonscheduliList").html(NonHtml);
+                $("ul#NonscheduliList").attr("data-val", NonIdstr);
+                $('ul#NonscheduliList').siblings(".layui-textarea").html(NonNameText);
+                form.render();
+            }
+        })
+
+        $(".departTable").on("click", ".addDesc", function () {
+            selMemberFun($(this));
+        });
+        $(".departTable").on("click", ".emptyDesc", function () {
+            $(this).siblings("ul").html("");
+            $(this).siblings("ul").attr("data-val", "");
+            $(this).siblings(".layui-textarea").html("");
+        })
+
+        form.on('submit(form-scheduliUser)', function (data) {
+            var textStr = $("ul#scheduliList").attr("data-val");
+            $.fetch({
+                url: "/gateway/hire/setApprovalUsers",
+                type: 'post',
+                data: {
+                    userIds: textStr,
+                    IsNewPos:1
+                },
+                cb: function (rs) {
+                    layer.msg("编辑成功");
+                }
+            })
+        })
+        
+        // 非新增
+        $(".NondepartTable").on("click", ".addDesc", function () {
+            selMemberFun($(this));
+        });
+        $(".NondepartTable").on("click", ".emptyDesc", function () {
+            $(this).siblings("ul").html("");
+            $(this).siblings("ul").attr("data-val", "");
+            $(this).siblings(".layui-textarea").html("");
+        })
+        form.on('submit(form-NonScheduliUser)', function (data) {
+            var textStr = $("ul#NonscheduliList").attr("data-val");
+            $.fetch({
+                url: "/gateway/hire/setApprovalUsers",
+                type: 'post',
+                data: {
+                    userIds: textStr,
+                    IsNewPos:0
+                },
+                cb: function (rs) {
+                    layer.msg("编辑成功");
+                }
+            })
+        })
+    })
+</script>
+
+</html>

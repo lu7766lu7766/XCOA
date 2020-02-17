@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>公司架构</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/fonts/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/jquery.orgchart.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-card">
+                <div id="chart-container"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+        .orgchart{width: 90%;}
+        #deprUser{
+            height: 100%;
+        }
+        #deprUser .head{
+            background-color: rgba(217, 83, 79, 0.8);
+            text-align: center;
+            height: 24px;
+            line-height: 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 4px 4px 0 0;
+        }
+    </style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script src="../../layui/extend/jorgchart.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            form = layui.form,
+            element = layui.element,
+            router = layui.router();
+        $.fetch({
+            url: "/gateway/companystructure/curdptstruct",
+            type: 'post',
+            cb: function (rs) {
+                console.log(rs)
+                if(rs==null||rs.length==0){
+                    $('#chart-container').html('<div style="line-height:120px;padding-left:50px;">暂无架构图</div>');
+                }else{
+                    $('#chart-container').orgchart({
+                        'data': rs.structure_tree[0],
+                        'nodeContent': 'content',
+                        'nodeID': 'id',
+                        'pan':true,
+                        'zoom':true,
+                        "toggleSiblingsResp":true,
+                        // ,callback: function() {
+                        //     console.log(1111)
+                        // }
+                        'createNode': function($node, data) {
+                            var cartdata= data;                            
+                            var userIcon=$('<div class="title hide-event">部门成员('+cartdata.user_count+'人)</div>');
+                            $node.append(userIcon);
+                            // $node.append(secondMenuIcon);
+                                var cols='',isLast=true;
+                                if(data.children&&data.children.length>0){
+                                    cols=data.children.length;
+                                    isLast=false;
+                                }else{
+                                    isLast=true;
+                                }
+                                $.fetch({
+                                    url:'/gateway/companystructure/showtreeusers',
+                                    type: 'post',
+                                    data:{
+                                        TreeID:cartdata.id
+                                    },
+                                    cb:function(rs){
+                                        if(rs.length>0){
+                                            var html="";
+                                            for(var i=0;i<rs.length;i++){
+                                                if(i==0){
+                                                    html+='<tr class="lines">'
+                                                }
+                                                if((i+1)%2 ==1){
+                                                    html+='<td style="width:50%;text-align:right;" class="right"><span>'+rs[i].name+';</span></td>'
+                                                }else{
+                                                     html+='<td style="width:50%;text-align:left;" class="left"><span>'+rs[i].name+';</span></td></tr><tr class="lines">'
+                                                }
+                                                if(i==rs.length-1){
+                                                    if(rs.length%2==1){
+                                                        html+='<td class="left"><span></span></td>'
+                                                    }
+                                                    html+='</tr>'
+                                                }
+                                            }
+                                        }else{
+                                            var html='暂无用户'
+                                        }
+                                       
+                                        // $(userIcon).find('.avatar').html(html);3
+                                         $(userIcon).parent('div').after('<div class="userList" style="'+(isLast?'display:block':'display:none')+'"><table style="width:100%;margin-left: -1px;margin-bottom: -1px;">'+html+'</table></div>')
+                                    }
+                                })
+                                $node.on('click','.hide-event', function(){
+                                    $(this).parent('div').siblings('div.userList').toggle('hidden');
+                                });
+                        }
+                    });
+
+                }
+            
+            }
+        });
+    });
+</script>
+
+</html>

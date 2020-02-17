@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>招聘申请</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                招聘申请列表
+                <div class="layui-inline ml-10 fr">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" id="addRecrui">添加招聘申请</a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="pz-10 layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-inline">
+                                <select id="RecruiSelect" lay-filter="RecruiSelect">
+                                    <option value="3">全部</option>
+                                    <option value="0">待审批</option>
+                                    <option value="1">未通过</option>
+                                    <option value="2">已通过</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="RecruiTable" lay-filter="RecruiTable"></table>
+               
+            </div>
+        </div>
+    </div>
+</body>
+<script id="RecruiCont" type="text/html">
+     <!-- 申请列表 -->
+    <div class="layui-card-body">
+        <div class="layui-form" lay-filter="component-form-depar">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline cateID bumen">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">申请人：</label>
+                    <div class="layui-input-inline cateID sqname">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">工作地点：</label>
+                    <div class="layui-input-inline">
+                        <input id="jobsIP" name="workPlace" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">职位：</label>
+                    <div class="layui-input-inline">
+                        <input id="IPname" name="workTitle" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">雇佣类型：</label>
+                    <div class="layui-input-inline">
+                        <select id="hireType" lay-filter="hireType" name="jobType">
+                            <option value="1">全职</option>
+                            <option value="2">兼职</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">需求人数：</label>
+                    <div class="layui-input-inline">
+                        <input lay-verify="required" type="tel" id=""  placeholder="请输入内容" name="hireSum"  autocomplete="off" class="layui-input" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">岗位：</label>
+                    <div class="layui-input-inline">
+                        <select name="titleId" lay-filter="titleId" id="titleId">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">新增岗位：</label>
+                    <div class="layui-input-inline">
+                        <select class="isNewTitle" disabled name="isNewTitle" lay-filter="isNewTitle">
+                            <option value="1" selected>是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">需求时间：</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="demandTime" placeholder="请输入开始和结束时间">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">招聘原因：</label>
+                <div class="layui-input-block">
+                    <textarea style="max-height: 300px;min-height: 200px" id="" placeholder="请输入内容" class="layui-textarea" name="hireReason"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">招聘要求：</label>
+                <div class="layui-input-block">
+                    <textarea style="max-height: 300px;min-height: 200px" id="" placeholder="请输入内容" class="layui-textarea" name="hireContent"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">附件：</label>
+                <button type="button" class="layui-btn" id="feedAttach" style="float:left">
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+                <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+              
+                <div id="feedFiles" class="UploadNames-box"></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">审批人：</label>
+                    <div class="layui-input-block">
+                        <select name="approvalUserId" lay-filter="approvalUserId" id="approvalUserId">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn layui-btn">提交</button>
+                    <button id="backFeek" class="layui-btn layui-btn-primary layui-btn">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'laydate', 'table', 'layer','form','upload'], function () {
+        var $ = layui.$,
+            admin = layui.admin
+        var laydate = layui.laydate,
+            form = layui.form,
+            upload = layui.upload
+            layer=layui.layer,
+            table = layui.table;
+
+        // 消息表格
+        var tableList = table.render({
+            elem: '#RecruiTable',
+            url: urls + '/gateway/hire/list', //数据接口
+            page: true, //开启分页
+            method: 'post',
+            where:{
+                status:3
+            },
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            contentType: 'application/json',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+            cols: [
+                [ //表头
+                    {
+                        field: 'hire_id',
+                        title: 'id',
+                        width:60,
+                    },{
+                        field: 'from_name',
+                        title: '申请人',
+                        width: 90
+                    }, {
+                        field: 'dept_name',
+                        title: '申请部门',
+                        minWidth:110,
+                        // templet: function (d) {
+                        //     return ['全部', '公司', '集团'][d.feedback_range]
+                        //     // return ['待处理','已查看','已回复','已关闭'][d.status-1];
+                        // }
+                    }, {
+                        field: 'created_at',
+                        title: '申请时间',
+                        minWidth:160,
+                    },{
+                        field: 'work_title',
+                        title: '招聘职位',
+                        minWidth:110,
+                    },{
+                        field: 'job_type',
+                        title: '职位类型',
+                        width:90,
+                        templet:function(d){
+                            return d.job_type==1?'全职':(d.job_type==2?'兼职':'')
+                        }
+                    },{
+                        field:'hire_sum',
+                        title: '招聘人数',
+                        width:90
+                    },{
+                        field: 'start_time',
+                        title: '招聘开始时间',
+                        minWidth:160,
+                    },{
+                        field: 'end_time',
+                        title: '招聘结束时间',
+                        minWidth:160,
+                    }, {
+                        field: 'approval_username',
+                        title: '审批人',
+                        width:90,
+                    },{
+                        field: 'approval_status',
+                        title: '审批状态',
+                        width:90,
+                        templet: function (d) {
+                           var htmlBtn = '<button class="'+["layui-btn layui-btn-primary layui-btn-xs","layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled","layui-btn layui-btn-warm layui-btn-xs "][d.approval_status]+'">'+['待审批','未通过','已通过'][d.approval_status]+'</button>'
+                        return htmlBtn
+                        }
+                    }, {
+                        field: '',
+                        fixed: 'right',
+                        unresize: true,
+                        title: '操作',
+                        minWidth:160,
+                        toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-sm" lay-event="Delete">删除</a></div>'
+                    }
+                ]
+            ],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                    ,
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr": res.data.page_index
+                };
+            },
+            done: function () {
+            }
+        });
+        
+        //状态选框
+        form.on('select(RecruiSelect)', function(data){
+            table.reload('RecruiTable', {
+                where: {
+                    status:data.value,
+                }
+                ,page:{
+                    curr:1,
+                }
+            })
+        });
+
+
+        // 申请招聘
+        $("#addRecrui").on('click',function(){
+            //提交 
+            var index= layer.open({
+                title:'招聘申请',
+                type: 1, 
+                content: $('#RecruiCont').html(),
+                area:['100%', '100%'],
+                success:function(layero,index){
+                    // 职务（岗位）
+                    $.fetch({
+                        url:'/gateway/jobTitle/tree',
+                        type: 'post',
+                        cb:function(rs){
+                            var selecTree = function(obj,elem,oid){//树结构下拉
+                                var selhtml="";
+                                var  ss='';
+                                var selecHtml=function(o,jj){
+                                    jj+="&nbsp;&nbsp;&nbsp;";
+                                    var nn =jj;
+                                    for(var i=0;i<o.length;i++){
+                                        if(oid==o[i].id){//不可以选自己
+                                            var m ='disabled="disabled"'
+                                        }else{
+                                            var m=''
+                                        }
+                                        if(o[i].children&&o[i].children.length>0){
+                                            selhtml+='<option '+m+' value="'+o[i].id+'" >'+jj+''+o[i].title_name+'</option>' 
+                                            selecHtml(o[i].children,jj);
+                                        }else{ 
+                                            selhtml+='<option '+m+' value="'+o[i].id+'" >'+nn+''+o[i].title_name+'</option>'
+                                        }
+                                    }
+                                    jj+="&nbsp;&nbsp;&nbsp;";
+                                            
+                                }
+                                if(obj&&obj.length>0){
+                                    selecHtml(obj,ss);
+                                }
+                                elem.html(selhtml);
+                            }
+                            selecTree(rs,$("#titleId"));
+                            form.render('select','component-form-depar'); 
+                        }
+                    })
+                    
+                    // 审核人
+                    $.fetch({
+                        url: "/gateway/hire/approvalUsers",
+                        type: 'post',
+                        data:{
+                            showAll:0
+                        },
+                        cb:function(rs){
+                            var opan ='',
+                                NonOpan = '';
+                            $(".isNewTitle").removeAttr("disabled");
+                            for(var i in rs){
+                                if(rs[i].is_new_pos==1){
+                                    opan+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                }else if(rs[i].is_new_pos==0){
+                                    NonOpan+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                }
+                            }
+                            $("#approvalUserId").html(opan);
+                            form.on('select(isNewTitle)', function(data){
+                                if(data.value==0){
+                                    $("#approvalUserId").html(NonOpan)
+                                }else if(data.value==1){
+                                    $("#approvalUserId").html(opan);
+                                }
+                                form.render('select','component-form-depar'); 
+                            })
+                            form.render('select','component-form-depar'); 
+                        }
+                    })  
+
+                    // 需求时间
+                    var tiemCont = laydate.render({ 
+                        elem: '#demandTime', //指定元素
+                        type: 'datetime',
+                        range: '~'
+                    });
+
+                    var attachIds=[];
+                    var uploadInst = upload.render({
+                        elem: '#feedAttach' //绑定元素
+                        ,url: urls+'/gateway/hireAttach/add' //上传接口
+                        ,accept:"file"
+                        ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                            layer.load('上传中'); //上传loading
+                        }
+                        ,done: function (res) {
+                            //上传完毕回调
+                            console.log(res);
+                            layer.closeAll('loading'); //关闭loading
+                            $("#feedFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                            attachIds.push(res.data.attachId);
+
+                        }
+                        ,error: function () {
+                            //请求异常回调
+                        }
+                    });
+                    $("#feedFiles").on("click",'i.del',function(){//删除附件
+                        console.log("1111")
+                        var delId =$(this).attr("data-file");
+                        var elem = $(this).parent("a");
+                        $.fetch({
+                            url: '/gateway/hireAttach/del',
+                            type: 'post',
+                            data:{
+                                // taskId:
+                                // hireId:,
+                                attachId:delId
+                            },
+                            cb:function(rs){
+                                attachIds.splice($.inArray(delId,attachIds),1);
+                                elem.remove();
+                            } 
+                        });
+                    })
+                    
+
+                    form.render();
+                    form.on('submit(subFeek)', function(data){
+                        // console.log($("#demandTime").val().split(" ~ "))
+                        var timetext = $("#demandTime").val().split(" ~ ");
+                        var startTime = timetext[0];
+                        var endTime = timetext[1];
+                        var attachIdsStr = attachIds.toString();
+
+                        var spr = $("#approvalUserId").val();
+                        if(spr==null){
+                            layer.msg("请先设置审核人！");
+                            return false
+                        }
+                        $.fetch({
+                            url:'/gateway/hire/add',
+                            type: 'post',
+                            data:{
+                               workPlace:data.field.workPlace,
+                               workTitle:data.field.workTitle,
+                               jobType:data.field.jobType,
+                               hireSum:data.field.hireSum,
+                               isNewTitle:data.field.isNewTitle,
+                               startTime:startTime,
+                               endTime:endTime,
+                               hireReason:data.field.hireReason,
+                               titleId:data.field.titleId,
+                               hireContent:data.field.hireContent,
+                               attachIds:attachIdsStr,
+                               approvalUserId:data.field.approvalUserId,
+                            },
+                            cb:function(rs){
+                                layer.msg("申请成功");
+                                layer.close(index);
+                                table.reload('RecruiTable')
+                            }
+                        })
+                    })
+                    //关闭
+                    $("#backFeek").on("click",function(){
+                        layer.close(index);                        
+                    })
+                     //window.userInfo
+                    //  console.log(window.userInfo.dapartName,window.userInfo.userName)
+                    $(".bumen span").html(window.userInfo.dapartName) 
+                    $(".sqname span").html(window.userInfo.userName) 
+                }
+            })
+        })
+
+        //列表详情
+        table.on('tool(RecruiTable)', function(obj){
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event
+            
+            console.log(data)
+            if(layEvent == 'diat'){
+                $.fetch({
+                    url:'/gateway/hire/detail',
+                    type: 'post',
+                    data:{
+                        hireId:data.hire_id
+                    },
+                    cb:function(rs){
+                        // layer.msg("申请成功");
+                        // layer.close(index);
+                        // // addChildren($node, [{
+                        //     location.reload()
+                        // // }])
+                        var shtml='';
+                        if(rs.attach&&rs.attach!=''){
+                            for(var i=0;i<rs.attach.length;i++){
+                                // /gateway/companyrule/download/'+rs.attach[i].id+'
+                                shtml+='<a class="seeXqOutIn cateID ml-10" href="'+urls+'/gateway/hireAttach/download?hireId='+rs.attach[i].hire_id+'&attachId='+rs.attach[i].id+'"><span>'+rs.attach[i].original_name+'</span></a>'
+                            }
+                        }else{
+                            shtml+='<span>暂无附件</span>'
+                        }
+                        var fj = ''
+                            if(rs.attach.length!=0){
+                                 fj = '<fieldset class="layui-elem-field">'
+                                    +'<legend>附件</legend>'
+                                    +'<div class="layui-field-box">'+shtml+'</div>'
+                                +'</fieldset>'
+                            }
+                         // 审批反馈意见
+                        var spfk = '';
+                        var res ='';
+                        var classList ='';
+                        if(rs.approval&&rs.approval!=''){
+                            console.log("1111",rs.approval)
+                            for (const i in rs.approval) {
+                                if(rs.approval[i].approval_result==1){
+                                    res ="不同意";
+                                    classList = "red";
+                                }else if(rs.approval[i].approval_result==2){
+                                    res ="同意";
+                                    classList = 'green';
+                                }else if(rs.approval[i].approval_result==0){
+                                    res ="待审批";
+                                    classList = 'gray';
+                                }
+                                
+                                var contEnt = rs.approval[i].content==null?'':rs.approval[i].content
+                                var updatedAt = rs.approval[i].updated_at==null?' ':rs.approval[i].updated_at
+                                spfk+='<p><span> 【 '+rs.approval[i].approval_name+' <em class='+classList+'>'+res+' '+updatedAt+'</em> 】</span>'+contEnt+'</p>'
+                            }
+                        }else{
+                            shtml+='<span>暂无反馈</span>'
+                        }
+
+                        var DataList = '<div class="layui-card-body">'
+                                +'<div class="layui-form" lay-filter="component-form-depar">'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">部门：</label>'
+                                        +'<div class="layui-input-inline cateID bumen">'
+                                                +'<span>'+rs.dept_name+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">申请人：</label>'
+                                        +'<div class="layui-input-inline cateID sqname">'
+                                                +'<span>'+rs.from_name+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">工作地点：</label>'
+                                        +'<div class="layui-input-inline cateID">'
+                                            +'<span>'+rs.work_place+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">职位：</label>'
+                                        +'<div class="layui-input-inline cateID">'
+                                                +'<span>'+rs.work_title+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">雇佣类型：</label>'
+                                        +'<div class="layui-input-inline cateID">'
+                                                +'<span>'+['','全职','兼职'][rs.job_type] +'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">需求人数：</label>'
+                                        +'<div class="layui-input-inline cateID">'
+                                                +'<span>'+rs.hire_sum+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">岗位：</label>'
+                                        +'<div class="layui-input-inline cateID">'
+                                                +'<span>'+rs.title_name+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">新增岗位：</label>'
+                                        +'<div class="layui-input-inline cateID">'
+                                                +'<span>'+['否','是'][rs.is_new_title]+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">需求时间：</label>'
+                                    +'<div class="layui-input-block cateID">'
+                                            +'<span>'+rs.start_time+'~'+rs.end_time+'</span>'
+                                    +'</div>'
+                                +'</div>'
+                                // +'<div class="layui-form-item">'
+                                //     +'<div class="layui-inline">'
+                                //             +'<label class="layui-form-label">审批人：</label>'
+                                //         +'<div class="layui-input-block">'
+                                //                 +'<span></span>'
+                                //         +'</div>'
+                                //     +'</div>'
+                                // +'</div>'
+                            +'</div>'
+                            +'<fieldset class="layui-elem-field">'
+                                +'<legend>招聘原因</legend>'
+                                +'<div class="layui-field-box ">'+rs.hire_reason+'</div>'
+                            +'</fieldset>'
+                            +'<fieldset class="layui-elem-field">'
+                                +'<legend>招聘要求</legend>'
+                                +'<div class="layui-field-box">'+rs.hire_content+'</div>'
+                            +'</fieldset>'
+                            +fj
+                            +'<fieldset class="layui-elem-field">'
+                                +'<legend>审批意见反馈</legend>'
+                                +'<div class="layui-field-box ">'+spfk+'</div>'
+                            +'</fieldset>'
+                        +'</div>'
+                        
+                        layer.open({
+                            title:'招聘详情信息',
+                            type: 1, 
+                            content:DataList,
+                            area:['100%', '100%'],
+                            success:function(index,layero){
+                                
+                            }
+                        })
+                    }
+                })
+            }else if(layEvent == 'Delete'){
+                layer.confirm('确定删除?',function(index){
+                    layer.close(index);
+                    $.fetch({
+                        url:"/gateway/hire/del",
+                        type: 'post',
+                        data:{
+                            hireId:data.hire_id,
+                            userId:data.from_uid
+                        },
+                        cb:function(rs){
+                            tableList.reload({});
+                        }
+                    });
+                })  
+            }
+        }) 
+        
+    })
+</script>
+
+</html>

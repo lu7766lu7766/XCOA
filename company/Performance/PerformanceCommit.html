@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>绩效提交</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">绩效提交</div>
+                <div class="layui-card-body">
+                    <div class=" layui-form"  lay-filter="performanceForm" id="performanceForm">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">填写日期</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="createrDateTime" placeholder="" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">填写人</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="creater" id="creater" placeholder="请输入标题" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-layui-label">添加附件</label>
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn layui-btn-primary" id="fileUpload"  style="float:left;">
+                                    <i class="layui-icon">&#xe67c;</i>上传附件
+                                </button>
+                                <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                                <div id="UploadNames" class="UploadNames-box UploadFl"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>审批流程</label>
+                           <div class="layui-input-inline">
+                                <select name="cateLevelOne" id="cateLevelOne" lay-filter="cateLevelOne"  lay-search></select>
+                            </div>
+                        </div>
+
+                        <!-- ·奖惩者资料 -->
+                        <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·奖惩者资料</blockquote>  
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>姓名</label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" name="recorderUid" type="text" id="recorderUid" lay-filter="recorderUid"  placeholder="选择奖惩用户" lay-verify="required" ts-selected="" readonly/>
+                            </div>
+                        </div>                      
+                        <!-- <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label"><span style="color:red">*</span>部门</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="recorderDeptId" id="recorderDeptId" placeholder="部门" autocomplete="off"  lay-verify="required" class="layui-input" readonly>
+                                </div>
+                            </div>    
+                            <div class="layui-inline">
+                                <label class="layui-form-label"><span style="color:red">*</span>岗位</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  lay-verify="required" name="recorderTitleId" id="recorderTitleId" placeholder="岗位" autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>                        
+                        </div> -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>发生日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" lay-verify="dateTime" name="recordDatetime" id="recordDatetime"  autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <!-- ·考核项目明细 -->
+                        <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·考核项目明细</blockquote>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="cateLevelTwo" lay-filter="cateLevelTwo" id="cateLevelTwo"  lay-search></select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">考核主题</label>
+                                <div class="layui-input-inline">
+                                    <select name="cateLevelThree" lay-filter="cateLevelThree" id="cateLevelThree"  disabled="disabled"><option>请选择评估项目</option></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>评估项目</label>
+                            <div class="layui-input-block">
+                                <select name="scoreId" lay-filter="scoreId" id="scoreId"  lay-search></select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">                        
+                            <div class="layui-inline">
+                                <label class="layui-form-label"><span style="color:red">*</span>分数</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="standardScore" id="standardScore" lay-filter="standardScore" placeholder="" autocomplete="off" class="layui-input" readonly>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn layui-btn-normal" id="editedScoreBtn">分数调整</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item editedScore" style="display: none;">
+                            <label class="layui-form-label"><span style="color:red">*</span>分数调整</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="editedScore" placeholder="" autocomplete="off" id="editedScore" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <button class="layui-btn layui-btn-normal"  id="chanelScoreBtn">取消调整</button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item editedScore" style="display: none;">
+                            <label class="layui-form-label"><span style="color:red">*</span>调整原因</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="请输入分数调整原因" class="layui-textarea" id="editedCause" name="editedCause"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>内容细节</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="请输入分内容细节" class="layui-textarea" id="recordDetail" name="recordDetail"  lay-verify="required"></textarea>
+                            </div>
+                        </div>
+                        <!-- ·错款赔偿明细 -->
+                        <blockquote class="layui-elem-quote" style="border-left:0;padding: 10px 15px;color:#1e9fff">·错款赔偿明细</blockquote>                        
+                         <div class="layui-form-item">
+                            <label class="layui-form-label">错款类型</label>
+                            <div class="layui-input-inline">
+                                <input type="radio" name="errMoneyType" value="1"  lay-filter="errMoneyType" title="出款"/>
+                                <input type="radio" name="errMoneyType" value="2"  lay-filter="errMoneyType" title="入款"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">提单金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="errMoneySubmit" placeholder="" autocomplete="off" class="layui-input amountNumber">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">错误金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="errMoneyTotal" placeholder="" autocomplete="off" class="layui-input amountNumber">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">赔偿金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="errMoneyCompensation" placeholder="" autocomplete="off" class="layui-input amountNumber">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-layout-admin">
+                            <div class="layui-input-block">
+                                <div class="layui-footer" style="left: 0;">
+                                    <button class="layui-btn" lay-submit lay-filter="performanceSub">立即提交</button>
+                                    <button type="reset" id="resetPage" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20181213" type="text/javascript"></script>
+<script type="text/javascript">
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+    ,version:true
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','laydate','laypage','upload','table','tableSelect'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    , table = layui.table
+    ,element = layui.element
+    ,form = layui.form
+    ,laydate=layui.laydate
+    ,upload=layui.upload
+    ,tableSelect=layui.tableSelect
+    ,router = layui.router();
+    element.render();
+    // var indexLoad=layer.load();//进入页面loading
+    //渲染默认表单
+    var getDate = function(a) {
+		var dd = new Date();
+		dd.setTime(dd.getTime() + (a == undefined || isNaN(parseInt(a)) ? 0 : parseInt(a)) * 86400000);
+		var y = dd.getFullYear();
+		var m = dd.getMonth() + 1;
+		var d = dd.getDate();
+		return y + "-" + (m < 10 ? ('0' + m) : m) + "-" + (d < 10 ? ('0' + d) : d);
+    }
+    var createrDateTime=getDate();
+    var ScoreData={};//动态储存分数
+    var ScoreEdit=false;//
+    var AttachsId=[];//保存附件ID    
+    form.val("performanceForm", {
+        "creater": window.userInfo.userName // "name": "value"
+        ,"createrDateTime": createrDateTime
+    })
+    $("#creater").attr("subVal",''+window.userInfo.userId+'');
+    var recorderArr=[];
+    //recordDatetime 发生日期
+    laydate.render({
+        elem: '#recordDatetime' //指定元素
+        ,type: 'datetime'
+        ,value:createrDateTime+' 00:00:00'
+    });
+    form.verify({//验证格式 YYYY-MM-DD ss:mm:ss
+        dateTime: [
+            /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))([ \t\n\x0B\f\r])(([0-1]{1}[0-9]{1})|([2]{1}[0-4]{1}))([:])(([0-5]{1}[0-9]{1}|[6]{1}[0]{1}))([:])((([0-5]{1}[0-9]{1}|[6]{1}[0]{1})))*$/
+            ,'日期格式不正确'
+        ]
+    })
+
+    //附件
+        var uploadInst = upload.render({
+            elem: '#fileUpload' //绑定元素
+            ,url: window.urls+'/gateway/performance/addAttach' //上传接口
+            ,accept:'file'
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                //上传完毕回调
+                layer.closeAll('loading'); //关闭loading
+                AttachsId.push(res.data.attachId);
+                $("#UploadNames").append('<a><span>'+res.data.attachName+'</span><i class="layui-icon layui-unselect layui-tab-close" data-id="'+res.data.attachId+'">ဆ</i></a>')    
+            }
+            ,error: function(){
+                layer.closeAll('loading'); //关闭loading
+            //请求异常回调
+            }
+        });
+        //删除附件
+        $('#UploadNames').on("click","i",function(){
+            var el =$(this);
+            var aid=el.attr('data-id');
+            $.fetch({
+                url:"/gateway/performance/delAttach",
+                type: 'post',
+                data:{
+                    attachId:aid,
+                },
+                cb:function(rs){
+                    el.parent("a").remove();
+                    AttachsId.splice($.inArray(aid,AttachsId),1);                    
+                }
+            });
+        })
+    
+    //评分标准 下拉框渲染 /gateway/performance/listScore cateId    
+    var listScoreFun =function(cateId,twoLevelCateId){
+        var datacateId = cateId==undefined?'':cateId;
+        var twoId = twoLevelCateId==undefined?'':twoLevelCateId;
+        if(cateId==undefined||twoId==undefined){
+            $("#scoreId").html('<option value="">暂无</option>');  
+            $("#standardScore").val('');                          
+            form.render()
+        }else{
+            $.fetch({
+                url:"/gateway/performance/listScore",
+                type: 'post',
+                data:{
+                    twoLevelCateId:twoId,
+                    cateId: datacateId,
+                    pageSize:10000000,
+                },
+                cb:function(rs){
+                    ScoreData={};
+                    var op=''
+                    // console.log(rs)
+                    var rs = rs.data_list
+                    if(rs&&rs.length>0){
+                        for(var i=0;i<rs.length;i++){
+                            op+='<option value="'+rs[i].id+'-'+rs[i].cate_id+'" >'+rs[i].title+'</option>'
+                            ScoreData[rs[i].id]=rs[i].score;
+                            // console.log(ScoreData)
+                        }
+                        $("#scoreId").html(op).val('');        
+                        // $("#standardScore").val(rs[0].score);
+                        // $("#cateLevelThree").val(rs[0].cate_id);
+                    }else{
+                        op='<option value="">暂无</option>'  
+                        $("#scoreId").html(op);        
+                            
+                         $("#standardScore").val('');
+                                      
+                    }
+                    form.render()
+                }
+            });
+        }
+    }
+    //流程 3级 下拉框渲染 /gateway/performance/listCate level parentId
+    var listCateFun =function(level,parentId,val){
+        var dataLevel = level===undefined?'':level;
+        var dataparentId = parentId===undefined?'':parentId;
+        $.fetch({
+            url:"/gateway/performance/listCate",
+            type: 'post',
+            data:{
+                level: dataLevel,
+                parentId: dataparentId,
+            },
+            cb:function(rs){
+                var op=''
+                if(rs&&rs.length>0){
+                    for(var i=0;i<rs.length;i++){
+                        op+='<option value="'+rs[i].id+'">'+rs[i].cate_name+'</option>'
+                    }
+                    if(level==1){
+                        $("#cateLevelOne").html(op).val('');
+                        // listCateFun(2,rs[0].id);
+                    }
+                    if(level==2){
+                        $("#cateLevelTwo").html(op).val('');
+                        // listCateFun(3,rs[0].id);  
+                        // listScoreFun('',rs[0].id);                                 
+
+                    }
+                    if(level==3){
+                        $("#cateLevelThree").html(op);
+                        if(val){
+                            $("#cateLevelThree").val(val);
+                        }
+                        // listScoreFun(rs[0].id);                                 
+                    }
+                }else{
+                    op='<option value="">暂无</option>'    
+                    if(level==1){
+                        $("#cateLevelOne").html(op).val('');
+                        $("#cateLevelTwo").html(op).val('');
+                        $("#cateLevelThree").html(op).val('');                      
+                        // listCateFun(2,rs[0].id);
+                    }
+                    if(level==2){
+                        $("#cateLevelTwo").html(op).val('');
+                        $("#cateLevelThree").html(op).val('');                     
+                        // listCateFun(3,rs[0].id);                    
+                    }
+                    if(level==3){
+                        $("#cateLevelThree").html(op);
+                        // listScoreFun(rs[0].id);                                 
+                    }              
+                }
+                // $("#cateLevelThree").val('')
+                form.render()
+            }
+        });
+    }
+    listCateFun(1,0);
+
+    //类型下拉动态操作
+    form.on('select(cateLevelOne)', function(data){//1级
+        listCateFun(2,data.value);
+    });   
+    form.on('select(cateLevelTwo)', function(data){//2级
+        listScoreFun('',data.value);
+    });    
+    form.on('select(cateLevelThree)', function(data){//3级
+        listScoreFun(data.value);
+    });  
+    form.on('select(scoreId)', function(data){//3级
+        var threeId=data.value.split('-')[1];
+        var ScoreDataId =data.value.split('-')[0];
+        var twoVal =$("#cateLevelTwo").val();
+        listCateFun(3,twoVal,threeId);
+        $("#standardScore").val(ScoreData[ScoreDataId]);  
+        $("#cateLevelThree").val(threeId);
+        form.render();
+    });  
+
+    //分数调整
+    $("#editedScoreBtn").on("click",function(){
+        $(".editedScore").show();
+        $(this).hide();
+        $("#editedScore").attr("lay-verify","required");
+        $("#editedCause").attr("lay-verify","required");
+        ScoreEdit=true
+    })
+    $("#chanelScoreBtn").on("click",function(){
+        $(".editedScore").hide();
+        $('#editedScoreBtn').show();
+        $("#editedScore").removeAttr("lay-verify");
+        $("#editedCause").removeAttr("lay-verify");
+        ScoreEdit=false;        
+    })
+    //用户列表
+    tableSelect.render({
+        elem: '#recorderUid',	//定义输入框input对象 必填
+        checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+        searchKey: 'userName',	//搜索输入框的name值 默认keyword
+        page:false,
+        
+        searchPlaceholder: '',	//搜索输入框的提示文字 默认关键词搜索
+        table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+            // limit:10000000
+            method:'post'
+            ,contentType: 'application/json'
+            ,page:'-100'
+            ,where:{
+                currentIndex:1,
+                pageSize:10000000,
+            }
+            ,loading:true
+            ,url:urls+'/gateway/user/list'
+            ,cols:  [[ //标题栏
+                {type:'checkbox'}
+                ,{field: 'id', title: '用户ID',width:80}
+                ,{field: 'name', title: '用户名'}
+                ,{field: 'department_name', title: '部门',sort: true }
+                ,{field: 'title_name', title: '岗位',sort: true }
+            ]]
+            ,request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "status_code":res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    // "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    // "curr":res.data.page_index
+                };
+            }
+            // ,done:function(){
+            //     $(".layui-table-page").hide();
+            // }
+        },
+        done:  function (elem, data) {
+            var NEWJSON = [];
+            recorderArr=[];
+            // console.log(elem, data)
+            layui.each(data.data, function (index, item) {
+                NEWJSON.push(item.name+'('+item.department_name+'-'+item.title_name+')');
+                recorderArr.push({
+                    recorderUid:item.id,
+                    recorderName:item.name,
+                    recorderDeptId:item.department_id,
+                    recorderTitleId:item.job_title_id,
+                })
+			})
+			elem.val(NEWJSON.join(","))
+            // elem.val(data.data[0].name);
+            // elem.attr('userId',''+data.data[0].id+'');
+            // $("#recorderDeptId").val(data.data[0].department_name);
+            // $("#recorderTitleId").val(data.data[0].title_name);
+            // $("#recorderDeptId").attr('subVal',''+data.data[0].department_id+'');
+            // $("#recorderTitleId").attr('subVal',''+data.data[0].job_title_id+'');
+
+        }
+    })
+    var upperCase = function(value){//用户只能输入正负数与小数
+        if(isNaN(value) && !/^-$/.test(value)){
+            return false
+        }else{
+            return true
+        }
+    }
+    form.on('submit(performanceSub)', function(data){
+        data.field['scoreTitle']=$("#scoreId").find("option:selected").text();
+        if(data.field.scoreId==''){
+            layer.msg('未设置评估项目无法提交');
+            return false
+        }else{
+            data.field.scoreId=data.field.scoreId.split('-')[0];
+        }
+        if(data.field.cateLevelOne==''){
+            layer.msg('未设置审批流程无法提交');
+            return false            
+        }
+        if(data.field.standardScore==''){
+            layer.msg('未设置默认加/扣分数无法提交');
+            return false            
+        }
+        data.field['attachIds']=AttachsId.join(",");//附件
+        // data.field['recorderName']=data.field.recorderUid;
+        data.field.recorderDeptId=$("#recorderDeptId").attr('subVal');
+        data.field.recorderTitleId=$("#recorderTitleId").attr('subVal');
+        data.field.creater=$("#creater").attr('subVal');
+        // data.field.recorderUid=$("#recorderUid").attr('ts-selected');
+        data.field.recorder=recorderArr
+        if(!ScoreEdit){//判断是否修改了分数
+            data.field.editedCause='';
+            data.field.editedScore=''
+        }else{
+            if(!upperCase(data.field.editedScore)){
+                layer.msg('请输入正确格式的分数,如"10"或"-10"');
+                $("#editedScore").addClass('layui-form-danger').focus();
+                return false
+            }else{
+                $("#editedScore").removeClass('layui-form-danger');
+            }
+        }
+        $.fetch({
+            url:"/gateway/performance/addRecord",
+            type: 'post',
+            data:data.field,
+            cb:function(rs){
+                layer.msg('提交成功')
+                setTimeout(function(){
+					location.reload();
+				}, 300 );
+            }
+        });
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+    //刷新页面
+    $("#resetPage").on("click",function(){
+		location.reload();        
+    })
+
+    //金额输入校验
+    var NumberCheckten =function(num) {
+		var str = num;
+		var len1 = str.substr(0, 1);
+		var len2 = str.substr(1, 1);
+		//如果第一位是0，第二位不是点，就用数字把点替换掉
+		if (str.length > 1 && len1 == 0 && len2 != ".") {
+		str = str.substr(1, 1);
+		}
+		//第一位不能是.
+		if (len1 == ".") {
+		str = "";
+		}
+		//限制只能输入一个小数点
+		if (str.indexOf(".") != -1) {
+		var str_ = str.substr(str.indexOf(".") + 1);
+		if (str_.indexOf(".") != -1) {
+			str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+		}
+		}
+		//正则替换，保留数字和小数点
+		str = str.replace(/[^\d^\.]+/g,'')
+		//如果需要保留小数点后两位，则用下面公式
+		var result = (str.toString()).indexOf(".");
+		if(result != -1) {
+			// alert("含有小数点");
+			
+			var num3=str.split('.')[1].slice(0,10);
+		} else {
+			// alert("不含小数点");
+		}
+		// console.log(num3,(num3==''||num3==undefined)?'':'.'+num3,111)
+		
+		str = str.replace(/\.\d\d\d\d\d\d\d\d\d\d\d$/,(num3==''||num3==undefined)?'':'.'+num3)
+		// str = str.replace(/\.\d\d\d\d$/,'')
+		// console.log(str)
+		
+		return str;
+    }
+    $("#performanceForm").on('keyup','.amountNumber',function () {
+            $(this).val(NumberCheckten($(this).val()));
+        }).on("paste",'.amountNumber',function (e) {  //CTR+V事件处理
+            // $(this).val($(this).val());
+            var pastedText = undefined;
+            if (window.clipboardData && window.clipboardData.getData) { // IE
+                pastedText = window.clipboardData.getData('Text');
+            } else {
+                pastedText = e.originalEvent.clipboardData.getData('Text');//e.clipboardData.getData('text/plain');
+            }
+            setTimeout(() => {
+                this.value=NumberCheck(pastedText.replace(/^\D*([1-9]\d*)?.*$/,'$1'));   
+                var sum = 0;
+                $(".amountNumber").each(function(){
+                    var num = $(this).val();
+                    if (num == "" || num == null) {
+                        num = 0;
+                    }
+                    // sum += parseFloat(num);
+                    sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                    
+                })
+                $("#totalAmount").val(NumberAmount(''+sum));
+            }, 0);
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+})
+</script>
+</html>

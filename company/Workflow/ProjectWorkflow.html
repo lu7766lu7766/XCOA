@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新建项目</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <i class=""></i>
+                新建项目
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs2"></div>
+                    <div class="layui-col-xs8">
+                        <div class="layui-form"  lay-filter="project-form">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">项目名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="projectName" lay-verify="required">
+                                </div>
+                            </div>
+                            <!-- <div class="layui-form-item">
+                                <label class="layui-form-label">起始日期</label>
+                                <div class="layui-input-block">
+                                    <input  type="text" class="layui-input" name="porjectTime" id="porjectTime">
+                                </div>
+                            </div> -->
+                            <div class="layui-form-item">
+                                    <label class="layui-form-label modify-layui-label">描述：</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-textarea" id="projectDesc" name="projectDesc" placeholder="请输入内容"></textarea>
+                                    </div>
+                                </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">访问控制</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" lay-filter="isPrivate" name="isPrivate" value="0 " title="默认设置(全部公司成员可以访问)"
+                                        checked>
+                                    <input type="radio" lay-filter="isPrivate" name="isPrivate" value="1" title="私有项目(只有项目团队成员才能访问)">
+                                </div>
+                            </div>
+                            <!-- 私有化显示出现 -->
+                            <div class="layui-form-item PrivateShow layui-form-text" style="display: none;">
+                                    <label class="layui-form-label label-six modify-layui-label">按部门发布：
+                                    </label>
+                                    <div id="projectDepar" class="layui-input-block departTable" data-title="按部门发布">
+                                        <div style="overflow-y:visible;min-height: 38px;word-break: break-all; "  placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                                        <ul  style="display: none" class="layui-small-static SmallStatic"></ul>
+                                        <a class="addDesc">
+                                            <i class="iconfont icon-40"></i>
+                                            添加
+                                        </a>
+                                        <a class="emptyDesc">
+                                            <i class="iconfont icon-qingkong"></i>
+                                            清空
+                                        </a>
+                                        
+                                    </div>
+                                </div>
+                                <div class="layui-form-item PrivateShow" style="display: none;">
+                                    <label class="layui-form-label label-six modify-layui-label">按人员发布：</label>
+                                    <div  id="projectToUser" class="layui-input-block departTable" data-title="按人员发布">
+                                        <div style="overflow-y:visible;min-height: 38px;word-break: break-all;" placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                                        <ul  style="display: none" class="layui-small-static SmallStatic"></ul>
+                                        <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                                        <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item PrivateShow" style="display: none;">
+                                    <label class="layui-form-label label-six modify-layui-label">按角色发布：</label>
+                                    <div id="projectToRole" class="layui-input-block departTable" data-title="按角色发布">
+                                        <div style="overflow-y:visible;min-height: 38px;word-break: break-all;"  placeholder="点击添加进行编辑"  readonly="readonly" class="layui-textarea"></div>
+                                        <ul  style="display: none" class="layui-small-static SmallStatic"></ul>
+                                        <a class="addDesc">
+                                            <i class="iconfont icon-40"></i>
+                                            添加
+                                        </a>
+                                        <a class="emptyDesc">
+                                            <i class="iconfont icon-qingkong"></i>
+                                            清空
+                                        </a>
+                                        <p class="cmsBtn">
+                                            <span class="">注：发布范围取部门、人员和角色的并集</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit id="subPorject" lay-filter="form-subPorject">保存</button>
+                                    <button class="layui-btn layui-btn-primary" id="backTable">返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'form', 'upload', 'layedit', 'laydate'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            upload = layui.upload,
+            form = layui.form;
+        var layedit = layui.layedit;
+        // laydate.render({
+        //     elem: '#porjectTime',
+        //     range: '~',
+        //     type : "datetime"
+        // });
+        form.render();
+      
+        // form.render(null, 'component-form-group');
+        // element.render('breadcrumb', 'breadcrumb');
+        console.log(daiData);
+        $("#projectToUser .addDesc").on("click",function(){
+            selMemberFun($(this));
+        });
+        $("#projectToUser .emptyDesc").on("click",function(){//添加联系人
+            $(this).siblings("ul.SmallStatic").html("");
+            $(this).siblings("ul.SmallStatic").attr("data-val","");
+            $(this).siblings(".layui-textarea").html("");
+        });
+        $("#projectDepar .addDesc").on("click",function(){
+            selDeparFun($(this));
+        });
+        $("#projectDepar .emptyDesc").on("click",function(){//添加联系人
+            $(this).siblings("ul.SmallStatic").html("");
+            $(this).siblings("ul.SmallStatic").attr("data-val","");
+            $(this).siblings(".layui-textarea").html("");
+        });
+        $("#projectToRole .addDesc").on("click",function(){
+            selRoleFun($(this));
+        });
+        $("#projectToRole .emptyDesc").on("click",function(){//添加联系人
+            $(this).siblings("ul.SmallStatic").html("");
+            $(this).siblings("ul.SmallStatic").attr("data-val","");
+            $(this).siblings(".layui-textarea").html("");
+        });
+        form.on('radio(isPrivate)', function(data){
+            console.log(data.elem); //得到radio原始DOM对象
+            console.log(data.value); //被点击的radio的value值
+            if(data.value ==1){
+                $(".PrivateShow").show();
+            }else{
+                $(".PrivateShow").hide();
+            }
+        });  
+        var subFun =function(obj={},msgT,url){
+            $.fetch({
+                url:url,
+                type: 'post',
+                data:obj,
+                cb:function(rs){
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭 
+                    parent.layer.msg(msgT);
+                }
+            });
+        }
+        if(daiData==null){//新建
+            form.on('submit(form-subPorject)', function(data){
+                console.log(data)
+                // var times = data.field.porjectTime.split(" ~ ");
+                console.log(1111,userIds,deptIds,roleIds)
+                if(data.field.isPrivate == 1){
+                    var userIds = $("#projectToUser ul.SmallStatic").attr("data-val");
+                    var userNames =$("#projectToUser .layui-textarea").text();
+
+                    var deptIds = $("#projectDepar ul.SmallStatic").attr("data-val");
+                    var deptNames =$("#projectDepar .layui-textarea").text();
+
+                    var roleIds = $("#projectToRole ul.SmallStatic").attr("data-val");
+                    var roleNames =$("#projectToRole .layui-textarea").text();
+                   
+                    if((userIds==undefined||userIds=='')&&(deptIds==undefined||deptIds=='')&&(roleIds==undefined||roleIds=='')){
+                        //项目团队
+                        layer.confirm('确定不添加项目团队继续提交？',{title:' '}, function(index){
+                            //向服务端发送删除指令
+                            subFun({
+                                    name: data.field.projectName,
+                                    isPrivate:data.field.isPrivate,
+                                    desc:data.field.projectDesc,
+                                    // starttime:times[0],
+                                    // endtime:times[1],
+                                    dept_names:deptNames,
+                                    dept_ids:deptIds,
+                                    user_names:userNames,
+                                    user_ids:userIds,
+                                    role_names:roleNames,
+                                    role_ids:roleIds,
+                                },'创建成功。',"/gateway/projectManage/add");
+                        });
+                    }else{
+                        subFun({
+                            name: data.field.projectName,
+                            isPrivate:data.field.isPrivate,
+                            desc:data.field.projectDesc,
+                            // starttime:times[0],
+                            // endtime:times[1],
+                            dept_names:deptNames,
+                            dept_ids:deptIds,
+                            user_names:userNames,
+                            user_ids:userIds,
+                            role_names:roleNames,
+                            role_ids:roleIds,
+                        },'创建成功。',"/gateway/projectManage/add");
+                    }
+                }else{
+                    subFun({
+                            name: data.field.projectName,
+                            isPrivate:data.field.isPrivate,
+                            desc:data.field.projectDesc,
+                            // starttime:times[0],
+                            // endtime:times[1],
+                    },'创建成功。',"/gateway/projectManage/add");
+                }
+              
+            })
+        }else{ //编辑
+            //0 title="默认设置(全部公司成员可以访问)"
+             // 1" title="私有项目(只有项目团队成员才能访问)">
+            console.log(daiData);
+            // var isPrivate =daiData.is_private=='0'?'默认设置(全部公司成员可以访问)':'私有项目(只有项目团队成员才能访问)';
+            // console.log(isPrivate)
+
+            $("input[name='isPrivate'][value='"+daiData.is_private+"']").prop("checked",true);
+            form.val("project-form", {
+                "projectName": daiData.name // "name": "value"
+                // ,"porjectTime": daiData.starttime+' ~ '+daiData.endtime
+                // ,"isPrivate":isPrivate
+                ,"projectDesc": daiData.desc
+            })
+            form.render();
+             if(daiData.is_private ==1){
+                $(".PrivateShow").show();
+            }else{
+                $(".PrivateShow").hide();
+            }
+            if(daiData.user_ids!=null){
+                $("#projectToUser ul").attr("data-val",daiData.user_ids);
+                $("#projectToUser .layui-textarea").html(daiData.user_names);
+                var userIdArr= daiData.user_ids.split(",");
+                var userNameArr= daiData.user_names.split(",");
+                var picHtml = '';
+                for(var i =0;i<userIdArr.length;i++){
+                    picHtml+='<li class="pick" data-user="'+userIdArr[i]+'">'+userNameArr[i]+'</li>'
+                }
+                $("#projectToUser ul").html(picHtml);
+            }
+
+            if(daiData.dept_ids!=null){
+                console.log(daiData.dept_names)
+                $("#projectDepar ul").attr("data-val",daiData.dept_ids);
+                $("#projectDepar .layui-textarea").html(daiData.dept_names);
+                $("#projectToUser").parent(".layui-form-item").show();
+                $("#projectToRole").parent(".layui-form-item").show();
+               
+                var deptIdArr= daiData.dept_ids.split(",");
+                var deptNameArr= daiData.dept_names.split(",");
+                var picHtml = '';
+                for(var i =0;i<deptIdArr.length;i++){
+                    picHtml+='<li class="pick" data-user="'+deptIdArr[i]+'">'+deptNameArr[i]+'</li>'
+                }
+                $("#projectDepar ul").html(picHtml);
+            }
+
+            if(daiData.role_ids!=null){
+                $("#projectToRole ul").attr("data-val",daiData.role_ids);
+                $("#projectToRole .layui-textarea").html(daiData.role_names);
+                $("#projectToUser").parent(".layui-form-item").show();
+                $("#projectToRole").parent(".layui-form-item").show();
+                var roleIdArr= daiData.role_ids.split(",");
+                var roleNameArr= daiData.role_names.split(",");
+                var picHtml = '';
+                for(var i =0;i<roleIdArr.length;i++){
+                    picHtml+='<li class="pick" data-user="'+roleIdArr[i]+'">'+roleNameArr[i]+'</li>'
+                }
+                $("#projectToRole ul").html(picHtml);
+            }
+
+            var projectId =daiData.id;
+            form.on('submit(form-subPorject)', function(data){
+                console.log(data)
+                // var times = data.field.porjectTime.split(" ~ ");
+                console.log(1111,userIds,deptIds,roleIds)
+                if(data.field.isPrivate == 1){
+                    var userIds = $("#projectToUser ul.SmallStatic").attr("data-val");
+                    var userNames =$("#projectToUser .layui-textarea").text();
+
+                    var deptIds = $("#projectDepar ul.SmallStatic").attr("data-val");
+                    var deptNames =$("#projectDepar .layui-textarea").text();
+
+                    var roleIds = $("#projectToRole ul.SmallStatic").attr("data-val");
+                    var roleNames =$("#projectToRole .layui-textarea").text();
+                   
+                    if((userIds==undefined||userIds=='')&&(deptIds==undefined||deptIds=='')&&(roleIds==undefined||roleIds=='')){
+                        //项目团队
+                        layer.confirm('确定不添加项目团队继续提交？',{title:' '}, function(index){
+                            //向服务端发送删除指令
+                            subFun({
+                                    projectId:projectId,
+                                    name: data.field.projectName,
+                                    isPrivate:data.field.isPrivate,
+                                    desc:data.field.projectDesc,
+                                    // starttime:times[0],
+                                    // endtime:times[1],
+                                    dept_names:deptNames,
+                                    dept_ids:deptIds,
+                                    user_names:userNames,
+                                    user_ids:userIds,
+                                    role_names:roleNames,
+                                    role_ids:roleIds,
+                                },'创建成功。',"/gateway/projectManage/update");
+                        });
+                    }else{
+                        subFun({
+                            projectId:projectId,
+                            name: data.field.projectName,
+                            isPrivate:data.field.isPrivate,
+                            desc:data.field.projectDesc,
+                            // starttime:times[0],
+                            // endtime:times[1],
+                            dept_names:deptNames,
+                            dept_ids:deptIds,
+                            user_names:userNames,
+                            user_ids:userIds,
+                            role_names:roleNames,
+                            role_ids:roleIds,
+                        },'创建成功。',"/gateway/projectManage/update");
+                    }
+                }else{
+                    subFun({
+                            projectId:projectId,
+                            name: data.field.projectName,
+                            isPrivate:data.field.isPrivate,
+                            desc:data.field.projectDesc,
+                            // starttime:times[0],
+                            // endtime:times[1],
+                    },'创建成功。',"/gateway/projectManage/update");
+                }
+              
+            })
+
+        }
+        $("#backTable").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭  
+        })
+        
+    });
+</script>
+
+</html>

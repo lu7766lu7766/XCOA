@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>消息中心</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    
+<style>
+    .layui-table-body {
+        overflow: hidden;
+    }
+</style>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                消息中心
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form" style="padding-bottom: 10px;">
+                    <div classs="layui-inline">
+                        <label class="layui-form-label modify-form-label">选择状态</label>
+                        <div class="layui-input-inline"> 
+                            <select name="" class="slct" lay-filter="MessageSelect" id="MessageSelect">
+                                <option value="1">未读</option>
+                                <option value="2">已读</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <table id="MessageAll" lay-filter="MessageAll"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="barDemo">
+    <a class="toTitle" lay-href={{'"'+d.message_url+'?id='+d.message_content_id+'"'}} data-id= {{'"' + d.message_id + '"'}} layadmin-event="messageToPage">{{d.message_content}}</a>
+</script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+    layui.config({
+		base: '../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','laydate','table','form'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,form = layui.form
+        var laydate = layui.laydate
+        ,table=layui.table;
+        
+
+        // 消息表格
+        var MessageTable = table.render({
+            elem: '#MessageAll'
+            ,url: urls + '/gateway/notifyMessage/list' //数据接口
+            ,page: true, //开启分页
+            method: 'post',
+            contentType: 'application/json',
+            where:{
+                status:1,
+            },
+            toolbar:'<div><button id="read" class="layui-btn layui-show" lay-event="read">标记为已读</button><button id="unread" class="layui-btn layui-hide" style="margin-left:0;" lay-event="unread">标记为未读</button></div>',
+            defaultToolbar:'',
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+            ,cols: [[ //表头
+                {checkbox: true},
+                {field: 'message_id', title: 'ID'}
+                ,{field: 'from_name', title: '发送人'}
+                ,{
+                    field: 'message_content',
+                    title: '信息内容',
+                    toolbar: '#barDemo'
+                }
+                ,{
+                    field: 'receive_status', 
+                    title: '状态',
+                    templet: function (d) {
+                        var yiwei='';
+                        if(d.receive_status == 2){
+                            yiwei += '<span>已读</span>'
+                        }else{
+                            yiwei += '<span>未读</span>'
+                        }
+                        return yiwei
+                    }
+                } 
+                ,{field: 'created_at', title: '接收时间'}
+            ]],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                    ,
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }, 
+            parseData: function (res) { //res 即为原始返回的数据
+                //console.log(res)
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr": res.data.page_index,
+                    "totalUnreadCount":res.data.total_unread_count
+                };
+            }, 
+            done: function (res) {
+               // console.log(res);
+                if(res.totalUnreadCount==0){
+                    $("#messageDo",parent.document).addClass('layui-hide');
+                }else if(res.totalUnreadCount>0){
+                    $("#messageDo",parent.document).html(res.totalUnreadCount);
+                    $("#messageDo",parent.document).removeClass('layui-hide');
+                }
+            }
+        });
+
+        form.render();
+        form.on('select(MessageSelect)', function (data) {
+            //
+            // //console.log($("#read"))
+            
+            MessageTable.reload({
+                where: {
+                    status: data.value,
+                },
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                done:function(res){
+                    if(data.value==1){
+                        $("#read").addClass('layui-show').removeClass('layui-hide');
+                        $("#unread").addClass('layui-hide').removeClass('layui-show');
+                    }else if(data.value==2){
+                        $("#unread").addClass('layui-show').removeClass('layui-hide');
+                        $("#read").addClass('layui-hide').removeClass('layui-show');
+                    }
+                   // console.log(res.count);
+                    if(res.totalUnreadCount==0){
+                        $("#messageDo",parent.document).addClass('layui-hide');
+                    }else if(res.totalUnreadCount>0){
+                        $("#messageDo",parent.document).html(res.totalUnreadCount);
+                        $("#messageDo",parent.document).removeClass('layui-hide');
+                    }
+                }
+            });
+        });
+
+        // var checkStatus = table.checkStatus('MessageAll'); 
+        // //console.log(window.layui.MessageTable,MessageTable,window)
+        table.on('tool(MessageAll)', function(obj){ 
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            
+            if(layEvent ==='MessageHref'){
+                $.fetch({
+                    url:"/gateway/notifyMessage/readed",
+                    type: 'post',
+                    data: {
+                        notifyMessageId:data.message_id
+                    },
+                    cb:function(rs){
+                        MessageTable.reload();
+                    }
+                })
+            }
+        })
+        //监听事件
+        table.on('toolbar(MessageAll)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            var checkStatus=checkStatus.data;
+            var subData=[];
+            for(var i=0;i<checkStatus.length;i++){
+                subData.push(checkStatus[i].message_id);
+            }
+            switch(obj.event){
+                case 'read':
+                if(subData.length>0){
+                    layer.confirm('确认将当前选中标记为已读?', function(index){
+                        var subStr=subData.join(',')
+                        $.fetch({
+                            url:"/gateway/notifyMessage/readed",
+                            type: 'post',
+                            data: {
+                                notifyMessageId:subStr
+                            },
+                            cb:function(rs){
+                                MessageTable.reload();
+                                layer.close(index);
+                            }
+                        })
+                    });   
+                }else{
+                    layer.msg('无选中项')
+                }
+                break;
+                case 'unread':
+                if(subData.length>0){
+                    layer.confirm('确认将当前选中标记为未读?', function(index){
+                        var subStr=subData.join(',')
+                        $.fetch({
+                            url:"/gateway/notifyMessage/unread",
+                            type: 'post',
+                            data: {
+                                notifyMessageId:subStr
+                            },
+                            cb:function(rs){
+                                MessageTable.reload();
+                                layer.close(index);
+                            }
+                        })
+                    });   
+                }else{
+                    layer.msg('无选中项')
+                }
+                break;
+            };
+        });
+
+    })
+</script>
+</html>

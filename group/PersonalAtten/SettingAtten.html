@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>考核设置</title>
+<link rel="stylesheet" type="text/css" href="../../css/Attendance.css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+<script src="../../js/sub/seta.js?v=20190226"></script>
+</head>
+	
+<body>
+	<!-- 新建排班 -->
+	<div class="NewUser col-md-11">
+		<!-- <div class="title">
+			<i class="iconfont icon-40"></i>
+			新建排班类型
+		</div> -->
+		<div class="title">
+			<i class="iconfont icon-Group"></i>
+			管理排班类型
+			<select id="workTimeSelec"></select>
+			<select id="workCompSelec"></select>
+			<div class="cont">
+				<button  onclick="openWorkForm($('#cloneNew'))">新建排班类型</button>
+			</div>
+		</div>
+		<div class="settingCont">
+			<table class="table table-bordered">
+				<tr>
+					<td>编号</td>
+					<td>ID</td>
+					<td>排班类型说明</td>
+					<td>第一次登记</td>
+					<td>第二次登记</td>
+					<td>第三次登记</td>
+					<td>第四次登记</td>
+					<td>年月</td>
+					<td>是否固定排班</td>
+					<td>操作</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>13</td>
+					<td>TW-CS晚班</td>
+					<td>00:00:00</td>
+					<td>03:00:00</td>
+					<td>06:00:00</td>
+					<td>09:00:00</td>
+					<td>2018-09</td>
+					<td>1</td>
+					<td>
+						<a href="">排班人员</a>
+						<a href="">编辑</a>
+						<a href="">删除</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- 点击排版人员 -->
+	<div class="popUps popUpsList">
+		<div class="title">
+			<span>获取排班名称</span>
+			<i class="iconfont icon-guanbi"></i>
+		</div>
+		<div class="ListTable">
+			<table class="table table-bordered">
+				<tr>
+					<td>名称</td>
+					<td>部门</td>
+				</tr>
+				<tr>
+					<td>john</td>
+					<td>美工前端</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- 删除 -->
+	<div class="popUps Delete">
+		<div class="title">
+			<span>删除确认</span>
+			<i class="iconfont icon-guanbi"></i>
+		</div>
+		<div class="DeleteCont">
+			<span>确认要删除吗，删除后不能恢复</span>
+			<p>
+				<button type="button" class="btn btn-default">确认</button>
+				<button type="button" class="btn btn-default">取消</button>
+			</p>
+		</div>
+	</div>
+	<!-- 编辑上下班时间 -->
+	<div id="cloneNew" class="tab-pane CloneNew  col-md-11 " style="display: none;">
+		<div class="title">
+			<i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+			编辑上下班时间
+		</div>
+		<div class="prompt">
+			<i class="iconfont icon-tishi"></i>
+			<span>
+				说明：上下班登记时间范围在00:00:00至23:59:59之间，请按时间顺序指定
+			</span>
+		</div>
+		<div class="SetingTable">
+			<table class="table table-bordered">
+				<tr>
+					<td>排班类型说明：</td>
+					<td> <input type="text" id="setName" class="form-control"></td>
+				</tr>
+				<tr>
+					<td>是否固定排班：</td>
+					<td><input type="checkbox" id="setRegChek"></td>
+				</tr>
+				<tr>
+					<td>年月：</td>
+					<td><input type="text" name="" value="2018-09"  placeholder="0000-00"></td>
+				</tr>
+				<tr>
+					<td>第1次登记：</td>
+					<td>
+						<input type="text" id="setTime1" class="form-control" placeholder="00:00:00">
+						<!-- <span>
+							<i class="iconfont icon-shijian"></i>
+							是否跨天
+						</span>
+						<input type="checkbox" class="Check"> -->
+					</td>
+				</tr>
+				<tr>
+					<td>第2次登记：</td>
+					<td>
+						<input type="text" id="setTime2" class="form-control" placeholder="00:00:00">
+						<!-- <span>
+							<i class="iconfont icon-shijian"></i>
+							是否跨天
+						</span>
+						<input type="checkbox" class="Check"> -->
+					</td>
+				</tr>
+				<tr>
+					<td>第3次登记：</td>
+					<td>
+						<input type="text" id="setTime3" class="form-control" placeholder="00:00:00">
+						<!-- <span>
+							<i class="iconfont icon-shijian"></i>
+							是否跨天
+						</span>
+						<input type="checkbox" class="Check"> -->
+					</td>
+				</tr>
+				<tr>
+					<td>第4次登记：</td>
+					<td>
+						<input type="text" id="setTime4" class="form-control" placeholder="00:00:00">
+						<!-- <span>
+							<i class="iconfont icon-shijian"></i>
+							是否跨天
+						</span>
+						<input type="checkbox" class="Check"> -->
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button type="button" id="subSetTimes">确定</button>
+						<button type="button" id="delSetVal" onclick="offWorkForm($('#cloneNew'))">取消</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- 蒙板 -->
+	<div class="MLL"></div>
+	<script>
+		function openWorkForm(el){
+			el.show();
+			$("div.NewUser").hide();
+		}
+		function offWorkForm(el){
+			el.hide();
+			$("div.NewUser").show();
+			el.find("input").val("");
+		}
+	</script>
+</body>
+
+</html>

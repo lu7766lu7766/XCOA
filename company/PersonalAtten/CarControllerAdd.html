@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>车辆使用申请</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                车辆申请
+            </div>
+            <div class="layui-card-body">
+                    <div class="layui-form" lay-filter="MeetingRoom">
+                            <div class="layui-form-item">  
+                                <label class="layui-form-label">使用类型</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" lay-filter="carApplType" name="carApplType" value="1" title="工作" checked>
+                                    <input type="radio" lay-filter="carApplType" name="carApplType" value="2" title="接机">
+                                    <input type="radio" lay-filter="carApplType" name="carApplType" value="3" title="送机">
+                                </div> 
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                   <label class="layui-form-label">申请人：</label>
+                                    <div class="layui-input-inline cateID CarApplyName">
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">                            
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">部门：</label>
+                                     <div class="layui-input-inline cateID depar">
+                                         <span></span>
+                                     </div>
+                                </div>
+                            </div>
+                             <div class="layui-form-item" id="carApplType">
+                                <label class="layui-form-label">是否拼车</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" lay-filter="Carpool" name="Carpool" value="1" title="是">
+                                    <input type="radio" lay-filter="Carpool" name="Carpool" value="" title="否" checked>
+                                </div>
+                            </div>
+                            <div class="layui-form-item chepai">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">车牌号：</label>
+                                    <div class="layui-input-inline">
+                                        <select name="carBrand" lay-filter="carBrand" id="carBrand"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item pinche">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">拼车车牌：</label>
+                                    <div class="layui-input-inline">
+                                        <select name="carCarpool" lay-filter="carCarpool" id="carCarpool"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">  
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">使用日期：</label>
+                                    <div class="layui-input-inline">
+                                        <input id="userCarDate" lay-filter="userCarDate" name="userCarDate"
+                                            lay-verify="required" placeholder="请选择日期" class="layui-input" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">  
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">使用时间：</label>
+                                    <div class="layui-input-inline">
+                                        <input id="userCarTime" lay-filter="userCarTime" name="userCarTime" lay-verify="required" placeholder="请选择时间" class="layui-input" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">人数：</label>
+                                    <div class="layui-input-inline">
+                                        <select id="peopleNum" lay-filter="peopleNum">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用途/详情：</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea" name="applyCause" lay-verify="required" placeholder="使用时间需比行程单抵达时间晚20分钟以上"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" id="jiejiForm" style="display: none">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">机场：</label>
+                                    <div class="layui-input-block">
+                                        <input id="airport" name="airport" placeholder="请输入机场" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">航班：</label>
+                                    <div class="layui-input-block">
+                                        <input id="flight" name="flight" placeholder="请输入航班" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">抵达时间：</label>
+                                    <div class="layui-input-block">
+                                        <input id="arrivalTime" lay-filter="arrivalTime" name="arrivalTime"  placeholder="请选择时间" class="layui-input" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">  
+                                <label class="layui-form-label"></label>
+                                <div class="layui-input-inline">
+                                    <input type="radio" name="trip" value="1" title="单程" checked>
+                                    <input type="radio" name="trip" value="2" title="回程">
+                                </div> 
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">出发地：</label>
+                                    <div class="layui-input-inline">
+                                        <input id="location" name="location" lay-verify="required" placeholder="请输入出发地点"
+                                            class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">目的地：</label>
+                                    <div class="layui-input-inline">
+                                        <input id="destination" name="destination" lay-verify="required"
+                                            placeholder="请输入目的地" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                 <label class="layui-form-label">附件：</label>
+                                 <div class="layui-input-block">
+                                     <button type="button" class="layui-btn" id="carAttach">
+                                         <i class="layui-icon">&#xe67c;</i>附件上传
+                                     </button>
+                                     <div id="finaFiles" class="UploadNames-box" style=" float: left;width: 100%;">
+                                     </div>
+                                 </div>
+                             </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">司机：</label>
+                                <div class="layui-input-inline">
+                                    <input id="carmenName" name="carmenName" lay-verify="required" placeholder="请输入司机名称"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <!-- <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">审批人：</label>
+                                    <div class="layui-input-block">
+                                        <select name="approvalUserId" lay-filter="approvalUserId" id="approvalUserId">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                           <div class="layui-form-item layui-layout-admin">
+                                <div class="layui-input-block">
+                                    <div class="layui-footer" style="left: 0;">
+                                        <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn layui-btn">提交</button>
+                                        <button id="backFeek" class="layui-btn layui-btn-primary layui-btn">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+    </div>
+</body>
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'laydate', 'table', 'form','upload'], function () {
+        var $ = layui.$,
+            admin = layui.admin
+        var laydate = layui.laydate,
+            form = layui.form,
+            upload = layui.upload,
+            table = layui.table;
+        
+        var d = new Date();
+        var year = d.getFullYear();
+        var month = d.getMonth()+1;
+        var GetDate =  d.getDate();
+        var month0 = month<10?'0'+month:month
+        var GetDate2 = GetDate<10?'0'+GetDate:GetDate
+
+        $(".CarApplyName span").html(window.userInfo.userName);
+        $(".depar span").html(window.userInfo.dapartName);
+                    // 当前申请人
+                    
+                    // 开始和结束时间
+        var availableListFun=function(time){
+            $.fetch({
+                url:'/gateway/car/availableList',
+                type:'post',
+                data:{
+                    time:time,
+                },
+                cb:function(rs){
+                    var Brand ='';
+                    if(rs&&rs.length>0){
+                        for(var i=0; i<rs.length; i++){
+                            Brand += '<option value="'+rs[i].id+'">'+rs[i].car_no+'</option>'
+                        }
+                    }else{
+                        Brand='<option value="-1">无可派遣车辆</option>'
+                        $("#carBrand").attr('disabled',true);
+                        // $("#subFeek").attr('disabled',true).addClass('disabled');
+                    
+                        form.render();
+                    }
+                    $("#carBrand").html(Brand);
+                    form.render()
+                }
+            })
+        }
+        laydate.render({
+            elem: '#userCarDate', //指定元素
+            type:'date',
+            value:year+'-'+month0+'-'+GetDate2,
+            done: function(value, date, endDate){
+                var listTime=value+' '+$("#userCarTime").val()+':00';
+                console.log(value+' '+$("#userCarTime").val())
+                if(value==''||$("#userCarTime").val()==''){
+                    layer.msg('请选择正确时间格式!');
+                }else{
+                    availableListFun(listTime);
+                }
+            }
+        });
+        laydate.render({
+            elem: '#userCarTime', //指定元素
+            type:'time'
+            ,format:'HH:mm'
+            ,done: function(value, date, endDate){
+                var listTime=$("#userCarDate").val()+' '+value+':00';
+                if(value==''||$("#userCarDate").val()==''){
+                    layer.msg('请选择正确时间格式!');
+                }else{
+                    availableListFun(listTime);
+                }
+            }
+        });
+        laydate.render({
+            elem: '#arrivalTime', //指定元素
+            type: 'datetime'
+        });
+        
+        availableListFun(year+'-'+month0+'-'+GetDate2+' '+$("#userCarTime").val()+':00');
+        // 添加共同申请人
+        $(".departTable").on("click", ".addDesc", function () {
+            selMemberFun($(this));
+        });
+        $(".departTable").on("click", ".emptyDesc", function () {
+            $(this).siblings("ul").html("");
+            $(this).siblings("ul").attr("data-val", "");
+            $(this).siblings(".layui-textarea").html("");
+        })
+            // 审批人
+            // $.fetch({
+            //     url:'/gateway/car/getApprovalUsers',
+            //     type: 'post',
+            //     data:{
+            //        showAll:0,
+            //     },
+            //     cb:function(rs){
+            //         $("#subFeek").attr('data-step',rs.step);
+            //         var opan =''
+            //         for(const i in rs){
+            //             opan+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+            //         }
+            //          $("#approvalUserId").html(opan);
+            //         form.render('select','component-form-depar'); 
+            //     }
+            // })
+                    // 获取车牌号
+            // var CarIdlist='';
+            
+            form.on('radio(carApplType)', function(data){
+                if(data.value==2||data.value==3){
+                    $("#jiejiForm").show();
+                }else{
+                    $("#jiejiForm").hide();
+                    
+                }
+            });
+
+            var financialObj={//保存财务相关数据的对象
+                finaFiles:[],//附件id数组
+            }
+            // 上传
+            var uploadInst = upload.render({//上传附件
+                elem: '#carAttach' //绑定元素
+                ,url: window.urls+"/gateway/carAttach/add" //上传接口
+                ,accept:'file'
+                ,data:{
+                    attachType:7
+                }
+                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                ,done: function(res){
+                    //上传完毕回调
+                    layer.closeAll('loading'); //关闭loading
+                    $("#finaFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                    financialObj.finaFiles.push(res.data.attachId);
+                }
+                ,error: function(){
+                    layer.closeAll('loading'); //关闭loading
+                    //请求异常回调
+                }
+            });
+            $("#finaFiles").on("click",'i.del',function(){//删除附件
+                var delId =$(this).attr("data-file");
+                var elem = $(this).parent("a");
+                //layer.load();
+                $.fetch({
+                    url: '/gateway/carAttach/del',
+                    type: 'post',
+                    data:{
+                        attachId:delId
+                    },
+                    cb:function(rs){
+                        financialObj.finaFiles.splice($.inArray(delId,financialObj.finaFiles),1);
+                        elem.remove();
+                    } 
+                });
+            })
+
+            $.fetch({
+                url:'/gateway/car/list',
+                type:'post',
+                data:{
+                    pageSize:1000,
+                    status:1
+                },
+                cb:function(rs){
+                    // var rs='';
+                    var Brand ='';
+                    if(rs&&rs.data_list.length>0){
+                        for(var i=0; i<rs.data_list.length; i++){
+                            Brand += '<option value="'+rs.data_list[i].id+'">'+rs.data_list[i].car_no+'</option>'
+                        }
+                    }else{
+                        Brand='<option value="-1">无可派遣车辆</option>'
+                        $("#carCarpool").attr('disabled',true);
+                        // $("#carmenName").attr('disabled',true);
+                        form.render();
+                    }
+                    $("#carCarpool").html(Brand);
+                    form.render()
+                }
+            });
+            
+            $(".pinche").hide();
+            form.on('radio(Carpool)', function(data){
+                // console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+                if(data.value!=1){
+                    $(".pinche").hide();
+                    $(".chepai").show();
+                }else{
+                    $(".pinche").show();
+                    $(".chepai").hide();
+                }
+            });
+
+            form.on('submit(subFeek)', function(data){
+              //  参数：applyCause：【必填】，carApplyType：【必填】，tripType：【必填】，carId：【必填】，driver：//【必填】，startDate：【必填】，startTime：【必填】，airport：【选填】，flight：【选填】，//arriveTime：【选填】，location：【选填】，destination：【选填】
+
+                // var approvalUid = $("#approvalUserId").val();
+                // var carUids = $("#scheduliList[data-val]")[0].dataset.val;
+                // var carNames = $(".departTable textarea").html();
+                
+                // console.log(data)
+                var startTime=data.field.userCarDate+' '+data.field.userCarTime+':00';
+                var peopleNum = $("#peopleNum").val();
+                var AttachIds = financialObj.finaFiles.join();
+                var isShared = $("#carApplType").find(" input[name='Carpool']:checked").val();
+                
+                if(isShared==1){
+                    var carId = $("#carCarpool").val();
+                }else{
+                    var carId = $("#carBrand").val();
+                }
+                if(carId==-1){
+                    layer.msg("暂无派遣车辆，请选择拼车！");
+                }
+                $.fetch({
+                    url:'/gateway/carApply/managerApply',
+                    type: 'post',
+                    data:{
+                        applyCause:data.field.applyCause,
+                        carApplyType:data.field.carApplType,
+                        tripType:data.field.trip,
+                        // carId:data.field.carBrand,
+                        driver:data.field.carmenName,
+                        startDate:data.field.userCarDate,
+                        startTime:startTime,
+                        airport:data.field.airport,
+                        flight:data.field.flight,
+                        arriveTime:data.field.arrivalTime,
+                        location:data.field.location,
+                        destination:data.field.destination,
+                        peopleNum:peopleNum,
+                        attachIds:AttachIds,
+                        isShared:isShared,
+                        carId:carId,
+                        // startDate:
+
+                    },
+                    cb:function(rs){ 
+                        layer.msg("添加完成");
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭  
+                    }
+                })
+            })
+            
+            form.render();
+        // 提交申请
+        $("#backFeek").on('click',function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭    
+
+        })
+        
+        // //状态选框
+        // form.on('select(RecruiSelect)', function(data){
+        //     table.reload('ResigTable', {
+        //         where: {
+        //             status:data.value,
+        //         }
+        //         ,page:{
+        //             curr:1,
+        //         }
+        //     })
+        // });   
+        
+    })
+</script>
+
+</html>

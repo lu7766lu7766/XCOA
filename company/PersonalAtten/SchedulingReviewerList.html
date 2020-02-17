@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>排班审核列表</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+<script src="../../js/sub/wktm.js?v=20190223"  type="text/javascript"></script>
+
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card workcont">
+            <div class="layui-card-header"><i class="iconfont icon-shenheren"></i>排班审批</div>
+            <div class="layui-card-body">
+                <div class="settingCont layui-card-body">
+                    <table id="workSetList" class="layui-table">
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>排班类型说明</td>
+                                <td>年-月</td>                                
+                                <td>第一次登记</td>
+                                <td>第二次登记</td>
+                                <td>第三次登记</td>
+                                <td>第四次登记</td>
+                                <td>是否跨天</td>
+                                <td>是否固定排班</td>
+                                <td>操作</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="workid">41</td>
+                                <td class="workname">tw-中班客服</td>
+                                <td class="time1">14:00:00</td>
+                                <td class="time2">18:00:00</td>
+                                <td class="time3">19:00:00</td>
+                                <td class="time4">23:00:00</td>
+                                <td class="cros" data-cros="0">否</td>
+                                <td class="fixeds" data-fixed="1">是</td>
+                                <td data-id="41">
+                                    <button class="layui-btn layui-btn-sm layui-btn-warm">审核</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- 编辑上下班时间 -->
+			<div id="cloneNew" class=" CloneNew  layui-card " style="display: none;">
+                    <div class="layui-card-header">
+                        <i class="iconfont icon-suyaniconchanpinleibufenzuodaohangbufen87"></i>
+                        编辑上下班时间
+                    </div>
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-xs2"></div>
+                        <div class="layui-col-xs8">
+                            <div class="SetingTable layui-card-body">
+                                <fieldset class="layui-elem-field">
+                                    <legend><i class="iconfont icon-tishi"></i>说明</legend>					
+                                    
+                                    <div class="layui-field-box">
+                                        上下班登记时间范围在00:00:00至23:59:59之间，请按时间顺序指定
+                                    </div>
+                                </fieldset>
+                                <form class="layui-form" lay-filter="component-form-newwork">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">排班类型说明：</label>
+                                        <div class="layui-input-inline">
+                                            <input lay-verify="name" name="newName"  type="text" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">是否固定排班：</label>
+                                        <div class="layui-input-block">
+                                            <input type="checkbox" name="switch" lay-skin="switch" value="1">
+                                        </div>
+                                    </div> -->
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">年-月：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="YearMonth" class="layui-input" id="test-laydate-type-workMonth" placeholder="yyyy-MM">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">第1次登记：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="setTime1" id="setTime1"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">第2次登记：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="setTime2" id="setTime2"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">第3次登记：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="setTime3" id="setTime3"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label modify-form-label">第4次登记：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="setTime4" id="setTime4"  value="00:00:00" class="form-control layui-input" placeholder="00:00:00">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn"  lay-submit lay-filter="form-newwork"  id="subSetTimes">确定</button>
+                                            <button class="layui-btn" type="reset" lay-submit  lay-filter="form-changwork" id="changSetTimes" style="display: none">确认修改</button>
+                                            <button class="layui-btn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                            <button class="layui-btn" type="reset" id="delSetVal" onclick="offWorkForm($('#cloneNew'))">取消</button>
+                                        </div>
+                                    </div>
+            
+                                </form>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs2"></div>
+                    </div>
+            </div>
+    </div>
+</body>
+<script>
+   function offWorkForm(el){
+			el.hide();
+			$("div.workcont").show();
+			el.find("input").val("");
+			$("#subSetTimes").hide();
+			$("#changSetTimes").hide();		
+			$("#changSetTimes").off("click");
+		}
+</script>
+
+<script src="../../layui/layui.js"></script>
+</html>

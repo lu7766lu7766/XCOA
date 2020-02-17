@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建财务</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="iconfont mr-5 icon-xinjianbianhui"></i>公司费用预支</div>
+            <div class="layui-card-body">
+                <div class="layui-form" lay-filter="GroupForm" id="GroupForm">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input readonly type="text" id="finaName" name="finaName" class="layui-input layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-inline">      
+                            <label class="layui-form-label">所在部门</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="finaDepa" name="finaDepa" class="layui-input layui-disabled" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">  
+                        <label class="layui-form-label">标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="finatitle" name="ApplySubject" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">  
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-block">
+                            <textarea type="text" id="finaTextarea" name="ApplyContent" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">  
+                        <div class="layui-inline">
+                            <label class="layui-form-label">申请币种</label>
+                            <div class="layui-input-inline"> 
+                                <select  id="FinancialCurrencyUnitId" name="FinancialCurrencyUnitId" lay-filter="FinancialCurrencyUnitId"></select>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="layui-form-item">  
+                        <label class="layui-form-label">申请金额</label>
+                        <div class="layui-input-block">
+                            <input type="tel" class="layui-input receiptCount" name="Amount">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">附件</label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn" id="finaAttach" style="float: left;">
+                                <i class="layui-icon">&#xe67c;</i>上传
+                            </button>
+                            <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                            <div id="finaFiles" class="UploadNames-box"></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button id="subFinanForm"  lay-submit class="layui-btn" lay-filter="subFinanForm">提交审批</button>
+                            <button id="resetFinanForm" class="layui-btn layui-btn-primary">重置</button>
+                            <button id="backFeek" class="layui-btn layui-btn-primary">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=2019012403"></script>
+<script>
+  
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','form','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+        ,upload = layui.upload;
+        // laydate.render({
+        //     elem: '#lzMon'
+        //     ,type: 'month'
+        //     ,value: new Date()
+        // });
+        $("#finaName").val(window.userInfo.userName);
+        $("#finaDepa").val(window.userInfo.dapartName); 
+            
+        // 关闭
+        $("#backFeek").on("click",function(){
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭  
+        })
+
+        var finaFiles=[];
+        var uploadInst = upload.render({//上传附件
+            elem: '#finaAttach' //绑定元素
+            ,url: window.urls+"/gateway/finagroupapply/addattach" //上传接口
+            ,accept:'file'
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                //上传完毕回调
+                layer.closeAll('loading'); //关闭loading
+                $("#finaFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                finaFiles.push(res.data.attachId);
+            }
+            ,error: function(){
+                layer.closeAll('loading'); //关闭loading
+                //请求异常回调
+            }
+        });
+       
+        // 
+       
+        // 重置
+        $("#resetFinanForm").on("click",function(){
+            layer.confirm('是否重置?', function (index) {
+                location.reload()
+            })
+        })
+        var removeFinaFiles=[];
+        if(window.data!=undefined){
+            $("#subFinanForm").text("提交审批");
+            $.fetch({
+                url:'/gateway/financial/currency',
+                type: 'post',
+                cb:function(rs){
+                    var html = ""
+                    for(var i=0; i<rs.length;i++){
+                        html+='<option value="'+rs[i].id+'">'+rs[i].zh_name+'('+rs[i].short_code+')</option>'
+                        // <i data-file="'+rs.attaches[i].id+'" class="del iconfont icon-guanbi"></i>
+                    }
+                    $("#FinancialCurrencyUnitId").html(html);
+                    form.render();
+                    form.val("GroupForm", {
+                        "ApplySubject": window.data.apply_subject,
+                        "ApplyContent": window.data.apply_content,
+                        "Amount":parseFloat(window.data.amount),
+                        'FinancialCurrencyUnitId':window.data.financial_currency_unit_id
+                    })
+                }
+            })
+            
+            $.fetch({
+                url:'/gateway/finagroupapply/detail',
+                type: 'post',
+                data:{
+                    ID:window.data.id
+                },
+                cb:function(rs){
+                    var finaFiles = ""
+                    for(var i=0; i<rs.attaches.length;i++){
+                        finaFiles+='<a><span class="currentName">'+rs.attaches[i].original_name+'</span><i data-file="'+rs.attaches[i].id+'" class="del iconfont icon-guanbi"></i></a>'
+                        // <i data-file="'+rs.attaches[i].id+'" class="del iconfont icon-guanbi"></i>
+                    }
+                    $("#finaFiles").html(finaFiles);
+                }
+            })
+            $("#finaFiles").on("click",'i.del',function(){//删除附件
+                var delId =$(this).attr("data-file");
+                var elem = $(this).parent("a");
+                finaFiles.splice($.inArray(delId,finaFiles),1);
+                elem.remove();
+                removeFinaFiles.push(delId);
+                //layer.load();
+               
+            })
+            form.on('submit(subFinanForm)', function(data){
+                if(removeFinaFiles&&removeFinaFiles.length>0){
+                    for(var i =0;i<removeFinaFiles.length;i++){
+                        $.fetch({
+                            url: '/gateway/finagroupapply/delattach',
+                            type: 'post',
+                            data:{AttachID:removeFinaFiles[i]},
+                            cb:function(rs){
+                            } 
+                        });
+                    }
+                }
+                var finaFilesStr=finaFiles.join(",");
+                $.fetch({
+                    url: '/gateway/finagroupapply/updateapply',
+                    type: 'post',
+                    data:{
+                        ID:window.data.id,
+                        ApplySubject:data.field.ApplySubject,
+                        ApplyContent:data.field.ApplyContent,
+                        AttachIds:finaFilesStr,
+                        Amount:data.field.Amount,
+                        FinancialCurrencyUnitId:data.field.FinancialCurrencyUnitId
+                    },
+                    cb:function(rs){
+                        layer.msg('修改成功',{anim: 5,time:3000},function(){
+                            // location.reload();
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		                    parent.layer.close(index)
+                        });
+                    } 
+                });
+                return false;
+            })
+        }else{
+            $.fetch({
+                url:'/gateway/financial/currency',
+                type: 'post',
+                cb:function(rs){
+                    var html = ""
+                    for(var i=0; i<rs.length;i++){
+                        html+='<option value="'+rs[i].id+'">'+rs[i].zh_name+'('+rs[i].short_code+')</option>'
+                        // <i data-file="'+rs.attaches[i].id+'" class="del iconfont icon-guanbi"></i>
+                    }
+                    $("#FinancialCurrencyUnitId").html(html);
+                    form.render();
+               
+                }
+            })
+            $("#finaFiles").on("click",'i.del',function(){//删除附件
+                var delId =$(this).attr("data-file");
+                var elem = $(this).parent("a");
+                //layer.load();
+                $.fetch({
+                    url: '/gateway/finagroupapply/delattach',
+                    type: 'post',
+                    data:{AttachID:delId},
+                    cb:function(rs){
+                        finaFiles.splice($.inArray(delId,finaFiles),1);
+                        elem.remove();
+                    } 
+                });
+            })
+            form.on('submit(subFinanForm)', function(data){
+                var finaFilesStr=finaFiles.join(",");
+                $.fetch({
+                    url: '/gateway/finagroupapply/addapply',
+                    type: 'post',
+                    data:{
+                        ApplySubject:data.field.ApplySubject,
+                        ApplyContent:data.field.ApplyContent,
+                        AttachIds:finaFilesStr,
+                        FinancialCurrencyUnitId:data.field.FinancialCurrencyUnitId,
+                        Amount:data.field.Amount
+                    },
+                    cb:function(rs){
+                        layer.msg('提交成功',{anim: 5,time:1500},function(){
+                            location.reload();
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		                    parent.layer.close(index)
+                        });
+                    } 
+                });
+                return false;
+            })
+        }
+        $("#GroupForm").on('keyup','.receiptCount',function () {
+            $(this).val(NumberCheck($(this).val()));
+        }).on("paste", '.receiptCount',function (e) {  //CTR+V事件处理
+            var pastedText = undefined;
+            if (window.clipboardData && window.clipboardData.getData) { // IE
+                pastedText = window.clipboardData.getData('Text');
+            } else {
+                pastedText = e.originalEvent.clipboardData.getData('Text');//e.clipboardData.getData('text/plain');
+            }
+            // alert(pastedText);
+            setTimeout(() => {
+                this.value=NumberCheck(pastedText.replace(/^\D*([1-9]\d*\.?\d{0,3})?.*$/,'$1'));   
+                var sum = 0;
+                $(".receiptCount").each(function(){
+                    var num = $(this).val();
+                    if (num == "" || num == null) {
+                        num = 0;
+                    }
+                    // sum =sum+
+                    sum= parseFloat((sum +  parseFloat(num)).toFixed(10))
+                })
+                $("#totalPrice").val(NumberCheck(''+sum));
+                var b_totalPrice = changeMoneyToChinese(sum);
+                $("#b_totalPrice").text(b_totalPrice);
+            }, 0);    
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+    })
+
+</script> 
+</html>

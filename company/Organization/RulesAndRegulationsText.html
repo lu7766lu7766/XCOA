@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>公司制度创建</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">制度管理</div>
+             <div class="layui-card-body">
+                <!-- <div class="layui-row layui-col-space15">
+                    <table class="layui-hide" id="CashListTabel" lay-filter="CashListTabel"></table>
+                </div> -->
+                <div class="layui-tab layui-tab-brief" lay-filter="TitleReview">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">已通过制度</li>
+                            <li>未通过制度</li>
+                            <li>待审批制度</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <table id="mycompanyrules" class="layui-table modify-layui-table" lay-filter="mycompanyrules"></table>
+                            </div>
+                            <!-- <div class="layui-tab-item">
+                                <table id="" class="layui-table modify-layui-table">
+                                </table>
+                            </div> -->
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="layerConntent">
+    <div class="layui-card-body">
+        <div class="layui-form" layui-filter="Companyrule">
+            <div class="layui-form-item">
+                <label class="layui-form-label modify-layui-label">制度标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Title" id="ruleTitle" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label modify-layui-label">制度类型</label>
+                <div class="layui-input-inline">
+                    <select name="RuleTypeID" id="RuleTypeID"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label modify-layui-label">审核人</label>
+                <div class="layui-input-inline">
+                    <select name="ApprovalUserId" id="ApprovalUserId">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label modify-layui-label">添加附件</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn layui-btn-primary" id="fileUpload"  style="float:left;">
+                        <i class="layui-icon">&#xe67c;</i>上传附件
+                    </button>
+                    <div class="layui-form-mid layui-word-aux" style="margin-left: 15px">（注：再次点击，可多次上传）</div>
+                    <div id="UploadNames" class="UploadNames-box"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label modify-layui-label">制度内容</label>
+                    <!-- <textarea name="Content" id="rules" style="display: none;" class="layui-hide"></textarea> -->
+                <div  class="layui-input-block" id="editor"></div>
+                <div  class="layui-input-block" style="color:#FF5722">注意:如果有粘贴操作，请检查图片是否粘贴成功，并使用图片上传功能手动添加。</div>                
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="subCompanyrule" class="layui-btn" lay-submit lay-filter="subCompanyrule">提交审批</button>
+                    <a id="backCompanyrule" class="layui-btn layui-btn-primary">返回</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        #editor .MsoNormal {
+            position:relative;
+        }
+        .layui-layer-page .layui-layer-content {
+            overflow:inherit;
+        }
+    </style>
+</script>
+<script type="text/html" id="delAppConntent">
+    <div class="layui-card-body">
+        <div class="layui-form" layui-filter="delApprForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label modify-layui-label">删除原因:</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入删除原因" name="DelReason" class="layui-textarea"></textarea>
+                  </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="subDelAppr" class="layui-btn" lay-submit lay-filter="subDelAppr">提交审批</button>
+                    <a id="back" class="layui-btn layui-btn-primary">返回</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+<script type="text/html" id="allUserTbTool">
+    {{#  if(d.apply_result==0 || d.apply_result_desc=='集团待批') { }}
+        <a class="layui-btn layui-btn-xs" lay-event="editUserClick">修改</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUser">查看详情</a>
+        {{#  if(d.show_apply_del_button == false && d.show_del_button == false) { }}
+                <a class="layui-btn layui-btn-xs layui-btn-disabled">删除</a>
+        {{#  }else if(d.show_apply_del_button == true){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="delApp">申请删除</a>
+        {{#  }else if( d.show_del_button == true){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="del">删除</a>
+        {{#  } }} 
+        
+	{{#  }else { }}
+		<a class="layui-btn layui-btn-xs" lay-event="editUserClick">修改</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="editUser">查看详情</a>
+        {{#  if(d.show_apply_del_button == false && d.show_del_button == false) { }}
+            <a class="layui-btn layui-btn-xs layui-btn-disabled" >删除</a>
+        {{#  }else if(d.show_apply_del_button == true){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="delApp">申请删除</a>
+        {{#  }else if( d.show_del_button == true){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="del">删除</a>
+        {{#  } }} 
+            
+    {{#  } }} 
+    <!-- show_apply_del_button = true 显示申请删除按钮，show_del_button = true 显示删除按钮。 -->
+
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script type="text/javascript" src="../../js/wangEdit.js?v=20181201"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','form','layedit',"upload",'table','laytpl'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            form = layui.form,
+            layedit = layui.layedit,
+            element = layui.element,
+            laytpl=layui.laytpl,
+            upload=layui.upload,
+            router = layui.router();
+            var table = layui.table;
+            var E = window.wangEditor
+            var editotr;
+        // var index=layedit.build("rules", {
+        //     tool: [
+        //         'strong' //加粗
+        //         ,'italic' //斜体
+        //         ,'underline' //下划线
+        //         ,'del' //删除线
+        //         ,'|' //分割线
+        //         ,'left' //左对齐
+        //         ,'center' //居中对齐
+        //         ,'right' //右对齐
+        //         ,'link' //超链接
+        //         ,'unlink' //清除链接
+        //         ,'face' //表情
+        //         // ,'image' //插入图片
+        //         // ,'help' //帮助
+        //     ]
+        // });
+        
+
+            element.on('tab(TitleReview)', function(data){
+                var index =[2,1,0][ data.index];
+                // var index = data.index;
+                TitleReviewFun(index);
+            });
+            
+            var datameno = [];
+            // 表格
+            var listTab;
+            var TitleReviewFun  = function(id){
+               // console.log(id)
+                if(id==2){
+                    var toolBtn='<div class="layui-btn-container"><button class="layui-btn layui-btn-sm" lay-event="add">添加</button><button class="layui-btn layui-btn-sm" lay-event="sort">制度排序</button></div>'
+
+                }else{
+                    var toolBtn='<div class="layui-btn-container"><button class="layui-btn layui-btn-sm" lay-event="add">添加</button></div>'
+                }
+                var mycompanyrules = table.render({
+                    id:"mycompanyrulesBox",
+                    elem: '#mycompanyrules',
+                    url: urls + '/gateway/companyrule/mycompanyrules',
+                    page: true,
+                    where:{
+                        ApplyResult:id,
+                    },
+                    limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                    toolbar:toolBtn,
+                    method: 'post',
+                    defaultToolbar:[],
+                    contentType: 'application/json',
+                    text: {
+                        none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    },
+                    cols: [
+                    //sort_index
+                        [{
+                            title: '排序',
+                            minWidth:100,
+                            type:'numbers',
+                        },{
+                            field: 'title',
+                            title: '制度名称',
+                            minWidth:100
+                        }, {
+                            field: 'rule_type_name',
+                            title: '制度类型',
+                            minWidth:100
+                        },{
+                            field: 'apply_result_desc',
+                            title: '审批状态',
+                            minWidth:100
+                        }, {
+                            field: 'approval_user_name',
+                            title: '审批人',
+                            minWidth:100
+                        }, 
+                        // {
+                        //     field: 'del_apply_result',
+                        //     title: '删除状态',                            
+                        //     // show_apply_del_button = true 显示申请删除按钮，
+                        //     //show_del_button = true 显示删除按钮。
+                        //     templet: function (d){  
+                        //         return ['集团待审批','未申请','集团已通过'][d.del_apply_result]
+                        //     },
+                        // }, 
+                        {
+                            fixed: 'right',
+                            width:205,
+                            title: '操作',
+                            toolbar: '#allUserTbTool'
+                        }]
+                    ],
+                    request: {
+                        pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    parseData: function (res) { //res 即为原始返回的数据
+                        return {
+                            "status_code": res.status_code, //解析接口状态
+                            "message": res.message, //解析提示文本
+                            "count": res.data.total_count, //解析数据长度
+                            "data": res.data.data_list, //解析数据列表
+                            "curr": res.data.page_index
+                        };
+                    },
+                    done:function(){
+                        table.resize('mycompanyrulesBox');
+                        
+                    }
+                })
+                //监听事件
+                table.on('tool(mycompanyrules)', function(obj){
+                    
+                    var data = obj.data; //获得当前行数据
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var tr = obj.tr; //获得当前行 tr 的DOM对象
+                    if(layEvent === 'editUser'){ //查看
+                        var shtml='';
+                        if(data.attaches&&data.attaches!=''){
+                            for(var i=0;i<data.attaches.length;i++){
+                                shtml+='<a class="seeXqOutIn" href="/gateway/companyrule/download/'+data.attaches[i].id+'"><span>'+data.attaches[i].original_name+'</span></a>'
+                            }
+                        }else{
+                             shtml='<span>暂无附件</span>'
+                        }
+                        layer.open({
+                            title: '制度详情',
+                            content: '<div class="layui-card-body">'
+                                    +'<fieldset class="layui-elem-field layui-field-title">'
+                                        +'<legend>'+obj.data.title+'</legend>'
+                                    +'</fieldset>'
+                                    +'<div class="layui-field-box pageCont RuBox">'
+                                        +'<p><label class="fl">附件：</label><u class="fr-width">'+shtml+'</u></p>'
+                                        +'<div class="w-e-text" style=" overflow-y: initial;">'+obj.data.content+'</div>'
+                                    +'</div>'
+                                    +'<fieldset class="layui-elem-field">'
+                                        +'<legend>删除操作审批记录</legend>'
+                                        +'<div class="layui-field-box pageCont reviewCont">'
+                                            +'<p><label class="fl">审核人：</label><u class="fr-width">'+(data.del_approval_user_name==null?'暂无':data.del_approval_user_name)+'</u></p>'
+                                            +'<p><label class="fl">审核描述：</label><u class="fr-width">'+data.del_apply_result_desc+'</u></p>'
+                                            +'<p><label class="fl">审核意见：</label><u class="fr-width">'+(data.del_approval_content==null?'暂无':data.del_approval_content)+'</u></p>'
+                                        +'</div>'
+                                    +'</fieldset>'
+                                +'</div>',
+                            area: ['80%', '80%'],
+                            btn: '',
+                            type: 1,
+                        })
+                        //do somehing
+                    } else if(layEvent === 'editUserClick'){ //修改
+                        var AttachsId=[];
+                        layer.open({
+                            title: '修改制度管理',
+                            content: ""+$("#layerConntent").html()+"",
+                            area: ['100%', '100%'],
+                            btn: '',
+                            type: 1,
+                            success: function (layero, index) {
+                                var layindex = index;
+                                for(var i=0;i<data.attaches.length;i++){
+                                    AttachsId.push(data.attaches[i].id);
+                                    $("#UploadNames").append('<a><span>'+data.attaches[i].original_name+'</span><i class="layui-icon layui-unselect layui-tab-close" data-id="'+data.attaches[i].id+'">ဆ</i></a>')
+                                }
+                                $("#backCompanyrule").on("click",function(){
+                                    layer.close(layindex);
+                                    mycompanyrules.reload();
+                                })
+                                $("#ruleTitle").val(obj.data.title);
+                                $.fetch({
+                                    url:"/gateway/companyrule/getuser",
+                                    type: 'post',
+                                    cb:function(rs){
+                                        var opHtml='';
+                                        for(var i=0;i<rs.length;i++){
+                                            opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                        }
+                                        $("#ApprovalUserId").html(opHtml);
+                                        $("#ApprovalUserId").val(obj.data.approval_userid);
+                                        form.render();
+                                    }
+                                });
+                                $.fetch({
+                                    url:"/gateway/companyrule/ruletype",
+                                    type: 'post',
+                                    cb:function(rs){
+                                        var opHtml='';
+                                        for(var i=0;i<rs.length;i++){
+                                            opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                        }
+                                        $("#RuleTypeID").html(opHtml);
+                                        $("#RuleTypeID").val(obj.data.rule_type_id);
+                                        
+                                        form.render();
+                                    }
+                                });
+                                editor = new E('#editor')
+                                    // 或者 var editor = new E( document.getElementById('editor') )
+                                editor.customConfig.uploadImgShowBase64 = true ;
+                                editor.customConfig.zIndex = 0;
+                                     // 关闭粘贴样式的过滤
+                                editor.customConfig.pasteFilterStyle =false
+                                    // 忽略粘贴内容中的图片
+                                editor.customConfig.pasteIgnoreImg = false
+                                editor.customConfig.pasteTextHandle = function (content) {
+                                        // content 即粘贴过来的内容（html 或 纯文本），可进行自定义处理然后返回
+                                        // return content + '<p>在粘贴内容后面追加一行</p>'
+                                        content=content.replace(/<\s?img[^>]*>/gi,'')
+                                        // var a =$(content).find('img').remove()
+                                        return content
+                                    }
+                                editor.create()
+                                ////// console.log(editor)
+                                editor.txt.html(obj.data.content); 
+                                // $("#rules").val(obj.data.content);
+                                // index=layedit.build("rules", {
+                                //     tool: [
+                                //         'strong' //加粗
+                                //         ,'italic' //斜体
+                                //         ,'underline' //下划线
+                                //         ,'del' //删除线
+                                //         ,'|' //分割线
+                                //         ,'left' //左对齐
+                                //         ,'center' //居中对齐
+                                //         ,'right' //右对齐
+                                //         ,'link' //超链接
+                                //         ,'unlink' //清除链接
+                                //         ,'face' //表情
+                                //         // ,'image' //插入图片
+                                //         // ,'help' //帮助
+                                //     ]
+                                // });
+                                var uploadInst = upload.render({
+                                    elem: '#fileUpload' //绑定元素
+                                    ,url: window.urls+'/gateway/companyrule/addattach' //上传接口
+                                    ,accept:'file'
+                                    ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                                        layer.load(); //上传loading
+                                    }
+                                    ,done: function(res){
+                                        //上传完毕回调
+                                        layer.closeAll('loading'); //关闭loading
+                                        AttachsId.push(res.data.attachId);
+                                        $("#UploadNames").append('<a><span>'+res.data.attachName+'</span><i class="layui-icon layui-unselect layui-tab-close" data-id="'+res.data.attachId+'">ဆ</i></a>')
+                                        
+                                    }
+                                    ,error: function(){
+                                        layer.closeAll('loading'); //关闭loading
+                                    //请求异常回调
+                                    }
+                                });
+                                //删除附件
+                                $('#UploadNames').on("click","i",function(){
+                                    var el =$(this);
+                                    var aid=el.attr('data-id');
+                                    $.fetch({
+                                        url:"/gateway/companyrule/delattach",
+                                        type: 'post',
+                                        data:{
+                                            AttachId:aid,
+                                        },
+                                        cb:function(rs){
+                                            el.parent("a").remove();
+                                        }
+                                    });
+                                })
+                                form.on('submit(subCompanyrule)', function(data){
+                                   //// console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                                   //// console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                                   //// console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                                    var Content=editor.txt.html();                                   
+                                    var attastr=AttachsId.join(',');
+                                    $.fetch({
+                                        url:"/gateway/companyrule/update",
+                                        type: 'post',
+                                        data:{
+                                            // ID：【制度ID，必填】：，：【审核人id，必填】，：
+                                            ID:obj.data.id,
+                                            ApprovalUserId: data.field.ApprovalUserId,
+                                            Content: Content,
+                                            RuleTypeID: data.field.RuleTypeID,
+                                            Title: data.field.Title,
+                                            AttachIds:attastr,  
+                                        },
+                                        cb:function(rs){
+                                            layer.msg("提交成功");
+                                            setTimeout(function(){
+                                                layer.close(layindex);
+                                                mycompanyrules.reload();
+                                            }, 800)
+                                        }
+                                    });
+                                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                                });
+                            },
+                        });
+                    }else if(layEvent === 'delApp'){
+                        layer.open({
+                            title: '删除申请',
+                            content: ""+$("#delAppConntent").html()+"",
+                            area: ['45%','auto'],
+                            btn: '',
+                            type: 1,
+                            success: function (layero, index) {
+                                $("#subDelAppr").on("click",function(){
+                                    var DelReason=$("#DelReason").val();
+                                    $.fetch({
+                                        url:"/gateway/companyrule/applydelrule",
+                                        type: 'post',
+                                        data:{
+                                            DelReason:DelReason,
+                                            ID:data.id
+                                        },
+                                        cb:function(rs){
+                                            layer.msg('提交成功.');
+                                            layer.close(index)
+                                        }
+                                    });
+                                })
+                            }
+                        })
+                    }else if(layEvent === 'del'){
+                        layer.confirm('确定删除?', {title:' '},function(index){
+                            $.fetch({
+                                url:'/gateway/companyrule/delrule ',
+                                data:{
+                                    ID:data.id
+                                },
+                                type: 'post',
+                                cb:function(rs){
+                                    layer.msg('删除成功。');
+                                    layer.close(index);
+                                    mycompanyrules.reload();                                            
+
+                                }
+                            })
+                        })
+                    }
+                })
+                table.on('toolbar(mycompanyrules)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch(obj.event){
+                        case 'add':
+                            layer.open({
+                                title: '新建制度管理',
+                                content: ""+$("#layerConntent").html()+"",
+                                area: ['100%', '100%'],
+                                btn: '',
+                                type: 1,
+                                success: function (layero, index) {
+                                    var AttachsId=[];
+                                    var layindex =index;
+                                    $("#backCompanyrule").on("click",function(){
+                                        layer.close(layindex);
+                                        mycompanyrules.reload();
+                                    })
+                                    $.fetch({
+                                        url:"/gateway/companyrule/getuser",
+                                        type: 'post',
+                                        cb:function(rs){
+                                            var opHtml='';
+                                            for(var i=0;i<rs.length;i++){
+                                                opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                            }
+                                            $("#ApprovalUserId").html(opHtml);
+                                            form.render();
+                                        }
+                                    });
+                                    $.fetch({
+                                        url:"/gateway/companyrule/ruletype",
+                                        type: 'post',
+                                        cb:function(rs){
+                                            var opHtml='';
+                                            for(var i=0;i<rs.length;i++){
+                                                opHtml+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                            }
+                                            $("#RuleTypeID").html(opHtml);
+                                            form.render();
+                                        }
+                                    });
+                                    var uploadInst = upload.render({
+                                        elem: '#fileUpload' //绑定元素
+                                        ,url: window.urls+'/gateway/companyrule/addattach' //上传接口
+                                        ,accept:'file'
+                                        ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                                            layer.load(); //上传loading
+                                        }
+                                        ,done: function(res){
+                                            //上传完毕回调
+                                            layer.closeAll('loading'); //关闭loading
+                                            AttachsId.push(res.data.attachId);
+                                            $("#UploadNames").append('<a><span>'+res.data.attachName+'</span><i class="layui-icon layui-unselect layui-tab-close" data-id="'+res.data.attachId+'">ဆ</i></a>')
+                                            
+                                        }
+                                        ,error: function(){
+                                            layer.closeAll('loading'); //关闭loading
+                                        //请求异常回调
+                                        }
+                                    });
+                                    //删除附件
+                                    $('#UploadNames').on("click","i",function(){
+                                        var el =$(this);
+                                        var aid=el.attr('data-id');
+                                        $.fetch({
+                                            url:"/gateway/companyrule/delattach",
+                                            type: 'post',
+                                            data:{
+                                                AttachId:aid,
+                                            },
+                                            cb:function(rs){
+                                                el.parent("a").remove();
+                                            }
+                                        });
+                                    })
+                                    // var E = window.wangEditor
+                                    var editor = new E('#editor');
+                                        // 或者 var editor = new E( document.getElementById('editor') )
+                                    editor.customConfig.uploadImgShowBase64 = true ;
+                                    editor.customConfig.zIndex = 0;
+                                     // 关闭粘贴样式的过滤
+                                    editor.customConfig.pasteFilterStyle =true
+                                    // 忽略粘贴内容中的图片
+                                    editor.customConfig.pasteIgnoreImg = true
+                                    // 自定义处理粘贴的文本内容
+                                    editor.customConfig.pasteTextHandle = function (content) {
+                                        // content 即粘贴过来的内容（html 或 纯文本），可进行自定义处理然后返回
+                                        // return content + '<p>在粘贴内容后面追加一行</p>'
+                                        content=content.replace(/<\s?img[^>]*>/gi,'')
+                                        // var a =$(content).find('img').remove()
+                                        return content
+                                    }
+                                    editor.create()
+                                    form.on('submit(subCompanyrule)', function(data){
+                                        // layedit.sync(index)
+                                        var Content=editor.txt.html();
+                                        var attastr=AttachsId.join(',');
+                                        $.fetch({
+                                            url:"/gateway/companyrule/add",
+                                            type: 'post',
+                                            data:{
+                                                ApprovalUserId: data.field.ApprovalUserId,
+                                                Content: Content,
+                                                RuleTypeID: data.field.RuleTypeID,
+                                                Title: data.field.Title,
+                                                AttachIds:attastr,
+                                            },
+                                            cb:function(rs){
+                                                layer.msg("提交成功");
+                                                setTimeout(function(){
+                                                    layer.close(layindex);
+                                                    mycompanyrules.reload();
+                                                }, 800)
+                                            }
+                                        });
+                                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                                    });
+                                },
+                            });
+                            break;
+                        case 'sort':
+                            layer.open({
+                                title: '制度排序',
+                                content: "mycompanyrulesSort.html",
+                                area: ['80%', '80%'],
+                                btn: '',
+                                type: 2,
+                                success: function (layero, index) {
+                                    //console.log(obj.data)
+                                },
+                                btn: ['保存','关闭']
+                                ,yes: function(index, layero){
+                                    var iframeWin = window[layero.find('iframe')[0]['name']]
+                                    // 
+                                    $.fetch({
+                                        url:"/gateway/companyrule/batchswapsort",
+                                        type: 'post',
+                                        data:{
+                                            Items:iframeWin.subObj,
+                                        },
+                                        cb:function(rs){ 
+                                            layer.close(index);
+                                            TitleReviewFun(2);
+                                            
+                                        }
+                                    });
+                                }
+                            });
+                            break;
+                    };
+                });
+            }
+            TitleReviewFun(2);
+    });
+</script>
+<style>
+/* .pageCont .w-e-text p img {
+    width: 100% !important;
+    height: auto;
+} */
+.RuBox p{
+    overflow: inherit;
+}
+.RuBox .MsoNormal span{
+    position: initial !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+}
+</style>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建表单控件</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">新建表单控件</div>
+            <div class="layui-card-body">
+                <div class="layui-form" id="newFormSetData" lay-verify="newFormSetData">
+                    <div class="layui-form-item">
+                        <!-- <div class="layui-inline">
+                            <label class="layui-form-label">排序编号</label>
+                            <div class="layui-input-inline">
+                                <input lay-verify="required" type="tel" id="formDesc" name="formDesc"  autocomplete="off" class="layui-input " onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" >
+                            </div>
+                        </div> -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">控件类型</label>
+                            <div class="layui-inline">
+                                <select id="formType" name="formType" lay-filter="formType"  class="layui-input-inline"></select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">控件描述</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  lay-verify="required"  id="formDesc" name="formDesc" class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-inline">                        
+                            <label class="layui-form-label">辅助文字</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="formode" name="formode" class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">是否必填</label>
+                            <div class="layui-input-inline">
+                                    <input type="radio" name="isReq" value="0" title="是">
+                                    <input type="radio" name="isReq" value="1" title="否" checked>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" id="formOtherSet">
+                            <!-- <div class="otherSet_1 layui-show">暂无</div>
+                            <div class="otherSet_2 layui-hide">下拉框</div>
+                            <div class="otherSet_3 layui-hide">复选框</div>
+                            <div class="otherSet_4 layui-hide">单选框</div>
+                            <div class="otherSet_5 layui-hide">文本域</div>
+                            <div class="otherSet_6 layui-hide">日期</div>
+                            <div class="otherSet_7 layui-hide">按钮</div> -->
+                    </div>
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button id="subFinanForm" class="layui-btn" >保存</button>
+                                <button id="closeFinanForm" class="layui-btn layui-btn-primary">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index', 'laydate', 'table', 'layer','form','upload'], function () {
+    var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router();
+        element.render();
+
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+        ,laypage=layui.laypage;
+        var newFormData={}
+    $.fetch({
+        url:"/gateway/formtpl/formcomponet",
+        type: 'post',
+        cb:function(rs){
+            if(rs&&rs.length>0){
+                var selHm='',centHm='';
+                for(var i =0;i<rs.length;i++){
+                    selHm+='<option value="'+rs[i].id+'">'+rs[i].component_desc+'</option>'
+
+                    centHm+='<div class="layui-form-item otherSet_'+rs[i].id+' layui-hide">'
+                        switch (rs[i].component_type){
+                            case 'text':
+                                centHm+='<label class="layui-form-label">默认输入</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<input type="text" id="textVal_'+rs[i].id+'" name="textVal_'+rs[i].id+'" class="layui-input" >'
+                                +'</div>'
+                            break;
+                            case 'select':
+                                centHm+='<div class="layui-block">'
+                                            +'<label class="layui-form-label">下拉选项:</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="text" id="selVal_'+rs[i].id+'" name="selVal_'+rs[i].id+'" class="layui-input" >'
+                                            +'</div>'
+                                            +'<a  id="addSel" class="layui-btn addoption">添加</a>'
+                                        +'</div>'
+                                        +'<div class="layui-block"><label class="layui-form-label">选项内容</label><div id="selOption" class="layui-input-inline option cateID"><span>暂无</span></div></div>'
+                                
+                            break;
+                            case 'checkbox':
+                                centHm+='<div class="layui-block">'
+                                            +'<label class="layui-form-label">复选框选项:</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="text" id="checkboxVal_'+rs[i].id+'" name="checkboxVal_'+rs[i].id+'" class="layui-input" >'
+                                            +'</div>'
+                                            +'<a class="layui-btn addoption" id="addCheckbox">添加</a>'
+                            
+                                        +'</div>'
+                                        +'<div class="layui-block"><label class="layui-form-label">选项内容</label><div id="checkboxOption" class="option layui-input-inline cateID"><span>暂无</span></div></div>'
+                                
+                            break;
+                            case 'radio':
+                                centHm+='<div class="layui-block">'
+                                            +'<label class="layui-form-label">单选框选项:</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="text" id="radioVal_'+rs[i].id+'" name="radioVal_'+rs[i].id+'" class="layui-input" >'
+                                            +'</div>'
+                                            +'<a id="addRadio" class="layui-btn addoption">添加</a>'
+                            
+                                        +'</div>'
+                                        +'<div class="layui-block"><label class="layui-form-label">选项内容</label><div id="radioOption" class="option layui-input-inline cateID"><span>暂无</span></div></div>'
+                            break;
+                            case 'textarea':
+                                centHm+='<label class="layui-form-label">默认输入</label>'
+                                +'<div class="layui-input-inline">'
+                                    +'<input type="text" id="textareaVal_'+rs[i].id+'" name="textareaVal_'+rs[i].id+'" class="layui-input" >'
+                                +'</div>'
+                            break;
+                            case 'datetime':
+                                centHm+='<div class="layui-block">'
+                                            +'<label class="layui-form-label">日期类型</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="radio" name="dateType" value="0" title="年-月-日" checked>'
+                                                +'<input type="radio" name="dateType" value="1" title="年-月" >'
+                                                +'<input type="radio" name="dateType" value="2" title="年" >'
+                                                +'<input type="radio" name="dateType" value="3" title="年-月-日 时:分:秒">'
+                                            +'</div>'
+
+                                            +'<label class="layui-form-label">范围选择</label>'
+                                            +'<div class="layui-input-inline">'
+                                                +'<input type="radio" name="isRange" value="0" title="是">'
+                                                +'<input type="radio" name="isRange" value="1" title="否" checked>'
+                                            +'</div>'
+                                        +'</div>'
+                            break;
+                        }
+                    centHm+='</div>'
+                }
+                $("#formType").html(selHm);
+                $("#formOtherSet").html(centHm);
+                if(window.nowFormData!=undefined){
+                    //控件类型
+                    $("#formType").val(window.nowFormData.component_id);
+                    $("#formDesc").val(window.nowFormData.label);
+                    if(window.nowFormData.attr){
+                        $("#formode").val(window.nowFormData.attr.formode);
+                    }
+                    // form.val("newFormSetData", {
+                    //     "isReq":['是','否'][window.nowFormData.required]
+                    // })
+                    // $("input[name='isReq']").val(window.nowFormData.attr.required);
+                    $("#newFormSetData").find("input[name='isReq']").each(function(){
+                        if($(this).attr('value')==window.nowFormData.requiredsubFinanForm){
+                            $(this).attr('checked','checked');
+                        }
+                    })
+                    switch (window.nowFormData.component_id){
+                            case 1:
+                                if(window.nowFormData.attr){
+                                    $("#textVal_"+window.nowFormData.component_id+"").val(window.nowFormData.attr.textVal)
+                                }
+                                
+                            break;
+                            case 2:
+                                if(window.nowFormData.attr){
+                                    if(window.nowFormData.attr.option&&window.nowFormData.attr.option.length>0){
+                                        var opHtml='';
+                                        for(var i=0;i<window.nowFormData.attr.option.length;i++){
+                                            opHtml +='<p><span>'+window.nowFormData.attr.option[i]+'</span> <a class="delOption toTitle">删除</a></p>'
+                                        }
+                                        $(".otherSet_"+window.nowFormData.component_id+" #selOption").html(opHtml);
+                                    }
+                                }
+                            break;
+                            case 3:
+                            if(window.nowFormData.attr){
+                                    if(window.nowFormData.attr.option&&window.nowFormData.attr.option.length>0){
+                                        var opHtml='';
+                                        for(var i=0;i<window.nowFormData.attr.option.length;i++){
+                                            opHtml +='<p><span>'+window.nowFormData.attr.option[i]+'</span> <a class="delOption toTitle red">删除</a></p>'
+                                        }
+                                        $(".otherSet_"+window.nowFormData.component_id+" #checkboxOption").html(opHtml);
+                                    }
+                                }
+                            break;
+                            case 4:
+                            if(window.nowFormData.attr){
+                                    if(window.nowFormData.attr.option&&window.nowFormData.attr.option.length>0){
+                                        var opHtml='';
+                                        for(var i=0;i<window.nowFormData.attr.option.length;i++){
+                                            opHtml +='<p><span>'+window.nowFormData.attr.option[i]+'</span> <a class="delOption toTitle red">删除</a></p>'
+                                        }
+                                        $(".otherSet_"+window.nowFormData.component_id+" #radioOption").html(opHtml);
+                                    }
+                                }
+                            break;
+                            case 5:
+                                if(window.nowFormData.attr){
+
+                                    $("#textareaVal_"+window.nowFormData.component_id+"").html(window.nowFormData.attr.textVal)
+                                }
+                            break;
+                            case 6:
+                                if(window.nowFormData.attr){
+                                    $("#formOtherSet").find("input[name='dateType']").each(function(){
+                                        if($(this).attr('value')==window.nowFormData.attr.dateFormType){
+                                            $(this).attr('checked','checked');
+                                        }
+                                    })
+                                    $("#formOtherSet").find("input[name='isRange']").each(function(){
+                                        if($(this).attr('value')==window.nowFormData.attr.dateIsRange){
+                                            $(this).attr('checked','checked');
+                                        }
+                                    })
+                                    form.render();
+                                }
+                            break;
+                        }
+                    $("#formType").val(window.nowFormData.component_id);
+
+                }
+                form.render();
+                $("#formOtherSet .otherSet_"+$("#formType").val()+"").addClass('layui-show').removeClass('layui-hide');
+                form.on('select(formType)', function(data){
+                    $("#formOtherSet .otherSet_"+data.value+"").siblings('.layui-show').addClass('layui-hide').removeClass('layui-show');
+                    $("#formOtherSet .otherSet_"+data.value+"").addClass('layui-show').removeClass('layui-hide');
+                });
+                //添加选项事件
+                $("#formOtherSet").on("click",'.addoption',function(){
+                    var oval = $(this).siblings('.layui-input-inline').find('input').val();
+                    var sel=$(this).parent('div.layui-block').siblings('.layui-block').find('.option');
+                    if(sel.text()=='暂无'){
+                        sel.html('<p><span>'+oval+'</span> <a class="delOption toTitle red">删除</a></p>');
+                    }else{
+                        sel.append('<p><span>'+oval+'</span> <a class="delOption toTitle red">删除</a></p>');                        
+                    }
+                    $(this).siblings('.layui-input-inline').find('input').val('');
+                });
+                $("#formOtherSet").on("click",'.delOption',function(){
+                    var dthis=$(this).parents('.option');
+                    $(this).parent('p').remove();
+                    if(dthis.text()==''){
+                        dthis.html('<span>暂无</span>')
+                    }
+                })
+                $("#subFinanForm").on("click",function(){
+                    var isverify=false;
+                    $(".layui-form").find('input').each(function(){
+                        if($(this).attr("lay-verify")=='required'){
+                            var isval =$(this).val();
+                            if(isval==''){
+                                isverify=true;                                
+                                $(this).addClass("layui-form-danger").focus();;
+                                var hm=$(this).parent(".layui-input-inline").siblings("label.layui-form-label").text();
+                                layer.msg(''+hm+'不能为空',{'icon':5,'anim': 6});
+                                return false
+                            }else{
+                                isverify=false;
+                            }
+                        }
+                    })
+                    if(!isverify){
+                        var fType=$("#formType").val();
+                        var component_label=$("#formDesc").val();
+                        var formode=$("#formode").val();
+                        var component_desc=$("#formType").find("option:selected").text();
+                        var required = $("#newFormSetData").find('input[name=isReq]:checked').val();//1非必填 0必填
+                        var option=[];
+                        var optionISnull=false;
+                        switch (fType){
+                            case '1':
+
+                                var component_type = ['text','select','checkbox','radio','textarea','datetime'][(fType-1)];
+                                var textVal = $("#textVal_"+fType+"").val();
+                                var othVal={//其他参数
+                                    "formode":formode,
+                                    "textVal":textVal,
+                                }
+                                newFormData={
+                                    component_desc:component_desc,
+                                    component_id: fType,
+                                    component_type:component_type,
+                                    label: component_label,
+                                    required: required,
+                                    template_id: '',
+                                    attr: othVal,
+                                }
+                            break;
+                            case '2':
+                                var component_type = ['text','select','checkbox','radio','textarea','datetime'][(fType-1)];
+                                $(".otherSet_"+fType+" .option").find('span').each(function(){
+                                    var optext=$(this).text();
+                                    if(optext=="暂无"){
+                                        layer.msg('请添加选项',{'icon':5,'anim': 6});
+                                        optionISnull=true;
+                                        return false
+                                    }else{
+                                        option.push(optext);
+                                        optionISnull=false;
+                                    }
+                                })
+                                var othVal={//其他参数
+                                    "formode":formode,
+                                    "option":option,
+                                }
+                                newFormData={
+                                    component_desc:component_desc,
+                                    component_id: fType,
+                                    component_type:component_type,
+                                    label: component_label,
+                                    required: required,
+                                    template_id: '',
+                                    attr: othVal,
+                                }
+                            break;
+                            case '3':
+                                var component_type = ['text','select','checkbox','radio','textarea','datetime'][(fType-1)];
+                                $(".otherSet_"+fType+" .option").find('span').each(function(){
+                                    var optext=$(this).text();
+                                    if(optext=="暂无"){
+                                        layer.msg('请添加选项',{'icon':5,'anim': 6});
+                                        optionISnull=true;
+                                        return false
+                                    }else{
+                                        option.push(optext);
+                                        optionISnull=false;
+                                    }
+                                })
+                                var othVal={//其他参数
+                                    "formode":formode,
+                                    "option":option,
+                                }
+                                newFormData={
+                                    component_desc:component_desc,
+                                    component_id: fType,
+                                    component_type:component_type,
+                                    label: component_label,
+                                    required: required,
+                                    template_id: '',
+                                    attr: othVal,
+                                }
+                            break;
+                            case '4':
+                                var component_type = ['text','select','checkbox','radio','textarea','datetime'][(fType-1)];
+                                $(".otherSet_"+fType+" .option").find('span').each(function(){
+                                    var optext=$(this).text();
+                                    if(optext=="暂无"){
+                                        layer.msg('请添加选项',{'icon':5,'anim': 6});
+                                        optionISnull=true;
+                                        return false
+                                    }else{
+                                        option.push(optext);
+                                        optionISnull=false;
+                                    }
+                                })
+                                var othVal={//其他参数
+                                    "formode":formode,
+                                    "option":option,
+                                }
+                                newFormData={
+                                    component_desc:component_desc,
+                                    component_id: fType,
+                                    component_type:component_type,
+                                    label: component_label,
+                                    required: required,
+                                    template_id: '',
+                                    attr: othVal,
+                                }
+                            break;
+                            case '5':
+                                var component_type = ['text','select','checkbox','radio','textarea','datetime'][(fType-1)];
+                                var textVal = $("#textVal_"+fType+"").val();
+                                var othVal={//其他参数
+                                    "formode":formode,
+                                    "textVal":textVal,
+                                }
+                                newFormData={
+                                    component_desc:component_desc,
+                                    component_id: fType,
+                                    component_type:component_type,
+                                    label: component_label,
+                                    required: required,
+                                    template_id: '',
+                                    attr: othVal,
+                                }
+                            break;
+                            case '6':
+                                var component_type = ['text','select','checkbox','radio','textarea','datetime'][(fType-1)];
+                                var textVal = $("#textVal_"+fType+"").val();
+                                var dateFormType = $(".otherSet_"+fType+"").find('input[name=dateType]:checked').val();//0年-月-日 1年-月 2年 3年-月-日 时:分:秒
+                                var dateIsRange = $(".otherSet_"+fType+"").find('input[name=isRange]:checked').val();//0是 1否
+                                
+                                var othVal={//其他参数
+                                    "dateFormType":dateFormType,
+                                    "dateIsRange":dateIsRange,
+                                    "formode":formode,
+                                }
+                                newFormData={
+                                    component_desc:component_desc,
+                                    component_id: fType,
+                                    component_type:component_type,
+                                    label: component_label,
+                                    required: required,
+                                    template_id: '',
+                                    attr: othVal,
+                                }
+                            break;
+                        }
+                        if(optionISnull){
+                            layer.msg('请添加选项',{'icon':5,'anim': 6});
+                            return false
+                        }
+                        if(window.trIndex&&window.nowFormData.template_id){
+                            newFormData.template_id=window.nowFormData.template_id;
+                            window.parent.window.thisFormData.splice(window.trIndex,1,newFormData);
+                            
+                        }else{
+                            window.parent.window.thisFormData.push(newFormData);
+                        }
+                        layer.msg('添加成功.')
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    }
+                })
+                $("#closeFinanForm").on("click",function(){
+                    layer.confirm('确定放弃本次编辑？', function(index){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                })
+            }
+        }
+    })
+   
+});
+
+
+</script> 
+</html>

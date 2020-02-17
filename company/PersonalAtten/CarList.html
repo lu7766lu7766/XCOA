@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>车辆管理列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" layui-card">
+            <div class="layui-row layui-col-space10 layui-card-body">
+                <div class="layui-col-xs12">
+                    <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="user-file-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">使用日期：</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" id="Cardate" lay-filter="Cardate" name="Cardate">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">状态：</label>
+                                <div class="layui-input-inline">
+                                    <select id="RecruiSelect" name="RecruiSelect" lay-filter="RecruiSelect" lay-search>
+                                        <option value="3">全部</option>
+                                        <option value="0">待审批</option>
+                                        <option value="1">未通过</option>
+                                        <option value="2">已通过</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">老车牌号：</label>
+                                <div class="layui-inline">
+                                    <select id="CarOldNumber" lay-filter="CarOldNumber" name="CarOldNumber">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">新车牌号：</label>
+                                <div class="layui-inline">
+                                    <select id="CarNumber" lay-filter="CarNumber" name="CarNumber">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">申请人：</label>
+                                <div class="layui-inline">
+                                    <input type="text" class="layui-input" id="Carpeople" name="Carpeople">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">司机：</label>
+                                <div class="layui-inline">
+                                    <input type="text" class="layui-input" id="Cardriver" name="Cardriver">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button id="RecruiListUserFile" class="layui-btn layui-btn">
+                                    <i class="iconfont icon-sousuo"></i>
+                                </button>
+                                <button class="layui-btn layui-btn layui-btn-primary"  lay-filter="closeLayer"
+                                id="closeLayer">
+                                    返回
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="userFileTable" lay-filter="userFileTable" class="layui-table">
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    $(function () {
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'table', 'laydate', 'form', 'laypage'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                router = layui.router(),
+                layer = layui.layer;
+            element.render();
+            var table = layui.table,
+                laypage = layui.laypage,
+                form = layui.form,
+                laydate = layui.laydate;
+
+            table.render({
+                elem: '#table-checkbox',
+                page: true,
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            });
+
+            // 生成表格
+            var RecruiList = table.render({
+                elem: '#userFileTable',
+                url: urls + "/gateway/carApply/list",
+                where:{
+                    status:3
+                },
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                method: 'post',
+                page: true, //开启分页
+                text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //标题栏
+                       {
+                            field: 'id',
+                            title: 'ID',
+                            minWidth:80,
+                        },{
+                            field: 'car_no',
+                            title: '车牌号',
+                            sort: true,
+                            minWidth:120,
+                            templet:function(d){
+                                return d.apply_status==0?"暂无":(d.car_no==null?"暂无":d.car_no)
+                            }
+                        },{
+                            field: 'from_uname',
+                            title: '申请人',
+                            sort: true,
+                            minWidth:90
+                        },  {
+                            field: 'start_time',
+                            title: '使用日期/时间',
+                            sort: true,
+                            minWidth:160,
+                        },{
+                            field: '',
+                            title: '使用类型',
+                            sort: true,
+                            minWidth:100,
+                            templet:function(d){
+                                return d.car_apply_type==1?"工作":(d.car_apply_type==2?"接机":d.car_apply_type==3?"送机":"")
+                            }
+                        },{
+                            field:'location',
+                            title:'出发地',
+                            minWidth:120,
+                            templet:function(d){
+                                return d.location==undefined?'暂无目的地':d.location
+                            }
+                        },{
+                            field:'destination',
+                            title:'目的地',
+                            minWidth:100,
+                            templet:function(d){
+                                return d.destination==undefined?'暂无目的地':d.destination
+                            }
+                        }, {
+                            field: 'approval_username',
+                            title: '审批人',
+                            minWidth:90,
+                        },{
+                            field: '',
+                            title: '审核状态',
+                            minWidth:100,
+                            templet: function (d) { 
+                            var htmlBtn = '<button class="'+["layui-btn layui-btn-primary layui-btn-xs","layui-btn layui-btn-warm layui-btn-xs","layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled"][d.apply_status]+'">'+['待审批','未通过','已通过'][d.apply_status]+'</button>'
+                                return htmlBtn
+                            }
+                        }, {
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            minWidth:160,
+                            // templet:function(d){
+                            //     return d.can_cancel=='0'?'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a>':(d.can_cancel=='1'?'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-sm" lay-event="Delete">删除</a>':'')
+                            // }
+                            toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="del">删除</a></div>'
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {}
+                
+            })
+
+             // 详情和删除
+            table.on('tool(userFileTable)', function(obj){
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event
+                
+                if(layEvent=='diat'){
+                    $.fetch({
+                        url:"/gateway/carApply/detail",
+                        type: 'post',
+                        data:{
+                            carApplyId:data.id,
+                            fromUid:data.from_uid
+                        },
+                        cb:function(rs){
+                            console.log(rs)
+                            var statusDiat = data.car_status==1?'正常':(data.car_status==2?'维护中':data.car_status==3?'损坏':data.car_status==4?'报废':'');
+                            var imgData='';
+                            var isShared = data.is_shared==0?'否':(data.is_shared==1?'是':'');
+                            var applyAttach = "";
+                            if(rs.apply_attach&&rs.apply_attach.length>0){
+                                for(var j=0;j<rs.apply_attach.length;j++){
+                                    applyAttach+='<a  title="点击下载" target="_blank" href="/gateway/carAttach/download?attachId='+rs.apply_attach[j].id+'">'+rs.apply_attach[j].original_name+'</a>'
+                                }
+                            }else{
+                                applyAttach='无附件'
+                            }
+                            for(var i in rs.car_attach){
+                                imgData += '<img style="width:140px;height:140px;" src="'+urls+'/gateway/car/img?carId='+rs.car_attach[i].car_id+'&attachId='+rs.car_attach[i].id+'">'
+                            }
+                            for(var i in rs.car_attach){
+                                imgData += '<img style="width:140px;height:140px;" src="'+urls+'/gateway/car/img?carId='+rs.car_attach[i].car_id+'&attachId='+rs.car_attach[i].id+'">'
+                            }
+                            for(var i in rs.car_attach){
+                                imgData += '<img style="width:140px;height:140px;" src="'+urls+'/gateway/car/img?carId='+rs.car_attach[i].car_id+'&attachId='+rs.car_attach[i].id+'">'
+                            }
+                            // 审批反馈意见
+                            var spfk = '';
+                            var res ='';
+                            var classList ='';
+                            if(rs.approval&&rs.approval!=''){
+                                for (const i in rs.approval) {
+                                    if(rs.approval[i].approval_result==1){
+                                        res ="未通过";
+                                        classList = "red";
+                                    }else if(rs.approval[i].approval_result==2){
+                                        res ="已通过";
+                                        classList = 'green';
+                                    }else if(rs.approval[i].approval_result==0){
+                                        res ="待审批";
+                                        classList = 'gray';
+                                    }
+                                    
+                                    var contEnt = rs.approval[i].content==null?'':rs.approval[i].content
+
+                                    spfk+='<p><span> 【 '+rs.approval[i].approval_name+' <em class='+classList+'>'+res+' '+rs.approval[i].created_at+'</em> 】</span>'+contEnt+'</p>'
+                                }
+                            }else{
+                                shtml+='<span>暂无反馈</span>'
+                            }
+                            var isNull = function(o){return (o==null||o=='')?'暂无':o}
+                            var htmls ='<div class=" layui-card layui-form">'
+                                +'<div class="layui-block">'
+                                    +'<blockquote class="layui-row layui-fluid">'
+                                        +'<div class="layui-col-xs12 layui-elem-quote layui-quote-nm addColor">' 
+                                           // +'<fieldset class="layui-elem-field">'
+                                                // +'<legend>申请人：</legend>'
+                                                // +'<div class="layui-field-box" style="word-break:break-all;overflow: hidden;"><div class="ShowWidth">'+isNull(data.from_uname)+'<i class="iconfont icon-triangle-left"></i></div></div>'
+                                               +'<div class="layui-col-xs3">'
+                                                    +'<p>申请人：<span>'+isNull(data.from_uname)+'</span></p>'
+                                               +'</div>'
+                                               +'<div class="layui-col-xs3">'
+                                                    +'<p>部门：<span>'+isNull(data.dept_name)+'</span></p>'
+                                               +'</div>'
+                                               +'<div class="layui-col-xs3">'
+                                                    +'<p>使用类型：<span>'+['','工作','接机','送机'][data.car_apply_type]+'</span></p>'
+                                               +'</div>'
+                                           // +'</fieldset>' 
+                                        +'</div>'
+                                        +'<div class="layui-col-xs12 layui-elem-quote layui-quote-nm addColor">'
+                                            +'<div class="layui-col-xs6">'
+                                                +'<p>车牌号：<span>'+isNull(rs.car_no)+'</span></p>'
+                                            +'</div>'
+                                           
+                                                +'<div class="layui-col-xs6">'
+                                                    +'<p>品牌型号：<span>'+isNull(data.car_brand)+'</span></p>'
+                                                +'</div>'
+                                                +'<div class="layui-col-xs6">'
+                                                    +'<p>座位数量：<span>'+isNull(data.car_seat_num)+'</span></p>'
+                                                +'</div>'
+                                                +'<div class="layui-col-xs6">'
+                                                    +'<p>状态：<span>'+isNull(statusDiat)+'</span></p>'
+                                                +'</div>'
+                                                +'<div class="layui-col-xs6">'
+                                                    +'<p>是否拼车：<span>'+isShared+'</span></p>'
+                                                +'</div>'
+                                                // +'<div class="layui-col-xs12">'
+                                                //     +'<p><label style="float: left;">图片：</label><span style="float: left;width: 92%;">'+isNull(imgData)+'</span></p>'
+                                                // +'</div>'
+                                           
+                                        +'</div>'
+                                        +'<div class="layui-col-xs12 layui-elem-quote layui-quote-nm addColor">'
+                                            +'<div class="layui-col-xs6">'
+                                                +'<p>使用日期：<span>'+isNull(data.start_time.split(' ')[0])+'</span></p>'
+                                            +'</div>'
+                                            +'<div class="layui-col-xs6">'
+                                                +'<p>使用时间：<span>'+isNull(data.start_time.split(' ')[1])+'</span></p>'
+                                            +'</div>'
+                                            // +'<div class="layui-col-xs6">'
+                                            //     +'<p>结束时间：<span>'+isNull(data.end_time)+'</span></p>'
+                                            // +'</div>'
+                                            +'<div class="layui-col-xs6">'
+                                                +'<p>出发地点：<span>'+isNull(data.location)+'</span></p>'
+                                            +'</div>'
+                                            +'<div class="layui-col-xs6">'
+                                                +'<p>目的地：<span>'+isNull(data.destination)+'(<span>'+['','单程','回程'][data.trip_type]+'</span>)</span></p>'
+                                            +'</div>'
+                                            +'<div class="layui-col-xs6">'
+                                                +'<p>司机：<span>'+isNull(data.car_driver)+'</span></p>'
+                                            +'</div>'
+                                           +'<div class="layui-col-xs3">'
+                                                +'<p>审批人：<span>'+isNull(data.approval_username)+'</span></p>'
+                                            +'</div>'
+                                        +'</div>'
+                                        if(data.car_apply_type==2){
+                                            htmls+='<div class="layui-col-xs12 layui-elem-quote layui-quote-nm addColor">'
+                                                    +'<div class="layui-col-xs4">'
+                                                        +'<p>机场：<span>'+isNull(data.airport)+'</span></p>'
+                                                    +'</div>'
+                                                    +'<div class="layui-col-xs4">'
+                                                        +'<p>航班：<span>'+isNull(data.flight)+'</span></p>'
+                                                    +'</div>'
+                                                    +'<div class="layui-col-xs4">'
+                                                        +'<p>抵达时间：<span>'+isNull(data.arrive_time)+'</span></p>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            }
+                                            htmls+='<div class="layui-col-xs12">' 
+                                            +'<fieldset class="layui-elem-field">'
+                                                +'<legend>用途/详情</legend>'
+                                                +'<div class="layui-field-box" style="word-break:break-all;">'+isNull(data.apply_cause)+'</div>'
+                                            +'</fieldset>' 
+                                        +'</div>'
+                                         htmls+='<div class="layui-col-xs12">' 
+                                        +'<fieldset class="layui-elem-field">'
+                                            +'<legend>附件</legend>'
+                                            +'<div class="layui-field-box layui-input-lineHeight" style="word-break:break-all;">'+applyAttach+'</div>'
+                                        +'</fieldset>' 
+                                        +'</div>'
+                                        +'<fieldset class="layui-elem-field">'
+                                            +'<legend>审批意见反馈</legend>'
+                                            +'<div class="layui-field-box ">'+isNull(spfk)+'</div>'
+                                        +'</fieldset>'
+                                    +'</blockquote>'
+                                +'</div>'
+                            +'</div>'
+                            layer.open({
+                                title:'车辆申请详情',
+                                content:htmls,
+                                type:1,
+                                id:'approvPop',
+                                area:['60%','auto'],
+                            })
+                        }
+                    });
+                }else if(layEvent=='del'){
+                    layer.confirm('确定删除?',function(index){
+                        layer.close(index);
+                        $.fetch({
+                            url:"/gateway/carApply/del",
+                            type: 'post',
+                            data:{
+                                carApplyId:data.id,
+                                fromUid:data.from_uid
+                            },
+                            cb:function(rs){
+                                RecruiList.reload({});
+                            }
+                        });
+                    })  
+                }
+            })
+      
+            
+            laydate.render({
+                elem: '#Cardate' //指定元素
+                ,type:'datetime'
+                ,range:'~'
+            });
+            // 获取老车车牌号
+            $.fetch({
+                url:'/gateway/car/list',
+                type:'post',
+                data:{
+                    // carNo:
+                    status:1
+                },
+                cb:function(rs){
+                    var Numder='<option value="">全部</option>';
+                    for(var i = 0; i < rs.data_list.length;i++){
+                        if(rs.data_list[i].car_no_old!=null){
+                            Numder+='<option value="'+rs.data_list[i].car_no_old+'">'+rs.data_list[i].car_no_old+'</option>'
+                        }else{
+
+                        }
+                    
+                    }
+                    $("#CarOldNumber").html(Numder)
+                    form.render()
+                }
+            });
+            // 获取新车车牌号
+            $.fetch({
+                url:'/gateway/car/list',
+                type:'post',
+                data:{
+                    // carNo:
+                    status:1
+                },
+                cb:function(rs){
+                    var Numder='<option value="">全部</option>';
+                    for(var i = 0; i < rs.data_list.length;i++){
+                        if(rs.data_list[i].car_no_new!=null){
+                            Numder+='<option value="'+rs.data_list[i].car_no_new+'">'+rs.data_list[i].car_no_new+'</option>'
+                        }else{
+
+                        }
+                    
+                    }
+                    $("#CarNumber").html(Numder)
+                    form.render()
+                }
+            });
+       
+
+             // 筛选
+            $("#RecruiListUserFile").on("click",function(){
+                var status = $("#RecruiSelect").val();
+                var carNo =$("#CarOldNumber").val();
+                var carNoNew = $("#CarNumber").val();
+                var applyUname = $("#Carpeople").val();
+                var driver = $("#Cardriver").val();
+                var newDate = $("#Cardate").val().split('~');
+                RecruiList.reload({
+                    where:{
+                        status:status,
+                        carNo:carNo,
+                        carNoNew:carNoNew,
+                        applyUname:applyUname,
+                        driver:driver,
+                        createDate:newDate[0],
+                        endDate:newDate[1]
+                        // companyId:company_id
+                    },
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                })
+                $("#closeLayer").show();
+            })
+            // 返回
+            $("#closeLayer").hide();
+            $("#closeLayer").on("click",function(){
+                $(this).hide();
+                form.val("user-file-form", {
+                    "Cardate":'',
+                    "RecruiSelect": '3', // "name": "value"
+                    "CarOldNumber": '<option value="">全部</option>',
+                    "CarNumber":'<option value="">全部</option>',
+                    "Carpeople":'',
+                    "Carpeople":'',
+                    "Cardriver":''
+                })
+                RecruiList.reload({
+                    where:{
+                        status:3
+                    },
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                })
+            })
+        });
+    })
+</script>
+
+</html>

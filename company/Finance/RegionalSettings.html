@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>区域设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="iconfont mr-5 engine"></i>区域设置</div>
+            <div class="layui-card-body">
+                <div class="layui-form" lay-filter="formTest">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">选择区域:</label>
+                        <div class="layui-input-block" id="RadioSelect">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">本地货币:</label>
+                        <div class="layui-input-block" id="locacrr">
+                        </div>
+                    </div>
+                  
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">外币转当地货币是否开启:</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="whether" value="1" title="是">
+                            <input type="radio" name="whether" value="0" title="否">
+                        </div>
+                    </div>
+                    <!-- <div class="layui-form-item" id="DisplayArea">
+                        <label class="layui-form-label">当地货币:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" value="" placeholder="" class="layui-input">
+                        </div>
+                    </div> -->
+                    <div class="layui-form-item ">
+                        <div class="layui-input-block">
+                                <button id="subFinanForm"  lay-submit class="layui-btn" lay-filter="subFinanForm">保存修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20190215"></script>
+<script>
+    $(function(){
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index','form'], function(){
+            var $ = layui.$
+            ,admin = layui.admin
+            ,element = layui.element
+            ,form = layui.form
+            ,router = layui.router();
+            element.render();
+
+            $.fetch({
+                url:'/gateway/financial/areas',
+                type: 'post',
+                cb:function(rs){
+                    console.log(rs)
+                    var contSelect = ''
+                    if(rs==null){
+                        $("#locacrr").html('<div class="layui-form-mid layui-word-aux">当前未设置本地币种,您可以在集团的财务管理-->财务设置-->区域设置中设置区域和本地货币。</div>');
+                        contSelect = '<div class="layui-form-mid layui-word-aux">暂无</div>';
+                        $("#subFinanForm").prop('disabled',true).addClass("layui-btn-disabled");
+                        $(".layui-input-block input[name='whether']").parents('.layui-form-item').hide();
+                    }else{
+                            if(rs.selected==true){
+                                contSelect += '<div class="layui-form-mid layui-word-aux" data-id="'+rs.id+'">'+rs.area_name+'</div>'
+                                if(rs.enabled==1){
+                                    $(".layui-input-block input[value='1']").prop("checked",true)
+                                    $(".layui-input-block input[value='0']").prop("checked",false)
+                                }else {
+                                    $(".layui-input-block input[value='1']").prop("checked",false)
+                                    $(".layui-input-block input[value='0']").prop("checked",true)
+                                }
+                            }else {
+                                contSelect += '<input type="radio" name="role" value="'+rs.id+'" title="'+rs.area_name+'" disabled>'
+                            }
+
+                             $("#locacrr").html('<div class="layui-form-mid layui-word-aux">'+rs.currency_name+'</div>')
+                    }
+
+                    $("#RadioSelect").html(contSelect);
+                    form.render();
+                }
+            })
+
+            
+            // 提交
+            $("#subFinanForm").on("click",function(){
+                // var id = $("#RadioSelect input[name='role']:checked").val();
+                var id = $("#RadioSelect div").attr('data-id')
+                var enabled = $(".layui-input-block input[name='whether']:checked").val();
+               if(enabled==''||enabled==undefined){
+                    layer.msg("请选择货币是否开启！")
+                    return false
+                }else {
+                    $.fetch({
+                        url:'/gateway/financial/setarea',
+                        type: 'post',
+                        data:{
+                            ID:id,
+                            Enabled:enabled
+                        },
+                        cb:function(rs){
+                            // console.log(rs)
+                            layer.msg("提交成功")
+                            form.val("formTest", {
+                                "role": rs.area_name // "name": "value"
+                                ,"whether": rs.enabled
+                            })
+                        }
+                    })
+                }
+            })
+        })
+    })
+</script>
+</html>

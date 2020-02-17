@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>财务统计</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+    
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<style>
+pre{
+    display:block;
+    visibility:hidden;
+}
+.expandingArea textarea.layui-textarea{
+    position:absolute;
+    top:0;
+    left:0;
+    border:none;
+    height:100% !important;
+}
+.expandingArea{
+    position:relative;
+}
+.expandingArea .layui-textarea{
+    min-height:auto;
+}
+</style>
+<body layadmin-themealias="default">
+    <div class="layui-fluid" id="isGrop" data-cgid="0">
+        <div class="layui-card">
+            <div class="layui-card-header pz-10">
+                <label for="" class="mx-10">
+                    <i class="iconfont icon-dailishouhui"></i>
+                    日期
+                </label>
+                <div class="layui-inline ml-5">
+                    <input type="text" class="layui-input caiwu-wihdt" id="statisticsTime" placeholder="请选择统计时间">
+                </div>
+            </div>
+            <div class="layui-card-body" id="statisticsBox">
+                    <table id="statisticList" class="layui-table"  lay-size="sm"></table>
+            </div>
+        </div>
+        <!-- 弹窗 -->
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script src="../../js/clipboard.min.js"></script>
+<script src="../../js/sub/finaStas.js?v=20191130"></script>
+
+
+</html>

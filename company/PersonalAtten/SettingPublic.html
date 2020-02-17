@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>公休日</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/common.js"  type="text/javascript"></script>
+</head>
+	
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div id="nameTime" class="layui-form layui-card-head layuiadmin-card-header-auto">
+
+            </div>
+            <div class="layui-form layui-card-body layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+					<label class="layui-form-label">月份选择</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" id="test-laydate-type-workTimeSelec" placeholder="yyyy-MM">
+					</div>
+				</div>
+                <table id="calendar" class="layui-table">
+                    <colgroup>
+                        <col width=""></col>
+                        <col width=""></col>
+                        <col width=""></col>
+                        <col width=""></col>
+                        <col width=""></col>
+                        <col width=""></col>
+                        <col width=""></col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>一</th>
+                            <th>二</th>
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                            <th>六</th>
+                            <th>日</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+     layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','table','form','laydate'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,laydate = layui.laydate
+        ,router = layui.router();
+        element.render();
+        var layer = layui.layer
+        ,form=layui.form
+        ,table=layui.table;
+
+        // var publicUrl =$("#calendar  tbody").attr("data-id");
+        // var pubType=window.timeRange.delid;
+        if(window.timeRange){
+            var st=window.timeRange.s.substring(7,0);
+            var et=window.timeRange.e.substring(7,0);
+            var timeArr=st.split('-');
+            var publicUrl=""+window.timeRange.delid+"/"+timeArr[0]+"-"+timeArr[1]+""
+            // console.log(window.timeRange.s,window.timeRange.e)
+            // var  stNumber=parseFloat(timeArr[1])-1<;
+            laydate.render({
+                elem: '#test-laydate-type-workTimeSelec'
+                ,type: 'month'
+                ,value:st
+                ,min:st+'-01'
+                ,max:et+'-31'
+                ,btns: [ 'confirm']
+                ,done: function(value, date){
+                    // workList.getWorkList(value);
+                    // workList.YearMot=value;
+                    console.log(value, date)
+                    var timeArr2=value.split('-');
+                    publicholidayFun(timeArr2[0],timeArr2[1]);
+                }
+            });
+            var nowMonth =function(y,m){
+                var  month = parseInt(m-1, 10);
+                //当前月的第一天的日期
+                var firstDay = new Date(y,month,01);
+                //第一天是星期几
+                var weekday = firstDay.getDay();
+                // console.log(weekday)
+                if(weekday==0){
+                    weekday=7;
+                }
+                //求当前月一共有多少天
+                //new Date(year,month+1,0) ： month+1是下一个月，day为0代表的是上一个月的最后一天，即我们所需的当前月的最后一天。
+                //getDate（）则返回这个日期对象是一个月中的第几天，我们由最后一天得知这个月一共有多少天
+                var days =new Date(y, month+1, 0).getDate();
+                var res = "<tr>";
+                //输出第一天之前的空格
+                for(var i=1;i<weekday;i++){
+                    res+="<td> </td>";
+                }
+                
+
+                for(var j=1;j<=days ;j++){
+
+                    var dayname= j<10? ''+y+'-'+m+'-0'+j+'':''+y+'-'+m+'-'+j+''
+                    var classT= 't-'+dayname+'';
+                    // console.log(dayname,window.timeRange.s,window.timeRange.e)
+                    if((dayname>=window.timeRange.s&&dayname<=window.timeRange.e)){
+                        var isDay='isDay'
+                        res += '<td><p class="'+isDay+'">'+dayname+'</p><div class="layui-table-name '+classT+'"></div></td>';
+                    }else{
+                        var isDay=''
+                        res += '<td style="background:#f5f5f5"><p>'+dayname+'</p><div class="layui-table-name '+classT+'"></div></td>';
+                        
+                    }
+
+                    
+                    
+                    //如果是周日则换行
+                    if(weekday%7 == 0){
+                        weekday = 0;
+                        res += '</tr><tr>';
+                    }
+                    weekday++;
+                }
+                return res;
+            }
+            var publicholidayFun=function(y,m){
+                var dayTable= nowMonth(y,m);//年月
+                publicUrl=""+window.timeRange.delid+"/"+y+"-"+m+""
+                $("#calendar  tbody").html(dayTable);
+                $.fetch({
+                    url: "/gateway/publicholiday/detail/"+publicUrl+"",
+                    type: 'get',
+                    cb:function(rs){
+                        var workTimeUser ='';
+                        for(var i=0;i< rs.user_list.length;i++){//弹窗中 全部用户的
+                            workTimeUser+='<tr>'
+                                        +'<td>'+rs.user_list[i].username+'</td>'
+                                        +'<td>'+rs.user_list[i].dept_name+'</td>'
+                                        +'<td>'
+                                            +'<div class="layui-form textL">'
+                                                +'<input lay-filter="layTableOneChoose" type="checkbox" name="chekOne" data-id="'+rs.user_list[i].id+'" title="" lay-skin="primary">'
+                                            +'</div>'
+                                        +'</td>'
+                                    +'</tr>'
+                        }
+                        // console.log(rs.date_user_list)
+                        $.each(rs.date_user_list,function(key,val){
+                            for(var i=0;i<rs.date_user_list[key].length;i++){
+                                $("div.layui-table-name.t-"+key+"").append('<p data-uid="'+rs.date_user_list[key][i].user_id+'">'+rs.date_user_list[key][i].user_name+'</p>');
+                            }
+                        })
+
+                        $("#calendar").off('click').on("click",'p.isDay',function(){
+                            var time = $(this).text();
+                            var idArr = [];
+                            $(this).next("div").find("p").each(function(){
+                                var uid = $(this).attr("data-uid");
+                                idArr.push(uid);
+                            })
+                            layer.open({
+                                title:'排班人员('+time+')',
+                                type: 1, 
+                                content:
+                                '<div class="layui-card-body">'
+                                    +'<table class="layui-table">'
+                                    + '<colgroup>'
+                                            +'<col width="150">'
+                                            +'<col width="200">'
+                                            +'<col>'
+                                        +'</colgroup>'
+                                        +'<thead>'
+                                            +'<tr>'
+                                                +'<th>姓名</th>'
+                                                +'<th>部门</th>'
+                                                +'<th>'
+                                                    +'<div class="layui-form textL">'
+                                                        +'<input class="chekAll" type="checkbox" name="chekAll" lay-filter="layTableAllChoose" title="是否公休" lay-skin="primary">'
+                                                    +'</div>'
+                                                +'</th>'
+                                            +'</tr> '
+                                        +'</thead>'
+                                                        
+                                        +'<tbody>'
+                                            +workTimeUser
+                            
+                                        +'</tbody>'
+                                            
+                                    +'</table>'
+                                +'</div>', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                                area:['80%', '80%'],                                
+                                maxmin: false,
+                                id:'setHoliUser',
+                                btn: ['确认', '取消'],
+                                yes:function(index,layero){
+                                    var idStr='',delIdStr='';
+                                    $("#setHoliUser").find("input[name='chekOne']").each(function(){
+                                        // console.log($(this),$(this).prop('checked'))
+                                        if($(this).prop('checked')){
+                                            idStr   += ''+$(this).attr('data-id')+',';
+                                        }else{
+                                            delIdStr += ''+$(this).attr('data-id')+',';
+                                        }
+                                    })
+                                    // return false
+                                    idStr = idStr.slice(0,idStr.length-1);
+                                    var  param ={
+                                        UserID:idStr,
+                                        DelUserID:delIdStr,
+                                        Date:time,
+                                        WorkTimeTypeUserID:window.timeRange.delid
+                                    }
+                                    $.fetch({
+                                        url: "/gateway/publicholiday/set",
+                                        type: 'post',
+                                        data: param,
+                                        cb:function(rs){
+                                            layer.msg("编辑成功!");
+                                            
+                                            layer.close(index);
+                                            var pubType=window.timeRange.delid; 
+                                            $.fetch({
+                                                url: "/gateway/publicholiday/detail/"+publicUrl+"",
+                                                type: 'get',
+                                                cb:function(rs){
+                                                    // console.log(rs)
+                                                    $("#calendar div.layui-table-name").html('');
+                                                    $.each(rs.date_user_list,function(key,val){
+                                                        for(var i=0;i<rs.date_user_list[key].length;i++){
+                                                            $("div.layui-table-name.t-"+key+"").append('<p data-uid="'+rs.date_user_list[key][i].user_id+'">'+rs.date_user_list[key][i].user_name+'</p>');
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                },
+                                success:function(){
+                                    form.render();
+                                    if(idArr.length>0){
+                                        for(var i=0;i<idArr.length;i++){
+                                            $("#setHoliUser input[data-id='"+idArr[i]+"']").prop('checked',true);
+                                            
+                                        }
+                                    }
+                                    form.on('checkbox(layTableAllChoose)', function(data){
+                                        if(data.elem.checked){
+                                            $(data.elem).parents("thead").next("tbody").find('input').prop("checked",true);
+
+                                        }else{
+                                            $(data.elem).parents("thead").next("tbody").find('input').prop("checked",false);
+                                        }
+                                        form.render();
+                                    }); 
+                                    form.on('checkbox(layTableOneChoose)', function(data){
+                    
+                                        var alen = $(data.elem).parents("tbody").find('input').length;
+                                        var clen = $(data.elem).parents("tbody").find('input:checkbox:checked').length;
+                                        if(alen == clen){
+                                            $(data.elem).parents("tbody").siblings("thead").find(".chekAll").prop("checked",true);
+                                        }else{
+                                            $(data.elem).parents("tbody").siblings("thead").find(".chekAll").prop("checked",false);
+                                        }
+                                        form.render();
+                                    }); 
+
+
+                                    
+                                    form.render();
+                                }
+                            })
+                            
+                        })
+                    }
+                })
+            }
+        
+            publicholidayFun(timeArr[0],timeArr[1]);
+        }
+    })
+</script>
+</html>

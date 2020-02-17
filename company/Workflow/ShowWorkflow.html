@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>展示任务</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../css/wang.css">    
+        
+    <script src="../../js/jquery.min.js"></script>
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header" id="IdText">
+            </div>
+            <div class="layui-card-body layui-row layui-col-space10">
+                <div class="layui-col-sm7 layui-col-md8 layui-col-lg9">
+                    <fieldset class="layui-elem-field">
+                        <legend>任务描述</legend>
+                        <div class="layui-field-box">
+                            <ol id="description">
+                                <!-- <li>2017-03-20 08:23:12, 由 <b>oliver</b> 创建</li> -->
+                            </ol>
+                        </div>
+                    </fieldset>
+                    <!-- <fieldset class="layui-elem-field">
+                        <legend>需求描述</legend>
+                        <div class="layui-field-box">
+                        </div>
+                    </fieldset>
+                    <fieldset class="layui-elem-field">
+                        <legend>验收标准</legend>
+                        <div class="layui-field-box">
+                            
+                        </div>
+                    </fieldset> -->
+                    <fieldset class="layui-elem-field">
+                        <legend>附件</legend>
+                        <div class="layui-field-box" id="annex">
+
+                        </div>
+                    </fieldset>
+                    <fieldset class="layui-elem-field">
+                        <legend>历史记录</legend>
+                        <div class="layui-field-box">
+                            <ul  class="layui-timeline" id="BoxList"></ul>
+                        </div>
+                    </fieldset>
+                    <div class="tc">
+                        <button class="layui-btn layui-btn-normal layui-btn-sm" id="Assign">指派</button>
+                        <button class="layui-btn layui-btn-normal layui-btn-sm" id="CarryOut">完成</button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm" id="Cancel">取消</button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm" id="ShutDown">关闭</button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm" id="Remarks">备注</button>
+                        <button class="layui-btn layui-btn-sm" id="Activation">激活</button>
+                    </div>
+                </div>
+                <div class="layui-col-sm5 layui-col-md4 layui-col-lg3" id="fieldsetCont">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/wangEdit.js?v=20181201"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['element', 'index', 'table','form','layedit','upload'], function () {
+        var $ = layui.$,
+            table = layui.table,
+            form = layui.form,
+            upload = layui.upload,
+            layedit = layui.layedit,
+            element = layui.element;
+            var E = window.wangEditor;
+            var editor = new E('#editor');
+        // 标题
+        var titleId = '<span class="mr-5">'+dataList.id+'</span><span>'+dataList.task_name+'</span>'
+        $("#IdText").html(titleId);
+        // 任务描述
+        var titleId = '<li><div class="w-e-text" style=" overflow-y: auto;">'+dataList.task_desc+'</div></li>'
+        $("#description").html(titleId)
+        
+        // 附件下载  /gateway/taskAttach/download  taskId：【必填】，attachId：【必填】
+        var titleId ='';
+        // console.log(dataList.task_attach,"123123123")
+        
+        if(dataList.task_attach != null){
+            for(var i =0; i<dataList.task_attach.length;i++){
+                // console.log(dataList,"1111111")
+                titleId += '<a href="'+urls+'/gateway/taskAttach/download?taskId='+dataList.id+'&attachId='+dataList.task_attach[i].attach_id+'" class="isDay mr-10">'+dataList.task_attach[i].original_name+'</a>'
+            }
+        }
+        $("#annex").html(titleId)
+        
+        // 历史记录
+        var textCont = ["创建","已取消","已完成","已关闭","指派","备注","激活","开始"]
+        var titleId ='';
+        for(var i =0; i<dataList.task_history.length;i++){
+            var taskhistoryattach='';
+            if(dataList.task_history_attach != null){
+                for(var k =0; k<dataList.task_history_attach.length;k++){
+                    if(dataList.task_history[i].task_history_id==dataList.task_history_attach[k].task_history_id){
+                        taskhistoryattach += '<a href="'+urls+'/gateway/taskAttach/download?taskId='+dataList.id+'&attachId='+dataList.task_history_attach[k].attach_id+'" class="isDay mr-10">'+dataList.task_history_attach[k].original_name+'</a>'
+                    }
+                }
+            }
+            if(dataList.task_history[i].action_type == 4){
+                titleId += '<li class="layui-timeline-item"><i class="layui-icon layui-timeline-axis">&#xe63f;</i><div class="layui-timeline-content layui-text"><h4 class="layui-timeline-title">' +dataList.task_history[i].created_at+', 由 <b>'+dataList.task_history[i].action_username+'</b> '+textCont[dataList.task_history[i].action_type] +'给'+((dataList.task_history[i].assigned_to==null)?'':'<b> '+(dataList.task_history[i].assigned_to)+'</b></h3><p>') +((dataList.task_history[i].action_remark==null)?'':('<div class="w-e-text " style=" overflow-y: auto;">'+dataList.task_history[i].action_remark+'</div>'))+(taskhistoryattach==''?'':('<div>附件:'+taskhistoryattach+'</div>'))+'</p></div></li>'
+            }else{
+                titleId += '<li class="layui-timeline-item"><i class="layui-icon layui-timeline-axis">&#xe63f;</i><div class="layui-timeline-content layui-text"><h4 class="layui-timeline-title">'+dataList.task_history[i].created_at+',由<b>'+dataList.task_history[i].action_username+'</b>'+((textCont[dataList.task_history[i].action_type]==undefined)?' 错误的值':(textCont[dataList.task_history[i].action_type]))+'</h3><p>'+((dataList.task_history[i].action_remark==null)?'':('<div class="w-e-text" style=" overflow-y: auto;">'+dataList.task_history[i].action_remark+'</div>'))+(taskhistoryattach==''?'':('<div>附件:'+taskhistoryattach+'</div>'))+'</p></div></li>'
+            }    
+        }
+        if(titleId!=''){
+            titleId +=    '<li class="layui-timeline-item">'
+            //    +' <i class="layui-icon layui-timeline-axis">&#xe63f;</i>'
+            //    +' <div class="layui-timeline-content layui-text">'
+            //     // <div class="layui-timeline-title">过去</div>
+            //     +'</div>'
+            +'</li>'
+
+        }
+        $("#BoxList").html(titleId)
+        // console.log(dataList)
+
+        // 右边内容
+        var listCont = '<div class="layui-tab layui-tab-card" style="box-shadow:none;">'
+                +'<ul class="layui-tab-title"><li class="layui-this">基本信息</li><li>任务进度</li><li>任务的一生</li></ul>'
+               +'<div class="layui-tab-content">'
+        // '<fieldset class="layui-elem-field">'
+        //                     +'<legend>基本信息</legend>'
+        //                     +'<div class="layui-field-box">'
+               +'<div class="layui-tab-item layui-show">'
+                                +'<div class="layui-form">'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">所属项目</label>'
+                                        +'<div class="layui-input-block cateID"><span>'+((dataList.cate_name==null)?' ':(dataList.cate_name))+'</span></div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">指派给</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.assigned_to_name==null)?' ':(dataList.assigned_to_name))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">任务类型</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.cate_name==null)?' ':(dataList.cate_name))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">任务状态</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+["未开始","已取消","已完成","已关闭","进行中"][dataList.task_status]+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">优先级</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+["","低","中","高"][dataList.task_priority_level]+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                        //     +'</div>'
+                        // +'</fieldset>'
+                        
+                        // +'<fieldset class="layui-elem-field">'
+                        //     +'<legend>任务的一生</legend>'
+                        +'<div class="layui-tab-item ">'
+                                +'<div class="layui-form">'
+                                        +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">实际开始时间</label>'
+                                        +'<div class="layui-input-block cateID"><span>'+((dataList.true_starttime==null)?' ':(dataList.true_starttime))+'</span></div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">实际结束时间</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.true_endtime==null)?' ':(dataList.true_endtime))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">实际工作时间</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.true_hours==null)?' ':(dataList.true_hours))+'（小时）</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">进度</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.progress_rate==null)?' ':(dataList.progress_rate))+'%</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">是否超时</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+['未超时','已超时',''][((dataList.progress_overtime==null)?'3':(dataList.progress_overtime))]+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">预计结束时间</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.estimate_endtime==null)?' ':(dataList.estimate_endtime))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label" style="width: 84px;">预计工作时间</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.estimate_hours==null)?' ':(dataList.estimate_hours))+'（小时）</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                        +'<div class="layui-tab-item">'
+                            +'<div class="layui-field-box">'
+                                +'<div class="layui-form">'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">由谁创建</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.created_by_name==null)?' ':(dataList.created_by_name))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">由谁完成</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.finished_by_name==null)?' ':(dataList.finished_by_name))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">由谁取消</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.cancel_by_name==null)?' ':(dataList.cancel_by_name))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">取消时间</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.cancel_by_time==null)?' ':(dataList.cancel_by_time))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">由谁关闭</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.closed_by_name==null)?' ':(dataList.closed_by_name))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    // +'<div class="layui-form-item">'
+                                    //     +'<label class="layui-form-label">关闭原因</label>'
+                                    //     +'<div class="layui-input-block cateID">'
+                                    //         +'<span>'+((dataList.assigned_to_name==null)?' ':(dataList.assigned_to_name))dataList.assigned_to_name+'</span>'
+                                    //     +'</div>'
+                                    // +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">关闭时间</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+((dataList.closed_by_time==null)?' ':(dataList.closed_by_time))+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'</div>'
+                        
+                        //     +'</div>'
+                        // +'</fieldset>'
+                      +'</div></div></br>'
+       
+            //    +'<fieldset class="layui-elem-field">'
+            //                 +'<legend>任务进度</legend>'
+            //                 +'<div class="layui-field-box">'
+            //                     +'<div class="layui-form">'
+                                   
+            //                     +'</div>'
+            //                 +'</div>'
+            //             +'</fieldset>'
+                        $("#fieldsetCont").html(listCont);
+        var AssignFun =function(opt={},type){
+            var attachIdArr =[];
+            
+            // var RemarksText =layedit.build("RemarksText", {
+            //     tool: [
+            //         'strong' //加粗
+            //         , 'italic' //斜体
+            //         , 'underline' //下划线
+            //         , 'del' //删除线
+            //         , '|' //分割线
+            //         , 'left' //左对齐
+            //         , 'center' //居中对齐
+            //         , 'right' //右对齐
+            //         , 'link' //超链接
+            //         , 'unlink' //清除链接
+            //     ]
+            // });
+            var content = '',layerHeight="580px";
+            content+= '<div class="layui-card-body layui-form">'
+                    if(type==4){
+                        layerHeight="580px"
+                        content+= '<div class="layui-form-item">'
+                            +'<label class="layui-form-label">指派给</label>'
+                            +'<div class="layui-input-inline">'
+                                +'<select lay-filter="AssignSelect" id="AssignSelect"></select>'
+                            +'</div>'
+                        +'</div>'
+                    }
+                    content+= '<div class="layui-form-item">'
+                            +'<label class="layui-form-label">备注</label>'
+                            // +'<div class="layui-input-block">'
+                                // +'<textarea name="RemarksText" id="RemarksText" style="display: none;"></textarea>'
+                        
+                                +'<div  class="layui-input-block" id="editor"></div>'
+                            // +'</div>'
+                        +'</div>' 
+                        +'<div class="layui-form-item">'
+                            +'<label class="layui-form-label">附件</label>'
+                            +'<div class="layui-input-block">'
+                                +'<button type="button" class="layui-btn" id="workFeild">'
+                                    +'<i class="layui-icon">&#xe67c;</i>上传附件'
+                                +'</button>'
+                                +'<div id="taskFiles" class="UploadNames-box"></div>'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>';
+                layer.open({
+                    title:''+opt.id+' '+opt.task_name+' > '+["创建","取消","完成","关闭","指派","备注","激活","开始"][type]+'',
+                    type: 1, 
+                    content:content,
+                    area:['80%', layerHeight],
+                    btn:['确定','取消'],
+                    success: function(index,layero){
+                        if(type==4){
+                            $.fetch({
+                                url:"/gateway/projectManage/users",
+                                type: 'post',
+                                data: {projectId:opt.task_project_id},  //传项目ID
+                                cb:function(rs){
+                                    var selectList = '';
+                                    for(var i = 0; i<rs.length; i++){
+                                        selectList += '<option value="'+ rs[i].users_id+'">'+ rs[i].name+'</option>'
+                                    }
+                                    $("#AssignSelect").html(selectList);
+                                    form.render();
+                                }
+                            })
+                        }
+                        var uploadInst = upload.render({
+                            elem: '#workFeild' //绑定元素
+                                
+                            ,url: urls+'/gateway/taskAttach/add' //上传接口
+                            ,accept:"file"
+                            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                                layer.load('上传中'); //上传loading
+                            }
+                            ,done: function (res) {
+                                //上传完毕回调
+                                console.log(res);
+                                layer.closeAll('loading'); //关闭loading
+                                $("#taskFiles").append('<a><span class="currentName">'+res.data.attachName+'</span><i data-file="'+res.data.attachId+'" class="del iconfont icon-guanbi"></i></a>')
+                                attachIdArr.push(res.data.attachId);
+
+                            }
+                            ,error: function () {
+                                //请求异常回调
+                            }
+                        });
+                            // 或者 var editor = new E( document.getElementById('editor') )
+                        editor.customConfig.uploadImgShowBase64 = true ;
+                        editor.customConfig.zIndex = 0;
+                        editor.create()
+                        // RemarksText =layedit.build("RemarksText", {
+                        //     tool: [
+                        //         'strong' //加粗
+                        //         , 'italic' //斜体
+                        //         , 'underline' //下划线
+                        //         , 'del' //删除线
+                        //         , '|' //分割线
+                        //         , 'left' //左对齐
+                        //         , 'center' //居中对齐
+                        //         , 'right' //右对齐
+                        //         , 'link' //超链接
+                        //         , 'unlink' //清除链接
+                        //     ]
+                        // });
+                         //删除附件
+                         $("#taskFiles").on("click",'i.del',function(){//删除附件
+                            var delId =$(this).attr("data-file");
+                            var elem = $(this).parent("a"); 
+                                var sub= {
+                                    // taskId:opt.id,
+                                    attachId:delId
+                                }
+                           
+                            $.fetch({
+                                url: '/gateway/taskAttach/del',
+                                type: 'post',
+                                data:sub,
+                                cb:function(rs){
+                                    attachIdArr.splice($.inArray(delId,attachIdArr),1);
+                                    elem.remove();
+                                } 
+                            });
+                        })
+                    },
+                    yes: function(index, layero){
+                        // var SelectId = $("#AssignSelect").val();
+                        // var SelectCont = $("#AssignSelect").find("option[value='"+SelectId+"']").text();
+                        var SelectId = $("#AssignSelect").val();
+                        var SelectCont = $("#AssignSelect").find("option[value='"+SelectId+"']").text();
+                        // layedit.sync(RemarksText);
+                        // var templateCont = layedit.getContent(RemarksText);
+                        var fildId=attachIdArr.toString();
+                        var templateCont=editor.txt.html();
+                        // var  val = 
+                        // console.log(templateCont)
+                        var param ={
+                            taskId:opt.id,
+                            attachIds:fildId,
+                            actionType:type,
+                            actionRemark: templateCont, //备注
+                            assignedUid: SelectId, //指派人ID
+                            assignedUname: SelectCont, //指派人name 
+                        }
+                        $.fetch({
+                            url:"/gateway/task/action",
+                            type: 'post',
+                            data: param,
+                            cb:function(rs){
+                                layer.msg(''+["创建成功","已取消","已完成","已关闭","指派成功","备注添加成功","激活成功","已开始"][type]+'',{time:800});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            },
+                        })
+                    }
+                })
+        }
+        // 指派
+       // 
+        $("#Assign").on('click',function(){
+            AssignFun(dataList,4);
+        });
+        // 完成
+        $("#CarryOut").on('click',function(){
+            AssignFun(dataList,2);
+        });
+        // 取消
+        $("#Cancel").on('click',function(){
+            AssignFun(dataList,1);
+        });
+        // 关闭
+        $("#ShutDown").on('click',function(){
+            AssignFun(dataList,3);
+        });
+        // 备注
+        $("#Remarks").on('click',function(){
+            AssignFun(dataList,5);
+        });
+        // 激活
+        $("#Activation").on('click',function(){
+            AssignFun(dataList,6);
+        });
+    })
+</script>
+</html>

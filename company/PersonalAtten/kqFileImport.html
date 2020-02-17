@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>排班导入</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-row layui-col-space10 layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-card-header">导入排班数据</div>
+                </div>
+                <div class="layui-col-xs3"></div>
+                <div class="layui-col-xs6">
+                    <form class="layui-form" lay-filter="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-label">下载导入模板：</label>
+                            <div class="layui-input-block modify-input-cont">
+                                <a id="dowmFile" target="blank" class="layui-btn"><i class="iconfont icon-xiazai"></i>排班模板下载</a>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label modify-form-label">选择导入文件：</label>
+                            <div class="layui-input-block modify-input-cont">
+                                <button type="button" class="layui-btn" id="uploadExl">
+                                    <i class="layui-icon">&#xe67c;</i>导入
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <fieldset class="layui-elem-field">
+                            <legend>说明：</legend>
+                            <div class="layui-field-box red">
+                                <p>1、排班模板请使用下载的Excel文件导入； </p>
+                                <p>2、排班模板的排班名称、用户、审批人必须在OA系统中存在，开始时间和结束时间不能和同一班次的其它数据有交叉。</p>
+                            </div>
+                     </fieldset>
+                </div>
+                <div class="layui-col-xs3"></div>
+            </div>
+        </div>
+       
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+    $(function(){
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','upload'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router()
+        ,layer = layui.layer;
+        element.render();
+    
+        var table = layui.table,laydate = layui.laydate;
+      
+        table.render({
+          elem: '#table-checkbox',
+          limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+          //,page: true
+        });
+        var upload = layui.upload;
+        var upurls =window.urls;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadExl' //绑定元素
+            ,accept:"file"
+            ,exts: "xlsx"
+            ,url:""+upurls+"/gateway/worktimetypeuser/import" //上传接口
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res, index, upload){
+                //上传完毕回调
+                layer.closeAll('loading'); //关闭loading
+                if(res.status_code==200){
+                    var rs =res.data;
+                   
+                    layer.msg("导入完成");
+                    var phtml='';
+                    if(rs.fail_message&&rs.fail_message.length>0){
+                        for(var i=0;i<rs.fail_message.length;i++){
+                            phtml +=' <p>'+rs.fail_message[i]+'</p>'
+                        }
+                    }
+    
+                    var fileMsgHt='<div class="layui-card">'
+                                   +' <div class="layui-card-body">'
+                                       +' <fieldset class="layui-elem-field">'
+                                           +' <legend>导入信息</legend>'
+                                           +' <div class="layui-field-box red">'
+                                               + '您共导入了'+ rs.total_count+'条信息，错误了'+rs.fail_count+'条，成功了'+rs.success_count+'条。'
+                                           +' </div>'
+                                       +' </fieldset>'
+                                   +' </div>'
+                                   +' <div class="layui-card-body">'
+                                       +' <blockquote class="layui-elem-quote layui-quote-nm">'
+                                            +phtml
+                                            +'(提示信息)'
+                                       +' </blockquote>'
+                                   +' </div>'
+                               +' </div>'
+    
+                    var fileMsg= layer.open({//新增排班人员弹窗
+                        title:' ',
+                        content:fileMsgHt,
+                        type:1,
+                        id:'dailWorkUrs',
+                        area:['60%','60%'],
+                        btn:['确定']
+                    })
+                }else{
+                    layer.msg(res.message);
+                }
+               
+            }
+            ,error: function(index, upload){
+                //请求异常回调
+                layer.closeAll('loading'); //关闭loading
+            }
+        });
+        $("a#dowmFile").attr("href",""+upurls+"/gateway/worktimetypeuser/download")
+      });
+})
+</script>
+</html>

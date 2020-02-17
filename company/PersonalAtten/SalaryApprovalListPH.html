@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工资设置审批</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+                            
+                <div class="layui-card-header">工资设置审批(菲籍)</div>
+            <!-- <div class="layui-tab layui-tab-brief" lay-filter="component-tabs-brief"> -->
+                <!-- <ul class="layui-tab-title">
+                    <li class="layui-this">待审批报销付款单</li>
+                    <li>已审批报销付款单</li>                
+                    <li>我的转发</li>                
+                </ul> -->
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-item l-mnl">
+								<div class="layui-inline">
+									<label class="layui-form-label">用户名</label>
+									<div class="layui-input-inline">
+										<input type="text"  class="layui-input" id="UserNamePH" name="UserNamePH">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">部门：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="DepartmentID" lay-filter="DepartmentID" name="DepartmentID"></select> -->
+										<select type="text" xm-select="DepartmentIDPH"  id="DepartmentIDPH" name="DepartmentIDPH" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">岗位：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTit leID"></select> -->
+										<select type="text"  id="JobTitleIDPH" name="JobTitleIDPH" placeholder="全部" autocomplete="off" class="layui-input"  xm-select="JobTitleIDPH"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline" style="margin-top: 5px">
+									<label class="layui-form-label">审批状态</label>
+									<div class="layui-input-inline">
+										<select id="ApprovalResult" lay-filter="ApprovalResult"  name="ApprovalResult">
+											<option value="-1">全部</option>
+											<option value="0">待审批</option>
+											<option value="1">未通过</option>
+											<option value="2">已通过</option>
+										</select> 
+									</div>
+								</div>
+								<div class="layui-inline">
+									<button class="layui-btn layui-btn-sm"  lay-filter="filterTabelSelPH" id="filterTabelSelPH" title="查询">
+										<i class="iconfont icon-sousuo"></i>
+									</button>
+									<button class="layui-btn layui-btn-sm"  lay-filter="closeLayerPH" id="closeLayerPH">
+										返回
+									</button>
+									 <button class="layui-btn layui-btn-sm"  lay-filter="subAppr" id="subAppr">
+										批量审批
+									</button>
+								</div>
+							</div>
+							<table class="layui-table" lay-filter="allUserListPH" id="allUserListPH"></table>
+                  
+                </div>
+            </div>
+        <!-- </div> -->
+    </div>
+</body>
+<style>
+    .xm-select-parent .xm-form-select dl{
+        min-width: 220%;
+    }
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th{
+		height:0px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-r th[rowspan="4"]{
+		height:124px !important;
+
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[rowspan="3"]{
+		height:93px !important;
+	}
+	/* .layui-table-header .layui-table-cell{
+		height:auto !important;
+		overflow:visible;
+		text-overflow:inherit;
+		white-space:normal;
+	} */
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[data-field="0"],
+	.layui-table[lay-size=sm] th[data-field="add payback"]{
+		background: #C6E0B4;
+	}
+	.layui-table[lay-size=sm] th[data-field="Payback"] {
+		background: #1e9fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="Deduction Mandatory"] {
+		background: #FF0000;
+		color: #fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="NSD.NSD"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="de_undertime"]{
+		background: #FFFF00;
+	}
+	.layui-table[lay-size=sm] th[data-field="nsd ot"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday_falling_on_rest_day"]{
+		background: #D9D9D9;
+	}
+	.layui-table[lay-size=sm] th[data-field="Ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field=""]{
+		background: #D9E1F2;
+	}
+	th[data-field="id"],td[data-field="id"]{
+		display: none;
+	}
+</style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery.jqprint-0.3.js?v=201902190"></script>
+<script src="../../js/common.js?v=20190105"></script>
+<script>
+    layui.config({
+        base: '../../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','form','laypage','formSelects'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,upload=layui.upload
+        ,router = layui.router();
+        element.render();
+
+        var laydate = layui.laydate
+        ,form = layui.form
+        ,layer = layui.layer
+        ,table=layui.table
+    	,formSelects = layui.formSelects
+        ,laypage=layui.laypage;
+
+        // var tableNowPage={
+        //     ApplyResult:0,
+        //     currentIndex:1,
+        //     pageSize:10,
+        // }
+        var urlTab = location.href.split('?tab=')[1]?location.href.split('?tab=')[1]:false;
+        var tabId=urlTab?urlTab.split('?')[0]:false;
+        var dataId = location.href.split('?id=')[1]?location.href.split('?id=')[1]:false;
+
+       
+        // 修正浮动栏高度
+        // @param tableElem 表格显示div
+        // function autoFixed(tableElem) {
+        //     var $tableView = tableElem || $(".layui-table-view");
+        //     var dataIndex ,trHeight;
+        //     $tableView.each(function() {
+        //         // 获取两侧浮动栏
+        //         var $fixed = $(this).find(".layui-table-fixed");
+        //         // 同步表头高度
+        //         $fixed.find(".layui-table-header tr").height($(this).find(".layui-table-header tr").eq(0).height());
+        //         // 遍历tr 修正浮动栏行高
+        //         $(this).find(".layui-table-main tr").each(function() {
+        //             dataIndex = $(this).attr("data-index");
+        //             trHeight = $(this).css("height");
+        //             $fixed.find("tr[data-index=" + dataIndex + "]").css("height", trHeight);
+        //         })
+        //     });
+        // }
+        // 监听浏览器窗口大小变化
+        // var resizeTimer;
+        // $(window).resize(function() {
+        //     if (resizeTimer) {
+        //         clearTimeout(resizeTimer);
+        //     }
+        //     resizeTimer = setTimeout(function() {
+        //         resizeTimer = null;
+        //         autoFixed();
+        //     },
+        //     200);
+        // });
+
+        // // 监听表头鼠标按下事件
+        // $(document).on('mousedown', 'thead',function(e) {
+        //     var that = $(this);
+        //     $(document).one('mouseup',
+        //     function() {
+        //         autoFixed(that.parents('.layui-table-view'));
+        //     })
+        // });
+        $.fetch({//部门树列表
+			url: "/gateway/department/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs[0].children[0].children;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('DepartmentIDPH', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+				
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		$.fetch({//岗位树列表
+			url: "/gateway/jobTitle/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('JobTitleIDPH', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				}); 
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+        });
+        //ph 薪资编辑列表
+			window.userbasicsalaryFun =function(datas,fun){
+				
+				datas['pageSize']=10000000;
+				$.fetch({
+						url:"/gateway/usersalary/ph/approvallist",
+						type:'post',
+						data:datas,
+						
+						cb:function(res){
+							// console.log(datas.ApprovalResult)
+							var endDate1 = laydate.getEndDate(10);
+							var allUserListPH = table.render({
+								elem: '#allUserListPH',
+								// url: window.urls + '/gateway/usersalary/ph/userbasicsalary',
+								limits:false,
+								limit:10000000000000,
+								height: 'full-235',								
+								toolbar:false,
+								// defaultToolbar:'',
+								// where:datas,
+								// method: 'post',
+								// contentType: 'application/json',
+								data:res.salary_list.data.data_list,
+								page: false,
+								size:'sm',
+								// loading: true,
+								// toolbar:true,
+								// defaultToolbar: '<div><a>删除</a></div>',
+								text: {
+									none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+								},
+								cols: [
+									[//第一级表头
+										{
+											// title: ' ',//排序	
+											rowspan:4,
+											field: 'checkbox',
+											type:'checkbox',
+											fixed:'left',
+											align:'center'
+										},{
+											sort:'',
+											field: 'id',
+											title: 'ID',//排序	
+											// type: 'numbers',
+											width:60,
+											unresize: true,
+											fixed:'left',
+											rowspan:4,
+										},
+										{
+											title: '  ',//排序	
+											colspan:14,
+											rowspan:1,
+											
+											fixed:'left',
+											align:'center'
+										},{
+											field:'add payback',
+											title: 'Add Item ',//排序	
+											colspan:28,
+											align:'center'
+										},{
+											field:'Payback',
+											title: 'Payback Item',
+											colspan:31,
+											align:'center'
+											
+										},{
+											field:'Deduction Mandatory',
+											title: 'Deduction Items',
+											colspan:4,
+											align:'center'
+										}
+										// ,{
+										// 	field:'Deduction Mandatory',
+										// 	title: 'Mandatory Contribution',
+										// 	colspan:4,
+										// 	align:'center'
+										// }
+										// ,{
+										// 	title: 'Total Pay',
+										// 	colspan:20
+										// }
+										,{
+											field:'creator',
+											title: '创建人',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											field:'modifier',
+											title: '编辑人',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											field:'apply_result_desc',
+											title: '状态',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											title: ' ',
+											rowspan:4,
+											fixed:'right',
+											width:100,
+											align:'center',
+											// toolbar: 
+											templet:function(d){
+												var ab= d.apply_result==0?'<button class="layui-btn layui-btn-xs" lay-event="appr">审批</button>':''
+												return '<div><button class="layui-btn layui-btn-xs" lay-event="edit">详情</button>'+ab+'</div>';
+											}
+										}
+									],
+								
+									[//第二级表头
+									{
+										sort:true,
+										field: 'no',
+										title: 'No',//排序	
+										type: 'numbers',
+										width:60,
+										unresize: true,
+										fixed:'left',
+										rowspan:3,
+									},{
+										sort:true,
+										field: 'user_name',
+										title: 'User Name',//名称
+										width:80,
+										rowspan:3,
+										fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'gender_desc',
+										title: 'Gender',//性别
+										fixed:'left',
+										rowspan:3,
+										width:80,
+										unresize: true
+									},{
+										sort:true,
+										field: 'dpt_name',
+										title: 'Dept',//部门
+										rowspan:3,
+										width:80,
+										fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'title_name',
+										title: 'Position',//岗位
+										rowspan:3,
+										width:80,
+										fixed:'left',
+										unresize: true 
+									},{
+										sort:true,
+										field: 'join_date',
+										title: 'Date Joined',//入职日期
+										rowspan:3,
+										width:95,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'due_date',
+										title: 'Confirmed Date',//转正日期
+										width:95,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'employ_type_desc',
+										title: 'Emply Type',//雇佣类型
+										width:80,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'month',
+										title: 'set month',//实际工作天数 
+										rowspan:3,
+										minWidth:110,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'salary_times',
+										title: 'stage',//实际工作天数 
+										rowspan:3,
+										minWidth:90,
+										// fixed:'left',
+										unresize: true
+									},
+									{
+										sort:true,
+										field: 'daily_wages',
+										title: 'Daily Wages',//雇佣类型
+										width:80,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'allowance',
+										title: 'allowance',//实际工作天数 
+										rowspan:3,
+										minWidth:90,
+										// fixed:'left',
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'calendar_daycount',
+										title: 'Calender Days',//日历天数
+										width:95,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'work_days',
+										title: 'Actual Working Days',//实际工作天数 
+										rowspan:3,
+										width:80,
+										// fixed:'left',
+										unresize: true
+									},{
+										field: '',
+										title: 'OT',//加班
+										minWidth:120,
+										// fixed:'left',
+										colspan:16,
+										unresize: true,
+										align:'center'
+									},
+									// {
+									// 	field: '',
+									// 	title: 'OT',//加班
+									// 	minWidth:120,
+									// 	// fixed:'left',
+									// 	colspan:16,
+									// 	unresize: true
+									// },
+									{
+										field: 'NSD.NSD',
+										title: 'Night Shift Diff.NSD',//晚班津贴
+										minWidth:120,
+										// fixed:'left',
+										colspan:8,
+										unresize: true,
+										align:'center'
+									}
+
+									,{
+										sort:true,
+										field: 'add_refund',
+										title: 'Refund',//回补
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_perfect_ttd',
+										title: 'Perfect Attd',//全勤
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_13th_paid',
+										title: '13th Paid',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_others',
+										title: 'Others',//其他
+										rowspan:3,
+										minWidth:120,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'add_sub_total',
+									// 	title: 'Sub Total',//加小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+
+								//回补
+									{
+										field: '',
+										title: 'OT',//加班
+										minWidth:120,
+										// //fixed:'left',
+										colspan:16,
+										unresize: true
+										,align:'center'
+										
+									},{
+										field: 'NSD.NSD',
+										title: 'Night Shift Diff.NSD',//晚班津贴
+										minWidth:120,
+										// //fixed:'left',
+										colspan:8,
+										unresize: true
+										,align:'center'
+									},
+									
+									{
+										sort:true,
+										field: 'pb_refund',
+										title: 'Refund',//回补
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_perfect_attd',
+										title: 'Perfect Attd',//全勤
+										rowspan:3,
+										minWidth:120,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_13th_paid',
+										title: '13th Paid',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_sss',
+										title: 'SSS',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_pag_ibig',
+										title: 'PAG-IBIG',//13薪
+										rowspan:3,
+										//fixed:'left',
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_philhealth',
+										title: 'PhilHealth',//13薪
+										rowspan:3,
+										//fixed:'left',
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'pb_others',
+										title: 'Others',//其他
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'pb_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+									//扣除项目
+									{
+										sort:true,
+										field: 'de_lateness',
+										title: 'Lateness',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_undertime',
+										title: 'Undertime',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_shortage',
+										title: 'Shortage',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_others',
+										title: 'Others',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'de_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+									//强制性扣除
+									// {
+									// 	sort:true,
+									// 	field: 'mc_sss',
+									// 	title: 'SSS',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_pag_ibig',
+									// 	title: 'PAG-IBIG',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_philhealth',
+									// 	title: 'PhilHealth',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// }
+									//Total Pay 共工资
+									// ,{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Allowance',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages (1) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages (2) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Allowance Pay PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages (3) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages (4) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Mand.Ddct(Emplyee)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Add Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Payback Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Deduction Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Gross Salary',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Gross Salary (1+2)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '1st Cut-off Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '2nd Cut-Off Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Wages(1st + 2nd)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '1st Net Pay',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '2st Net Pay',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Net Pay (1+2)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// }
+								],[//第三级表头
+										{	
+											field:'Ordinary',
+											title: 'Ordinary OT ',//排序	
+											colspan:8
+											,align:'center'
+										},{
+											field:'nsd ot',
+											title: 'NSD OT',
+											colspan:8
+											,align:'center'
+										},
+										
+										{
+											sort:true,
+											field: 'add_nsd_ordinary',
+											title: 'Ordinary',//回补
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_rest_day',
+											title: 'Rest Day',//全勤
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_special_day',
+											title: 'Special Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_special_day_falling_on_rest_day',
+											title: 'Special Day Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_regular_holiday',
+											title: 'Regular Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_regular_holiday_falling_on_rest_day',
+											title: 'Regular Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_double_holiday',
+											title: 'Double Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_double_holiday_falling_on_rest_day',
+											title: 'Double Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},
+										{	
+											field:'Ordinary',
+											title: 'Ordinary OT ',//排序	
+											colspan:8
+											,align:'center'
+										},{	
+											field:'nsd ot',
+											title: 'NSD OT',
+											colspan:8
+											,align:'center'
+										},
+										{
+											sort:true,
+											field: 'pb_nsd_ordinary',
+											title: 'Ordinary',//回补
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_rest_day',
+											title: 'Rest Day',//全勤
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_special_day',
+											title: 'Special Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_special_day_falling_on_rest_day',
+											title: 'Special Day Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_regular_holiday',
+											title: 'Regular Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_regular_holiday_falling_on_rest_day',
+											title: 'Regular Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_double_holiday',
+											title: 'Double Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_double_holiday_falling_on_rest_day',
+											title: 'Double Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},
+									],[//第四级表头
+									{
+										sort:true,
+										field: 'add_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'add_nsd_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									}
+									
+									,{
+										sort:true,
+										field: 'pb_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'pb_nsd_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_special_day_falling_on_rest_day',
+										title: 'Special Day Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									}
+				
+								]
+								],
+								// request: {
+								// 	pageName: 'currentIndex' //页码的参数名称，默认：page
+								// 	,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								// },
+								// parseData: function (res) { //res 即为原始返回的数据
+								// 	return {
+								// 		"status_code": res.status_code, //解析接口状态
+								// 		"message": res.message, //解析提示文本
+								// 		// "count": res.data.total_count, //解析数据长度
+								// 		"data": res.data, //解析数据列表
+								// 		// "curr": res.data.page_index
+								// 	};
+								// },
+								done: function (res) {
+									// console.log(rs)
+									setTimeout(function() {
+										if(dataId&&fun){
+											$('.layui-table-body.layui-table-main button[lay-event="edit"]').click();
+										}
+									}, 1);
+									var mnlData=res.data;
+									for(var i=0;i<mnlData.length;i++){
+										if(mnlData[i].apply_result!==0){
+											$("div[lay-id='allUserListPH']").find('td[data-field="id"]').each(function(){
+												if($(this).text()==mnlData[i].id){
+													$(this).siblings('td[data-field="checkbox"]').children('div').html(' ');
+												}
+											})
+
+									}
+									}
+								
+								}
+							});
+                    		//
+							
+						}
+					})
+					table.on('tool(allUserListPH)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+						var data = obj.data; //获得当前行数据
+						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+						var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+						
+						if(layEvent === 'appr'){ //查看
+							//do somehing
+							var conthtmlsappr ='<div class="layui-card-body layui-form">'
+                                            +' <div class="layui-form-item layui-form-text">'
+                                                 +'     <label class="layui-form-label">审批意见</label>'
+                                                 +'     <div class="layui-input-block">'
+                                                 +'   <textarea name="Content" id="Content" placeholder="请输入内容" class="layui-textarea"></textarea>'  
+                                                        +'    </div>' 
+                                                        +' </div>'
+                                                        +'<div class="layui-form-item">'
+                                                            +'<div class="layui-inline">'
+                                                                    +'<label class="layui-form-label">是否通过</label>'
+                                                                    +'<div class="layui-input-inline">'
+                                                                        +'<input type="radio" lay-filter="IsAgree" name="IsAgree" value="2" title="通过" >'
+                                                                        +'<input type="radio" lay-filter="IsAgree" name="IsAgree" value="1" title="不通过" >'
+                                                                    +'</div>'
+                                                            +'</div>'
+                                                        +'</div>'
+													+'<div class="layui-form-item">'
+                                                        +'<div class="layui-input-block">'
+                                                        +' <button class=" layui-btn" id="subuserbasicsalary">提交</button>'
+                                                
+                                                        +' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+														+'</div>'
+													+'</div>'
+												+'</div>'
+                                layer.open({
+                                    title:'审批',
+                                    type: 1, 
+                                    id:"conthtmlsappr",
+                                    content:conthtmlsappr,
+                                    resize:false,            
+                                    area:['60%', '50%'],   
+                                    success:function(layero,index){
+                                        $("#backuserbasicsalary").on("click",function(){
+                                            layer.close(index);
+                                        })
+                                        form.render();
+                                        $("#subuserbasicsalary").on("click",function(){
+                                                var IsAgree=$("input[name='IsAgree']:checked").val();
+                                                
+                                            //	console.log(subData);
+                                                $.fetch({
+                                                    url:'/gateway/usersalary/ph/approval',
+                                                    type: 'post',
+                                                    data:{
+                                                        ID:data.id,
+                                                        Content:$("#Content").val(),
+                                                        IsAgree:IsAgree,
+                                                    },
+                                                    cb:function(rs){
+                                                        layer.msg('审批成功');
+                                                        layer.close(index);
+                                                        var DepartmentID=formSelects.value('DepartmentIDPH', 'valStr');
+                                                        var JobTitleID=formSelects.value('JobTitleIDPH', 'valStr');
+                                                        // console.log(DepartmentID,JobTitleID,000)
+                                                        userbasicsalaryFun({
+                                                            UserName:$("#UserNamePH").val(),
+                                                            DepartmentID:DepartmentID==''?'-1':DepartmentID,
+                                                            JobTitleID:JobTitleID==''?'-1':JobTitleID,
+                                                                ApprovalResult:$("#ApprovalResult").val(),
+                                                        },false)
+                                                    }
+                                                })
+                                        })
+                                    }
+                            })
+						}  else if(layEvent === 'edit'){ //编辑
+							//do something
+							
+							//同步更新缓存对应的值
+							// console.log(data)
+							layer.open({
+								title:'详情',
+								type: 2, 
+								area:['95%','95%'],								
+								content: 'SalarySetEditAppr.html',
+								success:function(layero,index){
+                            	    // console.log(data);//id 
+                            	    var body = layer.getChildFrame('body', index);
+                            	    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+									iframeWin.isDiate=false;									
+									iframeWin.res=data;
+									iframeWin.MonthPH = $("#MonthPH").val();
+									iframeWin.SalaryTimes = $("#IsShowPH").val();
+
+									iframeWin.ApprovalResult=$("#ApprovalResult").val();
+									iframeWin.UserNamePH=$("#UserNamePH").val();
+									iframeWin.DepartmentIDPH=formSelects.value('DepartmentIDPH', 'valStr');
+									iframeWin.JobTitleIDPH=formSelects.value('JobTitleIDPH', 'valStr');
+									// iframeWin.IsShowPH=$("#IsShowPH").val();
+									// iframeWin.MonthPH=$("#MonthPH").val();
+                            	}
+							}); 
+						}
+					});
+					
+			}			
+        if(dataId){
+            var tableSub={
+                ApprovalResult:'-1',
+                ID:dataId,
+                UserName:'',
+                DepartmentID:'-1',
+                JobTitleID:'-1',
+            }
+            userbasicsalaryFun(tableSub,true)
+            
+        }else{
+            var tableSub={
+                ID:'',
+                ApprovalResult:'-1',
+                UserName:'',
+                DepartmentID:'-1',  
+                JobTitleID:'-1',              
+            }
+            userbasicsalaryFun(tableSub,false)
+            
+        }
+        $("#filterTabelSelPH").on("click",function(){
+			// var datas=
+			var DepartmentID=formSelects.value('DepartmentIDPH', 'valStr');
+			var JobTitleID=formSelects.value('JobTitleIDPH', 'valStr');
+	
+          
+            var wheres={ //设定异步数据接口的额外参数，任意设
+                id:'',
+                UserName:$("#UserNamePH").val(),
+                DepartmentID:DepartmentID==''?'-1':DepartmentID,
+                JobTitleID:JobTitleID==''?'-1':JobTitleID,
+                ApprovalResult:$("#ApprovalResult").val(),
+                //…
+            }
+              
+            userbasicsalaryFun(wheres,false)
+            
+		})
+		$("#subAppr").on("click",function(){
+			// var datas=
+			// console.log(table.checkStatus('allUserList'))
+			
+			var checkStatus = table.checkStatus('allUserListPH').data;
+			// console.log(checkStatus)
+			var idArr=[],ids='';
+
+			for(var i=0;i<checkStatus.length;i++){
+				if(checkStatus[i].apply_result==0){
+					idArr.push(checkStatus[i].id);
+				}
+			}
+
+			if(idArr.length==0){
+				layer.msg('请选择需要审批的人员');
+				return false
+			}else{
+				ids=idArr.join(',');
+			}
+			console.log(ids,checkStatus)
+			// // var ids = checkStatus.map(v=>v.id).join(",")
+			// if(!ids){
+			// 	layer.msg('请选择需要审批的人员');
+			// 	return false
+			// }
+			// console.log(checkStatus,ids)
+			// 	return false
+			
+			var conthtmlsappr ='<div class="layui-card-body layui-form">'
+                               +' <div class="layui-form-item layui-form-text">'
+                                    +'     <label class="layui-form-label">审批意见</label>'
+                                    +'     <div class="layui-input-block">'
+                                    +'   <textarea name="Content" id="Content" placeholder="请输入内容" class="layui-textarea"></textarea>'  
+                                           +'    </div>' 
+                                           +' </div>'
+                                           +'<div class="layui-form-item">'
+                                               +'<div class="layui-inline">'
+                                                       +'<label class="layui-form-label">是否通过</label>'
+                                                       +'<div class="layui-input-inline">'
+                                                           +'<input type="radio" lay-filter="IsAgree" name="IsAgree" value="2" title="通过" >'
+                                                           +'<input type="radio" lay-filter="IsAgree" name="IsAgree" value="1" title="不通过" >'
+                                                       +'</div>'
+                                               +'</div>'
+                                           +'</div>'
+									+'<div class="layui-form-item">'
+                                           +'<div class="layui-input-block">'
+                                           +' <button class=" layui-btn" id="subuserbasicsalary">提交</button>'
+                                   
+                                           +' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+										+'</div>'
+									+'</div>'
+								+'</div>'
+                   layer.open({
+                       title:'批量审批',
+                       type: 1, 
+                       id:"conthtmlsappr",
+                       content:conthtmlsappr,
+                       resize:false,            
+                       area:['60%', '50%'],   
+                           success:function(layero,index){
+                               $("#backuserbasicsalary").on("click",function(){
+                                   layer.close(index);
+                               })
+                               form.render();
+                               $("#subuserbasicsalary").on("click",function(){
+                                   var IsAgree=$("input[name='IsAgree']:checked").val();
+                                   
+
+                               //	console.log(subData);
+                                   $.fetch({
+                                       url:'/gateway/usersalary/ph/approval',
+                                       type: 'post',
+                                       data:{
+                                           ID:ids,
+                                           Content:$("#Content").val(),
+                                           IsAgree:IsAgree,
+                                       },
+                                       cb:function(rs){
+                                           layer.msg('提交成功');
+                                           layer.close(index);
+                                           var DepartmentID=formSelects.value('DepartmentIDPH', 'valStr');
+                                           var JobTitleID=formSelects.value('JobTitleIDPH', 'valStr');
+                                           // console.log(DepartmentID,JobTitleID,000)
+                                           userbasicsalaryFun({
+                                               UserName:$("#UserNamePH").val(),
+                                               DepartmentID:DepartmentID==''?'-1':DepartmentID,
+                                               JobTitleID:JobTitleID==''?'-1':JobTitleID,
+                                               ApprovalResult:$("#ApprovalResult").val(),
+                                           },false)
+                                       }
+                                   })
+                               })
+                           }
+                       })
+            
+		})
+   
+		$("#closeLayerPH").on("click",function(){
+			// var datas=
+			layui.formSelects.value('DepartmentIDPH', []); 
+			layui.formSelects.value('JobTitleIDPH', []); 
+			$("#ApprovalResult").val('-1');
+			$("#UserNamePH").val('');
+			form.render();
+		
+              var wheres={ //设定异步数据接口的额外参数，任意设
+                    id:'',
+                    UserName:'',
+                    DepartmentID:'-1',
+                    JobTitleID:'-1',
+                    ApprovalResult:'-1',
+                    //…
+                }
+              
+            userbasicsalaryFun(wheres,false)
+            
+		})
+   
+    })
+</script>
+<style>
+    /* .layui-table-cell{
+        height: auto !important;
+    }
+    .layui-table-view .layui-table{
+        height: 100%;
+    }
+    .layui-textarea{
+        min-height:auto;
+    } */
+</style>
+</html>

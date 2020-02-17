@@ -1,0 +1,493 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工资规则(MNL)</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body layui-form layui-row" id="SalaryRulesForm" lay-filter="salary">
+                <div class="layui-col-md4"  id="leftTable" style="display: none" >
+                        <table border="1" class="layui-table">
+                                <!-- <thead>
+                                </thead> -->
+                                <tbody>
+                                    <tr>
+                                        <td  colspan="2"  rowspan="3"></td>
+                                        <td id="table_name"  colspan="5" style="background: #404040;color: #fff;"></td>
+                                    </tr>
+                                    <tr class="pt-5">
+                                        <!-- <td  colspan="2"></td> -->
+                                        <td style="background: #c6e0b4;">第一年</td>
+                                        <td style="background: #b4c6e7;">第二年</td>
+                                        <td style="background: #f2f2f2;">第三年</td>
+                                        <td style="background: #aeaaaa;">第四年</td>
+                                        <td style="background: #a9d08e;">第五年</td>
+                                    </tr>
+                                     <tr style="background: #fce4d6;" class="pt-5">
+                                        <!-- <td  colspan="2"></td> -->
+                                        <td>人民币</td>
+                                        <td>人民币</td>
+                                        <td>人民币</td>
+                                        <td>人民币</td>
+                                        <td>人民币</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                </div>
+                <div class="layui-col-md8" style="padding-left: 45px">
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">规则名称:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="RuleName" id="RuleName" required  lay-verify="required" placeholder="请输入规则名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item syq">
+                        <label class="layui-form-label">试用期:</label>
+                        <!-- <div class="layui-form-mid">加</div> -->
+                        <div class="layui-form-mid">人民币(CNY)</div>
+                        <div class="layui-input-inline" style="width: 65px">
+                            <input type="text" name="Salary" id="syqSalary" required  lay-verify="required" placeholder="0"  autocomplete="off" class="layui-input numZ">
+                        </div>
+                    </div>
+                    <div id="zzhItem">
+                        <div class="layui-form-item zzh">
+                            <label class="layui-form-label">转正后:</label>
+                            <div class="layui-form-mid">第</div>
+                            <div class="layui-input-inline" style="width: 55px;">
+                                <input type="text" name="Year" required  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input num5">
+                            </div>
+                            <div class="layui-form-mid">年第</div>
+                            <div class="layui-input-inline" style="width: 55px;">
+                                <input type="text" name="Month" required  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input num12">
+                            </div>
+                            <div class="layui-form-mid">个月</div>
+                            <div class="layui-form-mid">人民币(CNY)</div>                    
+                            <div class="layui-input-inline" style="width: 65px">
+                                <input type="text" name="Salary" required  lay-verify="required" placeholder="0"  autocomplete="off" class="layui-input numZ">
+                            </div>
+                            <div class="layui-form-mid btnBox"><button class="layui-btn layui-btn-sm add">添加</button></div> 
+                        </div>
+                    </div>
+                    <div class="layui-form-item syq">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="salary" id="salary">保存</button>
+                            <button class="layui-btn" id="closeEdit">返回</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+       
+    </div>
+</body>
+<style>
+    .layui-col-md8{
+        width: 60% !important;
+    }
+    .layui-col-md4{
+        width: 40%!important;
+    }
+        .layui-table td, .layui-table th{
+            text-align:center;
+            color: #333;
+        }
+        .layui-table td{
+            padding: 5px 15px;
+        }
+        .layui-table tbody tr:hover, .layui-table thead tr, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
+            background-color: #fff;
+        }
+        .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+            border-width: 1px;
+            border-style: solid;
+            border-color: #000;
+        }
+        .bg-fce4d6{
+            background: #fce4d6;
+        }
+        .bg-e2efda{
+            background: #e2efda;
+        }
+        .bg-ffff00{
+            background: #ffff00;
+        }
+        .layui-table td {
+    padding: 0;
+}
+    </style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"  type="text/javascript"></script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','table', 'laydate','form'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,table = layui.table
+    ,form = layui.form
+    ,router = layui.router()
+    ,layer = layui.layer;
+    element.render();
+    
+    $("#closeEdit").on("click",function(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭   
+    })
+    
+    var ruleFormTabFun =function(wRes,isSub){ 
+        // console.log(wRes)
+        addHtml='<div class="layui-form-item zzh">'
+        +'    <label class="layui-form-label"></label>'
+        +'    <div class="layui-form-mid">第</div>'
+        +'    <div class="layui-input-inline" style="width: 55px;">'
+        +'        <input type="text" name="Year" required  lay-verify="required"  placeholder="0" autocomplete="off" class="layui-input num5" >'
+        +'    </div>'
+        +'    <div class="layui-form-mid">年第</div>'
+        +'    <div class="layui-input-inline" style="width: 55px;">'
+        +'        <input type="text" name="Month" required  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input num12">'
+        +'    </div>'
+        +'    <div class="layui-form-mid">个月</div>'
+        +'    <div class="layui-form-mid">人民币(CNY)</div>'
+        +'    <div class="layui-input-inline" style="width: 65px">'
+        +'        <input type="text" name="Salary" required  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input numZ">'
+        +'    </div>'
+        +'    <div class="layui-form-mid btnBox"><button class="layui-btn layui-btn-sm add">添加</button><button class="layui-btn layui-btn-sm del">删除</button></div>' 
+        +'</div>'
+
+        $("#zzhItem").on("click",'.add',function(){
+            var len= $("#zzhItem").children().length; 
+            //if(len<5){
+                    $("#zzhItem").find('.btnBox').html('<button class="layui-btn layui-btn-sm del">删除</button>');
+                    $("#zzhItem").append(addHtml); 
+            //}
+            // if(len==4){
+            //       $("#zzhItem").find('.add').hide()
+            // }
+        })
+        function NumberCheckten5(obj,n){
+            obj.value = obj.value.replace(/\D/g,''); //清除"数字"和"."以外的字符
+            obj.value = obj.value>5?'':obj.value;
+            obj.value = obj.value==0?'':obj.value;
+        }	
+        function NumberCheckten12(obj,n){
+            obj.value = obj.value.replace(/\D/g,''); //清除"数字"和"."以外的字符
+            obj.value = obj.value>12?'':obj.value;
+            obj.value = obj.value==0?'':obj.value;
+        }
+        function NumberChecktenZ(obj,n){
+            obj.value = obj.value.replace(/\D/g,''); //清除"数字"和"."以外的字符
+        }
+        $("#zzhItem").on('keyup','.layui-input.num5',function () {
+            NumberCheckten5(this)
+        }).bind("paste", function () {  //CTR+V事件处理
+            NumberCheckten5(this)
+            // $(this).val(NumberCheckten4($(this).val()));
+        }).css("ime-mode", "disabled"); 
+
+        $("#SalaryRulesForm").on('keyup','.layui-input.numZ',function () {
+            NumberChecktenZ(this)
+        }).bind("paste", function () {  //CTR+V事件处理
+            NumberChecktenZ(this)
+            // $(this).val(NumberCheckten4($(this).val()));
+        }).css("ime-mode", "disabled");
+            $("#zzhItem").on("click",'.del',function(){
+                var len= $("#zzhItem").children().length;     
+                if(len>1){
+                    // $(this).parents('.zzh').prev('.zzh').find('.btnBox').html('<button class="layui-btn layui-btn-sm add">添加</button><button class="layui-btn layui-btn-sm del">删除</button>');
+                    $(this).parents('.zzh').remove();
+                    $("#zzhItem").children(".zzh:last-child").children('.btnBox').html('<button class="layui-btn layui-btn-sm add">添加</button><button class="layui-btn layui-btn-sm del">删除</button>')
+                    if(wRes){
+                        var delId=$(this).parents('.zzh').attr('data-id');
+                        if(delId!=undefined){
+                            delArr.push(delId);
+                        }
+                    }
+                }
+                if(len==2){
+                    $("#zzhItem").find('.del').hide();
+                }
+                // console.log()
+            })
+            form.on('submit(salary)', function(data){
+                if(!wRes){
+                    var RuleName=$("#RuleName").val();
+                    var syqSalary=$("#syqSalary").val();
+                    var salaryArr=[];
+                    salaryArr.push({
+                        Status:1,
+                        Salary:syqSalary,
+                        Year:1,
+                        Month:1,
+                    })
+                    $("#zzhItem").find('.zzh').each(function(){
+                        salaryArr.push({
+                            Status:2,
+                            Salary:$(this).find("input[name='Salary']").val(),
+                            Year:$(this).find("input[name='Year']").val(),
+                            Month:$(this).find("input[name='Month']").val(),
+                        })
+                    })
+
+                    $.fetch({
+                        url:"/gateway/usersalaryautoupdate/mnl/setrule",
+                        type:'post',
+                        data:{
+                            RuleName:RuleName,
+                            Rules:salaryArr,
+                        },
+                        cb:function(rs){
+                            layer.msg('保存成功.');
+                            //if(isSub){
+                                $.fetch({
+                                    url:"/gateway/usersalaryautoupdate/mnl/rulenamedetail",
+                                    type:'post',
+                                    data:{
+                                        RuleNameID:rs.rule_name_id
+                                    },
+                                    cb:function(rs){
+                                        ruleFormTabFun(rs);
+                                        $(".layui-form-mid.btnBox").remove();
+                                        $("input").attr('disabled','disabled')
+                                        $("#salary").addClass('layui-btn-disabled');
+                                        $("#salary").before('<button class="layui-btn" id="road">再次添加</button>');
+
+                                        $("#road").on('click',function(){
+                                            location.reload() 
+                                        })
+                                    }
+                                })
+                        // }
+                            // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            // parent.layer.close(index); //再执行关闭     
+                        }
+                    })
+                }else{
+                    var RuleName=$("#RuleName").val();
+                    var syqSalary=$("#syqSalary").val();
+                    var salaryArr=[];
+                    salaryArr.push({
+                        ID:wRes.rules[0].id,
+                        Status:1,
+                        Salary:syqSalary,
+                        Year:1,
+                        Month:1,
+                    })
+                    $("#zzhItem").find('.zzh').each(function(){
+                        salaryArr.push({
+                            Status:2,
+                            ID:$(this).attr('data-id'),                    
+                            Salary:$(this).find("input[name='Salary']").val(),
+                            Year:$(this).find("input[name='Year']").val(),
+                            Month:$(this).find("input[name='Month']").val(),
+                        })
+                    })
+
+                    $.fetch({
+                        url:"/gateway/usersalaryautoupdate/mnl/setrule",
+                        type:'post',
+                        data:{
+                            DelRuleID:delArr.join(','),
+                            RuleNameID:wRes.rule_name.id,
+                            RuleName:RuleName,
+                            Rules:salaryArr,
+                        },
+                        cb:function(rs){
+                            layer.msg('保存成功.');
+                            location.reload() 
+                            // $.fetch({
+                            //     url:"/gateway/usersalaryautoupdate/mnl/rulenamedetail",
+                            //     type:'post',
+                            //     data:{
+                            //         RuleNameID:rs.rule_name_id
+                            //     },
+                            //     cb:function(rs){
+                                //   console.log(rs)
+                                    // ruleFormTabFun(rs)
+                                        
+                                // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                // parent.layer.close(index); //再执行关闭     
+                            //     }
+                            // })
+                        }
+                    })
+                }
+            })
+            
+        
+        
+
+
+
+            //以下 编辑内容 回显
+            if(wRes){
+                var delArr=[];
+                $(".layui-col-md4").show();
+                $("#RuleName").val(wRes.rule_name.rule_name);
+                var rulesArr=wRes.rules;
+                var html='';
+                for(var i=0;i<rulesArr.length;i++){
+                    if(rulesArr[i].status==1){
+                        $("#syqSalary").val(rulesArr[i].basic_salary);
+                    }
+                    if(rulesArr[i].status==2){
+                        html+='<div class="layui-form-item zzh" data-id="'+rulesArr[i].id+'">'
+                            +'    <label class="layui-form-label">'+(i==1?'转正后:':'')+'</label>'
+                            +'    <div class="layui-form-mid">第</div>'
+                            +'    <div class="layui-input-inline" style="width: 55px;">'
+                            +'        <input type="text" name="Year" required value="'+rulesArr[i].year+'"  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input">'
+                            +'    </div>'
+                            +'    <div class="layui-form-mid">年第</div>'
+                            +'    <div class="layui-input-inline" style="width: 55px;">'
+                            +'        <input type="text" name="Month" required value="'+rulesArr[i].month+'"  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input">'
+                            +'    </div>'
+                            +'    <div class="layui-form-mid">个月</div>'
+                            +'    <div class="layui-form-mid">人民币(CNY)</div>'
+                            +'    <div class="layui-input-inline" style="width: 65px">'
+                            +'        <input type="text" name="Salary" required value="'+toNonExponential(rulesArr[i].basic_salary)+'"  lay-verify="required" placeholder="0" autocomplete="off" class="layui-input">'
+                            +'    </div>'
+                            +'    <div class="layui-form-mid btnBox">'
+                            +'    '+((i==rulesArr.length-1)?'<button class="layui-btn layui-btn-sm add">添加</button>':'')+''
+                            +'    '+((rulesArr.length>1)?'<button class="layui-btn layui-btn-sm del">删除</button>':'')+''     
+                            +   '</div>' 
+                            +'</div>'
+                    }
+
+                }
+                $("#zzhItem").html(html);
+                var ruleData=wRes.rule_data;
+                var rulesData=wRes.rules;
+                var rulesJob=wRes.rule_job_titles;
+                var tablestr='',testStr='',monthArr=['一','二','三','四','五','六','七','八','九','十','十一','十二']
+                $("#table_name").text(wRes.rule_name.rule_name);
+                for(var i=0;i<1;i++){//列
+                    tablestr+='<tr class="month syq" data-month="'+(i+1)+'">'+(i==0?'<td style="border-right: 1px solid #fff;">试用期</td>':'')+'<td></td>'
+                    for(var j=0;j<5;j++){//行
+                        tablestr+='<td class="bg-fce4d6" data-year="'+(j+1)+'"></td>'
+                    }
+                    tablestr+='</tr>'
+                }
+                // tablestr +='<tr class="month syq" data-month="1"><td>试用期</td><td ></td><td  colspan="5" class="bg-fce4d6" data-year="1"></td><tr>'
+                for(var i=0;i<12;i++){//列
+                    if(i<6){
+                        var color='e2efda';
+                    }
+                    if(6<=i&&i<12){
+                        var color='ffff00';
+                    }
+                    tablestr+='<tr class="month zzh" data-month="'+(i+1)+'">'+(i==0?'<td rowspan="12">转正</td>':'')+'<td  class="bg-'+color+'">第'+monthArr[i]+'个月</td>'
+                    for(var j=0;j<5;j++){//行
+                        tablestr+='<td class="bg-'+color+'" data-year="'+(j+1)+'"></td>'
+                    }
+                    tablestr+='</tr>'
+                }
+                $("#leftTable>table>tbody").append(tablestr);
+
+                // console.log(ruleData);
+                for(var i=0;i<ruleData.length;i++){//列
+                    if(ruleData[i].status==1){
+                        $('tr.syq[data-month="'+ruleData[i].month+'"] td[data-year="'+ruleData[i].year+'"]').html(toNonExponential(ruleData[i].basic_salary));
+                    }
+                    if(ruleData[i].status==2){
+                        $('tr.zzh[data-month="'+ruleData[i].month+'"] td[data-year="'+ruleData[i].year+'"]').html(toNonExponential(ruleData[i].basic_salary));
+                    }
+                }
+                
+                for(var i=0;i<rulesData.length;i++){//右侧文字描述
+                    if(rulesData[i].status==1){
+                        testStr+='<p>试用期 ：人民币(CNY)'+rulesData[i].basic_salary+'</p>'
+                    }
+                }
+                for(var i=0;i<rulesData.length;i++){//右侧文字描述
+                    if(rulesData[i].status==2){
+                        testStr+='<p>转正后第'+monthArr[rulesData[i].year-1]+'年第'+monthArr[rulesData[i].month-1]+'个月：人民币(CNY)'+toNonExponential(rulesData[i].basic_salary)+'</p>'
+                    }
+                }
+                $("#rightText").html(testStr)
+
+
+            
+                
+
+                $.fetch({
+                    url:"/gateway/usersalaryautoupdate/mnl/getrulejobtitle",
+                    // url:'/gateway/usersalaryautoupdate/mnl/setjobtitlerule',
+                    type:'post',
+                    data:{
+                        // JobTitleID:obj.data.id
+                        RuleNameID:wRes.rule_name.id,
+                        // JobTitleID:'1,5,14'
+                    },
+                    cb:function(rs){
+                    var  jobtestStr='<div style="margin-top:20px;">';
+                        jobtestStr+='<p>已关联岗位：</p>'
+                        for(var i=0;i<rs.length;i++){//右侧文字描述
+                            jobtestStr+='<span>'+rs[i].title_name+';</span>'
+                        }
+                        jobtestStr+='<p><button id="editJob" class="layui-btn layui-btn-sm">编辑岗位</button></p>'
+                        
+                        jobtestStr+='</div>'
+                        $("#rightText").append(jobtestStr)
+                        $("#editJob").on("click",function(){
+                                // console.log(rs)
+                            layer.open({
+                                type: 2
+                                ,title:'设置岗位薪资规则'
+                                ,area:['90%','60%']               
+                                ,content: 'SalaryRuleJob.html'
+                                ,success:function(layero,index){
+                                    // console.log(data);//id 
+                                    var body = layer.getChildFrame('body', index);
+                                    body.find("#salaryName").text(wRes.rule_name.rule_name);
+                                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                    iframeWin.res=rs;
+                                    iframeWin.RuleNameID=wRes.rule_name.id;
+                                }
+                                ,end:function(){
+                                    location.reload();
+                                }
+                            }); 
+                        })
+                    }
+                })
+                
+            }else{
+                $(".layui-col-md4").hide();
+            }
+
+    }
+    
+
+// console.log(window.RuleNameID)
+
+    if(window.RuleNameID){
+        $.fetch({
+                url:"/gateway/usersalaryautoupdate/mnl/rulenamedetail",
+                type:'post',
+                data:{
+                    RuleNameID:window.RuleNameID
+                },
+                cb:function(rs){
+                 //   console.log(rs)
+                 ruleFormTabFun(rs);
+                  
+                }
+            })
+       
+    }else{
+        ruleFormTabFun();
+    }
+})
+</script>
+</html>

@@ -1,0 +1,2883 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工资设置编辑</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../css/dtree.css">
+    <link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+	<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/jquery.table2excel.min.js"></script>
+	<script src="../../js/common.js"  type="text/javascript"></script>
+
+</head>
+<body class="statiBox">
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-tab layui-card-body  layui-tab-brief" lay-filter="salTab">
+
+				<ul class="layui-tab-title">
+					<li class="layui-this">员工属性设置</li>					
+					<li  lay-id="1">工资设置编辑</li>
+					<li lay-id="4" class="TabPH">工资设置编辑(菲籍)</li>
+					<!-- >工资设置编辑(菲籍)</li> -->
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item  layui-show">
+							<div class=" layui-form">
+									<!-- <div style="color: #FF5722">注：点击列表可进行编辑</div> -->
+									<div class="layui-item l-mnl">
+										<div class="layui-inline">
+											<label class="layui-form-label">用户名：</label>
+											<div class="layui-input-inline">
+												<input type="text"  class="layui-input" id="UserNameAll" name="UserNameAll">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<label class="layui-form-label">部门：</label>
+											<div class="layui-input-inline">
+												<!-- <select id="DepartmentID" lay-filter="DepartmentID" name="DepartmentID"></select> -->
+												<select type="text" xm-select="DepartmentIDAll"  id="DepartmentIDAll" name="DepartmentIDAll" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+											</div>
+										</div>
+										<div class="layui-inline">
+											<label class="layui-form-label">岗位：</label>
+											<div class="layui-input-inline">
+												<!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTitleID"></select> -->
+												<select type="text"  id="JobTitleIDAll" name="JobTitleIDAll" placeholder="全部" autocomplete="off" class="layui-input"  xm-select="JobTitleIDAll"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+											</div>
+										</div>
+										<div class="layui-inline" style="margin-top: 5px">
+											<label class="layui-form-label">是否菲籍：</label>
+											<div class="layui-input-inline">
+												<select id="IsFilipino" lay-filter="IsFilipino"  name="IsFilipino">
+													<option value="-1">全部</option>
+													<option value="1">是</option>
+													<option value="0">否</option>
+												</select>
+											</div>
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn layui-btn-sm"  lay-filter="filterTabelSelAll" id="filterTabelSelAll" title="查询">
+												<i class="iconfont icon-sousuo"></i>
+											</button>
+											<button class="layui-btn layui-btn-sm"  lay-filter="closeLayerAll" id="closeLayerAll">
+												返回
+											</button>
+										</div>
+									</div>
+									<table class="layui-table" lay-filter="allUserListAll" id="allUserListAll"></table>
+								</div>
+					</div>
+					<div class="layui-tab-item">
+						<div class=" layui-form">
+							<!-- <div style="color: #FF5722">注：点击列表可进行编辑</div> -->
+							<div class="layui-item l-mnl">
+								<div class="layui-inline">
+									<label class="layui-form-label">用户名：</label>
+									<div class="layui-input-inline">
+										<input type="text"  class="layui-input" id="UserName" name="UserName">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">部门：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="DepartmentID" lay-filter="DepartmentID" name="DepartmentID"></select> -->
+										<select type="text" xm-select="DepartmentID"  id="DepartmentID" name="DepartmentID" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">岗位：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTitleID"></select> -->
+										<select type="text"  id="JobTitleID" name="JobTitleID" placeholder="全部" autocomplete="off" class="layui-input"  xm-select="JobTitleID"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline">
+										<label class="layui-form-label">自动更新：</label>
+										<div class="layui-input-inline" style="width: 181px;">
+											<select type="text"  id="AutoUpdate" name="AutoUpdate" placeholder="" autocomplete="off" class="layui-input"  ><option value="">全部</option><option value="1">是</option><option value="0">否</option></select>
+										</div>
+									</div>
+								<!-- <div class="layui-inline" style="margin-top: 5px">
+									<label class="layui-form-label">是否发放：</label>
+									<div class="layui-input-inline">
+										<select id="IsShow" lay-filter="IsShow"  name="IsShow">
+											<option value="-1">全部</option>
+											<option value="1">是</option>
+											<option value="0">否</option>
+										</select>
+									</div>
+								</div> -->
+								<div class="layui-inline">
+									<button class="layui-btn layui-btn-sm"  lay-filter="filterTabelSel" id="filterTabelSel" title="查询">
+										<i class="iconfont icon-sousuo"></i>
+									</button>
+									<button class="layui-btn layui-btn-sm"  lay-filter="closeLayer" id="closeLayer">
+										返回
+									</button>
+								</div>
+							</div>
+							<table class="layui-table" lay-filter="allUserList" id="allUserList"></table>
+						</div>
+					</div>
+					
+					<div class="layui-tab-item layui-form">
+							<!-- <div style="color: #FF5722">注：点击列表可进行编辑</div> -->
+							
+							<div class="layui-item l-mnl">
+								<div class="layui-inline">
+									<label class="layui-form-label">用户名</label>
+									<div class="layui-input-inline">
+										<input type="text"  class="layui-input" id="UserNamePH" name="UserNamePH">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">部门：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="DepartmentID" lay-filter="DepartmentID" name="DepartmentID"></select> -->
+										<select type="text" xm-select="DepartmentIDPH"  id="DepartmentIDPH" name="DepartmentIDPH" placeholder="全部" autocomplete="off" class="xm-input xm-select" xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">岗位：</label>
+									<div class="layui-input-inline">
+										<!-- <select id="JobTitleID" lay-filter="JobTitleID"  name="JobTit leID"></select> -->
+										<select type="text"  id="JobTitleIDPH" name="JobTitleIDPH" placeholder="全部" autocomplete="off" class="layui-input"  xm-select="JobTitleIDPH"  xm-select-search="" xm-select-radio=""><option value="">全部</option></select>
+									</div>
+								</div>
+								<div class="layui-inline" style="margin-top: 5px">
+									<label class="layui-form-label">阶段</label>
+									<div class="layui-input-inline">
+										<select id="IsShowPH" lay-filter="IsShowPH"  name="IsShowPH">
+											<option value="1">第一阶段</option>
+											<option value="2">第二阶段</option>
+											<option value="-1">全部</option>
+										</select> 
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label">月份</label>
+									<div class="layui-input-inline">
+										<input type="text"  class="layui-input"  autocomplete="off"  id="MonthPH" name="MonthPH">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<button class="layui-btn layui-btn-sm"  lay-filter="filterTabelSelPH" id="filterTabelSelPH" title="查询">
+										<i class="iconfont icon-sousuo"></i>
+									</button>
+									<button class="layui-btn layui-btn-sm"  lay-filter="closeLayerPH" id="closeLayerPH">
+										返回
+									</button>
+								</div>
+							</div>
+							<table class="layui-table" lay-filter="allUserListPH" id="allUserListPH"></table>
+					</div>
+				</div>
+
+					<!-- <div class="layui-col-xs2"></div>
+					<div class="layui-col-xs8">
+					</div>
+					<div class="layui-col-xs2"></div> -->
+			</div>
+		</div>
+	</div>
+	<!-- 用于复杂表头导出的 隐藏table -->
+	<table id="report-table" cellpadding=1 cellspacing=1 border =1 style="display: none"></table>
+</body>
+<style>
+	.user-list{
+		max-width: 75%;
+	}
+	.user-list li{
+		float: left;
+		min-width: 0;
+		line-height: 20px;
+		max-width: 160px;
+		text-overflow: ellipsis;
+		padding-right: 40px;
+		overflow: hidden;
+		margin-right: 4px;
+		vertical-align: top;
+   		position: relative;
+		padding-left: 10px;
+	}
+	.user-list li.bg{
+		background:#f6f6f6;
+
+	}
+	.user-list li .layui-tab-close{
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		margin: -7px 0 0;
+		width: 16px;
+		height: 16px;
+		line-height: 16px;
+		border-radius: 50%;
+		font-size: 12px;
+		cursor: pointer;
+	}   
+	.user-list li .layui-tab-close:hover{
+		border-radius: 2px;
+		background-color: #FF5722;
+		color: #fff;
+	}
+	.xm-select-parent .xm-form-select dl{
+        min-width: 220%;
+    }
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th{
+		height:30px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-r th[rowspan="4"]{
+		height:164px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[rowspan="3"]{
+		height:134px !important;
+	}
+	div[lay-id="allUserListPH"] .layui-table-fixed.layui-table-fixed-l th[data-field="0"],
+	.layui-table[lay-size=sm] th[data-field="add payback"]{
+		background: #C6E0B4;
+	}
+	.layui-table[lay-size=sm] th[data-field="Payback"] {
+		background: #1e9fff;
+	}
+	.layui-table[lay-size=sm] th[data-field="Deduction Mandatory"] {
+		background: #FF0000;
+		color: #fff;
+	}
+	div[lay-id="allUserListPH"] .layui-table-header .layui-table-cell{
+		height:auto !important;
+		overflow:visible;
+		text-overflow:inherit;
+		white-space:normal;
+	}
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="NSD.NSD"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="de_undertime"]{
+		background: #FFFF00;
+	}
+	.layui-table[lay-size=sm] th[data-field="nsd ot"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_ot_double_holiday_falling_on_rest_day"]{
+		background: #D9D9D9;
+	}
+	.layui-table[lay-size=sm] th[data-field="Ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="add_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_ordinary"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_special_day_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_regular_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_nsd_regular_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday"],
+	.layui-table[lay-size=sm] th[data-field="pb_ot_double_holiday_falling_on_rest_day"],
+	.layui-table[lay-size=sm] th[data-field=""]{
+		background: #D9E1F2;
+	}
+</style>
+<script src="../../layui/layui.js"></script>
+<!-- <script src="../../js/sub/sets.js?v=201812240"></script> -->
+<script>
+	
+    layui.config({
+		base: '../../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','form','laydate','table','dtree','formSelects'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,dtree = layui.dtree
+    	,formSelects = layui.formSelects
+        ,table = layui.table
+        ,router = layui.router();
+        element.render();
+        element.on('tab(attendanceTabBrief)', function(obj){
+			$(window).resize();
+		});
+
+		var laydate = layui.laydate,form = layui.form,layer = layui.layer,laypage = layui.laypage,table=layui.table, form = layui.form;
+        var isgroup =$("#statiDepSel").attr("data-isgroup")==1?true:false;	
+		var iscompanies;
+	    // 起始，截止时间选择
+        // var StartTime=  d.getFullYear() + '-' + lay.digit(d.getMonth()+1) + '-01';
+		// var EndTime = d.getFullYear() + '-' + lay.digit(d.getMonth() + 1) + '-' + lay.digit(d.getDate());
+		// var usercheckTime=StartTime;
+		function NumberCheckten2(obj,n){
+				obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+				obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+				obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+				obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+				obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+			}
+		function NumberCheckten2x(obj,n){
+				obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+				obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+				obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+				obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+				obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+		}		
+        form.verify({
+            startItem:function(value){
+                if(!value.match(/\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}/)){
+                    return '请选择正确日期';
+                };
+            },
+		})
+		//年月选择器
+		laydate.render({ 
+			elem: '#MonthPH'
+			,type: 'month'
+			,value:new Date()
+		});
+		//渲染下拉框 mnl
+		//部门下拉
+		$.fetch({//部门树列表
+			url: "/gateway/department/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs[0].children[0].children;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('DepartmentID', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentID', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+				
+				formSelects.config('DepartmentIDPH', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+
+				formSelects.config('DepartmentIDAll', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentIDAll', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				});
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		$.fetch({//岗位树列表
+			url: "/gateway/jobTitle/tree",
+			type: 'post',
+			cb:function(rs){
+			//	console.log(rs)
+				var formSelectsArr=rs;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('JobTitleID', { 
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleID', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				}); 
+				formSelects.config('JobTitleIDPH', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleIDPH', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				}); 
+
+				formSelects.config('JobTitleIDAll', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleIDAll', 'local', {
+					radio: true,
+					arr:formSelectsArr
+				}); 
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		
+		setTimeout(function () {
+			var allStaListtAll = table.render({
+				elem: '#allUserListAll',
+				limit:100000000,
+				// limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+				url: urls+'/gateway/usersalary/mnl/salaryeditlist',
+				method: 'post',
+				contentType: 'application/json',
+				where:{
+					UserName:''
+					,DepartmentID: -1
+					,JobTitleID: -1
+					,IsShow: -1
+					,IsFilipino:-1
+					,AutoUpdate:-1
+				},
+				// autoSort:false,
+				toolbar:'<div><a class="layui-btn layui-btn-xs" lay-event="showAll">设置是否显示在工资列表</a><a class="layui-btn layui-btn-xs" lay-event="setfilipino">设置菲籍员工</a></div>',
+				defaultToolbar:'',
+				page:false,
+				text: {
+					none: '暂无' 
+				},
+				size:'sm',
+				even:true,
+				initSort: {
+					field: 'user_name' //排序字段，对应 cols 设定的各字段名
+					,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+				},
+				height: 'full-235',
+				cols: [[
+					{type:'checkbox',fixed:'left'}
+					,{type:'numbers',fixed:'left',title:'序号'}
+					,{field:'user_name',title:'姓名',sort:true,align: 'center',minWidth:80}
+					,{field:'dpt_name',title:'部门',align: 'center',sort:true,minWidth:110}
+					,{field:'title_name',title:'岗位',sort:true,align: 'center',minWidth:110}
+					,{field:'is_filipino_desc',title:'是否菲籍',sort:true,align: 'center',minWidth:110}
+					,{field:'is_show',title:'是否显示在工资列表',sort:true,align: 'center',minWidth:180,
+						templet:function(d){
+							var isShow = d.is_show===null?2:d.is_show;
+							return ['否','是',' '][isShow];
+						}
+					}
+				]],
+				// data:data,
+				done:function(){
+					// $("div[lay-id='allUserList'] div.layui-table-header th div").height(38)
+					$(window).resize();
+				},
+				request: {
+				     pageName: 'currentIndex' //页码的参数名称，默认：page
+				     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+				}
+				,parseData: function(res){ //res 即为原始返回的数据
+					return {
+						"status_code":res.status_code, //解析接口状态
+						"message": res.message, //解析提示文本
+						"count": res.data.total_count, //解析数据长度
+						"data": res.data.salary_list, //解析数据列表
+						"curr":res.data.page_index
+					};
+				}
+			})
+
+			table.on('toolbar(allUserListAll)', function(obj){
+				var checkStatus = table.checkStatus(obj.config.id);
+				if(checkStatus.data.length===0){
+					layer.msg('无选中项，无法设置。');
+					return false
+				}
+				var uNames='';
+				var uIdsArr=[];
+				for(var i =0;i<checkStatus.data.length;i++){
+					uNames+='<li class="bg"><span>'+checkStatus.data[i].user_name+';</span><i data-id="'+checkStatus.data[i].user_id+'" class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>';
+					uIdsArr.push(checkStatus.data[i].user_id);
+				}
+				
+				var SubUidsStr=uIdsArr.join(',');
+				var userAmount=checkStatus.data.length;
+				var firstData=checkStatus.data[0];
+				var layEvent = obj.event;
+				if(layEvent === 'setfilipino'){
+						var conthtmls7 ='<div class="layui-card">'
+											+'<div class="layui-card-body layui-form">'
+													+'<div class="layui-form-item">'
+																+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">用户名：</label><ul class="layui-form-mid layui-word-aux user-list">'+(uNames==null?"暂无":uNames)+'</ul><div class="layui-form-mid layui-word-aux" style="display:none"><button class="layui-btn layui-btn-xs" id="cancelDel">撤销删除</button></div></div>'
+																+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">已选中：</label><div class="layui-form-mid layui-word-aux user-amount">'+(userAmount==null?"暂无":userAmount)+'人</div></div>'
+														+'</div>'
+														+'<div class="layui-form-item">'
+															+'<div class="layui-inline">'
+																	+'<label class="layui-form-label" style="width: 128px;">设置为菲籍员工</label>'
+																	+'<div class="layui-input-inline">'
+																		+'<input type="radio" lay-filter="IsShow" name="IsShow" value="1" title="是">'
+																		+'<input type="radio" lay-filter="IsShow" name="IsShow" value="0" title="否" >'
+																	+'</div>'
+															+'</div>'
+														+'</div>'
+														+'<div class="layui-form-item">'
+															+'<div class="layui-input-block">'
+																+' <button class=" layui-btn" id="subuserbasicsalary">确定</button>'
+																+' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+															+'</div>'
+														+'</div>'
+											+'</div>'
+									+'</div>'
+						layer.open({
+								title:'设置菲籍员工',
+								type: 1, 
+								id:"conthtmls7",
+								content:conthtmls7,
+								resize:false,            
+								area:['80%','80%'],   
+								success:function(layero,index){
+									if(userAmount==1){
+										$(".user-list li>.layui-tab-close").hide();
+									}else{
+										$(".user-list li>.layui-tab-close").show();
+										// $("#cancelDel").parent('div').show();
+									}
+									form.render();
+									$(".user-list").on("click",'li>.layui-tab-close',function(){
+										var uid=$(this).attr('data-id');
+										$(this).parent("li").remove();
+										var SubUidsArr=SubUidsStr.split(',');
+										SubUidsArr.splice($.inArray(uid,SubUidsArr),1);
+										SubUidsStr=SubUidsArr.join(',');
+										userAmount=userAmount-1;
+										$(".user-amount").html(userAmount)
+										$("#cancelDel").parent('div').show();
+										if(userAmount==1){
+											$(".user-list li>.layui-tab-close").hide();
+										}else{
+											$(".user-list li>.layui-tab-close").show();
+											
+										}
+									})
+									 
+									$("#cancelDel").on("click",function(){
+										$(".user-list").html(uNames);
+										SubUidsStr=uIdsArr.join(',');
+										userAmount=uIdsArr.length;
+										$(".user-amount").html(userAmount)
+										$("#cancelDel").parent('div').hide();
+										
+										if(userAmount==1){
+											$(".user-list li>.layui-tab-close").hide();
+										}else{
+											$(".user-list li>.layui-tab-close").show();
+											
+										}
+									})
+									
+									$("#subuserbasicsalary").on("click",function(){
+										var IsShow =$("input[name='IsShow']:checked").val();
+										// console.log(IsShow)
+										if(IsShow==='1'){
+											var pdata={
+												UserID:SubUidsStr,
+												IsFilipino:1
+											}
+										}else if(IsShow==='0'){
+											var pdata={
+												UserID:SubUidsStr,
+												IsFilipino:0
+											}
+										}
+										$.fetch({
+											url:'/gateway/usersalary/mnl/setfilipino',
+											type: 'post',
+											data:pdata,
+											cb:function(rs){
+												layer.msg('保存成功');
+												layer.close(index);
+												var DepartmentID=formSelects.value('DepartmentIDAll', 'valStr');
+												var JobTitleID=formSelects.value('JobTitleIDAll', 'valStr');
+												var IsFilipino=$("#IsFilipino").val();
+												// console.log(DepartmentID,JobTitleID,000)
+													// userbasicsalaryFun()
+													allStaListtAll.reload({where:{
+														UserName:$("#UserNameAll").val(),
+														DepartmentID:DepartmentID==''?'-1':DepartmentID,
+														JobTitleID:JobTitleID==''?'-1':JobTitleID,
+														IsFilipino:IsFilipino==''?'-1':IsFilipino,
+														AutoUpdate:-1
+														
+														//IsShow:$("#IsShow").val(),
+													}})
+												}
+											})
+										})
+										$("#backuserbasicsalary").on("click",function(){
+											layer.close(index);
+										})
+									}
+							})
+					}else if(layEvent === 'showAll'){
+													// console.log(uIdsArr)
+													// var showUIds=uIdsArr.join(',')
+													var conthtmls7 ='<div class="layui-card">'
+																		+'<div class="layui-card-body layui-form">'
+																				+'<div class="layui-form-item">'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">用户名：</label><ul class="layui-form-mid layui-word-aux user-list">'+(uNames==null?"暂无":uNames)+'</ul><div class="layui-form-mid layui-word-aux" style="display:none"><button class="layui-btn layui-btn-xs" id="cancelDel">撤销删除</button></div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">已选中：</label><div class="layui-form-mid layui-word-aux user-amount">'+(userAmount==null?"暂无":userAmount)+'人</div></div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">显示在工资列表</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="IsShow" name="IsShow" value="1" title="是">'
+																									+'<input type="radio" lay-filter="IsShow" name="IsShow" value="0" title="否" >'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-input-block">'
+																							+' <button class=" layui-btn" id="subuserbasicsalary">确定</button>'
+																							+' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+																						+'</div>'
+																					+'</div>'
+																		+'</div>'
+																	+'</div>'
+														layer.open({
+																title:'设置显示',
+																type: 1, 
+																id:"conthtmls7",
+																content:conthtmls7,
+																resize:false,            
+																area:['80%','80%'],   
+																success:function(layero,index){
+																	if(userAmount==1){
+																		$(".user-list li>.layui-tab-close").hide();
+																	}else{
+																		$(".user-list li>.layui-tab-close").show();
+																		// $("#cancelDel").parent('div').show();
+																	}
+																	form.render();
+																	$(".user-list").on("click",'li>.layui-tab-close',function(){
+																		var uid=$(this).attr('data-id');
+																		$(this).parent("li").remove();
+																		var SubUidsArr=SubUidsStr.split(',');
+																		SubUidsArr.splice($.inArray(uid,SubUidsArr),1);
+																		SubUidsStr=SubUidsArr.join(',');
+																		userAmount=userAmount-1;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').show();
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+																	 
+																	$("#cancelDel").on("click",function(){
+																		$(".user-list").html(uNames);
+																		SubUidsStr=uIdsArr.join(',');
+																		userAmount=uIdsArr.length;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').hide();
+																		
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+																	
+																	$("#subuserbasicsalary").on("click",function(){
+																		var IsShow =$("input[name='IsShow']:checked").val();
+																		$.fetch({
+																			url:'/gateway/usersalary/mnl/setshow',
+																			type: 'post',
+																			data:{
+																				UserID:SubUidsStr,
+																				IsShow:IsShow
+																			},
+																			cb:function(rs){
+																				layer.msg('保存成功');
+																				layer.close(index);
+																				var DepartmentID=formSelects.value('DepartmentIDAll', 'valStr');
+																				var JobTitleID=formSelects.value('JobTitleIDAll', 'valStr');
+																				var IsFilipino=$("#IsFilipino").val();
+																				// console.log(DepartmentID,JobTitleID,000)
+																					// userbasicsalaryFun()
+																					
+																					allStaListtAll.reload({where:{
+																						UserName:$("#UserNameAll").val(),
+																						DepartmentID:DepartmentID==''?'-1':DepartmentID,
+																						JobTitleID:JobTitleID==''?'-1':JobTitleID,
+																						IsFilipino:IsFilipino==''?'-1':IsFilipino,
+																						AutoUpdate:-1
+																						
+																						//IsShow:$("#IsShow").val(),
+																					}})
+																				}
+																		})
+																	})
+																	$("#backuserbasicsalary").on("click",function(){
+																		layer.close(index);
+																	})
+																}
+														})
+												}
+			})
+		
+			$("#filterTabelSelAll").on("click",function(){
+				// var datas=
+				var DepartmentID=formSelects.value('DepartmentIDAll', 'valStr');
+				var JobTitleID=formSelects.value('JobTitleIDAll', 'valStr');
+				var IsFilipinos=$("#IsFilipino").val();
+				// console.log(DepartmentID,JobTitleID,000)
+					// userbasicsalaryFun()
+					// console.log(IsFilipino)
+					allStaListtAll.reload({where:{
+						UserName:$("#UserNameAll").val(),
+						DepartmentID:DepartmentID==''?'-1':DepartmentID,
+						JobTitleID:JobTitleID==''?'-1':JobTitleID,
+						IsFilipino:IsFilipinos==''?'-1':IsFilipinos,
+						AutoUpdate:-1
+						
+						//IsShow:$("#IsShow").val(),
+					}})
+			})
+			$("#closeLayerAll").on("click",function(){
+				// var datas=
+				$("#UserNameAll").val('');
+				$("#IsFilipino").val(-1)
+				layui.formSelects.value('DepartmentIDAll', []); 
+				layui.formSelects.value('JobTitleIDAll', []); 
+				allStaListtAll.reload({where:{
+					UserName:''
+					,DepartmentID: -1
+					,JobTitleID: -1
+					,IsShow: -1
+					,IsFilipino:-1
+					,AutoUpdate:-1
+				}},)
+			})
+		}, 10);
+		
+		
+		
+		var now= new Date();
+        var year = now.getFullYear(),
+            month = now.getMonth() + 1,
+            date = now.getDate(),
+            wHtml = "",
+            zmonth ='',zdate='';
+            if(month<10){
+                zmonth = "0"+month;
+            }else{
+                zmonth = month;
+            }
+            if(date<10){
+                zdate = "0"+date;
+            }else{
+                zdate = date;
+			}
+			//工资列表获取
+			var  userbasicsalaryFun =function(datas){
+								var userbasicsalaryName={
+									air_tickets_deduct: 'AirTicketsDeduct'
+									,basic_salary: 'BasicSalary'
+									,deduction: 'Deduction'
+									,rental_fees_jian:'RentalFeesJian'
+									,guarantee_deduct: 'GuaranteeDeduct'
+									,medicine_subsidy: 'MedicineSubsidy'
+									,spring_festival_subsidy: 'SpringFestivalSubsidy'
+									,temp_visa_deduct: 'TempVisaDeduct'
+									,travel_visa_deduct: 'TravelVisaDeduct'
+									,visa_deduct: 'VisaDeduct'
+									,water_electricity_jian: 'WaterElectricityJian'
+									,wrong_money_jian: 'WrongMoneyJian'
+									
+									,first_currency_amount: 'FirstCurrencyUnitID'
+									,first_currency_unit_id: 'FirstCurrencyAmount'
+									,ticheng_jia:'TiCheng'
+									,xiangmu_jixiao_jia:'XiangMuJiXiao'
+								}
+								var userbasicsalaryUni={}
+								// $('#setdeductionForm').addClass("mnlTable");
+						//		console.log(datas)
+								datas['IsFilipino']=0;
+								$.fetch({
+									url:'/gateway/usersalary/mnl/salaryeditlist',
+									type: 'post',
+									data:datas,
+									cb:function(rs){
+										var cols= [{type:'checkbox',fixed:'left'},{type:'numbers',fixed:'left',title:'序号'},{fixed:'left',field:'user_name',title:'姓名',sort:true,align: 'center',minWidth:80},{fixed:'left',field:'dpt_name',title:'部门',align: 'center',sort:true,minWidth:110},{fixed:'left',field:'title_name',title:'岗位',sort:true,align: 'center',minWidth:110},{field:'basic_salary',title:'基本薪资',align: 'center',sort:true,minWidth:110},{field:'basic_currency_name',title:'基本薪资币种',align: 'center',sort:true,minWidth:110}];
+										for(var i=0;i<rs.columns.length;i++){
+											if(rs.columns[i].is_display){
+												cols.push({field:''+rs.columns[i].column_name+'',title:''+rs.columns[i].zh_name+'('+['','补贴','扣除'][rs.columns[i].calc_type] +')<br>币种：'+rs.columns[i].currency_unit_name+'',sort:true,align: 'center',minWidth:180},)//edit:'text',
+												userbasicsalaryUni[''+rs.columns[i].column_name+'']=rs.columns[i].currency_unit_id;
+											}
+										}
+										cols.push({field:'creator',title:'创建人',align: 'center',fixed:'right',sort:true,minWidth:100,templet: function (d){ 
+											return d.creator==''||d.creator==null?'':d.creator
+										}},{field:'approval_history',title:'审批人',align: 'center',fixed:'right',sort:true,minWidth:100,templet: function (d){ 
+											var s=''
+											if(d.approval_history&&d.approval_history.length>=0){
+												for(var i=0;i<d.approval_history.length;i++){
+													s+=d.approval_history[i].username+';'
+												}
+											}
+											return s
+										}},{field:'auto_update_salary',title:'是否自动',align: 'center',fixed:'right',sort:true,minWidth:100,templet: function (d){return ['否','是',''][d.auto_update_salary==null?2:d.auto_update_salary]}},{field:'is_filipino',title:'是否为菲籍',align: 'center',fixed:'right',sort:true,minWidth:110,templet: function (d){return ['否','是',''][d.is_filipino==null?2:d.is_filipino]}},{field:'apply_result_desc',title:'状态',align: 'center',fixed:'right',sort:true,minWidth:90},{field:'',title:'操作',minWidth:90,fixed:'right',
+											toolbar:'<div><a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a></div>'
+											
+										})
+										var data=rs.salary_list;
+										var allStaList = table.render({
+											elem: '#allUserList',
+											limit:100000000,
+											// limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+											// url: urls+'/gateway/usersalary/userbasicsalary',
+											// method: 'post',
+											// contentType: 'application/json',
+											// autoSort:false,
+											
+											toolbar:'<div><a class="layui-btn layui-btn-xs" lay-event="editAll">批量编辑</a><a class="layui-btn layui-btn-xs" lay-event="ruleAll">设置自动薪资</a></div>',
+											defaultToolbar:'',
+											page:false,
+											text: {
+												none: '暂无' 
+											},
+											size:'sm',
+											even:true,
+											initSort: {
+												field: 'basic_salary' //排序字段，对应 cols 设定的各字段名
+												,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+											},
+											height: 'full-235',
+											cols: [cols],
+											data:data,
+											done:function(){
+												$("div[lay-id='allUserList'] div.layui-table-header th div").height(38)
+												$(window).resize();
+											}
+											// request: {
+											//      pageName: 'currentIndex' //页码的参数名称，默认：page
+											//      ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+											// }
+											// ,parseData: function(res){ //res 即为原始返回的数据
+											// 	return {
+											// 		"status_code":res.status_code, //解析接口状态
+											// 		"message": res.message, //解析提示文本
+											// 	"count": res.data.total_count, //解析数据长度
+											// 		"data": res.data, //解析数据列表
+											// "curr":res.data.page_index
+											// 	};
+											// }
+										})
+										// window.yourFunction=function(){//解决列表定位列无高度问题
+										// 	var tableHeight=$(".layui-form.layui-border-box.layui-table-view").height();
+										// 	$(".layui-table-body.layui-table-main").height(tableHeight-29);
+										// 	$(".layui-table-fixed.layui-table-fixed-l .layui-table-body").height(tableHeight-46);
+											
+										// 	// console.log(tableHeight)
+										// }
+										// setTimeout('window.yourFunction()',10);
+										
+							
+										table.on('tool(allUserList)', function(obj){
+										//	console.log(obj.tr) //得到当前行元素对象
+										//	console.log(obj.data) //得到当前行数据
+											var layEvent = obj.event;
+										//	console.log(obj.data)
+											if(layEvent === 'edit'){
+												$.fetch({
+													url:"/gateway/usersalary/mnl/rateinit",
+													type:'post',
+													cb:function(rate){
+														var ophtml="";
+														var rateD={};
+														for(var i=0;i<rate.length;i++){
+															ophtml+='<option value="'+rate[i].id+'">'+rate[i].zh_name+'('+rate[i].short_code+')</option>'
+															rateD[rate[i].id]=rate[i].zh_name+'('+rate[i].short_code+')'
+														}
+														
+														var conthtmls6input='';
+													//	console.log(obj.data.user_id);
+														var userbasicsalaryUid=obj.data.user_id;
+														for(key in obj.data){
+															//console.log($('th[data-field="'+key+'"]').text())
+															var labelText=$('th[data-field="'+key+'"]').text();
+															//console.log(labelText,key,userbasicsalaryName[key])
+															if(labelText!=''&&userbasicsalaryName[key]!=undefined&&key!='basic_salary'){
+																conthtmls6input += '<div class="layui-inline">'
+																				+'<label class="layui-form-label" style="width: 128px;">'+labelText+'</label>'
+																					+'<div class="layui-input-inline">'
+																						+'<input type="text" name="'+userbasicsalaryName[key]+'" value="'+(obj.data[key]==null?'':obj.data[key])+'" placeholder="请输入" autocomplete="off" class="layui-input num2">'
+																					+'</div>'
+																					+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;">'+rateD[userbasicsalaryUni[key]]+'</div>'
+																				+'</div>'
+																				//console.log(1111)
+															}
+														}
+															// $('#setdeductionForm').addClass("mnlTable");
+													//console.log(conthtmls6input)
+														if(obj.data.is_all==null||obj.data.is_all==''){
+															obj.data.is_all=0;
+														}
+														var inputHtml =''
+														if(obj.data.is_show==0){
+															inputHtml+='<input type="radio" name="sex" value="1" title="是"><input type="radio" name="sex" value="0" title="否" checked>'
+														}else if(obj.data.is_show==1){
+															inputHtml+='<input type="radio" name="sex" value="1" title="是" checked><input type="radio" name="sex" value="0" title="否">'
+														}else{
+															inputHtml+='<input type="radio" name="sex" value="1" title="是" checked><input type="radio" name="sex" value="0" title="否">'
+														}
+														var conthtmls6 ='<div class="layui-card">'
+																			+'<div class="layui-card-body layui-form">'
+																					+'<div class="layui-form-item">'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">姓名：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.user_name==null?"暂无":obj.data.user_name)+'</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">部门：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.dpt_name==null?"暂无":obj.data.dpt_name)+'</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">岗位：</label><div class="layui-form-mid layui-word-aux">'+(obj.data.title_name==null?"暂无":obj.data.title_name)+'</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">显示在工资列表：</label><div class="layui-word-aux layui-form-mid">'+(['否','是'][obj.data.is_show])+'</div></div>'
+																					+'</div>'
+																					// +(obj.data.is_show==1?"是":'否')+
+																						
+																					
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资</label>'
+																								+'<div class="layui-input-inline"><input type="text" name="BasicSalary"  id="BasicSalary" value="'+(obj.data.basic_salary==null?'':obj.data.basic_salary)+'"  placeholder="请输入" autocomplete="off" class="layui-input num2"></div>'
+																								+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;"></div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资币种</label>'
+																							+'<div class="layui-input-inline"><select id="BasicSalaryCurrencyUnitID" name="BasicSalaryCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																						+conthtmls6input
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否房屋补贴</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="1" title="是" '+(obj.data.has_housing_subsidy==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="0" title="否" '+(obj.data.has_housing_subsidy==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">工资货币</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="checkIsAll" name="checkIsAll" value="1" title="全" '+(obj.data.is_all==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="checkIsAll" name="checkIsAll" value="0" title="部分" '+(obj.data.is_all==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否自动计算</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="AutoUpdateSalary" name="AutoUpdateSalary" value="1" title="是" '+(obj.data.auto_update_salary==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="AutoUpdateSalary" name="AutoUpdateSalary" value="0" title="否" '+(obj.data.auto_update_salary==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					// +'<div class="layui-form-item">'
+																					// +'</div>'
+
+																					+'<div class="layui-form-item all">'
+																						//领
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">打回币种</label> <div class="layui-input-inline"><select id="SecondCurrencyUnitID" name="SecondCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item part '+(obj.data.is_all==1?'layui-hide':'')+'">'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取币种</label> <div class="layui-input-inline"><select id="FirstCurrencyUnitID" name="FirstCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item part '+(obj.data.is_all==1?'layui-hide':'')+'">'
+																						//外币 打
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取金额</label> <div class="layui-input-inline"><input type="text" id="FirstCurrencyAmount" name="FirstCurrencyAmount" placeholder="请输入" value="'+(obj.data.first_currency_amount==null?'':obj.data.first_currency_amount)+'" autocomplete="off" class="layui-input num2"></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item">'
+																						//领
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">审批人</label> <div class="layui-input-inline"><select id="ApprovalUserID" name="ApprovalUserID"></select></div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-input-block">'
+																							+' <button class=" layui-btn" id="subuserbasicsalary">保存</button>'
+																							+' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+																						+'</div>'
+																					+'</div>'
+
+																				+'</div>'
+																		+'</div>'
+															layer.open({
+																title:'基本工资设置',
+																type: 1, 
+																id:"conthtmls6",
+																content:conthtmls6,
+																resize:false,            
+																area:['90%', '90%'],   
+																success:function(layero,index){
+					  												$.fetch({
+																		url: "/gateway/usersalary/mnl/getapprovaluser",
+																		type: 'post',
+																		data: {
+																		    IsApprovalUser: 1
+																		},
+																		cb: function (rs) {
+																			var op=''
+																			if(rs&&rs.length>0){
+																				for(var i=0;i<rs.length;i++){
+																					op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+																				}
+																			}else{
+																				$("#subuserbasicsalary").attr('disabled','disabled').addClass('layui-btn-disabled');
+																				layer.msg('未设置审批人,无法提交.');
+																			}
+																			$("#ApprovalUserID").html(op);
+																			form.render();
+																		}
+        															})
+																	$("#backuserbasicsalary").on("click",function(){
+																		layer.close(index);
+																	})
+																	form.on('radio(checkIsAll)', function(data){
+																		if(data.value==1){
+																			$(".part").addClass('layui-hide').removeClass('layui-show');
+																			// $("#FirstCurrencyAmount").val()
+																		}else{
+																			
+																			$(".part").addClass('layui-show').removeClass('layui-hide');
+																			// $(".all").addClass('layui-hide').removeClass('layui-show');
+																		}
+																		
+																	}); 
+																	$("#conthtmls6").on('keyup','.layui-input.num2',function () {
+																		NumberCheckten2x(this)
+																	}).bind("paste", function () {  //CTR+V事件处理
+																		NumberCheckten2x(this)
+																		// $( this).val(NumberCheckten4($(this).val()));
+																	}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+																			
+																	$("#BasicSalaryCurrencyUnitID").val(obj.data.basic_salary_currency_unit_id);
+																	$("#FirstCurrencyUnitID").val(obj.data.first_currency_unit_id);
+																	$("#SecondCurrencyUnitID").val(obj.data.second_currency_unit_id);
+																	form.render();
+																	$("#subuserbasicsalary").on("click",function(){
+																		var subData={};
+																		var BasicSalaryCurrencyUnitIDVal=$("#BasicSalaryCurrencyUnitID").val();
+																		var BasicSalaryVal=$("#BasicSalary").val();
+																		if(BasicSalaryCurrencyUnitIDVal==''||BasicSalaryCurrencyUnitIDVal==null){
+																			layer.msg('基本薪资不能为空');
+																			return false
+																		}
+																		if(BasicSalaryVal==''||BasicSalaryVal==null){
+																			layer.msg('基本薪资币种不能为空');
+																			return false															
+																		}
+																		$("#conthtmls6").find('input.layui-input.num2').each(function(){
+																		//	console.log($(this).val())
+																			var subName=$(this).attr("name");
+																			subData[subName]=$(this).val();
+																		})
+																		subData['UserID']=userbasicsalaryUid;						
+																		// console.log($("input[name='checkIsAll']:checked").val())								
+																		subData['IsAll']=$("input[name='checkIsAll']:checked").val();
+																		subData['HasHousingSubsidy']=$("input[name='HasHousingSubsidy']:checked").val();
+																		subData['AutoUpdateSalary']=$("input[name='AutoUpdateSalary']:checked").val();
+																		if(subData.IsAll==0){
+																			subData['FirstCurrencyAmount']=$("#FirstCurrencyAmount").val();
+																			subData['FirstCurrencyUnitID']=$("#FirstCurrencyUnitID").val();
+																		}else if(subData.IsAll==1){
+																			subData['FirstCurrencyAmount']=0;
+																			subData['FirstCurrencyUnitID']='';
+																		}
+																		subData['BasicSalaryCurrencyUnitID']=$("#BasicSalaryCurrencyUnitID").val();
+																		subData['SecondCurrencyUnitID']=$("#SecondCurrencyUnitID").val();
+																	
+																		subData['ApprovalUserID']=$("#ApprovalUserID").val();
+																		// subData['IsShow']=$("input[name='sex']:checked").val();
+																	//	console.log(subData);
+																		$.fetch({
+																			url:'/gateway/usersalary/mnl/setbasicsalary',
+																			type: 'post',
+																			data:subData,
+																			cb:function(rs){
+																				layer.msg('保存成功');
+																				layer.close(index);
+
+																				var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+																				var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+																				var AutoUpdate=$("#AutoUpdate").val();
+																				// console.log(DepartmentID,JobTitleID,000)
+																				userbasicsalaryFun({
+																					UserName:$("#UserName").val(),
+																					DepartmentID:DepartmentID==''?'-1':DepartmentID,
+																					JobTitleID:JobTitleID==''?'-1':JobTitleID,
+																					AutoUpdate:AutoUpdate==''?'-1':AutoUpdate,
+																					//IsShow:$("#IsShow").val(),
+																				})
+																			}
+																		})
+																	})
+																}
+															})
+															//obj.del(); //删除当前行
+															//obj.update(fields) //修改当前行数据
+														}
+													})
+															
+													
+												}
+										});
+										
+										table.on('toolbar(allUserList)', function(obj){
+										//	console.log(obj.tr) //得到当前行元素对象
+										 	 //得到当前行数据
+											var checkStatus = table.checkStatus(obj.config.id);
+											if(checkStatus.data.length===0){
+												layer.msg('无选中项，无法设置。');
+												return false
+											}
+											var uNames='';
+											var uIdsArr=[];
+											for(var i =0;i<checkStatus.data.length;i++){
+												uNames+='<li class="bg"><span>'+checkStatus.data[i].user_name+';</span><i data-id="'+checkStatus.data[i].user_id+'" class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>';
+												uIdsArr.push(checkStatus.data[i].user_id);
+											}
+											
+											var SubUidsStr=uIdsArr.join(',');
+											var userAmount=checkStatus.data.length;
+											var firstData=checkStatus.data[0];
+											var layEvent = obj.event;
+											if(layEvent === 'editAll'){
+												$.fetch({
+													url:"/gateway/usersalary/mnl/rateinit",
+													type:'post',
+													cb:function(rate){
+														var ophtml="";
+														var rateD={};
+														for(var i=0;i<rate.length;i++){
+															ophtml+='<option value="'+rate[i].id+'">'+rate[i].zh_name+'('+rate[i].short_code+')</option>'
+															rateD[rate[i].id]=rate[i].zh_name+'('+rate[i].short_code+')'
+														}
+														
+														var conthtmls6input='';
+													//	console.log(obj.data.user_id);
+														// var userbasicsalaryUid=firstData.user_id;
+														for(key in firstData){
+															// console.log($('th[data-field="'+key+'"]').text())
+															var labelText=$('th[data-field="'+key+'"]').text();
+														//	console.log(userbasicsalaryName[key])
+															if(labelText!=''&&userbasicsalaryName[key]!=undefined&&key!='basic_salary'){
+																conthtmls6input += '<div class="layui-inline">'
+																					+'<label class="layui-form-label" style="width: 128px;">'+labelText+'</label>'
+																					+'<div class="layui-input-inline">'
+																						+'<input type="text" name="'+userbasicsalaryName[key]+'" value="'+(firstData[key]==null?'':firstData[key])+'" placeholder="请输入" autocomplete="off" class="layui-input num2">'
+																					+'</div>'
+																					+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;">'+rateD[userbasicsalaryUni[key]]+'</div>'
+																				+'</div>'
+																				
+															}
+														}
+															// $('#setdeductionForm').addClass("mnlTable");
+													
+														if(firstData.is_all==null||firstData.is_all==''){
+															firstData.is_all=0;
+														}
+														// console.log(uNames)
+														// console.log(firstData)
+														var inputHtml =''
+														if(firstData.is_show==0){
+															inputHtml+='<input type="radio" name="sex" value="1" title="是"><input type="radio" name="sex" value="0" title="否" checked>'
+														}else if(firstData.is_show==1){
+															inputHtml+='<input type="radio" name="sex" value="1" title="是" checked><input type="radio" name="sex" value="0" title="否">'
+														}else{
+															inputHtml+='<input type="radio" name="sex" value="1" title="是" checked><input type="radio" name="sex" value="0" title="否">'
+														}
+														
+														var conthtmls6 ='<div class="layui-card">'
+																			+'<div class="layui-card-body layui-form">'
+																					+'<div class="layui-form-item">'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">用户名：</label><ul class="layui-form-mid layui-word-aux user-list">'+(uNames==null?"暂无":uNames)+'</ul><div class="layui-form-mid layui-word-aux" style="display:none;"><button class="layui-btn layui-btn-xs" id="cancelDel">撤销删除</button></div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">已选中：</label><div class="layui-form-mid layui-word-aux user-amount">'+(userAmount==null?"暂无":userAmount)+'人</div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">显示在工资列表：</label><div class="layui-word-aux layui-form-mid">'+(['否','是'][firstData.is_show])+'</div></div>'
+																					+'</div>'
+																						
+																					
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资</label>'
+																								+'<div class="layui-input-inline"><input type="text" name="BasicSalary"  id="BasicSalary" value="'+(firstData.basic_salary==null?'':firstData.basic_salary)+'"  placeholder="请输入" autocomplete="off" class="layui-input num2"></div>'
+																								+'<div class="layui-form-mid layui-word-aux" style=" width: 110px;"></div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;"><span style="color:red">*</span>基本薪资币种</label>'
+																							+'<div class="layui-input-inline"><select id="BasicSalaryCurrencyUnitID" name="BasicSalaryCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																						+conthtmls6input
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否房屋补贴</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="1" title="是" '+(firstData.has_housing_subsidy==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="HasHousingSubsidy" name="HasHousingSubsidy" value="0" title="否" '+(firstData.has_housing_subsidy==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">工资货币</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="checkIsAll" name="checkIsAll" value="1" title="全" '+(firstData.is_all==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="checkIsAll" name="checkIsAll" value="0" title="部分" '+(firstData.is_all==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">是否自动计算</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="AutoUpdateSalary" name="AutoUpdateSalary" value="1" title="是" '+(firstData.auto_update_salary==1?'checked':'')+'>'
+																									+'<input type="radio" lay-filter="AutoUpdateSalary" name="AutoUpdateSalary" value="0" title="否" '+(firstData.auto_update_salary==0?'checked':'')+'>'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item all">'
+																						//领
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">打回币种</label> <div class="layui-input-inline"><select id="SecondCurrencyUnitID" name="SecondCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item part '+(firstData.is_all==1?'layui-hide':'')+'">'
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取币种</label> <div class="layui-input-inline"><select id="FirstCurrencyUnitID" name="FirstCurrencyUnitID">'+ophtml+'</select></div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item part '+(firstData.is_all==1?'layui-hide':'')+'">'
+																						//外币 打
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">固定领取金额</label> <div class="layui-input-inline"><input type="text" id="FirstCurrencyAmount" name="FirstCurrencyAmount" placeholder="请输入" value="'+(firstData.first_currency_amount==null?'':firstData.first_currency_amount)+'" autocomplete="off" class="layui-input num2"></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item">'
+																						//领
+																						+'<div class="layui-inline">'
+																							+'<label class="layui-form-label" style="width: 128px;">审批人</label> <div class="layui-input-inline"><select id="ApprovalUserID" name="ApprovalUserID"></select></div>'
+																						+'</div>'
+																					+'</div>'
+
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-input-block">'
+																							+' <button class=" layui-btn" id="subuserbasicsalary">保存</button>'
+																							+' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+																						+'</div>'
+																					+'</div>'
+
+																				+'</div>'
+																		+'</div>'
+															layer.open({
+																title:'基本工资设置',
+																type: 1, 
+																id:"conthtmls6",
+																content:conthtmls6,
+																resize:false,            
+																area:['90%', '90%'],   
+																success:function(layero,index){
+																	//删除多选用户
+																	$.fetch({
+																		url: "/gateway/usersalary/mnl/getapprovaluser",
+																		type: 'post',
+																		data: {
+																		    IsApprovalUser: 1
+																		},
+																		cb: function (rs) {
+																			var op=''
+																			if(rs&&rs.length>0){
+																				for(var i=0;i<rs.length;i++){
+																					op+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+																				}
+																			}else{
+																				$("#subuserbasicsalary").attr('disabled','disabled').addClass('layui-btn-disabled');
+																				layer.msg('未设置审批人,无法提交.');
+																			}
+																			$("#ApprovalUserID").html(op);
+																			form.render();
+																		}
+        															})
+																	if(userAmount==1){
+																		$(".user-list li>.layui-tab-close").hide();
+																	}else{
+																		$(".user-list li>.layui-tab-close").show();
+																		// $("#cancelDel").parent('div').show();
+																	}
+																	$(".user-list").on("click",'li>.layui-tab-close',function(){
+																		var uid=$(this).attr('data-id');
+																		$(this).parent("li").remove();
+																		var SubUidsArr=SubUidsStr.split(',');
+																		SubUidsArr.splice($.inArray(uid,SubUidsArr),1);
+																		SubUidsStr=SubUidsArr.join(',');
+																		userAmount=userAmount-1;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').show();
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+																	 
+																	$("#cancelDel").on("click",function(){
+																		$(".user-list").html(uNames);
+																		SubUidsStr=uIdsArr.join(',');
+																		userAmount=uIdsArr.length;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').hide();
+																		
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+
+																	$("#backuserbasicsalary").on("click",function(){
+																		layer.close(index);
+																	})
+																	form.on('radio(checkIsAll)', function(data){
+																		if(data.value==1){
+																			$(".part").addClass('layui-hide').removeClass('layui-show');
+																			// $("#FirstCurrencyAmount").val()
+																		}else{
+																			
+																			$(".part").addClass('layui-show').removeClass('layui-hide');
+																			// $(".all").addClass('layui-hide').removeClass('layui-show');
+																		}
+																		
+																	}); 
+																	$("#conthtmls6").on('keyup','.layui-input.num2',function () {
+																		NumberCheckten2x(this)
+																	}).bind("paste", function () {  //CTR+V事件处理
+																		NumberCheckten2x(this)
+																		// $(this).val(NumberCheckten4($(this).val()));
+																	}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+																			
+																	$("#BasicSalaryCurrencyUnitID").val(firstData.basic_salary_currency_unit_id);
+																	$("#FirstCurrencyUnitID").val(firstData.first_currency_unit_id);
+																	$("#SecondCurrencyUnitID").val(firstData.second_currency_unit_id);
+																	form.render();
+																	$("#subuserbasicsalary").on("click",function(){
+																		var subData={};
+																		var BasicSalaryCurrencyUnitIDVal=$("#BasicSalaryCurrencyUnitID").val();
+																		var BasicSalaryVal=$("#BasicSalary").val();
+																		if(BasicSalaryCurrencyUnitIDVal==''||BasicSalaryCurrencyUnitIDVal==null){
+																			layer.msg('基本薪资不能为空');
+																			return false
+																		}
+																		if(BasicSalaryVal==''||BasicSalaryVal==null){
+																			layer.msg('基本薪资币种不能为空');
+																			return false															
+																		}
+																		$("#conthtmls6").find('input.layui-input.num2').each(function(){
+																		//	console.log($(this).val())
+																			var subName=$(this).attr("name");
+																			subData[subName]=$(this).val();
+																		})
+																		subData['UserID']=SubUidsStr;						
+																		// console.log($("input[name='checkIsAll']:checked").val())								
+																		subData['IsAll']=$("input[name='checkIsAll']:checked").val();
+																		subData['HasHousingSubsidy']=$("input[name='HasHousingSubsidy']:checked").val();
+																		subData['AutoUpdateSalary']=$("input[name='AutoUpdateSalary']:checked").val();
+																		if(subData.IsAll==0){
+																			subData['FirstCurrencyAmount']=$("#FirstCurrencyAmount").val();
+																			subData['FirstCurrencyUnitID']=$("#FirstCurrencyUnitID").val();
+																		}else if(subData.IsAll==1){
+																			subData['FirstCurrencyAmount']=0;
+																			subData['FirstCurrencyUnitID']='';
+																		}
+																		subData['BasicSalaryCurrencyUnitID']=$("#BasicSalaryCurrencyUnitID").val();
+																		subData['SecondCurrencyUnitID']=$("#SecondCurrencyUnitID").val();
+																		subData['ApprovalUserID']=$("#ApprovalUserID").val();
+																		// subData['IsShow']=$("input[name='sex']:checked").val();
+																		$.fetch({
+																			url:'/gateway/usersalary/mnl/setbasicsalary',
+																			type: 'post',
+																			data:subData,
+																			cb:function(rs){
+																				layer.msg('保存成功');
+																				layer.close(index);
+																				var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+																				var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+																				var AutoUpdate=$("#AutoUpdate").val();
+																				// console.log(DepartmentID,JobTitleID,000)
+																				userbasicsalaryFun({
+																					UserName:$("#UserName").val(),
+																					DepartmentID:DepartmentID==''?'-1':DepartmentID,
+																					JobTitleID:JobTitleID==''?'-1':JobTitleID,
+																					AutoUpdate:AutoUpdate==''?'-1':AutoUpdate,
+																					//IsShow:$("#IsShow").val(),
+																				})
+																			}
+																		})
+																	})
+																}
+															})
+															//obj.del(); //删除当前行
+															//obj.update(fields) //修改当前行数据
+														}
+													})
+															
+													
+												}else if(layEvent==='ruleAll'){
+													// console.log(uIdsArr)
+													// var showUIds=uIdsArr.join(',')
+													var conthtmls7 ='<div class="layui-card">'
+																		+'<div class="layui-card-body layui-form">'
+																				+'<div class="layui-form-item">'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">用户名：</label><ul class="layui-form-mid layui-word-aux user-list">'+(uNames==null?"暂无":uNames)+'</ul><div class="layui-form-mid layui-word-aux" style="display:none"><button class="layui-btn layui-btn-xs" id="cancelDel">撤销删除</button></div></div>'
+																							+'<div class="layui-inline"><label class="layui-form-label" style="width: 128px;">已选中：</label><div class="layui-form-mid layui-word-aux user-amount">'+(userAmount==null?"暂无":userAmount)+'人</div></div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-inline">'
+																								+'<label class="layui-form-label" style="width: 128px;">设置自动薪资</label>'
+																								+'<div class="layui-input-inline">'
+																									+'<input type="radio" lay-filter="IsShow" name="IsShow" value="1" title="是">'
+																									+'<input type="radio" lay-filter="IsShow" name="IsShow" value="0" title="否" >'
+																								+'</div>'
+																						+'</div>'
+																					+'</div>'
+																					+'<div class="layui-form-item">'
+																						+'<div class="layui-input-block">'
+																							+' <button class=" layui-btn" id="subuserbasicsalary">确定</button>'
+																							+' <button class=" layui-btn" id="backuserbasicsalary">取消</button>'
+																						+'</div>'
+																					+'</div>'
+																		+'</div>'
+																	+'</div>'
+														layer.open({
+																title:'设置自动薪资',
+																type: 1, 
+																id:"conthtmls7",
+																content:conthtmls7,
+																resize:false,            
+																area:['80%','80%'],   
+																success:function(layero,index){
+																	if(userAmount==1){
+																		$(".user-list li>.layui-tab-close").hide();
+																	}else{
+																		$(".user-list li>.layui-tab-close").show();
+																		// $("#cancelDel").parent('div').show();
+																	}
+																	form.render();
+																	$(".user-list").on("click",'li>.layui-tab-close',function(){
+																		var uid=$(this).attr('data-id');
+																		$(this).parent("li").remove();
+																		var SubUidsArr=SubUidsStr.split(',');
+																		SubUidsArr.splice($.inArray(uid,SubUidsArr),1);
+																		SubUidsStr=SubUidsArr.join(',');
+																		userAmount=userAmount-1;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').show();
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+																	 
+																	$("#cancelDel").on("click",function(){
+																		$(".user-list").html(uNames);
+																		SubUidsStr=uIdsArr.join(',');
+																		userAmount=uIdsArr.length;
+																		$(".user-amount").html(userAmount)
+																		$("#cancelDel").parent('div').hide();
+																		
+																		if(userAmount==1){
+																			$(".user-list li>.layui-tab-close").hide();
+																		}else{
+																			$(".user-list li>.layui-tab-close").show();
+																			
+																		}
+																	})
+																	
+																	$("#subuserbasicsalary").on("click",function(){
+																		var IsShow =$("input[name='IsShow']:checked").val();
+																		// console.log(IsShow)
+																		if(IsShow==='1'){
+																			var pdata={
+																				UserID:SubUidsStr,
+																				// IsShow:IsShow
+																			}
+																		}else if(IsShow==='0'){
+																			var pdata={
+																				DelUserID:SubUidsStr,
+																				// IsShow:IsShow
+																			}
+																		}
+																		$.fetch({
+																			url:'/gateway/usersalaryautoupdate/mnl/setautoupdate',
+																			type: 'post',
+																			data:pdata,
+																			cb:function(rs){
+																				layer.msg('保存成功');
+																				layer.close(index);
+
+																				var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+																				var JobTitleID=formSelects.value('JobTitleID', 'valStr');
+																				var AutoUpdate=$("#AutoUpdate").val();
+																				// console.log(DepartmentID,JobTitleID,000)
+																				userbasicsalaryFun({
+																					UserName:$("#UserName").val(),
+																					DepartmentID:DepartmentID==''?'-1':DepartmentID,
+																					JobTitleID:JobTitleID==''?'-1':JobTitleID,
+																					AutoUpdate:AutoUpdate==''?'-1':AutoUpdate,
+																					//IsShow:$("#IsShow").val(),
+																				})
+																				
+																			}
+																		})
+																	})
+																	$("#backuserbasicsalary").on("click",function(){
+																		layer.close(index);
+																	})
+																}
+														})
+												}
+												
+										});
+									}
+								})
+						
+							}				
+			userbasicsalaryFun({
+				UserName:'',
+				DepartmentID:'-1',
+				JobTitleID:'-1',
+				IsShow:'-1',
+				AutoUpdate:'-1'
+			});
+			
+			$("#filterTabelSel").on("click",function(){
+				// var datas=
+				var DepartmentID=formSelects.value('DepartmentID', 'valStr');
+				var JobTitleID=formSelects.value('JobTitleID', 'valStr');				
+				var AutoUpdate=$("#AutoUpdate").val();
+				// console.log(DepartmentID,JobTitleID,000)
+				userbasicsalaryFun({
+					UserName:$("#UserName").val(),
+					DepartmentID:DepartmentID==''?'-1':DepartmentID,
+					JobTitleID:JobTitleID==''?'-1':JobTitleID,
+					AutoUpdate:AutoUpdate==''?'-1':AutoUpdate,
+					//IsShow:$("#IsShow").val(),
+				})
+			})
+			$("#closeLayer").on("click",function(){
+				// var datas=
+				layui.formSelects.value('DepartmentID', []); 
+				layui.formSelects.value('JobTitleID', []); 
+				$("#AutoUpdate").val('');
+				
+			//	$("#IsShow").val('-1');
+				$("#UserName").val('');
+				form.render();
+				userbasicsalaryFun({
+					UserName:'',
+					DepartmentID:'-1',
+					JobTitleID:'-1',
+					AutoUpdate:'-1'
+				//	IsShow:'-1',
+				});
+			})
+			var NumberCheckten =function(num) {
+				var str = num;
+				var len1 = str.substr(0, 1);
+				var len2 = str.substr(1, 1);
+				//如果第一位是0，第二位不是点，就用数字把点替换掉
+				if (str.length > 1 && len1 == 0 && len2 != ".") {
+				str = str.substr(1, 1);
+				}
+				//第一位不能是.
+				if (len1 == ".") {
+					str = "";
+				}
+				//限制只能输入一个小数点
+				if (str.indexOf(".") != -1) {
+				var str_ = str.substr(str.indexOf(".") + 1);
+				if (str_.indexOf(".") != -1) {
+					str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+				}
+				}
+				//正则替换，保留数字和小数点
+				str = str.replace(/[^\d^\.]+/g,'')
+				//如果需要保留小数点后两位，则用下面公式
+				var result = (str.toString()).indexOf(".");
+				if(result != -1) {
+					// alert("含有小数点");
+					
+					var num3=str.split('.')[1].slice(0,10);
+				} else {
+					// alert("不含小数点");
+				}
+				// //console.log(num3,(num3==''||num3==undefined)?'':'.'+num3,111)
+				
+				str = str.replace(/\.\d\d\d\d\d\d\d\d\d\d\d$/,(num3==''||num3==undefined)?'':'.'+num3)
+				// str = str.replace(/\.\d\d\d\d$/,'')
+				// //console.log(str)
+				
+				return str;
+			}
+			
+			var NumberCheckten4 =function(num) {
+				var str = num;
+				var len1 = str.substr(0, 1);
+				var len2 = str.substr(1, 1);
+				//如果第一位是0，第二位不是点，就用数字把点替换掉
+				if (str.length > 1 && len1 == 0 && len2 != ".") {
+				str = str.substr(1, 1);
+				}
+				//第一位不能是.
+				if (len1 == ".") {
+					str = "";
+				}
+				//限制只能输入一个小数点
+				if (str.indexOf(".") != -1) {
+				var str_ = str.substr(str.indexOf(".") + 1);
+				if (str_.indexOf(".") != -1) {
+					str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+				}
+				}
+				//正则替换，保留数字和小数点
+				str = str.replace(/[^\d^\.]+/g,'')
+				//如果需要保留小数点后两位，则用下面公式
+				var result = (str.toString()).indexOf(".");
+				if(result != -1) {
+					// alert("含有小数点");
+					
+					var num3=str.split('.')[1].slice(0,4);
+				} else {
+					// alert("不含小数点");
+				}
+				// //console.log(num3,(num3==''||num3==undefined)?'':'.'+num3,111)
+				
+				str = str.replace(/\.\d\d\d\d\d$/,(num3==''||num3==undefined)?'':'.'+num3)
+				// str = str.replace(/\.\d\d\d\d$/,'')
+				// //console.log(str)
+				
+				return str;
+			}
+			$("#setdeductionForm").on('keyup','.amountNumber60',function () {
+				if(0<=$(this).val()&&$(this).val()<=60){$(this).val(NumberAmount($(this).val()));}
+         		else{
+					$(this).val('')
+				}
+			}).bind("paste", function () {  //CTR+V事件处理
+				if(0<=$(this).val()&&$(this).val()<=60){$(this).val(NumberAmount($(this).val()));}
+				else{
+					$(this).val('')
+				}
+				
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+			$("#setdeductionForm").on('keyup','.amountNumber0-31',function () {
+				if(0<=$(this).val()&&$(this).val()<=31){$(this).val(NumberAmount($(this).val()));}
+         		else{
+					$(this).val('')
+				}
+			}).bind("paste", function () {  //CTR+V事件处理
+				if(0<=$(this).val()&&$(this).val()<=31){$(this).val(NumberAmount($(this).val()));}
+				else{
+					$(this).val('')
+				}
+				
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+			$("#setdeductionForm").on('keyup','.amountNumber',function () {
+				$(this).val(NumberAmount($(this).val()));
+			}).bind("paste", function () {  //CTR+V事件处理
+				$(this).val(NumberAmount($(this).val()));
+				
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+			$("#setdeductionForm").on('keyup','.receipt100',function () {
+				if(0<=$(this).val()&&$(this).val()<=100){$(this).val(NumberCheckten($(this).val()));}
+				else{
+					$(this).val('')
+				}
+			}).bind("paste", function () {  //CTR+V事件处理
+				if(0<=$(this).val()&&$(this).val()<=100){$(this).val(NumberCheckten($(this).val()));}
+				else{
+					$(this).val('')
+				}
+			}).css("ime-mode", "disabled"); //CSS设置输入法不可用
+
+
+			//ph 薪资编辑列表
+			window.userbasicsalaryFunPH =function(datas,cType){
+				$.fetch({
+						url:"/gateway/usersalary/ph/salaryeditlist",
+						type:'post',
+						data:datas,
+						
+						cb:function(res){
+							// console.log(res)
+							// console.log(datas.SalaryTimes)
+							// if(datas.SalaryTimes==-1){
+							// 	var noedit=false;
+							// }else{
+							// 	var noedit=true;
+							// }
+							var endDate1 = laydate.getEndDate(10);
+							var allUserListPH = table.render({
+								elem: '#allUserListPH',
+								// url: window.urls + '/gateway/usersalary/ph/userbasicsalary',
+								limit:1000000000,
+								toolbar:false,
+								// defaultToolbar:'',
+								// where:datas,
+								// method: 'post',
+								// contentType: 'application/json',
+								data:res.salary_list,
+								page: false,
+								height: 'full-235',								
+								size:'sm',
+								// loading: true,
+								toolbar:'<div></div>',
+								// defaultToolbar: '<div><a>删除</a></div>',
+								text: {
+									none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+								},
+								cols: [
+									[//第一级表头
+										// {
+										// 	// title: ' ',//排序	
+										// 	rowspan:4,
+										// 	field: 'checkbox',
+										// 	type:'checkbox',
+										// 	fixed:'left',
+										// 	align:'center'
+										// },
+										{
+											title: '  ',//排序	
+											colspan:13,
+											rowspan:1,
+											
+											fixed:'left',
+											align:'center'
+										},{
+											field:'add payback',
+											title: 'Add Item ',//排序	
+											colspan:28,
+											align:'center'
+										},{
+											field:'Payback',
+											title: 'Payback Item',
+											colspan:31,
+											align:'center'
+											
+										},{
+											field:'Deduction Mandatory',
+											title: 'Deduction Items',
+											colspan:4,
+											align:'center'
+										}
+										// ,{
+										// 	field:'Deduction Mandatory',
+										// 	title: 'Mandatory Contribution',
+										// 	colspan:4,
+										// 	align:'center'
+										// }
+										// ,{
+										// 	title: 'Total Pay',
+										// 	colspan:20
+										// }
+										,{field:'auto_update_salary',title:'创建人',align: 'center',fixed:'right',sort:true,minWidth:100,rowspan:4,templet: function (d){ 
+											return d.creator==''||d.creator==null?'':d.creator
+										}}
+											
+										,{field:'approval_history',title:'审批人',align: 'center',fixed:'right',sort:true,minWidth:100,rowspan:4, templet: function (d){ 
+											var s=''
+											if(d.approval_history&&d.approval_history.length>=0){
+												for(var i=0;i<d.approval_history.length;i++){
+													s+=d.approval_history[i].username+';'
+												}
+											}
+											return s
+										}}
+										,{
+											field:'modifier',
+											title: '编辑人',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											field:'apply_result_desc',
+											title: '状态',
+											fixed:'right',
+											rowspan:4,
+											// colspan:4,
+											width:80,
+											align:'center'
+										}
+										,{
+											title: ' ',
+											field:'editbtn',
+											
+											rowspan:4,
+											fixed:'right',
+											width:100,
+											align:'center',
+											// toolbar: 
+											templet:function(d){
+												// return noedit?'<div><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button></div>':'<div><button class="layui-btn  layui-btn-disabled layui-btn-xs layui-disabled" lay-event="">编辑</button></div>';
+												return d?'<div><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button></div>':'<div><button class="layui-btn  layui-btn-disabled layui-btn-xs layui-disabled" lay-event="">编辑</button></div>';
+											}
+										}
+									],
+								
+									[//第二级表头
+									{
+										sort:true,
+										field: 'no',
+										title: 'No',//排序	
+										type: 'numbers',
+										minWidth:60,
+										unresize: true,
+										fixed:'left',
+										rowspan:3,
+									},{
+										sort:true,
+										field: 'user_name',
+										title: 'User Name',//名称
+										minWidth:110,
+										rowspan:3,
+										fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'gender_desc',
+										title: '<span title="Gender">Gender</span>',//性别
+										fixed:'left',
+										rowspan:3,
+										minWidth:90,
+										unresize: true
+									},{
+										sort:true,
+										field: 'dpt_name',
+										title: 'Dept',//部门
+										rowspan:3,
+										minWidth:80,
+										fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'title_name',
+										title: 'Position',//岗位
+										rowspan:3,
+										minWidth:90,
+										fixed:'left',
+										unresize: true 
+									},{
+										sort:true,
+										field: 'join_date',
+										title: 'Date Joined',//入职日期
+										rowspan:3,
+										minWidth:120,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'due_date',
+										title: 'Confirmed Date',//转正日期
+										minWidth:140,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'employ_type_desc',
+										title: 'Emply Type',//雇佣类型
+										minWidth:120,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'salary_times',
+										title: 'stage',//实际工作天数 
+										rowspan:3,
+										minWidth:90,
+										// fixed:'left',
+										unresize: true
+									},
+									{
+										sort:true,
+										field: 'daily_wages',
+										title: 'Daily Wages',//雇佣类型
+										width:80,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'allowance',
+										title: 'allowance',//实际工作天数 
+										rowspan:3,
+										minWidth:90,
+										// fixed:'left',
+										unresize: true
+									},
+									{
+										sort:true,
+										field: 'calendar_daycount',
+										title: 'Calender Days',//日历天数
+										minWidth:140,
+										rowspan:3,
+										// fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'work_days',
+										title: 'Actual Working Days',//实际工作天数 stage
+										rowspan:3,
+										minWidth:160,
+										// fixed:'left',
+										unresize: true
+									},{
+										field: '',
+										title: 'OT',//加班
+										minWidth:80,
+										// fixed:'left',
+										colspan:16,
+										unresize: true,
+										align:'center'
+									},
+									// {
+									// 	field: '',
+									// 	title: 'OT',//加班
+									// 	minWidth:120,
+									// 	// fixed:'left',
+									// 	colspan:16,
+									// 	unresize: true
+									// },
+									{
+										field: 'NSD.NSD',
+										title: 'Night Shift Diff.NSD',//晚班津贴
+										minWidth:160,
+										// fixed:'left',
+										colspan:8,
+										unresize: true,
+										align:'center'
+									}
+
+									,{
+										sort:true,
+										field: 'add_refund',
+										title: 'Refund',//回补
+										minWidth:100,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_perfect_ttd',
+										title: 'Perfect Attd',//全勤
+										minWidth:140,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_13th_paid',
+										title: '13th Paid',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_others',
+										title: 'Others',//其他
+										rowspan:3,
+										minWidth:120,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'add_sub_total',
+									// 	title: 'Sub Total',//加小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+
+								//回补
+									{
+										field: '',
+										title: 'OT',//加班
+										minWidth:120,
+										// //fixed:'left',
+										colspan:16,
+										unresize: true
+										,align:'center'
+										
+									},{
+										field: 'NSD.NSD',
+										title: 'Night Shift Diff.NSD',//晚班津贴
+										minWidth:120,
+										// //fixed:'left',
+										colspan:8,
+										unresize: true
+										,align:'center'
+									},
+									
+									{
+										sort:true,
+										field: 'pb_refund',
+										title: 'Refund',//回补
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_perfect_attd',
+										title: 'Perfect Attd',//全勤
+										rowspan:3,
+										minWidth:120,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_13th_paid',
+										title: '13th Paid',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},
+									{
+										sort:true,
+										field: 'pb_sss',
+										title: 'SSS',//13薪
+										//fixed:'left',
+										rowspan:3,
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_pag_ibig',
+										title: 'PAG-IBIG',//13薪
+										rowspan:3,
+										//fixed:'left',
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_philhealth',
+										title: 'PhilHealth',//13薪
+										rowspan:3,
+										//fixed:'left',
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'pb_others',
+										title: 'Others',//其他
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'pb_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+									//扣除项目
+									{
+										sort:true,
+										field: 'de_lateness',
+										title: 'Lateness',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_undertime',
+										title: 'Undertime',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_shortage',
+										title: 'Shortage',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},{
+										sort:true,
+										field: 'de_others',
+										title: 'Others',//回补小计
+										minWidth:120,
+										rowspan:3,
+										//fixed:'left',
+										unresize: true
+									},
+									// {
+									// 	sort:true,
+									// 	field: 'de_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },
+									//强制性扣除
+									// {
+									// 	sort:true,
+									// 	field: 'mc_sss',
+									// 	title: 'SSS',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_pag_ibig',
+									// 	title: 'PAG-IBIG',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_philhealth',
+									// 	title: 'PhilHealth',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'mc_sub_total',
+									// 	title: 'Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// }
+									//Total Pay 共工资
+									// ,{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Allowance',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages (1) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Daily Wages (2) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Allowance Pay PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages (3) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Daily Wages (4) PESO',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Mand.Ddct(Emplyee)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Add Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Payback Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Deduction Item Sub Total',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Gross Salary',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Gross Salary (1+2)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '1st Cut-off Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '2nd Cut-Off Wages',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Wages(1st + 2nd)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '1st Net Pay',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: '2st Net Pay',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// },{
+									// 	sort:true,
+									// 	field: 'gender_desc',
+									// 	title: 'Total Net Pay (1+2)',//回补小计
+									// 	minWidth:120,
+									// 	rowspan:3,
+									// 	//fixed:'left',
+									// 	unresize: true
+									// }
+								],[//第三级表头
+										{	
+											field:'Ordinary',
+											title: 'Ordinary OT ',//排序	
+											colspan:8
+											,align:'center'
+										},{
+											field:'nsd ot',
+											title: 'NSD OT',
+											colspan:8
+											,align:'center'
+										},
+										
+										{
+											sort:true,
+											field: 'add_nsd_ordinary',
+											title: 'Ordinary',//回补
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_rest_day',
+											title: 'Rest Day',//全勤
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_special_day',
+											title: 'Special Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_special_day_falling_on_rest_day',
+											title: '<span title="Special Day Falling on Rest Day">Special Day Falling on Rest Day</span>',//13薪
+											
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_regular_holiday',
+											title: 'Regular Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_regular_holiday_falling_on_rest_day',
+											title: 'Regular Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_double_holiday',
+											title: 'Double Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'add_nsd_double_holiday_falling_on_rest_day',
+											title: 'Double Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},
+										{
+											field:'Ordinary',
+											title: 'Ordinary OT ',//排序	
+											colspan:8
+											,align:'center'
+										},{
+											field:'nsd ot',
+											title: 'NSD OT',
+											colspan:8
+											,align:'center'
+										},
+										{
+											sort:true,
+											field: 'pb_nsd_ordinary',
+											title: 'Ordinary',//回补
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_rest_day',
+											title: 'Rest Day',//全勤
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_special_day',
+											title: 'Special Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_special_day_falling_on_rest_day',
+											title: '<span title="Special Day Falling on Rest Day">Special Day Falling on Rest Day</span>',//13薪
+											
+											minWidth:120,
+											rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_regular_holiday',
+											title: 'Regular Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_regular_holiday_falling_on_rest_day',
+											title: 'Regular Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_double_holiday',
+											title: 'Double Holiday',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},{
+											sort:true,
+											field: 'pb_nsd_double_holiday_falling_on_rest_day',
+											title: 'Double Holiday Falling on Rest Day',//13薪
+											
+											minWidth:120,rowspan:2,
+											unresize: true
+										},
+									],[//第四级表头
+									{
+										sort:true,
+										field: 'add_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_special_day_falling_on_rest_day',
+										title: '<span title="Special Day Falling on Rest Day">Special Day Falling on Rest Day</span>',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'add_nsd_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_special_day_falling_on_rest_day',
+										title: '<span title="Special Day Falling on Rest Day">Special Day Falling on Rest Day</span>',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'add_nsd_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									}
+									
+									,{
+										sort:true,
+										field: 'pb_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_special_day_falling_on_rest_day',
+										title: '<span title="Special Day Falling on Rest Day">Special Day Falling on Rest Day</span>',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},
+									
+									{
+										sort:true,
+										field: 'pb_nsd_ot_ordinary',
+										title: 'Ordinary',//回补
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_rest_day',
+										title: 'Rest Day',//全勤
+										minWidth:120,
+										
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_special_day',
+										title: 'Special Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_special_day_falling_on_rest_day',
+										title: '<span title="Special Day Falling on Rest Day">Special Day Falling on Rest Day</span>',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_regular_holiday',
+										title: 'Regular Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_nsd_regular_holiday_falling_on_rest_day',
+										title: 'Regular Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_double_holiday',
+										title: 'Double Holiday',//13薪
+										
+										minWidth:120,
+										unresize: true
+									},{
+										sort:true,
+										field: 'pb_nsd_ot_double_holiday_falling_on_rest_day',
+										title: 'Double Holiday Falling on Rest Day',//13薪
+										
+										minWidth:120,
+										unresize: true
+									}
+				
+								]
+								],
+								// request: {
+								// 	pageName: 'currentIndex' //页码的参数名称，默认：page
+								// 	,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								// },
+								// parseData: function (res) { //res 即为原始返回的数据
+								// 	return {
+								// 		"status_code": res.status_code, //解析接口状态
+								// 		"message": res.message, //解析提示文本
+								// 		// "count": res.data.total_count, //解析数据长度
+								// 		"data": res.data, //解析数据列表
+								// 		// "curr": res.data.page_index
+								// 	};
+								// },
+								done: function (rs) {
+									// console.log(rs)
+									$('div[lay-event="LAYTABLE_EXPORT"]').attr('lay-event','layevent-eport-table')
+									$('div[lay-event="layevent-eport-table"]').off('click').on('click',function(){
+										var repTh=	$("div[lay-id='allUserListPH'] .layui-table-box .layui-table-header>table").html();
+										var repTb=	$("div[lay-id='allUserListPH'] .layui-table-box .layui-table-body.layui-table-main>table").html();
+										$('#report-table').html(repTh+repTb);
+										$('#report-table').find('td[data-field="editbtn"]').remove();
+										$('#report-table').find('th[data-field="editbtn"]').remove();
+										// var table2excel = new Table2Excel();
+										// table2excel.export($('#report-table'));
+										
+										$('#report-table').table2excel({
+											fileext: ".xls",
+											filename: ""+month+"月 工资设置(菲籍)"
+										})
+									})
+								}
+							});
+                    		//
+							
+						}
+					})
+					table.on('tool(allUserListPH)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+						var data = obj.data; //获得当前行数据
+						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+						var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+						
+						if(layEvent === 'detail'){ //查看
+							//do somehing
+						}  else if(layEvent === 'edit'){ //编辑
+							//do something
+							
+							//同步更新缓存对应的值
+							// console.log(data)
+							layer.open({
+								type: 2, 
+								title:'编辑',
+								area:['95%','95%'],								
+								content: 'SalarySetEdit.html',
+								success:function(layero,index){
+                            	    // console.log(data);//id 
+                            	    var body = layer.getChildFrame('body', index);
+                            	    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+									iframeWin.isDiate=false;									
+									iframeWin.res=data;
+									iframeWin.MonthPH = $("#MonthPH").val();
+									iframeWin.SalaryTimes = $("#IsShowPH").val();
+
+									iframeWin.UserNamePH=$("#UserNamePH").val();
+									iframeWin.DepartmentIDPH=formSelects.value('DepartmentID', 'valStr');
+									iframeWin.JobTitleIDPH=formSelects.value('JobTitleID', 'valStr');
+									// iframeWin.IsShowPH=$("#IsShowPH").val();
+									// iframeWin.MonthPH=$("#MonthPH").val();
+                            	}
+							}); 
+						}
+					});
+				
+			}
+			element.on('tab(salTab)', function(data){
+				table.resize('allUserListPH');
+				table.resize('allUserList');
+			});
+			var UserNamePH=$("#UserNamePH").val();
+			var DepartmentIDPH=formSelects.value('DepartmentID', 'valStr');
+			var JobTitleIDPH=formSelects.value('JobTitleID', 'valStr');
+			var IsShowPH=$("#IsShowPH").val();
+			var MonthPH=$("#MonthPH").val();
+			// DepartmentID:DepartmentID==''?'-1':DepartmentID,
+			 // JobTitleID:JobTitleID==''?'-1':JobTitleID,
+			 
+			window.userbasicsalaryFunPH({
+				UserName: ''
+				,DepartmentID: DepartmentIDPH==""?'-1':DepartmentIDPH
+				,JobTitleID:  JobTitleIDPH==""?'-1':JobTitleIDPH
+				,Month:MonthPH
+				,SalaryTimes:IsShowPH
+			},"ph");
+			$("#filterTabelSelPH").on("click",function(){
+				// var datas=
+				var UserNamePH=$("#UserNamePH").val();
+				var DepartmentIDPH=formSelects.value('DepartmentIDPH', 'valStr');
+				var JobTitleIDPH=formSelects.value('JobTitleIDPH', 'valStr');
+				var IsShowPH=$("#IsShowPH").val();
+				var MonthPH=$("#MonthPH").val();	
+				// console.log($("#DepartmentIDPH").val())
+				userbasicsalaryFunPH({
+					UserName: UserNamePH
+					,DepartmentID: DepartmentIDPH==""?'-1':DepartmentIDPH
+					,JobTitleID:  JobTitleIDPH==""?'-1':JobTitleIDPH
+					,Month:MonthPH
+					,SalaryTimes:IsShowPH
+				},"ph")
+			})
+			$("#closeLayerPH").on("click",function(){
+				// var datas=
+				layui.formSelects.value('DepartmentIDPH', []); 
+				layui.formSelects.value('JobTitleIDPH', []); 
+				$("#IsShowPH").val('1');
+				$("#UserNamePH").val('');
+				var date=new Date;
+				var year=date.getFullYear(); 
+				var month=date.getMonth()+1;
+				month =(month<10 ? "0"+month:month);
+				$("#MonthPH").val(year.toString()+'-'+month.toString());	
+				
+				form.render();
+				userbasicsalaryFunPH({
+					UserName: ''
+					,DepartmentID: DepartmentIDPH==""?'-1':DepartmentIDPH
+					,JobTitleID:  JobTitleIDPH==""?'-1':JobTitleIDPH
+					,Month:year.toString()+'-'+month.toString()
+					,SalaryTimes:1
+				},"ph");
+			})
+})
+</script>
+</html>

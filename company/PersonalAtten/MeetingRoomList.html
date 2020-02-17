@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>会议室管理列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class=" layui-card">
+            <div class="layui-row layui-col-space10 layui-card-body">
+                <div class="layui-col-xs12">
+                    <div class="layui-card-header">
+                        会议查询
+                    </div>
+                    <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="user-file-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">状态：</label>
+                                <div class="layui-input-inline">
+                                    <select id="RecruiSelect" name="RecruiSelect" lay-filter="RecruiSelect" lay-search>
+                                        <option value="3">全部</option>
+                                        <option value="0">待审批</option>
+                                        <option value="1">未通过</option>
+                                        <option value="2">已通过</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button id="RecruiListUserFile" class="layui-btn layui-btn">
+                                    <i class="iconfont icon-sousuo"></i>
+                                </button>
+                                <button class="layui-btn layui-btn layui-btn-primary"  lay-filter="closeLayer"
+                                id="closeLayer">
+                                    返回
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="userFileTable" lay-filter="userFileTable" class="layui-table">
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    $(function () {
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index', 'table', 'laydate', 'form', 'laypage'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                router = layui.router(),
+                layer = layui.layer;
+            element.render();
+            var table = layui.table,
+                laypage = layui.laypage,
+                form = layui.form,
+                laydate = layui.laydate;
+
+            table.render({
+                elem: '#table-checkbox',
+                page: true,
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            });
+
+            // 生成表格
+            var RecruiList = table.render({
+                elem: '#userFileTable',
+                url: urls + "/gateway/meeting/list",
+                where:{
+                    status:3
+                },
+                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+                method: 'post',
+                page: true, //开启分页
+                text: {
+                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                },
+                cols: [
+                    [ //标题栏
+                       {
+                            field: 'id',
+                            title: 'ID',
+                            minWidth:60,
+                        },{
+                            field: 'meeting_topic',
+                            title: '会议名称',
+                            minWidth:100,
+                        },{
+                            field: 'from_uname',
+                            title: '申请人',
+                            minWidth:100,
+                        },  {
+                            field: 'start_time',
+                            title: '开始时间',
+                            minWidth:160,
+                        },{
+                            field: 'end_time',
+                            title: '结束时间',
+                            minWidth:160,
+                        }, {
+                            field: 'approval_username',
+                            title: '审批人',
+                            minWidth:100
+                        },{
+                            field:'meeting_room_name',
+                            title:'会议室',
+                            minWidth:100
+                        },{
+                            field: '',
+                            title: '会议状态',
+                            minWidth:100,
+                            templet: function (d) { 
+                            var htmlBtn = '<button class="'+["layui-btn layui-btn-primary layui-btn-xs","layui-btn layui-btn-warm layui-btn-xs","layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled"][d.approval_result]+'">'+['待审批','未通过','已通过'][d.approval_result]+'</button>'
+                            return htmlBtn
+                            }
+                        }, {
+                            field: '',
+                            fixed: 'right',
+                            unresize: true,
+                            title: '操作',
+                            minWidth:150,
+                            // templet:function(d){
+                            //     return d.can_cancel=='0'?'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a>':(d.can_cancel=='1'?'<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-sm" lay-event="Delete">删除</a>':'')
+                            // }
+                            toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="Delete">删除</a></div>'
+                        }
+                    ]
+                ],
+                request: {
+                    pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "status_code": res.status_code, //解析接口状态
+                        "message": res.message, //解析提示文本
+                        "count": res.data.total_count, //解析数据长度
+                        "data": res.data.data_list, //解析数据列表
+                        "curr": res.data.page_index
+                    };
+                },
+                done: function () {}
+                
+            })
+
+            //列表详情
+            table.on('tool(userFileTable)', function(obj){
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event
+                
+                if(layEvent == 'diat'){
+                    $.fetch({
+                        url:'/gateway/meeting/detail',
+                        type: 'post',
+                        data:{
+                            meetingId:data.id,
+                            fromUid:data.from_uid
+                        },
+                        cb:function(rs){
+                            console.log(rs)
+                            // 审批反馈意见
+                            var spfk = '';
+                            var res ='';
+                            var classList ='';
+                            if(rs.approval&&rs.approval!=''){
+                                for (const i in rs.approval) {
+                                    if(rs.approval[i].approval_result==1){
+                                        res ="未通过";
+                                        classList = "red";
+                                    }else if(rs.approval[i].approval_result==2){
+                                        res ="已通过";
+                                        classList = 'green';
+                                    }else if(rs.approval[i].approval_result==0){
+                                        res ="待审批";
+                                        classList = 'gray';
+                                    }
+                                    
+                                    var contEnt = rs.approval[i].content==null?'':rs.approval[i].content
+
+                                    spfk+='<p><span> 【 '+rs.approval[i].approval_name+' <em class='+classList+'>'+res+' '+rs.approval[i].created_at+'</em> 】</span>'+contEnt+'</p>'
+                                }
+                            }else{
+                                shtml+='<span>暂无反馈</span>'
+                            }
+
+                            var MeetinDesc = rs.meeting_desc==null?'暂时描述':rs.meeting_desc
+                            var IsNotify = rs.is_notify==0?"否":(rs.is_notify==1?"是":"")
+                            var IsFix= rs.is_fix==0?"不是":(rs.is_fix==1?"每周":rs.is_fix==2?"每月":rs.is_fix==3?"每年":"")
+                            var DataList = '<div class="layui-card-body">'
+                                    +'<div class="layui-form" lay-filter="component-form-depar">'
+                                    +'<div class="layui-form-item">'
+                                        +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">申请人：</label>'
+                                            +'<div class="layui-input-inline cateID sqname">'
+                                                +'<span>'+rs.from_uname+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">部门：</label>'
+                                            +'<div class="layui-input-inline cateID sqname">'
+                                                +'<span>'+rs.dept_name+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">会议室：</label>'
+                                            +'<div class="layui-input-inline cateID sqname">'
+                                                +'<span>'+rs.meeting_room_name+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">开始时间：</label>'
+                                            +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+rs.start_time+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">结束时间：</label>'
+                                            +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+rs.end_time+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                        +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">日期：</label>'
+                                            +'<div class="layui-input-inline cateID sqname">'
+                                                +'<span>'+rs.meeting_date+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">出席人员：</label>'
+                                        +'<div class="layui-input-block cateID box">'
+                                            +'<span>'+rs.meeting_users_names+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">是否通知：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+IsNotify+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<label class="layui-form-label">是否定期：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span>'+IsFix+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-form-item">'
+                                        +'<div class="layui-inline">'
+                                            +'<label class="layui-form-label">会议主题：</label>'
+                                            +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+rs.meeting_topic+'</span>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<fieldset class="layui-elem-field">'
+                                    +'<legend>会议目的</legend>'
+                                    +'<div class="layui-field-box ">'+MeetinDesc+'</div>'
+                                +'</fieldset>'
+                                +'<fieldset class="layui-elem-field">'
+                                    +'<legend>审批意见反馈</legend>'
+                                    +'<div class="layui-field-box ">'+spfk+'</div>'
+                                +'</fieldset>'
+                            +'</div>'
+                            
+                            layer.open({
+                                title:'招聘详情信息',
+                                type: 1, 
+                                content:DataList,
+                                area:['100%', '100%'],
+                                success:function(index,layero){
+                                    // 审核确认
+                                    $("#appOk").off("click").on("click",function(){
+                                        var content = $("#appDacText").val();
+                                        var isAgree = $("#approvalNo").find(" input[name='approvalYn']:checked").val();
+                                        console.log(data.id)
+                                        if(content==''){
+                                            layer.msg("意见不能为空!");
+                                            return false
+                                        }
+                                        $.fetch({
+                                            url:"/gateway/meeting/approval",
+                                            type: 'post',
+                                            data:{
+                                                meetingId: data.id,
+                                                approvalResult: isAgree,
+                                                approvalContent: content,
+                                            },
+                                            cb:function(rs){
+                                                layer.closeAll();
+                                                layer.msg("审批完成");
+                                                table.reload('ResigTable',{})
+                                            }
+                                        })
+                                    
+                                    })
+                                    form.render();
+                                }
+                            })
+                        }
+                    })
+                }else if(layEvent == 'Delete'){
+                    layer.confirm('确定删除?', function (index) {
+                        $.fetch({
+                            url: "/gateway/meeting/del",
+                            type: 'post',
+                            data: {
+                                meetingId: data.id,
+                                fromUid:data.from_uid
+                            },
+                            cb: function (rs) {
+                                layer.msg("删除成功");
+                                layer.close(index);
+                                RecruiList.reload({});
+                            }
+                        })
+                    });
+                }
+            }) 
+            
+
+             // 筛选
+            $("#RecruiListUserFile").on("click",function(){
+                var status = $("#RecruiSelect").val();
+                RecruiList.reload({
+                    where:{
+                        status:status,
+                    }
+                    ,page:{
+                        curr:1,
+                    }
+                })
+                $("#closeLayer").show();
+            })
+            // 返回
+            $("#closeLayer").hide();
+            $("#closeLayer").on("click",function(){
+                $(this).hide();
+                form.val("user-file-form", {
+                    "RecruiSelect": '3' // "name": "value"
+                })
+                RecruiList.reload({
+                    where:{
+                        status:3
+                    }
+                })
+            })
+        });
+    })
+</script>
+
+</html>

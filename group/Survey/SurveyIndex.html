@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+         
+            <div class="layui-card-body" id="SurveyLiet" data-grop="1">
+                <table lay-filter="allsurveyTb" class="layui-table" id="allsurveyTb">
+                    <!-- <colgroup>
+                        <col width="50">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="80">
+                        <col width="300">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>创建时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody  >
+                        <tr>
+                            <td>1</td>
+                            <td class="limit-width">
+                                <a class="toTitle">惺惺惜惺惺惺惺惜惺惺惺惺惜惺惺惺惺惜惺惺惺惺惜惺惺</a>
+                            </td>
+                            <td>2018-10-01 15:39:45</td>
+                            <td>2018-10-31 15:39:45</td>
+                            <td>2018-10-27 15:39:59</td>
+                            <td>启用</td>
+                            <td>
+                                <button class="layui-btn layui-btn-xs">修改</button>
+                                <button class="layui-btn layui-btn-xs layui-btn-danger">删除</button>
+                                <button class="layui-btn layui-btn-xs layui-btn-normal">问题管理</button>
+                                <button class="layui-btn layui-btn-xs layui-btn-normal">答卷管理</button>
+                            </td>
+                        </tr>
+                    </tbody> -->
+                </table>
+                <!-- <div id="surveyTablePag"></div>
+                <table id="demp"></table> -->
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    $(function(){
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index','table','laydate','form','laypage'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,element = layui.element
+        ,router = layui.router()
+        ,layer = layui.layer;
+        element.render();
+        var table = layui.table
+            ,form = layui.form
+            ,laypage=layui.laypage
+            ,laydate = layui.laydate;
+
+         $.fetch({
+            url:"/gateway/company/list",
+            type: 'post',
+            cb:function(rs){
+                //删除对应行（tr）的DOM结构，并更新缓存
+                console.log(rs);
+                var htmls='<div>'
+                             +'<div class="layui-inline mb-5">'
+                                 +'<label class="layui-form-label modify-form-label">开始日期：</label>'
+                                 +'<div class="layui-input-block">'
+                                 +'<input type="text" class="layui-input" id="SurveyItemStart">'
+                                 +'</div>'
+                             +'</div>'
+                             +'<div class="layui-inline mb-5">'
+                                 +'<label class="layui-form-label modify-form-label">结束日期：</label>'
+                                 +'<div class="layui-input-block">'
+                                     +'<input type="text" class="layui-input" id="SurveyItemEnd">'
+                                 +'</div>'
+                             +'</div>'
+                             +'<div class="layui-inline mb-5">'
+                                 +'<label class="layui-form-label modify-form-label">问卷名称：</label>'
+                                 +'<div class="layui-input-block">'
+                                     +'<input type="text" class="layui-input" id="SurveyTit">'
+                                 +'</div>'
+                             +'</div>'
+                             +'<div class="layui-inline mb-5">'
+                                 +'<label class="layui-form-label modify-form-label">公司名称：</label>'
+                                 +'<div class="layui-input-block">'
+                                     +'<select id="companyId" name="companyId">'
+                                            +'<option value="1">全部</option>'
+                                            for(var i=0;i<rs.length;i++){
+                                               htmls+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                            }
+                                        htmls+='</select>'
+                                 +'</div>'
+                             +'</div>'
+                             +'<div class="layui-inline ml-5 mb-5">'
+                                 +'<button id="InquireSur" class="layui-btn" lay-event="InquireSur" title="查询"><i class="iconfont icon-sousuo"></i></button>'
+                                 +'<button id="InquireSurBack" class="layui-btn layui-btn-primary" style="display:none;"  lay-event="InquireSurBack">返回</button>'
+                                 // +'<button id="addSurvey" class="layui-btn" lay-event="addSurvey">新增</button>'
+                            +'</div>'
+                        +'</div>'
+                var tableIndex = table.render({
+                    elem: '#allsurveyTb'
+                    ,url: window.urls+"/gateway/survey/list"
+                    // ,limit:10
+                    ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+                    ,method:'post'
+                    ,contentType: 'application/json'
+                    ,page:true
+                    ,loading:true
+                    ,defaultToolbar:[]
+                    ,toolbar: htmls
+                    ,cols:  [[ //标题栏
+                        {field: 'id', title: 'ID',width:80}
+                        ,{field: 'survey_title', title:'名称'}
+                        ,{field: 'survey_starttime', title: '开始时间',sort: true,width:180}
+                        ,{field: 'survey_endtime', title: '结束时间',sort: true,width:180}
+                        ,{field: 'created_at', title: '创建时间',sort: true ,width:180}
+                        ,{field: 'company_name', title: '公司名称',sort: true ,width:180}
+                        ,{field: 'survey_status', title: '状态',width:80, templet:function(d){
+                            return d.survey_status==0?'禁用':(d.survey_status==1?'初始化':(d.survey_status==2?'已发布':''))
+                        }}
+                        ,{fixed: 'right'
+                            ,title:'操作'
+                            ,width:105
+                            ,toolbar:'<div><a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="openA">答卷管理</a></div>'
+                        }
+                    ]]
+                    ,request: {
+                        pageName: 'currentIndex' //页码的参数名称，默认：page
+                        ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "status_code":res.status_code, //解析接口状态
+                            "message": res.message, //解析提示文本
+                            "count": res.data.total_count, //解析数据长度
+                            "data": res.data.data_list, //解析数据列表
+                            "curr":res.data.page_index
+                        };
+                    }
+                    ,done:function(){
+                        laydate.render({
+                            elem: '#SurveyItemStart',
+                            //,type: 'date' //默认，可不填
+                            value:this.where.startTime
+                        });
+                        laydate.render({
+                            elem: '#SurveyItemEnd',
+                            value:this.where.endTime
+                            
+                            //,type: 'date' //默认，可不填
+                        });
+                        $("#SurveyTit").val(this.where.title);
+                        $("#companyId").val(this.where.companyId);
+                        form.render();
+                    }
+                    
+                    //,…… //其他参数
+                });
+          
+
+           
+        //***** */
+            table.on('toolbar(allsurveyTb)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var checkStatus = table.checkStatus(obj.config.id);
+                if (obj.event === 'InquireSur') { //ss
+                    var starT = $("#SurveyItemStart").val();
+                    var endT = $("#SurveyItemEnd").val();
+                    var title = $("#SurveyTit").val();
+                    var companyId = $("#companyId").val();
+                    tableIndex.reload({
+                        where: {//记录搜索状态
+                            startTime: starT,
+                            endTime: endT,
+                            title: title,
+                            companyId: companyId,
+                        },
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                    if (starT !== "" || endT !== "" || title !== ""|| companyId !== "") {
+                        $("#InquireSurBack").css('display', 'inline-block');
+                    } else {
+                        $("#InquireSurBack").css('display', 'none');
+                    }
+                } else if (obj.event === 'InquireSurBack') { //删除
+                    tableIndex.reload({
+                        where:{},
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                    $("#InquireSurBack").css('display', 'none');
+                } 
+            });
+            /************* */
+            table.on('tool(allsurveyTb)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            
+                var tdata = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+            if(layEvent === 'openA'){
+                    var index=layer.open({
+                        title:'',
+                        type: 2,
+                        //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                        content: 'AnswerSurvey.html??v=2018120501', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['', 'no']
+                        area:['100%', '100%'],                                
+                        maxmin: false,
+                        closeBtn: 0,
+                        success: function(layero, index){
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; 
+                            $(body).attr("data-Eid",tdata.id);
+                            iframeWin.window.surveyId=tdata.id;
+                            iframeWin.window.companyId=tdata.company_id;
+                        },
+                        end:function(){
+                            //关闭层后刷新列表
+                            tableIndex.reload({});
+                        } 
+                    })
+                }
+            });
+
+            }
+        });    
+    });
+})
+</script>
+</html>

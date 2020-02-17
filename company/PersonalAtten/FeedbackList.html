@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>意见反馈列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                意见反馈列表
+                <div class="layui-inline ml-10 fr">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" id="addcashmanagement">添加反馈意见</a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="pz-10 layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-inline">
+                                <select id="FeedbackStuisSelect" lay-filter="FeedbackStuisSelect">
+                                    <option value="">全部</option>
+                                    <option value="1">待处理</option>
+                                    <option value="3">已回复</option>
+                                    <option value="4">已关闭</option>                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="FeedbackTableList" lay-filter="FeedbackTableList"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+    layui.config({
+		base: '../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['index','laydate','table','form'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        var laydate = layui.laydate
+        ,form=layui.form        
+        ,table=layui.table;
+        
+
+        // 消息表格
+        var FeedbackTable = table.render({
+            elem: '#FeedbackTableList'
+            ,url: urls+'/gateway/feedback/list' //数据接口
+            ,page: true, //开启分页
+            // toolbar: '<div style="padding-bottom: 10px;">'
+            //             +'<div classs="layui-inline">'
+            //                 +'<label class="layui-form-label modify-form-label">选择状态</label>'
+            //                 +'<div class="layui-input-inline">'
+            //                     +'<select name="" class="slct" lay-filter="leaveDescSel" id="leaveDescSel"><option value="0">已读</option><option value="1">未读</option><option value="2">已回复</option></select>'
+            //                 +'</div>'
+            //             +'</div>'
+            //         +'</div>',
+            method: 'post',
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            contentType: 'application/json',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID'}
+                ,{field: 'from_name', title: '提交人'}
+                ,{field: 'feedback_title', title: '意见反馈标题'}
+                ,{field: 'created_at', title: '反馈时间'}
+                ,{field: 'status', title: '反馈范围',
+                    templet: function (d) {
+                        return ['全部','公司','集团'][d.feedback_range]
+                        // return ['待处理','已查看','已回复','已关闭'][d.status-1];
+                }}
+                ,{field: 'status', title: '状态',
+                    templet: function (d) {
+                        var htmlBtn = '<button class="'+["layui-btn layui-btn-primary layui-btn-xs","layui-btn layui-btn-warm layui-btn-xs","layui-btn layui-btn-normal  layui-btn-xs","layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled"][d.status-1]+'">'+['待处理','已查看','已回复','已关闭'][d.status-1]+'</button>'
+                        return htmlBtn
+                        // return ['待处理','已查看','已回复','已关闭'][d.status-1];
+                    }} 
+                ,{
+                    field: '', 
+                    fixed:'right',
+                    unresize:true,
+                    title: '操作',
+                    toolbar:'<div><a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a></div>'
+                }
+            ]],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                    ,
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }, 
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr": res.data.page_index
+                };
+            }, 
+            done: function () {
+
+            }
+        });
+        table.on('tool(FeedbackTableList)', function(obj){ 
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            
+            if(layEvent ==='diat'){
+                
+                $.fetch({
+                    url: '/gateway/feedback/detail',
+                    type: 'post',
+                    data:{
+                        // taskId:
+                        feedbackId:data.id,
+                    },
+                    cb:function(rs){
+                        console.log(rs)
+                        var attachHtml='',replyhHtml='';
+                        if(rs.attach.length>0){
+                            for(var i =0;i<rs.attach.length;i++){
+                                attachHtml+='<a class="seeXqOutIn mr-10" href="'+urls+'/gateway/feedbackAttach/download?feedbackId='+rs.id+'&attachId='+rs.attach[i].id+'" target="_blank" >'+rs.attach[i].original_name+'</a>'
+                            }
+                        }else{
+                            attachHtml='无附件'
+                        }
+                        if(rs.reply.length>0){
+                            for(var i =0;i<rs.reply.length;i++){
+                                replyhHtml+='<li>'+rs.reply[i].created_at +', <b>'+rs.reply[i].reply_name +' '+ rs.reply[i].company_name+' '+ rs.reply[i].department_name+'</b>回复'
+                                                +'<div class="BgColor">'+rs.reply[i].reply_content +'</div>'
+                                            +'</li>'
+                            }
+                        }else{
+                            replyhHtml='无回复'
+                        }
+                        var cont='<div class="layui-card">'
+                                +'<div class="layui-layer-content layui-card-body">'
+                                    +'<div class="layui-form">'
+                                        +'<div class="layui-form-item">'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">提交人：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+rs.from_name+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">部门：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+rs.department_name+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">反馈范围：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+['全部','公司','集团'][rs.feedback_range]+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">上传时间：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+rs.created_at+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                            +'<div class="layui-inline">'
+                                                +'<label class="layui-form-label">状态：</label>'
+                                                +'<div class="layui-input-inline cateID">'
+                                                    +'<span>'+["待处理","已查看","已回复","已关闭"][rs.status-1]+'</span>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<fieldset class="layui-elem-field">'
+                                        +'<legend>意见标题</legend>'
+                                        +'<div class="layui-field-box">'
+                                             +rs.feedback_title
+                                        +'</div>'
+                                    +'</fieldset>'
+                                    // +'<div class="layui-field-box pageCont">'
+                                    //     +rs.feedback_title
+                                    // +'</div>'
+                                    +'<fieldset class="layui-elem-field">'
+                                        +'<legend>意见内容</legend>'
+                                        +'<div class="layui-field-box pageCont">'
+                                            +rs.feedback_content
+                                        +'</div>'
+                                    +'</fieldset>'
+                                    +'<fieldset class="layui-elem-field">'
+                                        +'<legend>附件</legend>'
+                                        +'<div class="layui-field-box">'
+                                             +attachHtml
+                                        +'</div>'
+                                    +'</fieldset>'
+                                    // +'<div class="layui-field-box">'
+                                    //     +'附件'
+                                    //     +attachHtml
+                                    // +'</div>'
+                                    +'<fieldset class="layui-elem-field">'
+                                        +'<legend>回复意见</legend>'
+                                        +'<div class="layui-field-box">'
+                                            +'<ol id="">'
+                                                +replyhHtml
+                                            +'</ol>'
+                                        +'</div>'
+                                    +'</fieldset>'
+                                    +'<div class="layui-form">'
+                                        if(rs.status!=4&&rs.reply.length>0){
+                                            cont+='<div class="layui-form-item layui-form-text">'
+                                                +'<label class="layui-form-label">意见回复</label>'
+                                                +'<div class="layui-input-block">'
+                                                    +'<textarea id="replyCcont" class="layui-textarea" placeholder="请输入内容"></textarea>'
+                                                +'</div>'
+                                            +'</div>'
+                                        }
+                                        cont+='<div class="layui-form-item">'
+                                            +'<div class="layui-input-block">'
+                                            if(rs.status!=4&&rs.reply.length>0){
+                                                cont+='<button id="subreply" class="layui-btn"  lay-filter="">回复</button>'
+                                                cont+='<button class="layui-btn layui-btn-primary" id="backfeedback">返回</button>'
+                                            }
+                                                // +'<button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="">关闭</button>'
+                                        cont+='</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>';
+                        layer.open({
+                            title: '反馈详情',
+                            content:cont,
+                            area: ['100%', '100%'],
+                            btn: '',
+                            type: 1,
+                            success: function (layero, index) {
+                                $("#backfeedback").on("click",function(){
+                                    layer.close(index);
+                                });
+                                $("#subreply").on("click",function(){
+                                    var replyCcont=$("#replyCcont").val();
+                                    if(replyCcont==""){
+                                        layer.msg("意见内容不能为空！",{icon:5});
+                                        $("#replyCcont").addClass("layui-form-danger");
+                                        return false
+                                    }else{
+                                        $("#replyCcont").removeClass("layui-form-danger");
+                                    }
+                                    $.fetch({
+                                        url: '/gateway/feedback/reply',
+                                        type: 'post',
+                                        data:{
+                                            replyContent:replyCcont,
+                                            feedbackId:data.id,
+                                        },
+                                        cb:function(rs){
+                                            layer.msg("回复成功");
+                                            layer.close(index);
+                                        }
+                                    })
+                                })
+                            },
+                            end:function(){
+                                FeedbackTable.reload();
+                            }
+                        });
+                    } 
+                });
+            }
+        })
+        $("#addcashmanagement").on("click",function(){
+            layer.open({
+                title: '意见反馈',
+                content: "Feedback.html",
+                area: ['600px', '520px'],
+                btn: '',
+                type: 2,
+                success: function (layero, index) {
+
+                },
+                end:function(){
+                    FeedbackTable.reload();
+                }
+            });
+        });
+        
+        form.on('select(FeedbackStuisSelect)',function(data){
+            // console.log()
+            FeedbackTable.reload({
+                where:{
+                    status:data.value,
+                }
+            })
+        })
+
+
+    })
+</script>
+</html>

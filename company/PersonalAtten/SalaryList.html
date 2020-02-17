@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>工资列表</title>
+	<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+	<link rel="stylesheet" type="text/css" href="../../css/formSelects-v4.css">
+	<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/jquery.table2excel.min.js"></script>
+
+</head>
+
+<body layadmin-themealias="default">
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<div class="layui-form" style="margin-bottom: 10px;">
+					<div class="layui-form-item">
+						<div class="layui-inline" style="min-width:45%">
+							<label class="layui-form-label">
+								部门
+							</label>
+							<div class="layui-input-block">
+								<select type="text" xm-select="DepartmentID" id="DepartmentID" name="DepartmentID"
+									placeholder="请选择部门" autocomplete="off" class="xm-input xm-select"
+									xm-select-search="">
+									<option value="">请选择部门</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline" style="min-width:45%">
+							<label class="layui-form-label">
+								岗位
+							</label>
+							<div class="layui-input-block">
+								<select type="text" xm-select="JobTitleID" id="JobTitleID" name="JobTitleID"
+									placeholder="请选择岗位" autocomplete="off" class="xm-input xm-select"
+									xm-select-search="">
+									<option value="">请选择岗位</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label" >已确认工资</label>
+							<div class="layui-input-inline">
+								<select name="IsConfirm" id="IsConfirm"><option value="-1">全部</option><option value="1">是</option><option value="0">否</option></select>
+							</div> 
+						</div> 
+						<div class="layui-inline">
+							<label class="layui-form-label">工资月份</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" id="monTime">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<label class="layui-form-label">姓名</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" id="UserName">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<button class="layui-btn" id="IqProject" title="搜索"><i
+									class="iconfont icon-sousuo"></i></button>
+						</div>
+					</div>
+					<div class="layui-form-item">
+
+						<div class="layui-inline">
+							<label class="layui-form-label">发放日期</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" id="dateTime">
+							</div>
+							<button class="layui-btn" id="subList" title="">发放</button>
+							<button class="layui-btn" id="previewList" title="">工资预览</button>
+							<button class="layui-btn" id="newList" title="">重新生成数据</button>
+						</div>
+						<!-- <div class="layui-inline">
+							<div class="layui-form-mid layui-word-aux"> 注：修改后请点击保存(<span style="padding: 3px;" class="layui-bg-orange">橙色</span>标记为修改后未保存项)</div>
+						</div> -->
+					</div>
+				</div>
+				<table id="projectTable" lay-filter="projectTable"></table>
+			</div>
+		</div>
+	</div>
+	<!-- 用于复杂表头导出的 隐藏table -->
+	<table id="report-table" cellpadding=1 cellspacing=1 border=1 style="display: none"></table>
+</body>
+<style>
+	th[data-field="jia"] {
+		background: #dcdb2b;
+		color: #fff;
+		/*  #5FB878; #009688*/
+	}
+
+	th[data-field="hb"] {
+		background: #999;
+		color: #fff;
+
+	}
+
+	th[data-field="jian"] {
+		background: #FF5722;
+		color: #fff;
+
+	}
+
+	th[data-field="yingfa"] {
+		color: #fff;
+		background: #FFB800;
+	}
+
+	th[data-field="lingqu"] {
+		color: #fff;
+		background: #01AAED;
+	}
+
+	th[data-field="dahui"] {
+		color: #fff;
+		background: #2F4056;
+	}
+
+	th[data-field="visa_total_deposit"] {
+		color: #fff;
+		background: #009688;
+	}
+
+	dl.xm-select-dl {
+		width: 400px;
+	}
+</style>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1" type="text/javascript"></script>
+<script>
+	layui.config({
+		base: '../../layui/' //静态资源所在路径
+	}).extend({
+		index: 'index' //主入口模块
+	}).use(['element', 'index', 'table', 'laydate', 'formSelects'], function () {
+		var $ = layui.$,
+			table = layui.table,
+			laydate = layui.laydate,
+			formSelects = layui.formSelects,
+			element = layui.element;
+		var d = new Date();
+		var year = lay.digit(d.getMonth() + 1) == 1 ? d.getFullYear() - 1 : d.getFullYear();
+		var month = lay.digit(d.getMonth() + 1) == 1 ? 12 : (d.getMonth() + 1);
+		var maxDate = d.getDate();
+		if (month == 1) {
+			month = 12;
+			year = year - 1;
+		} else {
+			month = month - 1;
+		}
+		month = month < 10 ? '0' + month : month;
+		var companyTW = false;
+
+		// var table2excel = new Table2Excel();
+		// table2excel.export(document.querySelectorAll("table"));
+
+		//渲染下拉框 mnl
+		//部门下拉
+		$.fetch({ //部门树列表
+			url: "/gateway/department/tree",
+			type: 'post',
+			cb: function (rs) {
+				//	console.log(rs)
+				var formSelectsArr = rs[0].children[0].children;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('DepartmentID', {
+					keyName: 'name',
+					keyVal: 'id'
+				})
+				layui.formSelects.data('DepartmentID', 'local', {
+					radio: true,
+					arr: formSelectsArr
+				});
+
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+		$.fetch({ //岗位树列表
+			url: "/gateway/jobTitle/tree",
+			type: 'post',
+			cb: function (rs) {
+				//	console.log(rs)
+				var formSelectsArr = rs;
+				// formSelectsArr.unshift({'name':'全部','id':'-1'})
+				formSelects.config('JobTitleID', {
+					keyName: 'title_name',
+					keyVal: 'id'
+				})
+				formSelects.data('JobTitleID', 'local', {
+					radio: true,
+					arr: formSelectsArr
+				});
+				// formSelects.render('deptId', {
+				//     radio: true,                    //是否设置为单选模式
+				// });
+			}
+		});
+
+		var usersalaryFun = function (month, btn) {
+
+			if (btn) {
+				var sdata = {
+					IsDemission: 0,
+					Month: month,
+					DepartmentID: '',
+					JobTitleIDStr: '',
+					IsSearch: 0,
+					IsConfirm:-1,	
+				}
+			} else {
+				var UserName = $("#UserName").val()
+				var DepartmentID = formSelects.value('DepartmentID');
+				var JobTitleID = formSelects.value('JobTitleID');
+				var IsConfirm =$('#IsConfirm').val();
+				var arrDep = [],
+					subDpr;
+				if (DepartmentID.length > 0) {
+					for (var i = 0; i < DepartmentID.length; i++) {
+						arrDep.push(DepartmentID[i].id);
+					}
+					subDpr = arrDep.join(',');
+				} else {
+					subDpr = '';
+				}
+
+				var arrJob = [],
+					JobTitleIDStr;
+				if (JobTitleID.length > 0) {
+					for (var i = 0; i < JobTitleID.length; i++) {
+						arrJob.push(JobTitleID[i].id);
+					}
+					JobTitleIDStr = arrJob.join(',');
+				} else {
+					JobTitleIDStr = '';
+				}
+				var sdata = {
+					Month: month,
+					UserName: UserName,
+					DepartmentID: subDpr,
+					JobTitleID: JobTitleIDStr,
+					IsDemission: 0,
+					IsSearch: 1,					
+					IsConfirm:IsConfirm,
+				}
+
+			}
+			// var indexs=layer.load(1);
+			$.fetch({
+				url: "/gateway/usersalary/getcode",
+				type: 'post',
+				cb: function (rs) {
+					//console.log(rs)
+					var rs = rs[0];
+					if (!rs) {
+						layer.msg('请先进行工资设置')
+					} else if (rs == 'mnl') {
+						$.fetch({
+							url: "/gateway/usersalary/mnl/index",
+							type: 'post',
+							data: sdata,
+							cb: function (rs) {
+								var assign = rs.assign;
+								$.fetch({
+									url: "/gateway/usersalary/mnl/rateinit",
+									type: 'post',
+									cb: function (rate) {
+										var rateD = {};
+										var rateCol = [];
+										for (var j = 0; j < rate
+											.length; j++) {
+											rateD[rate[j].id] = rate[j]
+												.zh_name
+										}
+										var addCols = [{
+												sort: true,
+												align: "center",
+												field: "housing_subsidy_jia",
+												title: "房屋补贴",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "housing_subsidy_rmb_jia",
+												title: "房屋补贴（折合人民币）",
+												minWidth: 170
+											}
+											// 
+											, {
+												sort: true,
+												align: "center",
+												field: "overtime_subsidy_jia",
+												title: "加班费（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "overtime_subsidy_rmb_jia",
+												title: "加班费（折合人民币）",
+												minWidth: 160
+											}, {
+												sort: true,
+												align: "center",
+												field: "refund_jia",
+												title: "退款",
+												minWidth: 128,
+												edit: "text"
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "full_attend_jia",
+												title: "全勤（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "full_attend_rmb_jia",
+												title: "全勤(折合人民币）",
+												minWidth: 140
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "commission_jia",
+												title: "提成",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "job_subsidy_jia",
+												title: "岗位补贴",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "job_subsidy_rmb_jia",
+												title: "岗位补贴（折合人民币）",
+												minWidth: 180
+											}, {
+												sort: true,
+												align: "center",
+												field: "year_end_awards_jia",
+												title: "年终奖金",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "other_jia",
+												title: "其他",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "sum_subsidy_jia",
+												title: "加项目小计",
+												minWidth: 128
+											}
+
+
+
+											, {
+												sort: true,
+												align: "center",
+												field: "housing_subsidy_hb",
+												title: "房屋补贴",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "housing_subsidy_rmb_hb",
+												title: "房屋补贴（折合人民币）",
+												minWidth: 180
+											}
+											// 
+											, {
+												sort: true,
+												align: "center",
+												field: "overtime_subsidy_hb",
+												title: "加班费（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "overtime_subsidy_rmb_hb",
+												title: "加班费（折合人民币）",
+												minWidth: 170
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "refund_hb",
+												title: "退款",
+												minWidth: 128,
+												edit: "text"
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "full_attend_hb",
+												title: "全勤（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "full_attend_rmb_hb",
+												title: "全勤（折合人民币）",
+												minWidth: 160
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "commission_hb",
+												title: "提成",
+												minWidth: 128,
+												edit: "text"
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "job_subsidy_hb",
+												title: "岗位补贴",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "job_subsidy_rmb_hb",
+												title: "岗位补贴（折合人民币）",
+												minWidth: 180
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "year_end_awards_hb",
+												title: "年终奖金",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "other_hb",
+												title: "其他",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "sum_subsidy_hb",
+												title: "加项目-回补小计",
+												minWidth: 180
+											}
+
+
+											, {
+												sort: true,
+												align: "center",
+												field: "late_jian",
+												title: "迟到（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "late_rmb_jian",
+												title: "迟到（折合人民币）",
+												minWidth: 160
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "leave_early_jian",
+												title: "早退（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "leave_early_rmb_jian",
+												title: "早退（折合人民币）",
+												minWidth: 160
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "kuang_gong_jian",
+												title: "旷工（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "kuang_gong_jian_rmb",
+												title: "旷工（折合人民币）",
+												minWidth: 160
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "special_shijia_jian",
+												title: "特殊事假（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "special_shijia_rmb_jian",
+												title: "特殊事假（折合人民币）",
+												minWidth: 180
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "shijia_jian",
+												title: "事假（披索）",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "shijia_rmb_jian",
+												title: "事假（折合人民币）",
+												minWidth: 160
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "rental_fees_jian",
+												title: "外宿租赁费",
+												minWidth: 190,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "rental_fees_rmb_jian",
+												title: "外宿租赁费（折合人民币）",
+												minWidth: 190
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "water_electricity_jian",
+												title: "外宿水电费",
+												minWidth: 190,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "water_electricity_rmb_jian",
+												title: "外宿水电费（折合人民币）",
+												minWidth: 180
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "wrong_money_jian",
+												title: "错款",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "wrong_money_rmb_jian",
+												title: "错款（折合人民币）",
+												minWidth: 160
+											}, {
+												sort: true,
+												align: "center",
+												field: "visa_deposit_jian",
+												title: "9G押金（人民币）",
+												minWidth: 150
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "other_jian",
+												title: "其他",
+												minWidth: 128,
+												edit: "text"
+											}, {
+												sort: true,
+												align: "center",
+												field: "sum_subsidy_jian",
+												title: "扣除项目小计",
+												minWidth: 150
+											}
+
+
+											, {
+												sort: true,
+												align: "center",
+												field: "basic_salary_ying",
+												title: "基本工资",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "basic_currency_name",
+												title: "基本工资币种",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "sum_items_total_ying",
+												title: "加项目加总",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "huibu_items_total_ying",
+												title: "回补项目加总",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "kouchu_items_total_ying",
+												title: "扣除项目加总",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "sum_yingfa_ying",
+												title: "应发工资小计",
+												minWidth: 150
+											}, {
+												sort: true,
+												align: "center",
+												field: "percent2_ying",
+												title: "2% 调整",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "adjustment_ying",
+												title: "调整后工资",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "yingfa_ying",
+												title: "应发工资",
+												minWidth: 128
+											}
+											// ,{sort:true,align:"center",field:"first_currency_amount",title:"领外币额",minWidth:128}
+											// ,{sort:true,align:"center",field:"first_currency_rmb_amount",title:"领外币折合人民币",minWidth:128}
+											, {
+												sort: true,
+												align: "center",
+												field: "remaining_salary_ying",
+												title: "剩余工资",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "yingfa2_ying",
+												title: "应发工资",
+												minWidth: 128
+											}
+
+
+											, {
+												sort: true,
+												align: "center",
+												field: "first_currency_amount",
+												title: "金额",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "first_currency_name",
+												title: "币种",
+												minWidth: 128
+											}, {
+												sort: true,
+												align: "center",
+												field: "first_currency_rmb_amount",
+												title: "折合人民币",
+												minWidth: 128
+											}
+
+											, {
+												sort: true,
+												align: "center",
+												field: "second_currency_amount",
+												title: "金额",
+												minWidth: 128
+												// ,style:'background-color:#01AAED;color:#fff;'
+											}, {
+												sort: true,
+												align: "center",
+												field: "second_currency_name",
+												title: "币种",
+												minWidth: 128
+												// ,style:'background-color:#01AAED;color:#fff;'
+											}
+										];
+										var colSpanjia = 13;
+										var colSpanhb = 13;
+										var colSpanjian = 19;
+										var colsTowLe = []; //删选后的表头
+										var subNoneData = []; //隐藏掉的数据
+										for (var i = 0; i < addCols
+											.length; i++) {
+
+											var fieldStr = addCols[i]
+												.field;
+											cutfieldStr = fieldStr.replace(
+												"_jian", "_cut");
+											cutfieldStr = cutfieldStr
+												.replace("_rmb", "");
+											cutfieldStr = cutfieldStr
+												.replace("_hb", "");
+											cutfieldStr = cutfieldStr
+												.replace("_jia", "");
+											cutfieldStr = cutfieldStr
+												.replace("_cut", "_jian");
+											// fieldStr
+											// //console.log(rs.columns)
+											var nocolumnsArr = true;
+											for (var j = 0; j < rs.columns
+												.length; j++) {
+												//console.log(cutfieldStr,rs.columns[j].column_name)
+												if (cutfieldStr == rs
+													.columns[j].column_name
+												) { //在设置列表的动态表头
+													if (rs.columns[j]
+														.is_display == 0
+													) { //隐藏的
+														if (fieldStr
+															.indexOf(
+																"_jia") !=
+															-1 && fieldStr
+															.indexOf(
+																"_jian") ==
+															-1
+														) { //加 存在_jia不存在_jian
+															colSpanjia--;
+														} else if (fieldStr
+															.indexOf(
+																"_hb") != -
+															1
+														) { //回补
+															colSpanhb--;
+														} else if (fieldStr
+															.indexOf(
+																"_jian") !=
+															-1) { //减
+															colSpanjian--;
+														}
+														subNoneData.push(
+															fieldStr);
+													} else { //显示的
+														//console.log(rateD[rs.columns[j].currency_unit_id]);
+														if (fieldStr
+															.indexOf(
+																"_rmb") ==
+															-1
+														) { //不包含 _rmb
+															addCols[i]
+																.title =
+																addCols[i]
+																.title +
+																'（' +
+																rateD[rs
+																	.columns[
+																		j]
+																	.currency_unit_id
+																] + '）'
+														}
+														colsTowLe.push(
+															addCols[i])
+													}
+													// //console.log(fieldStr)
+													//如果当前列 不在动态设置表里 则nocolumnsArr为true
+													nocolumnsArr = false
+												}
+											}
+											if (nocolumnsArr) {
+												colsTowLe.push(addCols[i]);
+											}
+										}
+										//console.log(colsTowLe);
+										// if(cutfieldStr==rs.columns[i].column_name){
+										// 	$("th[data-field='"+fieldStr+"']>div>span>i").text('('+rateD[rs.columns[i].currency_unit_id]+')');
+										// }
+										// //console.log(colsTowLe,subNoneData)
+										var cols = [
+											[{
+													field: '',
+													type: 'numbers',
+													title: '编号',
+													fixed: 'left',
+													width: 60,
+													rowspan: 2,
+													unresize: true
+												}, {
+													sort: true,
+													field: 'user_name',
+													title: '用户名',
+													rowspan: 2,
+													minWidth: 80,
+													fixed: 'left',
+													unresize: true
+												}, {
+													sort: true,
+													field: 'gender_desc',
+													title: '性别',
+													rowspan: 2,
+													minWidth: 90,
+													unresize: true,
+													fixed: 'left'
+
+												}, {
+													sort: true,
+													field: 'dpt_name',
+													title: '部门',
+													rowspan: 2,
+													minWidth: 90,
+													unresize: true,
+													fixed: 'left'
+
+												}, {
+													sort: true,
+													field: 'title_name',
+													title: '岗位',
+													minWidth: 100,
+													rowspan: 2,
+													unresize: true,
+													fixed: 'left',
+													totalRowText: '合计：'
+
+												},{
+													sort:true,
+													field: 'is_confirm_desc',
+													title: '是否确认',
+													minWidth: 100
+													,rowspan: 2
+													,unresize: true
+													,fixed:'left'
+													// ,totalRowText:'合计：'
+													
+												},{
+													sort: true,
+													field: 'join_date',
+													title: '入职日期',
+													rowspan: 2,
+													unresize: true
+														// ,fixed:'left'
+														,
+													minWidth: 100
+
+												}, {
+													sort: true,
+													field: 'due_date',
+													title: '转正日期',
+													rowspan: 2,
+													unresize: true
+														// ,fixed:'left'
+														,
+													minWidth: 100
+
+												}, {
+													sort: true,
+													field: 'employ_type_desc',
+													title: '雇佣类型',
+													rowspan: 2,
+													unresize: true
+														// ,fixed:'left'
+														,
+													minWidth: 100
+
+												}, {
+													sort: true,
+													field: 'contract_startdate',
+													title: '合同期开始',
+													rowspan: 2,
+													unresize: true
+														// ,fixed:'left'
+														,
+													minWidth: 100
+
+												}, {
+													sort: true,
+													field: 'contract_enddate',
+													title: '合同期结束',
+													rowspan: 2,
+													unresize: true
+														// ,fixed:'left'
+														,
+													minWidth: 100
+
+												},
+												{
+													align: 'center',
+													field: 'jia',
+													title: '加项目',
+													colspan: colSpanjia
+													//,style: 'background-color: yellow'
+													// ,unresize: true
+													// ,edit:'text'
+												}, {
+													align: 'center',
+													field: 'hb',
+													title: '加项目-回补'
+														//,style: 'background-color: gry'
+														,
+													colspan: colSpanhb
+													// ,unresize: true
+													// ,edit:'text'var colSpanjia= 13;
+													// var = 13;
+													// var = 18;
+												}, {
+													align: 'center',
+													field: 'jian',
+													title: '扣除项目',
+													colspan: colSpanjian
+													//,style: 'background-color: red'
+
+													// ,unresize: true
+													// ,edit:'text'
+												}, {
+													align: 'center',
+													field: 'yingfa',
+													title: '应发工资',
+													colspan: 11
+													//,style: 'background-color: blue'													
+													// ,unresize: true
+													// ,edit:'text'
+												}, {
+													align: 'center',
+													field: 'visa_total_deposit',
+													rowspan: 2,
+													edit: "text",
+													// totalRow:true,
+													//style: 'background-color: green',										
+													title: '其他(已押9G押金)',
+													minWidth: 160
+													// ,edit:'text'
+												}
+												// ,{
+												// 	align: 'center',
+												// 	field: 'second_currency_amount',
+												// 	rowspan: 2,
+												// 	title: '外币',
+												// 	minWidth: 100
+												// 	// ,edit:'text'
+												// }
+												, {
+													align: 'center',
+													field: 'lingqu',
+													// rowspan: 2,
+													title: '领取',
+													minWidth: 100,
+													colspan: 3
+
+													// ,edit:'text'
+												}, {
+													align: 'center',
+													field: 'dahui',
+													// rowspan: 2,
+													title: '打回',
+													minWidth: 100,
+													colspan: 2
+
+													// ,edit:'text'
+												}
+											], colsTowLe
+											// ,{align:"center",field:"second_currency_rmb_amount",title:"折合人民币",minWidth:128
+											// 	// ,style:'background-color:#01AAED;color:#fff;'
+											// }
+										]
+										// //console.log(addCols,repCols,cutCols,cutCols.length,cols)
+										table.render({
+											elem: '#projectTable'
+												// ,url:  window.urls+"/gateway/usersalary/index "
+												,
+											toolbar: true,
+											totalRow: true,
+											defaultToolbar: [
+													'filter',
+													'print',
+													'exports'
+												]
+												// ,where:{
+												// 	Month:year+'-'+month,
+												// }
+												,
+											text: {
+												none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+											},
+											data: rs.list
+												// ,cellMinWidth: 100
+												,
+											limit: 100000
+												// ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+												,
+											method: 'post',
+											contentType: 'application/json',
+											page: false,
+											loading: true,
+											size: 'sm',
+											height: 'full-250' //高度最大化减去差值
+												// ,parseData: function(res){ //res 即为原始返回的数据
+												// 	return {
+												// 		"status_code":res.status_code,//解析接口状态
+												// 		"message": res.message, //解析提示文本
+												// 		// "count": res.data.total_count, //解析数据长度
+												// 		"data": res.data.list, //解析数据列表
+												// 		// "curr":res.data.page_index
+												// 		"assign":res.data.assign,
+												// 		"pay_date":res.data.pay_date
+												// 	};
+												// 	// var assign res.assign?'':'text',
+												// }
+												,
+											cols: cols,
+											request: {
+												// pageName: 'currentIndex' //页码的参数名称，默认：page
+												// ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+											},
+											done: function (res) {
+												// //console.log(res,res.assign)
+												if (assign) {
+													$("div[lay-id='projectTable']")
+														.find(
+															'td'
+														)
+														.each(
+															function () {
+																$(this)
+																	.removeAttr(
+																		'data-edit'
+																	);
+															})
+													$("#dateTime").val(res.pay_date).attr("disabled","disabled").addClass("layui-disabled");
+													$("#subList").attr("disabled","disabled").addClass(" layui-btn-disabled").text("已发放");
+													$("#previewList").hide();
+													$("#newList").hide();
+												} else {
+													$("#dateTime").val('').removeAttr("disabled","disabled").removeClass("layui-disabled");
+													$("#subList").removeAttr("disabled","disabled").removeClass(" layui-btn-disabled").text("发放");
+													$("#previewList").show();
+													$("#newList").show();
+												}
+												for (key in rs
+													.summarize
+												) {
+													$(".layui-table-total td[data-field='" +
+															key +
+															"']>div"
+														)
+														.text(
+															rs
+															.summarize[
+																key
+															]
+														);
+													// //console.log($(".layui-table-total td[data-field='"+key.split('sum_')[1]+"']>div"),rs.summarize[key])
+												}
+
+												$('div[lay-event="LAYTABLE_EXPORT"]')
+													.attr(
+														'lay-event',
+														'layevent-eport-table'
+													)
+												$('div[lay-event="layevent-eport-table"]')
+													.off(
+														'click'
+													).on(
+														'click',
+														function () {
+															var repTh =
+																$(
+																	"div[lay-id='projectTable'] .layui-table-box .layui-table-header>table"
+																)
+																.html();
+															var repTb =
+																$(
+																	"div[lay-id='projectTable'] .layui-table-box .layui-table-body.layui-table-main>table"
+																)
+																.html();
+															$('#report-table')
+																.html(
+																	repTh +
+																	repTb
+																);
+															// var table2excel = new Table2Excel();
+															// table2excel.export($('#report-table'));
+
+															$('#report-table')
+																.table2excel({
+																	fileext: ".xls",
+																	filename: "" +
+																		month +
+																		" 工资列表"
+																})
+														})
+											}
+										});
+										// table.reload('projectTable',{cols: cols});
+										table.resize('projectTable');
+
+									}
+								})
+							}
+						})
+					} else if (rs == "tw") {
+						companyTW = true;
+						$.fetch({
+							url: "/gateway/usersalary/index",
+							type: 'post',
+							data: sdata,
+							cb: function (rs) {
+								var assign = rs.assign;
+								var cols = [
+									[{ //0
+											field: '',
+											type: 'numbers',
+											title: '編號',
+											fixed: 'left',
+											width: 60,
+											unresize: true
+										}, { //1
+											field: 'user_name',
+											title: '員工姓名',
+											minWidth: 80,
+											fixed: 'left',
+											unresize: true,
+											totalRowText: '合计'
+										},
+										//2身分證字號
+										{ //3
+											field: 'dpt_name',
+											title: '部門',
+											minWidth: 90,
+											unresize: true,
+											fixed: 'left'
+
+										},
+										//4到職日期
+										//5銀行帳號
+										{ // ** 岗位
+											field: 'title_name',
+											title: '崗位',
+											minWidth: 100,
+											unresize: true,
+											fixed: 'left'
+
+										}, { //** 职等
+											field: 'zhi_deng',
+											title: '職等',
+											unresize: true,
+											edit: 'text',
+											minWidth:80,
+											fixed: 'left'
+
+										},{ //** 职等
+											field: 'is_confirm_desc',
+											title: '是否確認',
+											unresize: true,
+											edit: 'text',
+											minWidth:85,
+											fixed: 'left'
+
+										},
+										{ //6核發薪資
+											align: 'center', //0000
+											field: 'he_fa_salary',
+											title: '核發薪資',
+											totalRow: true
+
+												// ,colspan:14
+												,
+											minWidth: 90,
+											unresize: true
+											// ,edit:'text'
+										}, { //7
+											align: 'center',
+											totalRow: true,
+											field: 'basic_salary',
+											title: '本薪(應)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //7
+											align: 'center',
+											totalRow: true,
+											field: 'full_attend_salary',
+											title: '全勤(應)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //8
+											align: 'center',
+											totalRow: true,
+											field: 'ban_bie_salary',
+											title: '班別津貼(應)',
+											minWidth: 100,
+											unresize: true,
+											edit: 'text'
+										}, { //9
+											align: 'center',
+											totalRow: true,
+											field: 'overtime_salary',
+											title: '加班費(應)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //10
+											align: 'center',
+											totalRow: true,
+											field: 'duan_fu_salary',
+											title: '短付薪資(應)',
+											unresize: true,
+											minWidth: 100,
+											edit: 'text'
+										}, { //11
+											align: 'center',
+											totalRow: true,
+											field: 'shijia_deduction',
+											// title: '事假',
+											title: '請假扣款(應)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //新加 遲到/早退扣款
+											align: 'center',
+											totalRow: true,
+											field: 'late_leave_deduction',
+											// title: '事假',
+											title: '遲到/早退扣款(應)',
+											minWidth: 130,
+											edit: 'text'
+										}, { //12
+											align: 'center',
+											totalRow: true,
+											field: 'yi_fu_salary',
+											title: '溢付薪資(應)',
+											unresize: true,
+											minWidth: 100,
+											edit: 'text'
+										},
+										//应税薪资小计
+										{ // 13
+											align: 'center',
+											totalRow: true,
+											field: 'ying_shui_xiao_ji',
+											title: '應稅薪資小計',
+											unresize: true,
+											minWidth: 110
+											// ,edit:'text'
+										},
+										{ //14
+											align: 'center',
+											totalRow: true,
+											field: 'li_zhi_salary_ying',
+											// title: '离职所得(应)'
+											title: '退職所得(應)',
+											unresize: true,
+											minWidth: 110,
+											edit: 'text'
+										}, { //15
+											align: 'center',
+											totalRow: true,
+											field: 'li_jin_salary',
+											title: '禮金(應)',
+											unresize: true,
+											minWidth: 100,
+											edit: 'text'
+										}, { //16
+											align: 'center',
+											totalRow: true,
+											field: 'reward_salary',
+											title: '獎金(應)',
+											unresize: true,
+											minWidth: 100,
+											edit: 'text'
+										}, { //17
+											align: 'center',
+											totalRow: true,
+											field: 'year_end_awards_salary',
+											title: '年終獎金(應)',
+											unresize: true,
+											minWidth: 100,
+											edit: 'text'
+										},
+										//应税奖金小计 18
+										{ // 18
+											align: 'center',
+											totalRow: true,
+											field: 'ying_shui_jiang_jin',
+											title: '應稅獎金小計',
+											unresize: true,
+											minWidth: 110
+											// ,edit:'text'
+										},
+										{ //19
+											align: 'center',
+											totalRow: true,
+											field: 'meal_subsidy',
+											title: '伙食津貼(免)',
+											minWidth: 100,
+											edit: 'text'
+										},
+										{ //20
+											align: 'center',
+											totalRow: true,
+											field: 'overtime_salary_mian',
+											title: '加班費(免)',
+											minWidth: 100,
+											edit: 'text'
+										},
+										{ //21
+											align: 'center',
+											totalRow: true,
+											field: 'li_zhi_salary_mian',
+											title: '退職所得(免)',
+											unresize: true,
+											minWidth: 100,
+											edit: 'text'
+										},
+										{ //22
+											//免税薪资小计 22
+											align: 'center',
+											totalRow: true,
+											field: 'mian_shui_xin_zi',
+											title: '免稅薪資小計',
+											minWidth: 110
+											// ,edit:'text'
+										},
+										{ // 23
+											//应付薪资小计 23
+											align: 'center',
+											totalRow: true,
+											field: 'ying_fu_xin_zi',
+											title: '應付薪資小計',
+											minWidth: 110
+											// ,edit:'text'
+										},
+										{ //24
+											align: 'center',
+											totalRow: true,
+											field: 'xin_zi_dai_kou',
+											title: '薪資代扣繳',
+											minWidth: 100,
+											edit: 'text'
+										}, { //25
+											align: 'center',
+											totalRow: true,
+											field: 'reward_dai_kou',
+											title: '獎金代扣繳',
+											minWidth: 100,
+											edit: 'text'
+										}, { //26
+											align: 'center',
+											totalRow: true,
+											field: 'li_zhi_suo_de_dai_kou',
+											title: '退職所得代扣繳',
+											minWidth: 120,
+											edit: 'text'
+										}, { //27
+											align: 'center',
+											totalRow: true,
+											field: 'gr_jb_tw',
+											title: '健保費(員)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //28
+											align: 'center',
+											totalRow: true,
+											field: 'gr_lb_tw',
+											title: '勞保費(員)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //29
+											align: 'center',
+											totalRow: true,
+											field: 'gr_lt_tw',
+											title: '勞退(員)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //30
+											align: 'center',
+											totalRow: true,
+											field: 'gr_er_dai_jb_tw',
+											title: '二代健保(員)',
+											minWidth: 110,
+											edit: 'text'
+										},
+										//31 代扣项小计
+										{ //31
+											align: 'center',
+											totalRow: true,
+											field: 'dai_kou_xiang_xiao_ji',
+											title: '代扣項小計',
+											minWidth: 100
+											// ,edit:'text'
+										},
+										{ //32
+											align: 'center',
+											totalRow: true,
+											field: 'ljb_jia',
+											title: '勞健保調整(加)',
+											minWidth: 110,
+											edit: 'text'
+										}, { //33
+											align: 'center',
+											totalRow: true,
+											field: 'ljb_jian',
+											title: '勞健保調整(減)',
+											minWidth: 110,
+											edit: 'text'
+										}, { //34
+											align: 'center',
+											totalRow: true,
+											field: 'qita_jia',
+											title: '其他調整(加)',
+											minWidth: 110,
+											edit: 'text'
+										}, { //35
+											align: 'center',
+											totalRow: true,
+											field: 'qita_jian',
+											title: '其他調整(減)',
+											minWidth: 110,
+											edit: 'text'
+										}, { //36
+											align: 'center',
+											totalRow: true,
+											field: 'yifu_lijin_jian',
+											title: '已付禮金(減)',
+											minWidth: 110,
+											edit: 'text'
+										},
+										//37调整项小计
+										{ //37
+											align: 'center',
+											totalRow: true,
+											field: 'tiao_zheng_xiang_xiao_ji',
+											title: '調整項小計',
+											minWidth: 100
+											// ,edit:'text'
+										},
+										//38 实际支付薪资
+										{ //38
+											align: 'center',
+											totalRow: true,
+											field: 'real_salary',
+											title: '實際支付薪資',
+											minWidth: 110
+											// ,edit:'text'
+										}, { //39
+											align: 'center',
+											totalRow: true,
+											field: 'jian_bao_amount',
+											title: '健保投保額',
+											minWidth: 100,
+											edit: 'text'
+										}, { //40
+											align: 'center',
+											totalRow: true,
+											field: 'gs_jb_tw',
+											title: '健保費(公)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //41
+											align: 'center',
+											totalRow: true,
+											field: 'lao_bao_amount',
+											title: '勞保投保額',
+											minWidth: 100,
+											edit: 'text'
+										}, { //42
+											align: 'center',
+											totalRow: true,
+											field: 'gs_lb_tw',
+											title: '勞保費(公)',
+											minWidth: 100,
+											edit: 'text'
+										}, { //43
+											align: 'center',
+											totalRow: true,
+											field: 'zhi_ye_zai_hai',
+											title: '職災(公)',
+											minWidth: 100
+											// ,edit:'text'
+										}, { //44
+											align: 'center',
+											totalRow: true,
+											field: 'lao_tui_amount',
+											title: '勞退提繳額',
+											minWidth: 100,
+											edit: 'text'
+										}, { //45
+											align: 'center',
+											totalRow: true,
+											field: 'gs_lt_tw',
+											title: '勞退(公)',
+											minWidth: 100,
+											edit: 'text'
+										}
+
+									]
+								]
+								table.render({
+									elem: '#projectTable'
+										// ,url:  window.urls+"/gateway/usersalary/index "
+										,
+									toolbar: true,
+									totalRow: true,
+									defaultToolbar: ['filter', 'print',
+											'exports'
+										]
+										// ,where:{
+										// 	Month:year+'-'+month,
+										// }
+										,
+									text: {
+										none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+									},
+									data: rs.list
+										// ,cellMinWidth: 100
+										,
+									limit: 100000
+										// ,limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000]
+										,
+									method: 'post',
+									contentType: 'application/json',
+									page: false,
+									loading: true,
+									size: 'sm',
+									height: 'full-120' //高度最大化减去差值
+										// ,parseData: function(res){ //res 即为原始返回的数据
+										// 	return {
+										// 		"status_code":res.status_code,//解析接口状态
+										// 		"message": res.message, //解析提示文本
+										// 		// "count": res.data.total_count, //解析数据长度
+										// 		"data": res.data.list, //解析数据列表
+										// 		// "curr":res.data.page_index
+										// 		"assign":res.data.assign,
+										// 		"pay_date":res.data.pay_date
+										// 	};
+										// 	// var assign res.assign?'':'text',
+										// }
+										,
+									cols: cols,
+									request: {
+										// pageName: 'currentIndex' //页码的参数名称，默认：page
+										// ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+									},
+									done: function (res) {
+										// //console.log(res,res.assign)
+										if (assign) {
+											$("div[lay-id='projectTable']")
+												.find('td').each(
+													function () {
+														$(this).removeAttr(
+															'data-edit'
+														);
+													})
+											$("#dateTime").val(res
+													.pay_date).attr(
+													"disabled", "disabled")
+												.addClass(
+													"layui-disabled");
+											$("#subList").attr("disabled",
+													"disabled").addClass(
+													" layui-btn-disabled")
+												.text("已发放");
+											$("#previewList").hide();
+											$("#newList").hide();
+										} else {
+											$("#dateTime").val('')
+												.removeAttr("disabled",
+													"disabled")
+												.removeClass(
+													"layui-disabled");
+											$("#subList").removeAttr(
+													"disabled", "disabled")
+												.removeClass(
+													" layui-btn-disabled")
+												.text("发放");
+											$("#previewList").show();
+											$("#newList").show();
+										}
+										// if(companyTW){
+										// 	$("div[lay-id='projectTable']").find("tH[data-field='yingkou_amount'] div")
+
+										// }
+										// layer.close(indexs);
+									}
+								});
+								// table.reload('projectTable',{cols: cols});
+								table.resize('projectTable');
+
+							}
+						})
+
+					}
+				}
+			})
+
+		}
+		laydate.render({
+			elem: '#monTime',
+			type: 'month',
+			value: year + '-' + month,
+			max: -maxDate,
+			// change: function(value, date, endDate){
+			// 	tableIndex.reload({
+			// 		where:{
+			// 			Month:value
+			// 		},
+			// 	});
+			// },
+			done: function (value, date, endDate) {
+				// tableIndex.reload({
+				// 	where:{
+				// 		Month:value
+				// 	},
+				// });
+				usersalaryFun(value);
+				table.resize('projectTable');
+
+			}
+		});
+		laydate.render({
+			elem: '#dateTime',
+			type: 'date',
+			// value: d.getFullYear() + '-' + lay.digit(d.getMonth() + 1)
+		});
+		var subData = {
+			Month: d.getFullYear() + '-' + lay.digit(d.getMonth() + 1),
+			PayDate: '',
+			UserSalary: [],
+		}
+		var dval = $('#monTime').val();
+		usersalaryFun(year + '-' + month, true)
+
+
+		$("#IqProject").on("click", function () {
+			var dval = $('#monTime').val();
+			// tableIndex.reload({
+			//     where:{
+			// 		Month:dval
+			//     },
+			// });
+			usersalaryFun(dval);
+
+			table.resize('projectTable');
+		})
+
+		//监听表格编辑
+		table.on('edit(projectTable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+
+			if (obj.field !== "zhi_deng") {
+				if (isNaN(obj.value)) {
+					layer.msg('请输入正确值');
+					$(this).val('');
+					return false
+				}
+			}
+			var dval = $('#monTime').val();
+			// var PayDate=$('#dateTime').val();
+			// if(PayDate==''){
+			// //console.log(obj,companyTW)
+			// }
+			var UserID = obj.data.user_id;
+			$.fetch({
+				url: "/gateway/usersalary/getcode",
+				type: 'post',
+				cb: function (rs) {
+
+					var rs = rs[0];
+					if (rs == 'tw') {
+						var BasicSalary = obj.data.basic_salary;
+						var OvertimeSalary = obj.data.overtime_salary;
+						var FullAttendSalary = obj.data.full_attend_salary;
+						var HousingSubsidy = obj.data.housing_subsidy;
+						var OtherSubsidy = obj.data.other_subsidy;
+						var LateLeaveDeduction = obj.data.late_leave_deduction;
+						var ShijiaDeduction = obj.data.shijia_deduction;
+						var SickDeduction = obj.data.sick_deduction;
+						var OtherDeduction = obj.data.other_deduction;
+						var YiLiao = obj.data.yi_liao;
+						var GongShang = obj.data.gong_shang;
+						var OtherDeduction2 = obj.data.other_deduction2;
+						var PersonalTax = obj.data.personal_tax;
+						var AccumFund = obj.data.accum_fund;
+						var RealSalary = obj.data.real_salary;
+						var ZhiDeng = obj.data.zhi_deng;
+						var MealSubsidy = obj.data.meal_subsidy;
+						var GRerDaiJianBaoTW = obj.data.gr_er_dai_jb_tw;
+						var JianBaoAmount = obj.data.jian_bao_amount;
+						var LaoBaoAmount = obj.data.lao_bao_amount;
+						var LaoTuiAmount = obj.data.lao_tui_amount;
+						var BanBieSalary = obj.data.ban_bie_salary;
+						var DuanFuSalary = obj.data.duan_fu_salary;
+						var LiZhiSalaryYing = obj.data.li_zhi_salary_ying;
+						var LiZhiSalaryMian = obj.data.li_zhi_salary_mian;
+						var LiJinSalary = obj.data.li_jin_salary;
+						var RewardSalary = obj.data.reward_salary;
+						var YearEndAwardsSalary = obj.data.year_end_awards_salary;
+						var YiFuSalary = obj.data.yi_fu_salary;
+						var XinZiDaiKou = obj.data.xin_zi_dai_kou;
+						var RewardDaiKou = obj.data.reward_dai_kou;
+						var LiZhiSuoDeDaiKou = obj.data.li_zhi_suo_de_dai_kou;
+						var LJBJia = obj.data.ljb_jia;
+						var LJBJian = obj.data.ljb_jian;
+						var QiTaJia = obj.data.qita_jia;
+						var QiTaJian = obj.data.qita_jian;
+						var YiFuLiJinJian = obj.data.yifu_lijin_jian;
+						var ZhiYeZaiHai = obj.data.zhi_ye_zai_hai;
+						var GRLBTW = obj.data.gr_lb_tw;
+						var GRJBTW = obj.data.gr_jb_tw;
+						var GSLBTW = obj.data.gs_lb_tw;
+						var GSJBTW = obj.data.gs_jb_tw;
+						var GSLTTW = obj.data.gs_lt_tw;
+						var GRLTTW = obj.data.gr_lt_tw;
+
+						var OvertimeSalaryMian = obj.data.overtime_salary_mian;
+						//计算扣缴 和 薪资总额
+						var yingfuAmount = (parseInt(OvertimeSalary) + parseInt(
+							FullAttendSalary) + parseInt(HousingSubsidy) + parseInt(
+							MealSubsidy) + parseInt(BasicSalary) + parseInt(
+							OtherSubsidy)).toFixed(2);
+						var yingkouAmount = (parseInt(LateLeaveDeduction) + parseInt(
+							ShijiaDeduction) + parseInt(SickDeduction) + parseInt(
+							OtherDeduction)).toFixed(2);
+						// //console.log(yingfuAmount);
+						var upData = {
+							UserID: UserID,
+							ZhiDeng: ZhiDeng,
+							BasicSalary: BasicSalary,
+							OvertimeSalary: OvertimeSalary,
+							ShijiaDeduction: ShijiaDeduction,
+							SickDeduction: SickDeduction,
+
+							MealSubsidy: MealSubsidy,
+							GRLBTW: GRLBTW,
+							GRJBTW: GRJBTW,
+							GRLTTW: GRLTTW,
+							GRerDaiJianBaoTW: GRerDaiJianBaoTW,
+							GSLBTW: GSLBTW,
+							GSJBTW: GSJBTW,
+							GSLTTW: GSLTTW,
+
+							JianBaoAmount: JianBaoAmount,
+							LaoBaoAmount: LaoBaoAmount,
+							LaoTuiAmount: LaoTuiAmount,
+
+							BanBieSalary: BanBieSalary,
+							DuanFuSalary: DuanFuSalary,
+							LiZhiSalaryYing: LiZhiSalaryYing,
+							LiZhiSalaryMian: LiZhiSalaryMian,
+
+							LiJinSalary: LiJinSalary,
+							RewardSalary: RewardSalary,
+
+							YearEndAwardsSalary: YearEndAwardsSalary,
+							YiFuSalary: YiFuSalary,
+							XinZiDaiKou: XinZiDaiKou,
+							RewardDaiKou: RewardDaiKou,
+							LiZhiSuoDeDaiKou: LiZhiSuoDeDaiKou,
+
+							LJBJia: LJBJia,
+							LJBJian: LJBJian,
+							QiTaJia: QiTaJia,
+							QiTaJian: QiTaJian,
+							YiFuLiJinJian: YiFuLiJinJian,
+
+							FullAttendSalary: FullAttendSalary,
+							HousingSubsidy: HousingSubsidy,
+							OtherSubsidy: OtherSubsidy,
+							LateLeaveDeduction: LateLeaveDeduction,
+							OtherDeduction: OtherDeduction,
+							YiLiao: YiLiao,
+							GongShang: GongShang,
+							OtherDeduction2: OtherDeduction2,
+							PersonalTax: PersonalTax,
+							AccumFund: AccumFund,
+							ZhiYeZaiHai: ZhiYeZaiHai,
+							// RealSalary:RealSalary,
+							OvertimeSalaryMian: OvertimeSalaryMian,
+
+						}
+						var subData = {
+							Month: dval,
+							// PayDate:PayDate,
+
+							UserSalary: [upData],
+						}
+
+						obj.update(obj.data);
+						// //console.log(subData)
+						$.fetch({
+							url: "/gateway/usersalary/savesalary",
+							type: 'post',
+							data: subData,
+							cb: function (rs) {
+								var dval = $('#monTime').val();
+								obj.update({
+									'real_salary': rs.sigle_item
+										.real_salary,
+								});
+								$(obj.tr.selector).find(
+									"td[data-field='real_salary'] div").text(rs
+									.sigle_item.real_salary)
+
+								obj.update({
+									'basic_salary': rs.sigle_item
+										.basic_salary,
+									'dai_kou_xiang_xiao_ji': rs.sigle_item
+										.dai_kou_xiang_xiao_ji,
+									'he_fa_salary': rs.sigle_item
+										.he_fa_salary,
+									'li_zhi_salary_ying': rs.sigle_item
+										.li_zhi_salary_ying,
+
+									'mian_shui_xin_zi': rs.sigle_item
+										.mian_shui_xin_zi,
+									'tiao_zheng_xiang_xiao_ji': rs
+										.sigle_item
+										.tiao_zheng_xiang_xiao_ji,
+									'ying_fu_xin_zi': rs.sigle_item
+										.ying_fu_xin_zi,
+									'ying_shui_jiang_jin': rs.sigle_item
+										.ying_shui_jiang_jin,
+									'ying_shui_xiao_ji': rs.sigle_item
+										.ying_shui_xiao_ji,
+								});
+								$(obj.tr.selector).find(
+									"td[data-field='basic_salary'] div").text(
+									rs.sigle_item.basic_salary);
+								$(obj.tr.selector).find(
+									"td[data-field='dai_kou_xiang_xiao_ji'] div"
+								).text(rs.sigle_item.dai_kou_xiang_xiao_ji);
+								$(obj.tr.selector).find(
+									"td[data-field='he_fa_salary'] div").text(
+									rs.sigle_item.he_fa_salary);
+								$(obj.tr.selector).find(
+										"td[data-field='li_zhi_salary_ying'] div")
+									.text(rs.sigle_item.li_zhi_salary_ying);
+								$(obj.tr.selector).find(
+										"td[data-field='mian_shui_xin_zi'] div")
+									.text(rs.sigle_item.mian_shui_xin_zi);
+								$(obj.tr.selector).find(
+									"td[data-field='tiao_zheng_xiang_xiao_ji'] div"
+								).text(rs.sigle_item
+									.tiao_zheng_xiang_xiao_ji);
+								$(obj.tr.selector).find(
+										"td[data-field='ying_fu_xin_zi'] div")
+									.text(rs.sigle_item.ying_fu_xin_zi);
+								$(obj.tr.selector).find(
+										"td[data-field='ying_shui_jiang_jin'] div")
+									.text(rs.sigle_item.ying_shui_jiang_jin);
+								$(obj.tr.selector).find(
+										"td[data-field='ying_shui_xiao_ji'] div")
+									.text(rs.sigle_item.ying_shui_xiao_ji);
+								// //console.log(111,obj,'layui-table-total')
+
+								for (key in rs.summarize) {
+									$(".layui-table-total td[data-field='" + key
+										.split('sum_')[1] + "']>div").text(rs
+										.summarize[key]);
+									// //console.log($(".layui-table-total td[data-field='"+key.split('sum_')[1]+"']>div"),rs.summarize[key])
+								}
+
+							}
+						})
+					} else if (rs == 'mnl') {
+						var upData = {
+							UserID: UserID,
+							HousingSubsidyJia: obj.data.housing_subsidy_jia,
+							OvertimeSubsidyJia: obj.data.overtime_subsidy_jia, //加项目-加班费
+							RefundJia: obj.data.refund_jia, //加项目-退款,
+							FullAttendJia: obj.data.full_attend_jia, //加项目-全勤奖,
+							CommissionJia: obj.data.commission_jia, //加项目-提成,
+							JobSubsidyJia: obj.data.job_subsidy_jia, //加项目-岗位补贴,
+
+							YearEndAwardsJia: obj.data.year_end_awards_jia, //加项目-年终奖金，
+							OtherJia: obj.data.other_jia, //加项目-其它,
+
+							HousingSubsidyHb: obj.data.housing_subsidy_hb, //回补项-房屋补贴
+							OvertimeSubsidyHb: obj.data.overtime_subsidy_hb, //回补项-加班费
+							RefundHb: obj.data.refund_hb, //回补项-退款,
+							FullAttendHb: obj.data.full_attend_hb, //回补项-全勤奖,
+							CommissionHb: obj.data.commission_hb, //回补项-提成,
+							JobSubsidyHb: obj.data.job_subsidy_hb, //回补项-岗位补贴,
+
+							YearEndAwardsHb: obj.data.year_end_awards_hb, //回补项-年终奖金，
+							OtherHb: obj.data.other_hb, //回补项-其它,
+
+							LateJian: obj.data.late_jian, //扣除项-迟到,
+							LeaveEarlyJian: obj.data.leave_early_jian, //扣除项-早退,
+							SpecialShijiaJian: obj.data.special_shijia_jian, //扣除项-特殊事假,
+
+							ShijiaJian: obj.data.shijia_jian, //扣除项-事假,
+
+							VisaTotalDeposit: obj.data.visa_total_deposit,
+							KuangGongJian: obj.data.kuang_gong_jian,
+							// VisaTotalDeposit:obj.data.kuang_gong_jian_rmb,
+
+							RentalFeesJian: obj.data.rental_fees_jian, //扣除项-外宿租赁费,
+							WaterElectricityJian: obj.data
+								.water_electricity_jian, //扣除项-外宿水电费,
+							WrongMoneyJian: obj.data.wrong_money_jian, //扣除项-错款,
+
+							OtherJian: obj.data.other_jian, //扣除项-其它
+						}
+						var subData = {
+							Month: dval,
+							// PayDate:PayDate,
+							IsDemission: 0,
+							UserSalary: [upData],
+						}
+
+						// obj.update(obj.data);
+						$.fetch({
+							url: "/gateway/usersalary/mnl/savesalary",
+							type: 'post',
+							data: subData,
+							cb: function (rs) {
+								console.log(rs, obj.data.user_id);
+								for (key in rs.summarize) {
+									$(".layui-table-total td[data-field='" + key +
+										"']>div").text(rs.summarize[key]);
+								}
+								if (rs.data.user_id == obj.data.user_id) {
+									obj.update(rs.data);
+								}
+
+							}
+						})
+					}
+
+				}
+			})
+
+		})
+
+		$("#subList").on("click", function () {
+
+			var dval = $('#monTime').val();
+			var PayDate = $('#dateTime').val();
+			// var patt = '\d{4}-\d{2}-\d{2}';
+			// var pmtt = '\d{4}-\d{2}';
+			// patt.test(PayDate);
+			// //console.log(patt.test(PayDate))
+			// pmtt.test(dval);
+			if (PayDate == '') {
+				layer.msg('请输入发放日期');
+				$(this).val('');
+				return false
+			}
+			$.fetch({
+				url: "/gateway/usersalary/getcode",
+				type: 'post',
+				cb: function (rs) {
+					var rs = rs[0];
+					var ismnl = rs == 'mnl' ? '/mnl' : '';
+
+					layer.confirm(
+						'确定发放？<br>发放日期:<span style="color:#FF5722">' + PayDate +
+						'</span><br>工资月份:<span style="color:#FF5722">' + dval +
+						'</span>', {
+							title: false,
+							closeBtn: false
+						},
+						function (index) {
+							$.fetch({
+								url: "/gateway/usersalary" + ismnl +
+									"/assignsalary",
+								type: 'post',
+								data: {
+									Month: dval,
+									PayDate: PayDate,
+								},
+								cb: function (rs) {
+									layer.msg('发放成功.');
+									layer.close(index);
+									//tableIndex.reload({
+									// 	where:{
+									// 		Month:dval
+									// 	},
+									//});
+									usersalaryFun(dval, true);
+									table.resize('projectTable');
+								}
+							})
+						}
+					)
+				}
+			})
+		})
+		// 预览工资
+		$("#previewList").on("click", function () {
+			var dval = $('#monTime').val();
+			var Month = $("#dateTime").val();
+			var MonthTime = Month.substring(0, 7);
+			// if (Month == '') {
+			// 	layer.msg('请输入预览的日期');
+			// 	$(this).val('');
+			// 	return false
+			// }
+			$.fetch({
+				url: "/gateway/usersalary/getcode",
+				type: 'post',
+				cb: function (rs) {
+					var rs = rs[0];
+					var ismnl = rs == 'mnl' ? '/mnl' : '';
+					var dataCont = ''
+					if (ismnl == '/mnl') {
+						dataCont = {
+							Month: dval,
+							IsDemission: 0,
+						}
+					} else {
+						dataCont = {
+							Month: dval
+						}
+					}
+					layer.confirm(
+						// 预览日期:<span style="color:#FF5722">' + Month +
+						// '</span><br>
+						'工资月份:<span style="color:#FF5722">' + dval +
+						'</span>', {
+							title: false,
+							closeBtn: false
+						},
+						function (index) {
+							$.fetch({
+								url: "/gateway/usersalary" + ismnl + "/setview",
+								type: 'post',
+								data: dataCont,
+								cb: function (rs) {
+									layer.msg('预览成功.');
+									layer.close(index);
+									usersalaryFun(dval, true);
+									table.resize('projectTable');
+								}
+							})
+						}
+					)
+
+				}
+			})
+		})
+		$("#newList").on("click", function () {
+			var dval = $('#monTime').val();
+			if (dval == '') {
+				layer.msg('请输入清除年月');
+				$(this).val('');
+				return false
+			}
+			$.fetch({
+				url: "/gateway/usersalary/getcode",
+				type: 'post',
+				cb: function (rs) {
+					var rs = rs[0];
+					var ismnl = rs == 'mnl' ? '/mnl' : '';
+					if (rs == 'mnl') {
+						var sdata = {
+							Month: dval,
+							IsDemission: 0,
+						}
+					} else {
+						var sdata = {
+							Month: dval,
+						}
+					}
+					layer.confirm(
+						'确定清除 <span style="color:#FF5722">' + dval + '</span> 的工资数据?', {
+							title: false,
+							closeBtn: false
+						},
+						function (index) {
+							$.fetch({
+								url: "/gateway/usersalary" + ismnl + "/cleardata",
+								type: 'post',
+								data: sdata,
+								cb: function (rs) {
+									layer.msg('清除成功.');
+									layer.close(index);
+									usersalaryFun(dval, true);
+									table.resize('projectTable');
+								}
+							})
+						})
+				}
+			})
+		})
+	});
+</script>
+
+</html>

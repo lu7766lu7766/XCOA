@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>绩效知悉</title>
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">绩效知悉</div>
+                <div class="layui-card-body">
+                    <div class=" layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">
+                                    知悉状态
+                                </label>
+                                <div class="layui-input-inline">
+                                    <select type="text"  id="result" lay-filter="result"  name="result" placeholder="" autocomplete="off" class="layui-input">
+                                        <option value="3">全部</option>
+                                        <option value="1">已否决</option>
+                                        <option value="2">已知悉</option>
+                                        <option value="0">待知悉</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="performance" class="" lay-filter="performance"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?v=20181213" type="text/javascript"></script>
+<script type="text/javascript">
+layui.config({
+    base: '../../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','form','laydate','laypage','table'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    , table = layui.table
+    ,element = layui.element
+    ,router = layui.router();
+    element.render();
+    element.on('tab(component-tabs-brief)', function(obj){
+
+    });
+
+    var laydate = layui.laydate
+        ,form = layui.form
+        ,laypage =layui.laypage
+        ,layedit = layui.layedit;
+    //消息中心跳转来则传入id
+    var urlTab = location.href.split('?tab=')[1]?location.href.split('?tab=')[1]:false;
+    var tabId=urlTab?urlTab.split('?')[0]:false;
+    var dataId = location.href.split('?id=')[1]?location.href.split('?id=')[1]:false;
+    console.log(dataId);
+    if(dataId){
+        var tableSub={
+            result:3,
+            recordId:dataId
+        }
+    }else{
+        var tableSub={
+            result:3
+        }
+    }
+
+    // 更换为数据表格
+    var performance = table.render({
+        elem: '#performance',
+        url: urls+'/gateway/performance/informList',
+        where:tableSub,
+        limit: 10,
+        method: 'post',
+        contentType: 'application/json',
+        page:true,
+        loading: true,
+        defaultToolbar: '',
+        limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+        text: {
+            none: '暂无数据' 
+        },
+        cols: [[
+            {sort: true,field:'record_id',title:'编号',minWidth:80},
+            {sort: true,field:'creater_name',title:'填写人',minWidth:100},
+            {sort: true,field:'title',title:'标题',minWidth:100},
+            {sort: true,field:'recorder_name',title:'奖惩者姓名',minWidth:120},
+            {sort: true,field:'recorder_dept_name',title:'部门',minWidth:100},
+            {sort: true,field:'recorder_title_name',title:'岗位',minWidth:120},
+            {sort: true,field:'record_datetime',title:'发生日期',minWidth:160},
+
+            // {sort: true,field:'level_two_name',title:'类型'},
+            // {sort: true,field:'level_three_name',title:'考核主题'},
+            // {sort: true,field:'score_title',title:'评估项目'},
+            {sort: true,field:'standard_score',title:'加/扣分',minWidth:100,
+                templet: function (d){
+                return d.edited_score==null?d.standard_score:d.edited_score
+            }},
+            {sort: true,field:'record_detail',title:'内容细节',minWidth:100},
+            {sort: true,field:'created_at',title:'填写日期',minWidth:160},
+            // {sort: true,field:'err_money_type',title:'错款类型',
+            //     templet: function (d){
+            //     return ['无','出款','入款'][d.err_money_type]
+            // }},
+            {sort: true,field:'inform_result',title:'知悉状态',minWidth:100,
+                templet: function (d){
+                return ['待知悉','否决','已知悉'][d.inform_result]
+            }},
+            {sort: true,field:'remark',title:'知悉备注',minWidth:110},
+            {sort: true,field:'is_deleted_name',title:'是否删除',minWidth:100},
+            {sort: true,field:'is_edited_name',title:'是否修改',minWidth:100},  
+            
+            // {sort: true,field:'err_money_submit',title:'提单金额'},
+            // {sort: true,field:'err_money_total',title:'错款金额'},
+            // {sort: true,field:'err_money_compensation',title:'赔偿金额'},
+            {sort: true,field:'record_status',title:'考核单状态',minWidth:120 ,templet: function (d){
+                if(d.is_deleted===1){
+                    return d.is_deleted_name
+                }else{
+                    return ['已提交','已否决','已通过','待他人知悉'][d.record_status] 
+                }              
+            }},
+            {title:'操作',fixed: 'right',minWidth:140,templet: function (d){
+                // return ['已提交','已否决','已通过','待知悉'][d.err_money_type]
+                var event = ' lay-event="appr"'
+                var disabled = 'layui-btn-disabled'
+                if(d.inform_result==0&&d.record_status!=1){
+                    disabled='';
+                }else{
+                    event='';
+                }
+                var btn ='<a class="layui-btn layui-btn-sm"  lay-event="details">详情</a><a class="layui-btn layui-btn-sm '+disabled+'" '+event+'>知悉</a>'   
+                return btn
+            }},
+        ]]
+        ,request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        ,parseData: function(res){ //res 即为原始返回的数据
+            return {
+                "status_code":res.status_code, //解析接口状态
+                "message": res.message, //解析提示文本
+                "count": res.data.total_count, //解析数据长度
+                "data": res.data.data_list, //解析数据列表
+                "curr":res.data.page_index
+            };
+        },
+        done: function () {
+            if(dataId&&this.where.recordId!=''){
+                $('.layui-table-body.layui-table-main a[lay-event="details"]').click();
+            }
+        }
+        
+    })
+    form.on('select(result)', function(data){
+        performance.reload({
+            where: { //设定异步数据接口的额外参数，任意设
+                result: data.value, 
+                recordId:'',    
+            }
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }
+        });
+    }); 
+ 
+ 
+    table.on('tool(performance)', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        if (layEvent === 'details') {
+            layer.open({
+                title:false,
+                content:'PerformanceDetail.html',
+                type:2,
+                closeBtn:false,
+                id:'performanceeDetail',
+                area:['100%','100%'],
+                success:function(layero,index){
+                    var body = layer.getChildFrame('body', index);
+					var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+					iframeWin.detailData={
+						recordId:data.record_id,
+                        creater:data.creater,
+                        recordSatus:data.record_status,
+                        informResult:data.inform_result,
+                        informId:data.inform_id
+					}
+                },
+                end:function(){
+                    performance.reload({
+                        where:tableSub,
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        },
+                        done: function () {}
+                    });
+                }
+            });
+        }else if (layEvent === 'appr') {
+            // var nid =data.id;
+            if(data.recorder_uid==window.userInfo.userId){
+                layer.confirm('确定知悉?', {title:' '},function(index){
+                    $.fetch({
+                        url:'/gateway/performance/doInform',
+                        data:{
+                            recordId:data.record_id,
+                            informId:data.inform_id,
+                            result:2
+                        },
+                        type: 'post',
+                        cb:function(rs){
+                            layer.msg('提交成功');
+                            layer.close(index);
+                            performance.reload({
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                },
+                                done: function () {}
+                            });
+                        }
+                    })
+                })
+            
+                // 消息表格
+            }else{
+              var contAppr='<div class="layui-fluid">'
+                                                +'<div class="layui-form">'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<div class="layui-input-block layui-input-lineHeight">'
+                                                            +'<input type="radio" name="ApprYn" lay-filter="ApprYn" value="2" title="知悉" checked>'
+                                                            +'<input type="radio" name="ApprYn" lay-filter="ApprYn" value="1" title="否决">'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-form-item contentApprBox" style="display:none">'
+                                                        +'<label class="layui-form-label modify-layui-label">否决原因</label>'
+                                                        +'<div class="layui-input-block layui-input-lineHeight">'
+                                                            +'<textarea  id="contentAppr" name="contentAppr" class="layui-textarea"></textarea>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                    +'<div class="layui-form-item">'
+                                                        +'<div class="layui-input-block">'
+                                                            +'<button id="subFinanApprForm" lay-submit class="layui-btn" lay-filter="subFinanApprForm">提交</button>'
+                                                            +'<button id="backApprList" class="layui-btn layui-btn-primary">取消</button>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                +'</div>'
+                                    +'</div>'
+                layer.open({
+                    title:'绩效知悉',
+                    content:contAppr,
+                    type:1,
+                    closeBtn:false,
+                    id:'performanceeDetail',
+                    area:['400px','350px'],
+                    success:function(layero,index){
+                        form.render();
+                        form.on('radio(ApprYn)', function(data){
+                            console.log(data.elem); //得到radio原始DOM对象
+                            console.log(data.value); //被点击的radio的value值+
+                            if(data.value==1){
+                                
+                                $(".contentApprBox").show();
+                                $("#contentAppr").attr('lay-verify',"required");
+                            }else{
+                                $(".contentApprBox").hide();
+                                $("#contentAppr").removeAttr('lay-verify');
+                                
+                            }
+                            
+                        });  
+                        $("#subFinanApprForm").on("click",function(){
+                            var result=$("input[name='ApprYn']:checked").val();
+                            if(result ==1){
+                                var content =$("#contentAppr").val();
+                                if(content!=''&&content!=undefined){
+                                    $.fetch({
+                                        url:'/gateway/performance/doInform',
+                                        data:{
+                                            recordId:data.record_id,
+                                            informId:data.inform_id,
+                                            result:result,
+                                            content:content,
+                                        },
+                                        type: 'post',
+                                        cb:function(rs){
+                                            layer.msg('提交成功');
+                                            layer.close(index);
+                                            performance.reload({
+                                                page: {
+                                                    curr: 1 //重新从第 1 页开始
+                                                },
+                                                done: function () {}
+                                            });
+                                        }
+                                    })
+                                    // lay.msg("请填写否决原因")
+                                    // return false
+                                }
+                            }else{
+                                var content='';
+                                $.fetch({
+                                        url:'/gateway/performance/doInform',
+                                        data:{
+                                            recordId:data.record_id,
+                                            informId:data.inform_id,
+                                            result:result,
+                                        },
+                                        type: 'post',
+                                        cb:function(rs){
+                                            layer.msg('提交成功');
+                                            layer.close(index);
+                                            performance.reload({
+                                                page: {
+                                                    curr: 1 //重新从第 1 页开始
+                                                },
+                                                done: function () {}
+                                            });
+                                        }
+                                    })
+                            }
+                        })
+                        $("#backApprList").on("click",function(){
+                            layer.close(index);
+                        })
+                    }
+
+                });
+            }
+        }
+    })
+
+    $('#performance').on("mouseenter", '.limit-width',function(){
+        var tipsCont1 = '<div style="width:auto; min-width:30px; max-width: 360px; word-wrap: break-word;">'+$(this).text();+'</div>'
+        var that = this;
+        layer.tips(tipsCont1, that,{
+              tips:[1,'#999']
+              ,maxWidth: 'auto'
+        });
+    });
+})
+</script>
+</html>

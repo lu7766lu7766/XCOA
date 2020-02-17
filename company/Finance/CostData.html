@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>费用类型</title>
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+    <script src="../../js/jquery.min.js"></script>
+</head>
+<body layadmin-themealias="default">
+    <!-- 广告费 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">项目：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label">用途：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">执行日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="ggf-Time">
+                    </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label">结束日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="ggf-EndTime">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">印刷数量：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>1</option>
+                            <option>2</option>
+                        </select>
+                        <!-- <input type="text" class="layui-input"> -->
+                    </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label">网址：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">详述：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 机票 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">机票类型：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>回程</option>
+                            <option>单程</option>
+                        </select>
+                        <!-- <input type="text" class="layui-input"> -->
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">国家：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option></option>
+                            <option></option>
+                        </select>
+                        <!-- <input type="text" class="layui-input"> -->
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机票时间段：</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="jp-Time">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出境日期：</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="jp-CcItem">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">详述：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 交通费 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">发生时段：</label>
+                    <div class="layui-input-inline">
+                        <!-- <select>
+                            <option>回程</option>
+                            <option>单程</option>
+                        </select> -->
+                        <input type="text" class="layui-input" id="jtf-OccurTime">
+                    </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label">交通类型：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>巴士</option>
+                            <option>火车</option>
+                            <option>汽车</option>
+                            <option>船</option>
+                        </select>
+                        <!-- <input type="text" class="layui-input"> -->
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">出发点：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label">目的地：</label>
+                    <div class="layui-input-inline">
+                        <!-- <select>
+                            <option></option>
+                            <option></option>
+                        </select> -->
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">详述：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 清关入境 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">发生时段：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="qgrj-Time">
+                    </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label">国家：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>1</option>
+                            <option>2</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 公司车 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">车牌：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">车型：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用途：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>维修</option>
+                            <option>维护</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">维修明细：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">维护开始日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="carTime">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">维护结束日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="carEndTime">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 租金 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">大厦名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">单位数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">单位号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">月份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="RentTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 运维IT -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">器材：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">型号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用途：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">所用部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">购买日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="ItTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 生日 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">生日日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="BirthdayTiem">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">生日物品：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">年份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="BirthdayYear">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 交际 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">目的：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">参与人数：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="CationTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 工装 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">人员：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="ToolingTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 签证 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">人员：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">签证日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="VisaTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 医药 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">人员：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="MedicineTime">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">诊所，医院：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">单据号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 运费 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">运送目的地：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">运输方式：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>海运</option>
+                            <option>空运</option>
+                            <option>陆运</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用途：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="FreightTime">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 银行卡 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">盘口：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">预计抵达日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="BankTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 办公室运营（清洁，维修） -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">费用明细：</label>
+                    <div class="layui-input-inline">
+                        <select>
+                            <option>清洁</option>
+                            <option>维修</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">服务商：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="CleanTime">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 奖金 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">人员：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用途：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 保险 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">人员：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">保险日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="SafeTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 网络线 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">公司：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">费用月份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="NetworkTime">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 电信 -->
+    <div class="layui-fluid">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">公司：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">服务商：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">月份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="ElectricTiem">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.1"></script>
+<script>
+    $(function(){
+        layui.config({
+            base: '../../layui/' //静态资源所在路径
+        }).extend({
+            index: 'index' //主入口模块
+        }).use(['index','form','laypage','table','laydate'], function(){
+            var $ = layui.$,
+            admin = layui.admin
+            var laydate = layui.laydate,
+                form = layui.form;
+            // 广告费
+            laydate.render({
+                elem:'#ggf-Time'
+            })
+            laydate.render({
+                elem: '#ggf-EndTime' //指定元素
+            });
+
+            // 机票
+            laydate.render({
+                elem: '#jp-CcTime',
+                type:'datetime',
+                range: '~'
+            })
+            laydate.render({
+                elem: '#jp-Time',
+                type:'datetime',
+                range: '~'
+            })
+
+            //交通费
+            laydate.render({
+                elem:'#jtf-OccurTime',
+                type:'date',
+                range: '~'
+            }) 
+
+            // 清关入境
+            laydate.render({
+                elem:'#qgrj-Time',
+                type:'date',
+                range: '~'
+            })
+
+            // 公司车
+            laydate.render({
+                elem:'#carTime',
+                type:'date'
+            })
+            laydate.render({
+                elem:'#carEndTime',
+                type:'date'
+            })
+
+            //租金
+            laydate.render({
+                elem:'#RentTiem',
+                type:'month'
+            }) 
+
+            //运维IT
+            laydate.render({
+                elem:'#ItTiem',
+                type:'datetime'
+            }) 
+
+            //生日
+            laydate.render({
+                elem:'#BirthdayTiem',
+                type:'datetime'
+            }) 
+            laydate.render({
+                elem:'#BirthdayYear',
+                type:'year'
+            }) 
+
+            // 交际
+            laydate.render({
+                elem:'#CationTiem',
+                type:'datetime'
+            })
+
+            // 工装
+            laydate.render({
+                elem:'#ToolingTiem',
+                type:'datetime'
+            })
+
+            // 签证
+            laydate.render({
+                elem:'#VisaTiem',
+                type:'time'
+            })
+
+            // 医药
+            laydate.render({
+                elem:'#MedicineTime'
+            })
+
+            // 运费
+            laydate.render({
+                elem:'#FreightTime'
+            })
+
+            // 银行卡
+            laydate.render({
+                elem:'#BankTiem',
+                type:'datetime'
+            })
+
+            // 办公室运营（清洁，维修）
+            laydate.render({
+                elem:'#CleanTime'
+            }) 
+
+            // 保险
+            laydate.render({
+                elem:'#SafeTiem'
+            })
+
+            // 网络费
+            laydate.render({
+                elem:'#NetworkTime',
+                type:'month'
+            })
+
+            // 电信
+            laydate.render({
+                elem:'#ElectricTiem',
+                type:'month'
+            })
+        })
+    })
+</script>
+</html>

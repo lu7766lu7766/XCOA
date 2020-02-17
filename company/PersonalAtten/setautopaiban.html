@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增排班人员</title>
+<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+<link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+<script src="../../js/jquery.min.js"></script>
+</head>
+	
+<body layadmin-themealias="fashion-red">
+	<div  class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-card">
+                <div class="layui-card-header" >
+					<i class="iconfont icon-Group"></i>
+					倒班设置列表
+                </div>
+				<div class="settingCont layui-card-body layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-inline">
+                                <select id="ApprovalResult" name="ApprovalResult" lay-filter="ApprovalResult">
+                                    <option value="-1">全部</option>
+                                    <option value="0">待审批</option>
+                                    <option value="1">未通过</option>
+                                    <option value="2">已通过</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button id="daobanlistUserFile" lay-submit lay-filter="daobanlistUserFile"
+                                class="layui-btn layui-btn">
+                                <i class="iconfont icon-sousuo"></i>
+                            </button>
+                            <button class="layui-btn layui-btn layui-btn-primary" lay-filter="closeLayer"
+                                id="closeLayer">
+                                返回
+                            </button>
+                        </div>
+                    </div>                    
+                    <table class="layui-hide" id="daobanlist" lay-filter="daobanlist"></table>
+                    
+                </div>                
+		    </div>
+            
+		</div>
+	</div>
+    <script src="../../js/common.js?v=20181222"  type="text/javascript"></script>
+    <script src="../../layui/layui.js"></script>
+    <script id="setautopaibanLayer" type="text/html">
+        <body>
+			<div class="">
+				<!-- <div class="layui-card-header" >
+					<i class="iconfont icon-Group"></i>
+					倒班设置
+				</div> -->
+				<div class="settingCont layui-card-body">
+                    <div class="popUpsCont layui-card layui-form layui-fluid">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">倒班用户</label>
+                            <div class="layui-input-block">
+                                <ul class="layui-small-static" id="workUserList" style="display:none;"></ul>
+                                <textarea name="workUserList" lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea  layui-input-inline" style="width: 100%;"></textarea>
+                                <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                                <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">倒班名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  class="layui-input" id="WorkTimeName" name="WorkTimeName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">开始日期</label>
+                            <div class="layui-input-inline">
+                                <input id="StartDate" type="text" placeholder="请选择开始日期" class="layui-input StartDate">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">周期</label>
+                            <div class="layui-input-inline">
+                                <select id="TimeUnit" name="TimeUnit" lay-filter="TimeUnit">
+                                    <option value="day_15">15 天</option>
+                                    <option value="month_1">1 个月</option>
+                                    <option value="month_2">2 个月</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排班类型</label>
+                            <div class="layui-input-inline">
+                                <select id="workTypeSel1" name="workTypeSel1" lay-filter="workTypeSel1"></select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select id="workTypeSel2" name="workTypeSel2" lay-filter="workTypeSel2"></select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select id="workTypeSel3" name="workTypeSel3" lay-filter="workTypeSel3"></select>
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">*按顺序添加，至少添加一项，不能相同。</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">审批人</label>
+                                <div class="layui-input-inline">
+                                    <select id="ApprovalUserid" name="ApprovalUserid" lay-filter="ApprovalUserid"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button id="subworkForm" data-code="" class="layui-btn">保存</button>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+            </div>
+            <body>
+    
+    </script>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+          <button class="layui-btn layui-btn-sm" lay-event="add">新增倒班</button>
+        </div>
+      </script>
+<script>
+layui.config({
+    base: '../../layui/' //静态资源所在路径
+}).extend({
+    index: 'index' //主入口模块
+}).use(['index','table','laydate','form','laypage','laytpl'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,router = layui.router()
+    ,layer = layui.layer;
+    element.render();
+
+    var table = layui.table
+        ,laydate = layui.laydate
+        ,laypage = layui.laypage
+        ,laytpl = layui.laytpl
+        ,form = layui.form;
+
+   
+
+    //倒班列表
+     var daobanlist = table.render({
+            elem: '#daobanlist',
+            url: urls + '/gateway/worktimetypeuser/daobanlist', //数据接口
+            page: true, //开启分页
+            method: 'post',
+            toolbar: '#toolbarDemo',
+            where:{
+                ApprovalResult:-1,
+            },
+            defaultToolbar:'',
+            limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
+            contentType: 'application/json',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+
+            cols: [
+                [ //表头
+                    // {
+                    //     field: '',
+                    //     title: '排班用户',
+                    //     minWidth:120,
+                    // },
+                    {
+                        field: 'work_time_name',
+                        title: '倒班名称',
+                        minWidth:80,
+                    },{
+                        field: 'start_date',
+                        title: '开始日期',
+                        minWidth:160,
+                    },{
+                        field: 'end_date',
+                        title: '结束日期',
+                        minWidth:80,
+                    },{
+                        field: 'approval_username',
+                        title: '审批人',
+                        minWidth:160,
+                    },
+                    // {
+                    //     field: '',
+                    //     title: '班次循环顺序',
+                    //     minWidth:80,
+                    // },
+                   {
+                        field: '',
+                        fixed: 'right',
+                        unresize: true,
+                        title: '操作',
+                        minWidth:120,
+                        templet:function(d){
+                            var btn ='<a class="layui-btn layui-btn-sm" lay-event="diat">查看详情</a><a class="layui-btn layui-btn-sm" lay-event="edit">编辑</a>'
+                            return btn
+                        },
+                    }
+                ]
+            ],
+            request: {
+                pageName: 'currentIndex' //页码的参数名称，默认：page
+                    ,
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "status_code": res.status_code, //解析接口状态
+                    "message": res.message, //解析提示文本
+                    "count": res.data.total_count, //解析数据长度
+                    "data": res.data.data_list, //解析数据列表
+                    "curr": res.data.page_index
+                };
+            },
+            done: function (res) {
+               
+            }
+        });
+        var editDaitLayer=function(isEdit,obj){
+            // var titles= isEdit?'查看详情':'新增倒班'
+                    layer.open({
+                        type: 1,
+                        title:'新增倒班',
+                        area: ['80%', '80%'],
+                        content: $('#setautopaibanLayer').html(), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        success: function(layero, index){
+                             //新增弹窗相关
+                            laydate.render({
+                                elem: '#StartDate' //指定元素
+                            });
+                            $.fetch({
+                                url:"/gateway/worktime/showuser",
+                                type: 'post',
+                                cb:function(rs){
+                                    var ophtml='';
+                                    if(rs.length ==0){
+                                        ophtml= '<option value="0">暂无审批人</option>'
+                                    }else{
+                                        for(var i =0;i<rs.length;i++){
+                                            ophtml+='<option value="'+rs[i].user_id+'">　'+rs[i].user_name+'</option>'
+                                        }
+                                    }
+                                    $("#ApprovalUserid").html(ophtml);
+                                    form.render();
+                                }
+                            })
+                                
+                                $("a.addDesc").on("click", function () {
+                                    selMemberFun($(this));
+                                });
+                                $("a.emptyDesc").on("click", function () {
+                                    $(this).siblings("ul").html("");
+                                    $(this).siblings("ul").attr("data-val", "");
+                                    $(this).siblings(".layui-textarea").html("");
+                                })
+                                // $.fetch({
+                                //     url:"/gateway/worktimetypeuser/setautopaiban",
+                                //     type: 'post',
+                                //     data:{
+                                //         UserID:27,
+                                //         WorkTimeName:
+                                //     },
+                                //     cb:function(rs){
+                                //         var ophtml='';
+                                //         if(rs.length ==0){
+                                //             ophtml= '<option value="0">暂无审批人</option>'
+                                //         }else{
+                                //             for(var i =0;i<rs.length;i++){
+                                //             ophtml+='<option value="'+rs[i].user_id+'">　'+rs[i].user_name+'</option>'
+                                //             }
+                                //         }
+                                //         $("#workApprUs").html(ophtml);
+                                //         form.render();
+                                //     }}
+                                // )
+                                $.fetch({
+                                    url:"/gateway/worktime/list",
+                                    type: 'post',
+                                    cb:function(rs){
+                                    var ophtml='';
+                                        if(rs.length ==0){
+                                            ophtml= '<option value="0">暂无排班</option>'
+                                        }else{
+                                            ophtml= '<option value=""></option>'                    
+                                            for(var i =0;i<rs.length;i++){
+                                                ophtml+='<option value="'+rs[i].id+'">　'+rs[i].name+'</option>'
+                                            }
+                                        }
+                                        $("#workTypeSel1").html(ophtml);
+                                        $("#workTypeSel2").html(ophtml);
+                                        $("#workTypeSel3").html(ophtml);
+                                        form.render();
+                                    }
+                                });
+                                $("#subworkForm").on("click",function(){
+                                    var UserID=$("#workUserList").attr('data-val');
+                                    var WorkTimeName=$("#WorkTimeName").val();
+                                    var StartDate=$("#StartDate").val();
+                                    var TimeUnitArr=$("#TimeUnit").val().split('_');
+                                    var TimeInterval=TimeUnitArr[1];
+                                    var TimeUnit=TimeUnitArr[0];
+                                    var workTypeSel1=$("#workTypeSel1").val();
+                                    var workTypeSel2=$("#workTypeSel2").val();
+                                    var workTypeSel3=$("#workTypeSel3").val();
+                                    var WorkTimeTypeLoopArr=[workTypeSel1,workTypeSel2,workTypeSel3];
+                                    var ApprovalUserid=$("#ApprovalUserid").val();
+                                    if(!UserID){
+                                        layer.msg('请选择排班用户.');
+                                        return false
+                                    }
+                                    if(!WorkTimeName){
+                                        layer.msg('倒班名称不能为空.');
+                                        return false
+                                    }
+                                    if(!StartDate){
+                                        layer.msg('开始日期不能为空.');
+                                        return false
+                                    }
+                                    if(!workTypeSel1){
+                                        layer.msg('第一项排班类型不能为空.');
+                                        return false
+                                    }
+                                    if(!workTypeSel2&&workTypeSel3){
+                                        layer.msg('请选择第二项排班类型.');
+                                        return false
+                                    }
+                                    var nary = WorkTimeTypeLoopArr.sort();
+                                    for(var i = 0; i < nary.length - 1; i++) {
+                                        if(nary[i] == nary[i + 1] && nary[i]!='') {
+                                            layer.msg('排班类型不能重复.');
+                                            return false
+                                        }
+                                    }
+                                    Array.prototype.clean = function(deleteValue) {  
+                                        for (var i = 0; i < this.length; i++) {  
+                                            if (this[i] == deleteValue) {           
+                                            this.splice(i, 1);//返回指定的元素  
+                                            i--;  
+                                            }  
+                                        }  
+                                        return this;  
+                                    };  
+                                    var WorkTimeTypeLoop=WorkTimeTypeLoopArr.clean("").join(',');
+                                    var prs={
+                                        UserID:UserID,
+                                        WorkTimeName:WorkTimeName,
+                                        StartDate:StartDate,
+                                        TimeInterval:TimeInterval,
+                                        TimeUnit:TimeUnit,
+                                        WorkTimeTypeLoop:WorkTimeTypeLoop,
+                                        ApprovalUserid:ApprovalUserid,
+                                    }
+                                    $.fetch({
+                                        url:"/gateway/worktimetypeuser/setautopaiban",
+                                        type: 'post',
+                                        data:prs,
+                                        cb:function(rs){
+                                            layer.msg("提交成功！");
+                                            layer.close(index);
+                                        }
+                                    });
+                                })
+                        }
+                    })
+                }
+
+        form.on('submit(daobanlistUserFile)', function(data){
+        // $("#daobanlistUserFile").on("click",function(){
+            // console.log($("#departmentId").val(),data)
+            // var status = $("#status").val();
+            data.field.departmentId=(data.field.departmentId== -1?' ':data.field.departmentId)
+            console.log(data.field)
+            daobanlist.reload({
+                where:data.field,
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+            })
+            $("#closeLayer").show();
+        })
+        table.on('tool(daobanlist)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            
+            if(layEvent === 'diat'){ //查看
+                //do somehing
+                $.fetch({
+                    url: "/gateway/worktimetypeuser/daobandetail",
+                    type: 'post',
+                    data:{
+                        AutoKey:data.auto_key, //自动排版key
+                    },
+                    cb:function(rs){
+                        console.log(rs)
+                        var PBUser='';
+                        for(var j = 0; j<rs.user_list.length; j++){
+                            PBUser+='<span class="red">'+rs.user_list[j].name+'，</span>'
+                        }
+                        var PBtype = '';
+                        for(var i = 0; i<rs.work_time_type_arr.length; i++){
+                            PBtype+='<span class="red">'+rs.work_time_type_arr[i].name+'，</span>'
+                        }
+
+                        var htmlS = '<div class="">'
+                            +'<div class="layui-form" action="">'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">倒班用户：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +PBUser
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">倒班名称：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span class="red">'+rs.work_time_name+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">开始日期：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span class="red">'+rs.start_date+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">结束日期：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span class="red">'+rs.end_date+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                    // +'<div class="layui-inline">'
+                                    //     +'<label class="layui-form-label">周期：</label>'
+                                    //     +'<div class="layui-input-block cateID">'
+                                    //         +'<span class="red"></span>'
+                                    //     +'</div>'
+                                    // +'</div>'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">排班类型：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +PBtype
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="layui-inline">'
+                                        +'<label class="layui-form-label">审批人：</label>'
+                                        +'<div class="layui-input-block cateID">'
+                                            +'<span class="red">'+rs.approval_username+'</span>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-input-block">'
+                                        +' <button class="ShutDown layui-btn">关闭</button>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                        +'</div>'
+                        layer.open({
+                            title:'排班详情',
+                            type: 1, 
+                            content:htmlS,
+                            id:'ApprovalList',
+                            area:['60%', 'auto'],
+                            success:function(layero,index){
+                                $(".ShutDown").on("click",function(){
+                                    layer.close(index)
+                                })
+                            }
+                        })
+                    }
+                })
+            } else if(layEvent === 'edit'){ //编辑
+                //
+                // editDaitLayer(true,data);
+            } 
+        });
+        //监听事件
+        table.on('toolbar(daobanlist)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'add':
+                    // var cont=
+                    editDaitLayer(false,'');
+                break;
+            
+            };
+        });
+        // 返回
+        $("#closeLayer").hide();
+        $("#closeLayer").on("click",function(){
+            $(this).hide();
+            form.val("user-file-form", {
+                "ApprovalResult": '-1' // "name": "value"
+                
+            })
+            daobanlist.reload({
+                where:{
+                    ApprovalResult:-1
+                }
+            })
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+   
+    })
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>会议室申请</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+</head>
+
+<body layadmin-themealias="default">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                会议室申请
+                <!-- <div class="layui-inline ml-10 fr">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" id=" .isDay">添加会议室申请</a>
+                </div> -->
+            </div>
+            <div class="layui-card-body">
+                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="user-file-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">年月份：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="MeetingItem">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">会议室：</label>
+                            <div class="layui-input-inline">
+                                <select id="MeetingSelect" name="MeetingSelect" lay-filter="MeetingSelect" lay-search>
+                                    
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button id="RecruiListUserFile" class="layui-btn layui-btn">
+                                <i class="iconfont icon-sousuo"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <table id="ResigTable" lay-filter="ResigTable"></table> -->
+                <div>
+                    <table id="ResigT" lay-filter="ResigTable" class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>星期一</th>
+                                <th>星期二</th>
+                                <th>星期三</th>
+                                <th>星期四</th>
+                                <th>星期五</th>
+                                <th>星期六</th>
+                                <th>星期日</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script id="ResignCont" type="text/html">
+    <div class="layui-card-body">
+        <div class="layui-form" lay-filter="component-form-depar">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">申请人：</label>
+                    <div class="layui-input-inline cateID sqname">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline cateID department">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">会议室：</label>
+                    <div class="layui-input-inline cateID Room">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">开始：</label>
+                    <div class="layui-input-inline cateID StartEcho">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结束：</label>
+                    <div class="layui-input-inline cateID EddEcho">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline cateID rq">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出席人员:</label>
+                <div class="layui-input-block">
+                    <div class="layui-overflow departTable" data-title="设置招聘审批人员">
+                        <ul class="layui-small-static" id="scheduliList" style="display:none;">
+                        </ul>
+                        <textarea name="meetingNames" lay-verify="required" placeholder="点击添加进行编辑" readonly="readonly" class="layui-textarea  layui-input-inline"></textarea>
+                        <a class="addDesc"><i class="iconfont icon-40"></i>添加</a>
+                        <a class="emptyDesc"><i class="iconfont icon-qingkong"></i>清空</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <!-- <div class="layui-inline">
+                    <label class="layui-form-label"><span class="red">*</span>名称：</label>
+                    <div class="layui-input-inline">
+                        <input id="" name="" lay-verify="required" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div> -->
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="red">*</span>会议主题：</label>
+                    <div class="layui-input-inline">
+                        <input id="" name="meetingTopic" lay-verify="required" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">会议目的：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="meetingDesc" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否通知：</label>
+                <div class="layui-input-block" id="Notice">
+                    <input type="radio" name="sex1" value="0" title="否" checked>
+                    <input type="radio" name="sex1" value="1" title="是">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否定期：</label>
+                <div class="layui-input-block" id="regular">
+                    <input type="radio" name="sex" value="0" title="不是" checked>
+                    <input type="radio" name="sex" value="1" title="每周">
+                    <input type="radio" name="sex" value="2" title="每月">
+                    <input type="radio" name="sex" value="3" title="每年">
+                </div>
+            </div>
+            <div class="layui-form-item NoModify">
+                <div class="layui-inline">
+                    <label class="layui-form-label">审批人：</label>
+                    <div class="layui-input-block">
+                        <select name="approvalUserId" lay-filter="approvalUserId" id="approvalUserId">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item Modify">
+                <div class="layui-inline">
+                    <label class="layui-form-label">审批人：</label>
+                    <div class="layui-input-block cateID Approver">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+           <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="subFeek" lay-submit lay-filter="subFeek" class="layui-btn layui-btn">提交</button>
+                    <button id="backFeek" lay-filter="backFeek" class="layui-btn layui-btn-primary layui-btn">关闭</button>
+                     <button id="delete" lay-submit lay-filter="delete" class="layui-btn layui-btn-danger layui-btn">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js?0.10" type="text/javascript"></script>
+<script>
+    layui.config({
+        base: '../../layui/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use(['index', 'laydate', 'table', 'form','upload'], function () {
+        var $ = layui.$,
+            admin = layui.admin
+        var laydate = layui.laydate,
+            form = layui.form,
+            upload = layui.upload,
+            table = layui.table;
+
+
+        var GPMeeting = function(d){
+            // 预约回显
+            $.fetch({
+                url:'/gateway/meeting/reservation',
+                type: 'post',
+                data:d,
+                cb:function(rs){
+                    for(var i in rs){
+                        var MeetingStatus = rs[i].meeting_status==0?"待审批":(rs[i].meeting_status==2?"已预订":"")
+                        var ColorZise = ''
+                        if(rs[i].meeting_status==0){
+                            ColorZise+='gray'
+                        }else if(rs[i].meeting_status==2){
+                            ColorZise+='red'
+                        }
+                        if(rs[i].meeting_date){
+                            $(".t-"+rs[i].meeting_date+"").append('<p class="'+ColorZise+' PClike" data-Uid="'+rs[i].from_uid+'" date-id="'+rs[i].id+'">'+rs[i].start_time+'-'+MeetingStatus+'</p>')
+                        }
+                    }
+                }
+            })
+        }
+        
+        var d = new Date();
+        var year = d.getFullYear();
+        var month = d.getMonth()+1;
+        var month0 = month<10?'0'+month:month
+        var tiemMeeting = laydate.render({ 
+            elem: '#MeetingItem',
+            type: 'month'
+            ,value: year+'-'+month0
+        });
+
+
+        //当前月日历
+        var nowMonth =function(y,m){
+            var  month = parseInt(m-1, 10);
+            //当前月的第一天的日期
+            var firstDay = new Date(y,month,01);
+            //第一天是星期几
+            var weekday = firstDay.getDay();
+            // console.log(weekday)
+            if(weekday==0){
+                weekday=7;
+            }
+            //求当前月一共有多少天
+            //new Date(year,month+1,0) ： month+1是下一个月，day为0代表的是上一个月的最后一天，即我们所需的当前月的最后一天。
+            //getDate（）则返回这个日期对象是一个月中的第几天，我们由最后一天得知这个月一共有多少天
+            var days =new Date(y, month+1, 0).getDate();
+            var res = "<tr>";
+            //输出第一天之前的空格
+            for(var i=1;i<weekday;i++){
+                res+="<td> </td>";
+            }
+            
+
+            for(var j=1;j<=days ;j++){
+                var dayname= j<10? ''+y+'-'+m+'-0'+j+'':''+y+'-'+m+'-'+j+''
+                var classT= 't-'+dayname+'';
+                res += '<td><p class="isDay">'+dayname+'</p><div class="layui-table-Meeting '+classT+'"></div></td>';
+                
+                //如果是周日则换行
+                if(weekday%7 == 0){
+                    weekday = 0;
+                    res += '</tr><tr>';
+                }
+                weekday++;
+            }
+            return res;
+        }
+    
+        $("#ResigT tbody").html(nowMonth(year,month0));
+        
+        
+        // 会议名称
+        $.fetch({
+            url:'/gateway/meetingroom/list',
+            type: 'post',
+            cb:function(rs){
+                var SelectOption = '';
+                for(var i in rs.data_list){
+                    SelectOption+='<option value="'+rs.data_list[i].id+'">'+rs.data_list[i].name+'</option>'
+                }
+                $("#MeetingSelect").html(SelectOption)
+                // 预约回显
+                var meetingRoomId = $("#MeetingSelect").val();
+                var date = $("#MeetingItem").val();
+                console.log(meetingRoomId)
+                if(meetingRoomId==null){
+                    layer.msg("暂无会议室");
+                }else{
+                    GPMeeting({meetingRoomId:meetingRoomId,date:date})
+                }
+                form.render(); 
+            }
+        })
+        
+        // 提交申请
+        $("#ResigT").on('click','.isDay',function(){
+            var dateItem =$(this).html();
+            var RoomVal = $("#MeetingSelect").val();
+            var Room = $("#MeetingSelect").find('option[value="'+RoomVal+'"]').text();
+            console.log(Room,"1111")
+            var ItemLayer = '<div class="layui-card-body">'
+                                +'<div class="layui-form" lay-filter="component-form-depar">'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-block">'
+                                        +'<label class="layui-form-label">开始时间：</label>'
+                                        +'<div class="layui-input-inline cateID sqname">'
+                                            +'<input type="text" lay-verify="required" class="layui-input" id="StartItem" name="StartItem">'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-block">'
+                                        +'<label class="layui-form-label">结束时间：</label>'
+                                        +'<div class="layui-input-inline cateID sqname">'
+                                            +'<input type="text" lay-verify="required" class="layui-input" id="EddItem" name="EddItem">'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<div class="layui-input-block">'
+                                        +'<button id="SubmitItem" lay-submit lay-filter="SubmitItem" class="layui-btn layui-btn">提交</button>'
+                                       +'<button id="ShutDown" lay-filter="ShutDown" class="layui-btn layui-btn-primary layui-btn">关闭</button>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                        +'</div>'
+
+            layer.open({
+                title:'选择时间',
+                type: 1, 
+                content:ItemLayer,
+                area:['atuo', 'atuo'],
+                success:function(layero,index){
+                    // 开始时间
+                    laydate.render({
+                        elem:'#StartItem',
+                        type:'time',
+                    })
+                    // 结束时间
+                    laydate.render({
+                        elem:'#EddItem',
+                        type:'time',
+                    })
+                    form.on('submit(SubmitItem)', function(data){
+                        var meetingRoomId = $("#MeetingSelect").val();
+                        var startTime =dateItem+' '+data.field.StartItem;
+                        var endTime = dateItem+' '+data.field.EddItem;
+                        $.fetch({
+                            url:'/gateway/meeting/checkTime',
+                            type: 'post',
+                            data:{
+                                meetingRoomId:meetingRoomId,
+                                date:dateItem,
+                                startTime:startTime,
+                                endTime:endTime,
+                            },
+                            cb:function(rs){
+                                // layer.msg("检测成功");
+                                layer.close(index);
+                                layer.open({
+                                    title:'会议室申请',
+                                    type: 1, 
+                                    content: $('#ResignCont').html(),
+                                    area:['100%', '100%'],
+                                    success:function(layero,index){
+                                        $("#delete").hide();
+                                        // 隐藏修改审批人
+                                        $(".Modify").hide();
+                                        // 审核人   
+                                        $.fetch({
+                                            url:'/gateway/meetingroom/getApprovalUsers',
+                                            type: 'post',
+                                            // data:{
+                                            //    showAll:1
+                                            // },
+                                            cb:function(rs){
+                                                $("#subFeek").attr('data-step',rs.step);
+                                                var opan =''
+                                                for(const i in rs){
+                                                    opan+='<option value="'+rs[i].id+'">'+rs[i].name+'</option>'
+                                                }
+
+                                                $("#approvalUserId").html(opan);
+                                                form.render('select','component-form-depar'); 
+                                            }
+                                        })
+                                        
+                                        // 参加会议人员
+                                        $(".departTable").on("click", ".addDesc", function () {
+                                            selMemberFun($(this));
+                                        });
+                                        $(".departTable").on("click", ".emptyDesc", function () {
+                                            $(this).siblings("ul").html("");
+                                            $(this).siblings("ul").attr("data-val", "");
+                                            $(this).siblings(".layui-textarea").html("");
+                                        })
+                                        
+                                        form.on('submit(subFeek)', function(data){
+                                            var approvalUid = $("#approvalUserId").val();
+                                            // var meetingRoomId = $("#meetingRoomId").val();
+                                            var meetingUids = $("#scheduliList").attr("data-val");
+                                            $.fetch({
+                                                url:'/gateway/meeting/apply',
+                                                type: 'post',
+                                                data:{
+                                                    meetingTopic:data.field.meetingTopic,
+                                                    meetingUids:meetingUids,
+                                                    meetingNames:data.field.meetingNames,
+                                                    approvalUid:approvalUid,
+                                                    meetingRoomId:meetingRoomId,
+                                                    startTime:startTime,
+                                                    endTime:endTime,
+                                                    date:dateItem,
+                                                    isFix:data.field.sex,
+                                                    isNotify:data.field.sex1,
+                                                    meetingDesc:data.field.meetingDesc
+                                                },
+                                                cb:function(rs){
+                                                    layer.msg("申请成功");
+                                                    layer.close(index);
+                                                    console.log(rs)
+                                                    // 刷新
+                                                    $(".layui-table-Meeting").html('');
+                                                    var meetingRoomId = $("#MeetingSelect").val();
+                                                    var date = $("#MeetingItem").val();
+                                                    if(meetingRoomId==null){
+                                                        layer.msg("暂无会议室");
+                                                    }else{
+                                                        GPMeeting({meetingRoomId:meetingRoomId,date:date})
+                                                    }
+
+                                                }
+                                            })
+                                        })
+                                        form.render()
+                                        $("#backFeek").on('click',function(){
+                                            layer.close(index);
+                                        })
+                                    }
+                                })
+                                 // window.userInfo
+                                $(".sqname span").html(window.userInfo.userName)
+                                $(".department span").html(window.userInfo.dapartName)
+                                $(".rq span").html(dateItem);
+                                $(".StartEcho span").html(data.field.StartItem)
+                                $(".EddEcho span").html(data.field.EddItem)
+                                $(".Room span").html(Room)
+                            }
+                        })
+                    })
+                    form.render();
+
+                    $("#ShutDown").on('click',function(){
+                        layer.close(index);
+                    })
+                }
+            })
+        })
+
+        // 修改删除
+        $("#ResigT").on('click','p.PClike',function(){
+            var meetingId = $(this).attr("date-id");
+            var fromUid = $(this).attr("data-uid");
+            var dateItem =$(this).parent(".layui-table-Meeting").siblings(".isDay").html();
+            $.fetch({
+                url:'/gateway/meeting/detail',
+                type: 'post',
+                data:{
+                    meetingId:meetingId,
+                    fromUid:fromUid,
+                },
+                cb:function(rs){
+                    // console.log(rs,"11111")
+                    var StartEcho = rs.start_time.substr(10,19);
+                    var EddEcho = rs.end_time.substr(10,19);
+                    $.fetch({
+                        url:'/gateway/meetingroom/getApprovalUsers',
+                        type: 'post',
+                        data:{
+                           showAll:1
+                        },
+                        cb:function(re){
+                            // console.log(re,"222222")
+                            var ContID =[];
+                            if(re){
+                                for(var i in re){
+                                    ContID.push(re[i].id);
+                                }
+                            }
+                           
+                            var Traversing = ContID.indexOf(window.userInfo.userId);
+                            var RoomVal = $("#MeetingSelect").val();
+                            var Room2 = $("#MeetingSelect").find('option[value="'+RoomVal+'"]').text();
+                            if(rs.from_uid==window.userInfo.userId||Traversing>-1){
+                                layer.open({
+                                    title:'会议室修改',
+                                    type: 1, 
+                                    content: $('#ResignCont').html(),
+                                    area:['100%', '100%'],
+                                    success:function(layero,index){
+                                        $("#subFeek").html("修改");
+                                        $("#backFeek").hide();
+                                        // 显示修改审批人和隐藏审批人下拉列表
+                                        $(".Modify").show();
+                                        $(".NoModify").hide();
+
+                                        var html = '<li class="pick" data-user="' + rs.meeting_users_id + '">' + rs.meeting_users_names + '</li>';
+                                        var idstr = '' + rs.meeting_users_id + ',';
+                                        var nameText = '' + rs.meeting_users_names;
+
+                                        $("ul#scheduliList").html(html);
+                                        $("ul#scheduliList").attr("data-val", idstr);
+                                        $('ul#scheduliList').siblings(".layui-textarea").html(nameText);
+                                        
+                                        
+                                        $("#Notice input[name=sex1][value=0]").attr("checked", rs.is_notify == 0 ? true : false);
+                                        $("#Notice input[name=sex1][value=1]").attr("checked", rs.is_notify == 1 ? true : false);
+                                        
+                                        $("#regular input[name=sex][value=0]").attr("checked", rs.is_fix == 0 ? true : false);
+                                        $("#regular input[name=sex][value=1]").attr("checked", rs.is_fix == 1 ? true : false);
+                                        $("#regular input[name=sex][value=2]").attr("checked", rs.is_fix == 2 ? true : false);
+                                        $("#regular input[name=sex][value=3]").attr("checked", rs.is_fix == 3 ? true : false);
+
+                                        form.val("component-form-depar", {
+                                            "meetingTopic": rs.meeting_topic // "name": "value"
+                                            ,"meetingDesc": rs.meeting_desc
+                                            // ,"sex1": rs.is_notify
+                                            // ,"sex": rs.is_fix
+                                        })
+                                        // 参加会议人员
+                                        $(".departTable").on("click", ".addDesc", function () {
+                                            selMemberFun($(this));
+                                        });
+                                        $(".departTable").on("click", ".emptyDesc", function () {
+                                            $(this).siblings("ul").html("");
+                                            $(this).siblings("ul").attr("data-val", "");
+                                            $(this).siblings(".layui-textarea").html("");
+                                        })
+                                        // 修改
+                                        form.on('submit(subFeek)', function(data){
+                                            var meetingUids = $("#scheduliList").attr("data-val").slice(0,-1);
+                                            layer.confirm('确定修改?', function () {
+                                                $.fetch({
+                                                    url:'/gateway/meeting/editApply',
+                                                    type: 'post',
+                                                    data:{
+                                                        meetingId:meetingId,
+                                                        meetingTopic:data.field.meetingTopic,
+                                                        meetingUids:meetingUids,
+                                                        meetingNames:data.field.meetingNames,
+                                                        isFix:data.field.sex,
+                                                        isNotify:data.field.sex1,
+                                                        meetingDesc:data.field.meetingDesc
+                                                    },
+                                                    cb:function(rs){
+                                                        var DataCont=''
+                                                        for(var d=0; d<rs.length;d++){
+                                                            if(rs[d]!=''){
+                                                                DataCont+=rs[d]
+                                                            }
+                                                        }
+                                                        console.log(DataCont)
+                                                        layer.msg("修改成功"+' '+DataCont);
+                                                        layer.close(index);
+                                                        // 刷新
+                                                        $(".layui-table-Meeting").html('');
+                                                        var meetingRoomId = $("#MeetingSelect").val();
+                                                        var date = $("#MeetingItem").val();
+                                                        if(meetingRoomId==null){
+                                                            layer.msg("暂无会议室");
+                                                        }else{
+                                                            GPMeeting({meetingRoomId:meetingRoomId,date:date})
+                                                        }
+
+                                                    }
+                                                })
+                                            })
+                                        })
+                                        // 删除
+                                        form.on('submit(delete)', function(data){
+                                            layer.confirm('确定删除?', function () {
+                                               $.fetch({
+                                                    url:'/gateway/meeting/del',
+                                                    type: 'post',
+                                                    data:{
+                                                        meetingId:meetingId,
+                                                        fromUid:rs.from_uid
+                                                    },
+                                                    cb:function(rs){
+                                                        layer.msg("删除成功");
+                                                        layer.close(index);
+                                                        // 刷新
+                                                        $(".layui-table-Meeting").html('');
+                                                        var meetingRoomId = $("#MeetingSelect").val();
+                                                        var date = $("#MeetingItem").val();
+                                                        if(meetingRoomId==null){
+                                                            layer.msg("暂无会议室");
+                                                        }else{
+                                                            GPMeeting({meetingRoomId:meetingRoomId,date:date})
+                                                        }
+                                                    }
+                                                })
+                                            })
+                                        })
+                                        form.render();
+                                    }
+                                })
+                            }else{
+                                layer.open({
+                                    title:'会议室查看',
+                                    type: 1, 
+                                    content: $('#ResignCont').html(),
+                                    area:['100%', '100%'],
+                                    success:function(layero,index){
+                                        var html = '<li class="pick" data-user="' + rs.meeting_users_id + '">' + rs.meeting_users_names + '</li>';
+                                        var idstr = '' + rs.meeting_users_id + ',';
+                                        var nameText = '' + rs.meeting_users_names + ';';
+                                        $("ul#scheduliList").html(html);
+                                        $("ul#scheduliList").attr("data-val", idstr);
+                                        $('ul#scheduliList').siblings(".layui-textarea").html(nameText);
+                                        
+                                        $("#Notice input[name=sex1][value=0]").attr("checked", rs.is_notify == 0 ? true : false);
+                                        $("#Notice input[name=sex1][value=1]").attr("checked", rs.is_notify == 1 ? true : false);
+                                        
+                                        $("#regular input[name=sex][value=0]").attr("checked", rs.is_fix == 0 ? true : false);
+                                        $("#regular input[name=sex][value=1]").attr("checked", rs.is_fix == 1 ? true : false);
+                                        $("#regular input[name=sex][value=2]").attr("checked", rs.is_fix == 2 ? true : false);
+                                        $("#regular input[name=sex][value=3]").attr("checked", rs.is_fix == 3 ? true : false);
+
+                                        form.val("component-form-depar", {
+                                            "meetingTopic": rs.meeting_topic // "name": "value"
+                                            ,"meetingDesc": rs.meeting_desc
+                                            // ,"sex1": rs.isNotify
+                                            // ,"sex": rs.is_fix
+                                        })
+                                        // 显示修改审批人和隐藏审批人下拉列表
+                                        $(".Modify").show();
+                                        $(".NoModify").hide();
+                                        form.render();
+                                        $("#backFeek").on('click',function(){
+                                            layer.close(index);
+                                        })
+                                    }
+                                })
+                                $("#delete").hide();
+                                $("#subFeek").hide();
+                            }
+                            
+                            var approvalName ="";
+                            if(rs.approval){
+                                rs.approval.forEach(v => {
+                                    approvalName+=v.approval_name
+                                });
+                            }
+                            $(".Approver span").html(approvalName)
+                            $(".sqname span").html(rs.from_uname)
+                            $(".department span").html(rs.dept_name)
+                            $(".rq span").html(dateItem);
+                            $(".StartEcho span").html(StartEcho)
+                            $(".EddEcho span").html(EddEcho)
+                            $(".Room span").html(Room2)
+                        }
+                    })
+                }
+            })
+        })
+
+         // 筛选
+        $("#RecruiListUserFile").on("click",function(){
+            var tiem = $("#MeetingItem").val();
+            tiem = tiem.split('-');
+            var year1 = tiem[0],month1 = tiem[1];
+            $("#ResigT tbody").html(nowMonth(year1,month1));
+
+            // 筛选预约回显
+            var meetingRoomId = $("#MeetingSelect").val();
+            var date = $("#MeetingItem").val();
+            if(meetingRoomId==null){
+                layer.msg("暂无会议室");
+            }else{
+                GPMeeting({meetingRoomId:meetingRoomId,date:date})
+            }
+            
+        })
+    })
+</script>
+
+</html>
