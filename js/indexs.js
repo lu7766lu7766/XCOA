@@ -153,7 +153,7 @@ $(function () {
                             //获取cookie中 语言变量
                             // $.menuInit(data.data,language);
                             alert("登录已失效，请重新登录！")
-                            window.location.href = 'login.html';
+                            // window.location.href = 'login.html';
                         } else if (data.status_code != 200) {
                             alert(data.message);
                         }
@@ -359,9 +359,9 @@ $(function () {
                 } else if (data.status_code === 400 && data.message == "未登录") {
                     // 登陆错误
                     alert("登录已失效，请重新登录。");
-                    window.location.href = "login.html"
+                    // window.location.href = "login.html"
                 } else {
-                    window.location.href = 'login.html';
+                    // window.location.href = 'login.html';
                 }
             }
         });
