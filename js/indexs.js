@@ -28,7 +28,7 @@ $(function () {
     // window.urls = "http://oa-company.com";
     // window.urls = "http://oa-group.com";
     // window.urls = "http://oa-company-699.com";
-    window.urls = "http://www.oa.video88.cc";
+    window.urls = "http://api.oa.video88.cc";
     // window.urls =   window.location.host; //
     layui.config({
         base: '../layui/' //静态资源所在路径
