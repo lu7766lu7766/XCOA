@@ -1,4 +1,4 @@
-//登录成功后 导航方法   
+//登录成功后 导航方法
 // setInterval("sessionId()",5000);
 // function sessionId()
 // {
@@ -28,7 +28,7 @@ $(function () {
     // window.urls = "http://oa-company.com";
     // window.urls = "http://oa-group.com";
     // window.urls = "http://oa-company-699.com";
-    window.urls = "";
+    window.urls = "http://www.oa.video88.cc";
     // window.urls =   window.location.host; //
     layui.config({
         base: '../layui/' //静态资源所在路径
@@ -95,12 +95,12 @@ $(function () {
                         'Cache-Control': 'no-cache'
                     },
                     'success': function (data) {
-                        // console.log(data.data.msgUnread)                   
+                        // console.log(data.data.msgUnread)
                         if (data.status_code == 200) {
                             if (data.data.msgUnread != null && data.data.msgUnread == 0) {
                                 $("#messageDo").addClass('layui-hide').html(data.data.msgUnread); ///实时更新未读消息
                             } else {
-                                $("#messageDo").removeClass('layui-hide').html(data.data.msgUnread); ///实时更新未读消息                            
+                                $("#messageDo").removeClass('layui-hide').html(data.data.msgUnread); ///实时更新未读消息
                             }
                             userInfo.dapartId = data.data.departmentId;
                             userInfo.userId = data.data.id;
@@ -178,7 +178,7 @@ $(function () {
         // var userName =getUrlParms("user");
 
         $("#logOut").click(function () {
-            // 
+            //
             // var prame = {
             $.ajax({
                 url: "" + urls + "/gateway/logout",
@@ -242,9 +242,9 @@ $(function () {
 
                 if (key == "leftNav") {
                     for (var i = 0; i < menu.menuData[key].length; i++) { //顶部切换的             // console.log(topNav);
-                        // console.log(menu.menuData[key][i]);  
+                        // console.log(menu.menuData[key][i]);
                         for (var k = 0; k < menu.menuData[key][i].length; k++) {
-                            // menu.lNavHtml +='<dl class="layui-nav-child">'        
+                            // menu.lNavHtml +='<dl class="layui-nav-child">'
                             if (menu.menuData[key][i][k].children && menu.menuData[key][i][k].children.length > 0) { //包含子导航
                                 menu.lNavHtml +='<dd class="parent_' + menu.menuData[key][i][k].parent_id +' "><a >' +menu.menuData[key][i][k].display_name +'</a><dl class="layui-nav-child">'
                                 for (var j = 0; j < menu.menuData[key][i][k].children.length; j++) {
@@ -257,7 +257,7 @@ $(function () {
                                     }else{
                                         menu.lNavHtml += '<dd class=" parent_' + menu.menuData[key][i][k].parent_id + '_' + menu.menuData[key][i][k].children[j].id +'"><a class="noChild"   lay-href="' + menu.menuData[key][i][k].children[j].static_html +'">' + menu.menuData[key][i][k].children[j].display_name +'</a></dd>'
                                     }
-                                    
+
                                 }
                                 menu.lNavHtml += '</dl></dd>'
                             } else {
@@ -279,7 +279,7 @@ $(function () {
                     }
                 }
             });
-            //静态导航 
+            //静态导航
 
             // var ulHtml = '<li><i class="iconfont icon-jiantou pos_a"></i><a href="javascript:void(0)" data-url="no.html">工作流</a></li> \
             // <li><i class="iconfont icon-jiantou pos_a"></i><a href="javascript:void(0)" data-url="no.html">行政事务</a></li> \
@@ -323,7 +323,7 @@ $(function () {
             //     if( $(this).parent("li").hasClass("active") ){
             //         $(this).parent("li").removeClass("active");
             //     }else{
-            //         $(this).parent("li").addClass("active");   
+            //         $(this).parent("li").addClass("active");
             //         // console.log($(this),222)
 
             //     }
@@ -333,7 +333,7 @@ $(function () {
             //     if($(this).parent("li").hasClass("active")){
             //         $(this).parent("li").removeClass("active");
             //     }else{
-            //         $(this).parent("li").addClass("active");        
+            //         $(this).parent("li").addClass("active");
             //     }
 
             // })

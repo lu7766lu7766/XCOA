@@ -1,7 +1,7 @@
 
-window.urls = ""
+window.urls = "http://www.oa.video88.cc"
 // window.urls = "http://10.20.11.152";
-// 
+//
 // window.urls = "http://oa-company.com"
 // window.urls = "http://oa-group.com"
 // window.urls = "http://oa-company-699.com";
@@ -39,10 +39,10 @@ try{
                     type: 'post',
                     data: param,
 					async: async_,
-                    beforeSend: function () {		
+                    beforeSend: function () {
                         $("#btnLogin").attr("disabled", true);
                     },
-                    complete: function () {	
+                    complete: function () {
                         $("#btnLogin").attr("disabled", false);
                     },
                     'timeout': _user_.ajax_timeout,
@@ -64,7 +64,7 @@ try{
                     {
                        // 登陆错误
                        alert(data.message);
-                        // 
+                        //
                     }
                 });
     }
@@ -82,4 +82,4 @@ $("body").keydown(function() {
     if (event.keyCode == "13") {//keyCode=13是回车键
         $("#btnLogin").click();
     }
-});    
+});
