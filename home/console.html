@@ -1,553 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>首页</title>
-    <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
-    <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
-    <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
-    <link rel="stylesheet" type="text/css" href="../../css/wang.css"> 
-    <script src="../../js/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>首页</title>
+  <link rel="stylesheet" type="text/css" href="../../css/iconFont/iconfont.css">
+  <link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+  <link rel="stylesheet" type="text/css" href="../../layui/css/admin.css">
+  <link rel="stylesheet" type="text/css" href="../../css/wang.css">
+  <script src="../../js/jquery.min.js"></script>
 </head>
 <body layadmin-themealias="default">
-    <div class="layui-fluid">
-            <div class="layui-row  layui-col-space15">
-                <div class="layui-col-md8">
-                    <div class="layui-card">
-                        <div class="layui-card-header">快捷方式</div>
-                        <div class="layui-card-body">
-                            <div class="layui-carousel layadmin-carousel layadmin-shortcut" id="test1">
-                                <div carousel-item id="leftNavKJCD">
-                                    <!-- <ul class="layui-row layui-col-space10 layui-this">
-                                        <li class="layui-col-xs2">
-                                            <a lay-href="home/homepage1.html"></a>
-                                            <i></i><cite>主页一</cite>
-                                        </li>
-                                    </ul>
-                                    <ul class="layui-row layui-col-space10">条目2</ul>
-                                    <ul>条目3</ul>
-                                    <ul>条目4</ul>
-                                    <ul>条目5</ul> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md4">
-                    <div class="layui-card">
-                        <div class="layui-card-header">代办事项</div>
-                        <div class="layui-card-body">
-                            <div class="Nobody">
-                                <p>开发中</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md6 isCompanShow" style="display:none;">
-                        <div class="layui-card">
-                            <div class="layui-card-header">内部邮件</div>
-                            <!-- <div class="layui-card-body"> -->
-                                <div class="layui-tab layui-tab-card" lay-filter="docDemoTabBrief">
-                                    <ul class="layui-tab-title">
-                                        <li class="layui-this">未读邮件</li>
-                                        <li>已读邮件</li>
-                                        <li>已删除</li>
-                                    </ul>
-                                    <div class="layui-tab-content">
-                                        <div class="layui-tab-item layui-show">
-                                            <table class="layui-table" style="margin-top: 0" id="mailNoReadBox" lay-filter="mailNoReadBox"></table>
-                                        </div>
-                                        <div class="layui-tab-item ">
-                                            <table class="layui-table" style="margin-top: 0" id="mailIsReadBox" lay-filter="mailIsReadBox"></table>                                            
-                                        </div>
-                                        <div class="layui-tab-item ">
-                                            <table class="layui-table" style="margin-top: 0" id="maildelBox" lay-filter="maildelBox"></table>                                          
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- <div class="Nobody">
-                                    <p>开发中</p>
-                                </div> -->
-                            <!-- </div> -->
-                        </div>
-                       
-                </div>
-                <div class="layui-col-md6 isCompanShow" style="display:none;">
-                        <div class="layui-card">
-                            <div class="layui-card-header">公告消息</div>
-                            <div class="layui-card-body">
-                                <table id="newNotice" class="" lay-filter="newNotice"></table>
-
-                            </div>
-                        </div>
-                </div>
+<div class="layui-fluid">
+  <div class="layui-row  layui-col-space15">
+    <div class="layui-col-md8">
+      <div class="layui-card">
+        <div class="layui-card-header">快捷方式</div>
+        <div class="layui-card-body">
+          <div class="layui-carousel layadmin-carousel layadmin-shortcut" id="test1">
+            <div carousel-item id="leftNavKJCD">
+              <!-- <ul class="layui-row layui-col-space10 layui-this">
+                  <li class="layui-col-xs2">
+                      <a lay-href="home/homepage1.html"></a>
+                      <i></i><cite>主页一</cite>
+                  </li>
+              </ul>
+              <ul class="layui-row layui-col-space10">条目2</ul>
+              <ul>条目3</ul>
+              <ul>条目4</ul>
+              <ul>条目5</ul> -->
             </div>
-        
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">代办事项</div>
+        <div class="layui-card-body">
+          <div class="Nobody">
+            <p>开发中</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md6 isCompanShow" style="display:none;">
+      <div class="layui-card">
+        <div class="layui-card-header">内部邮件</div>
+        <!-- <div class="layui-card-body"> -->
+        <div class="layui-tab layui-tab-card" lay-filter="docDemoTabBrief">
+          <ul class="layui-tab-title">
+            <li class="layui-this">未读邮件</li>
+            <li>已读邮件</li>
+            <li>已删除</li>
+          </ul>
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+              <table class="layui-table" style="margin-top: 0" id="mailNoReadBox" lay-filter="mailNoReadBox"></table>
+            </div>
+            <div class="layui-tab-item ">
+              <table class="layui-table" style="margin-top: 0" id="mailIsReadBox" lay-filter="mailIsReadBox"></table>
+            </div>
+            <div class="layui-tab-item ">
+              <table class="layui-table" style="margin-top: 0" id="maildelBox" lay-filter="maildelBox"></table>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="Nobody">
+            <p>开发中</p>
+        </div> -->
+        <!-- </div> -->
+      </div>
+
+    </div>
+    <div class="layui-col-md6 isCompanShow" style="display:none;">
+      <div class="layui-card">
+        <div class="layui-card-header">公告消息</div>
+        <div class="layui-card-body">
+          <table id="newNotice" class="" lay-filter="newNotice"></table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 </body>
 <script src="../../layui/layui.js"></script>
 <script src="../../js/common.js?v=20190416"></script>
 
 <script>
-$(function(){
+  $(function ()
+  {
     layui.config({
-        base: '../../layui/' //静态资源所在路径
+      base: '../../layui/', //静态资源所在路径
     }).extend({
-        index: 'index' //主入口模块
-    }).use(['index','form','carousel','table'], function(){
-        var $ = layui.$
-        ,admin = layui.admin
-        ,element = layui.element
-        ,layer = layui.layer
-        ,table = layui.table
-        ,carousel=layui.carousel
-        $.ajax({
-            url:"/gateway/menu/list",
-            dataType: 'json',
-            type: 'post',
-            'success': function (data) {
-                if (data.status_code == 200 && data.message == "OK"){
-                    //获取cookie中 语言变量
-                    rs=data.data;
-                    var khtmlArr =[];
-                // console.log(rs.leftNav);
-                    for(var i=0;i<rs.leftNav.length;i++){
-                        for(var k=0;k<rs.leftNav[i].length;k++){
+      index: 'index', //主入口模块
+    }).use(['index', 'form', 'carousel', 'table'], function ()
+    {
+      var $ = layui.$
+        , admin = layui.admin
+        , element = layui.element
+        , layer = layui.layer
+        , table = layui.table
+        , carousel = layui.carousel
+      $.ajax({
+        url: urls + '/gateway/menu/list',
+        dataType: 'json',
+        type: 'post',
+        'success': function (data)
+        {
+          if (data.status_code == 200 && data.message == 'OK')
+          {
+            //获取cookie中 语言变量
+            rs = data.data
+            var khtmlArr = []
+            // console.log(rs.leftNav);
+            for (var i = 0; i < rs.leftNav.length; i++)
+            {
+              for (var k = 0; k < rs.leftNav[i].length; k++)
+              {
 
-                            if(rs.leftNav[i][k].children&&rs.leftNav[i][k].children.length>0){
-                                for(var j=0;j<rs.leftNav[i][k].children.length;j++){
-                                    // console.log(rs.leftNav[i][k].children);
-                                    var khtml ='<li class="layui-col-xs3">'
-                                                +'<a lay-href="'+rs.leftNav[i][k].children[j].static_html+'">'
-                                                +'<i class="layui-icon layui-icon-layer"></i><cite>'+rs.leftNav[i][k].children[j].display_name+'</cite></a>'
-                                            +'</li>'
-                                    khtmlArr.push(khtml);
-                                    // console.log(khtmlArr);
-                                }
-                            }else{
-                                var khtml ='<li class="layui-col-xs3">'
-                                            +'<a lay-href="'+rs.leftNav[i][k].static_html+'">'
-                                            +'<i class="layui-icon layui-icon-layer"></i><cite>'+rs.leftNav[i][k].display_name+'</cite></a>'
-                                        +'</li>'
-                                khtmlArr.push(khtml);
-                                // console.log(khtmlArr);
-                            }
-
-                        }
-
-                    }
+                if (rs.leftNav[i][k].children && rs.leftNav[i][k].children.length > 0)
+                {
+                  for (var j = 0; j < rs.leftNav[i][k].children.length; j++)
+                  {
+                    // console.log(rs.leftNav[i][k].children);
+                    var khtml = '<li class="layui-col-xs3">'
+                      + '<a lay-href="'
+                      + rs.leftNav[i][k].children[j].static_html
+                      + '">'
+                      + '<i class="layui-icon layui-icon-layer"></i><cite>'
+                      + rs.leftNav[i][k].children[j].display_name
+                      + '</cite></a>'
+                      + '</li>'
+                    khtmlArr.push(khtml)
                     // console.log(khtmlArr);
-                    var sleHtml='<ul class="layui-row layui-col-space10">';
-                    for(var x=0;x<khtmlArr.length;x++){
-                        sleHtml+= khtmlArr[x];
-                        if(x%8===7&&(x!=khtmlArr.length-1)){
-                            sleHtml+='</ul><ul class="layui-row layui-col-space10">'
-                        }else if(x==khtmlArr.length-1){
-                            sleHtml+='</ul>'
-                        }
-                    }
-                    $("#leftNavKJCD").html(sleHtml);
-                    carousel.render({
-                        elem: '#test1'
-                        ,width: '100%' //设置容器宽度
-                        ,arrow: 'none' //始终显示箭头
-                        ,autoplay:false
-                        ,indicator:'inside'
-                        //,anim: 'updown' //切换动画方式
-                    });
-                
-                }else if(data.status_code===400&&data.message == "未登录"){
-                    // 登陆错误
-                    alert("登录已失效，请重新登录。");
-                    window.location.href="login.html"	
-                }else{
-                    window.location.href='login.html';
+                  }
                 }
-            }
-        });
+                else
+                {
+                  var khtml = '<li class="layui-col-xs3">'
+                    + '<a lay-href="'
+                    + rs.leftNav[i][k].static_html
+                    + '">'
+                    + '<i class="layui-icon layui-icon-layer"></i><cite>'
+                    + rs.leftNav[i][k].display_name
+                    + '</cite></a>'
+                    + '</li>'
+                  khtmlArr.push(khtml)
+                  // console.log(khtmlArr);
+                }
 
-        // console.dir(window.parent.userInfo,"2-2-2-2-2")
-        // 这是最新的js代码
-        // console.log(window.parent.userInfo.type,"2222")
-        var  Userinfo = window.parent.userInfo;
-        // console.log(window.parent.userInfo.type,"22222")
-        var flag = true;
-        $(".isCompanShow").hide();
-        window.parent.userInfo = new Proxy(window.parent.userInfo, {
-            get : function( target , prop ) {
-                return target[prop];
+              }
+
+            }
+            // console.log(khtmlArr);
+            var sleHtml = '<ul class="layui-row layui-col-space10">'
+            for (var x = 0; x < khtmlArr.length; x++)
+            {
+              sleHtml += khtmlArr[x]
+              if (x % 8 === 7 && (x != khtmlArr.length - 1))
+              {
+                sleHtml += '</ul><ul class="layui-row layui-col-space10">'
+              }
+              else if (x == khtmlArr.length - 1)
+              {
+                sleHtml += '</ul>'
+              }
+            }
+            $('#leftNavKJCD').html(sleHtml)
+            carousel.render({
+              elem: '#test1'
+              , width: '100%' //设置容器宽度
+              , arrow: 'none' //始终显示箭头
+              , autoplay: false
+              , indicator: 'inside',
+              //,anim: 'updown' //切换动画方式
+            })
+
+          }
+          else if (data.status_code === 400 && data.message == '未登录')
+          {
+            // 登陆错误
+            alert('登录已失效，请重新登录。')
+            window.location.href = 'login.html'
+          }
+          else
+          {
+            window.location.href = 'login.html'
+          }
+        },
+      })
+
+      // console.dir(window.parent.userInfo,"2-2-2-2-2")
+      // 这是最新的js代码
+      // console.log(window.parent.userInfo.type,"2222")
+      var Userinfo = window.parent.userInfo
+      // console.log(window.parent.userInfo.type,"22222")
+      var flag = true
+      $('.isCompanShow').hide()
+      window.parent.userInfo = new Proxy(window.parent.userInfo, {
+        get: function (target, prop)
+        {
+          return target[prop]
+        },
+        set: function (target, prop, value)
+        {
+          target[prop] = value
+          let toIndex = window.setTimeout(() =>
+          {
+            if (prop == 'type' && flag == true)
+            {
+              if (value == 'company')
+              {
+                flag = false
+                renderTable()
+                $('.isCompanShow').show()
+              }
+              else
+              {
+                flag = false
+                $('.isCompanShow').remove()
+              }
+            }
+            window.clearTimeout(toIndex)
+          }, 100)
+        },
+      })
+
+      function renderTable()
+      {
+        // console.log("231123")
+        var mailNoReadBox = table.render({
+          elem: '#mailNoReadBox',
+          id: 'mailNoReadBox',
+          url: '/gateway/receive/list',//
+          contentType: 'application/json',
+          method: 'post',
+          where: {
+            status: 0,
+          },
+          page: true, //开启分页
+          // limits:false,
+          limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 500, 1000, 5000],
+          toolbar: false,
+          loading: true,
+          text: {
+            none: '暂无数据', //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+          },
+          toolbar: '',
+          defaultToolbar: '',
+          cols: [
+            [ //标题栏
+              {
+                sort: true,
+                field: 'from_name',
+                title: '发件人',
+                minWidth: 120,
+              }, {
+              sort: true,
+              field: 'subject',
+              title: '主题',
+              width: 100,
+            }, {
+              sort: true,
+              field: 'apply_time',
+              title: '附件',
+              // width: 180,
+              templet: function (d)
+              {
+                var attachs = ''
+                if (d.attach && d.attach.length > 0)
+                {
+                  for (var k = 0; k < d.attach.length; k++)
+                  {
+                    attachs += '<p data-id="' + d.attach[k].attachId + '">' + d.attach[k].original_name + '</p>'
+                  }
+                }
+                else
+                {
+                  attachs = '无附件'
+                }
+                return attachs
+              },
+            }, {
+              sort: true,
+              field: 'updated_at',
+              title: '发送时间',
+              minWidth: 100,
+            }, {
+              sort: true,
+              field: 'attachSize',
+              title: '附件大小',
+              minWidth: 100,
             },
-            set : function( target, prop, value) {
-                target[prop] = value;
-                let toIndex = window.setTimeout( () => {
-                    if( prop == 'type' && flag == true ) {
-                        if( value=='company'){
-                            flag=false;
-                            renderTable();
-                            $(".isCompanShow").show();
-                        }else{
-                            flag=false
-                            $(".isCompanShow").remove();
-                        }
-                    } 
-                    window.clearTimeout(toIndex)
-                },100)
+            ],
+          ],
+          request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,
+            limitName: 'pageSize', //每页数据量的参数名，默认：limit
+          },
+          parseData: function (res)
+          { //res 即为原始返回的数据
+            return {
+              'status_code': res.status_code, //解析接口状态
+              'message': res.message, //解析提示文本
+              'count': res.data.total_count, //解析数据长度
+              'data': res.data.data_list, //解析数据列表
+              'curr': res.data.page_index,
             }
-        });
+          },
+          done: function ()
+          {
+          },
+        })
+        // table.resize('mailNoReadBox');
 
-        function renderTable(){
-            // console.log("231123")
-            var mailNoReadBox = table.render({
-                elem: '#mailNoReadBox',
-                id:'mailNoReadBox',
-                url:"/gateway/receive/list",//
-                contentType: 'application/json',
-                method: 'post',
-                where: {
-                    status: 0,
-                },
-                page: true, //开启分页
-                // limits:false,
-                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
-                toolbar:false,
-                loading: true,
-                text: {
-                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                },
-                toolbar:'',
-                defaultToolbar: '',
-                cols: [
-                    [ //标题栏
-                        {sort: true,
-                            field: 'from_name',
-                            title: '发件人',
-                            minWidth: 120
-                        },{sort: true,
-                            field: 'subject',
-                            title: '主题',
-                            width: 100
-                        }, {sort: true,
-                            field: 'apply_time',
-                            title: '附件',
-                            // width: 180,
-                            templet:function(d){
-                                var attachs ='';                            
-                                if(d.attach&&d.attach.length>0){
-                                    for(var k=0;k<d.attach.length;k++){
-                                        attachs+='<p data-id="'+d.attach[k].attachId+'">'+d.attach[k].original_name+'</p>'    
-                                    }
-                                }else{
-                                    attachs='无附件';
-                                }
-                                return attachs
-                            }
-                        },{sort: true,
-                            field: 'updated_at',
-                            title: '发送时间',
-                            minWidth: 100,
-                        },{sort: true,
-                            field: 'attachSize',
-                            title: '附件大小',
-                            minWidth: 100,
-                        }
-                    ]
-                ],
-                request: {
-                    pageName: 'currentIndex' //页码的参数名称，默认：page
-                        ,
-                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
-                },
-                parseData: function (res) { //res 即为原始返回的数据
-                    return {
-                        "status_code": res.status_code, //解析接口状态
-                        "message": res.message, //解析提示文本
-                        "count": res.data.total_count, //解析数据长度
-                        "data": res.data.data_list, //解析数据列表
-                        "curr": res.data.page_index
-                    };
-                },
-                done:function(){
+        var mailIsReadBox = table.render({
+          elem: '#mailIsReadBox',
+          url: '/gateway/receive/list',//
+          id: 'mailIsReadBox',
+          contentType: 'application/json',
+          method: 'post',
+          where: {
+            status: 1,
+          },
+          page: true, //开启分页
+          // limits:false,
+          limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 500, 1000, 5000],
+          toolbar: false,
+          loading: true,
+          text: {
+            none: '暂无数据', //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+          },
+          toolbar: '',
+          defaultToolbar: '',
+          cols: [
+            [ //标题栏
+              {
+                sort: true,
+                field: 'from_name',
+                title: '发件人',
+                minWidth: 120,
+              }, {
+              sort: true,
+              field: 'subject',
+              title: '主题',
+              width: 100,
+            }, {
+              sort: true,
+              field: 'apply_time',
+              title: '附件',
+              // width: 180,
+              templet: function (d)
+              {
+                var attachs = ''
+                if (d.attach && d.attach.length > 0)
+                {
+                  for (var k = 0; k < d.attach.length; k++)
+                  {
+                    attachs += '<p data-id="' + d.attach[k].attachId + '">' + d.attach[k].original_name + '</p>'
+                  }
                 }
-            })
-            // table.resize('mailNoReadBox');
-            
-            var mailIsReadBox = table.render({
-                elem: '#mailIsReadBox',
-                url:"/gateway/receive/list",//
-                id:'mailIsReadBox',            
-                contentType: 'application/json',
-                method: 'post',
-                where: {
-                    status:1,
-                },
-                page: true, //开启分页
-                // limits:false,  
-                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
-                toolbar:false,
-                loading: true,
-                text: {
-                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                },
-                toolbar:'',
-                defaultToolbar: '',
-                cols: [
-                    [ //标题栏
-                        {sort: true,
-                            field: 'from_name',
-                            title: '发件人',
-                            minWidth: 120
-                        },{sort: true,
-                            field: 'subject',
-                            title: '主题',
-                            width: 100
-                        }, {sort: true,
-                            field: 'apply_time',
-                            title: '附件',
-                            // width: 180,
-                            templet:function(d){
-                                var attachs ='';                            
-                                if(d.attach&&d.attach.length>0){
-                                    for(var k=0;k<d.attach.length;k++){
-                                        attachs+='<p data-id="'+d.attach[k].attachId+'">'+d.attach[k].original_name+'</p>'    
-                                    }
-                                }else{
-                                    attachs='无附件';
-                                }
-                                return attachs
-                            }
-                        },{sort: true,
-                            field: 'updated_at',
-                            title: '发送时间',
-                            minWidth: 100,
-                        },{sort: true,
-                            field: 'attachSize',
-                            title: '附件大小',
-                            minWidth: 100,
-                        }
-                    ]
-                ],
-                request: {
-                    pageName: 'currentIndex' //页码的参数名称，默认：page
-                        ,
-                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
-                },
-                parseData: function (res) { //res 即为原始返回的数据
-                    return {
-                        "status_code": res.status_code, //解析接口状态
-                        "message": res.message, //解析提示文本
-                        "count": res.data.total_count, //解析数据长度
-                        "data": res.data.data_list, //解析数据列表
-                        "curr": res.data.page_index
-                    };
-                },
-            })
-        
-            var maildelBox = table.render({
-                elem: '#maildelBox',
-                url:"/gateway/receive/list",//
-                contentType: 'application/json',
-                id:'maildelBox',                        
-                method: 'post',
-                where: {
-                    status: 2,
-                },
-                page: true, //开启分页
-                // limits:false,
-                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
-                toolbar:false,
-                loading: true,
-                text: {
-                    none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                },
-                toolbar:'',
-                defaultToolbar: '',
-                cols: [
-                    [ //标题栏
-                        {sort: true,
-                            field: 'from_name',
-                            title: '发件人',
-                            minWidth: 120
-                        },{sort: true,
-                            field: 'subject',
-                            title: '主题',
-                            width: 100
-                        }, {sort: true,
-                            field: 'apply_time',
-                            title: '附件',
-                            // width: 180,
-                            templet:function(d){
-                                var attachs ='';
-                                if(d.attach&&d.attach.length>0){
-                                    for(var k=0;k<d.attach.length;k++){
-                                        attachs+='<p data-id="'+d.attach[k].attachId+'">'+d.attach[k].original_name+'</p>'    
-                                    }
-                                }else{
-                                    attachs='无附件';
-                                }
-                                return attachs
-                            }
-                        },{sort: true,
-                            field: 'updated_at',
-                            title: '发送时间',
-                            minWidth: 100,
-                        },{sort: true,
-                            field: 'attachSize',
-                            title: '附件大小',
-                            minWidth: 100,
-                        }
-                    ]
-                ],
-                request: {
-                    pageName: 'currentIndex' //页码的参数名称，默认：page
-                        ,
-                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
-                },
-                parseData: function (res) { //res 即为原始返回的数据
-                    return {
-                        "status_code": res.status_code, //解析接口状态
-                        "message": res.message, //解析提示文本
-                        "count": res.data.total_count, //解析数据长度
-                        "data": res.data.data_list, //解析数据列表
-                        "curr": res.data.page_index
-                    };
-                },
-            })
-            var newNotice = table.render({
-                elem: '#newNotice',
-                url:'/gateway/notice/index',
-                // limit: 10,
-                method: 'post',
-                id:'newNotice',                                    
-                contentType: 'application/json',
-                page:true,
-                loading: true,
-                defaultToolbar: '',
-                limits:[10,20,30,40,50,60,70,80,90,100,200,500,1000,5000],
-                text: {
-                    none: '暂无公告' 
-                },
-                cols: [[
-                    {sort: true,field:'creater',title:'发布人'},
-                    {
-                        sort: true,field: 'title',
-                        title: '标题',
-                        templet: function (d){
-                            return '<a class = "toTitle" lay-event="show">' + d.title + '</a>'
-                        }
-                    },
-                    {sort: true,field:'to_users',title:'发布范围'},
-                    {sort: true,field:'created_at',title:'发布时间'}
-                ]]
-                ,request: {
-                    pageName: 'currentIndex' //页码的参数名称，默认：page
-                    ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                else
+                {
+                  attachs = '无附件'
                 }
-                ,parseData: function(res){ //res 即为原始返回的数据
-                    return {
-                        "status_code":res.status_code, //解析接口状态
-                        "message": res.message, //解析提示文本
-                        "count": res.data.total_count, //解析数据长度
-                        "data": res.data.data_list, //解析数据列表
-                        "curr":res.data.page_index
-                    };
+                return attachs
+              },
+            }, {
+              sort: true,
+              field: 'updated_at',
+              title: '发送时间',
+              minWidth: 100,
+            }, {
+              sort: true,
+              field: 'attachSize',
+              title: '附件大小',
+              minWidth: 100,
+            },
+            ],
+          ],
+          request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,
+            limitName: 'pageSize', //每页数据量的参数名，默认：limit
+          },
+          parseData: function (res)
+          { //res 即为原始返回的数据
+            return {
+              'status_code': res.status_code, //解析接口状态
+              'message': res.message, //解析提示文本
+              'count': res.data.total_count, //解析数据长度
+              'data': res.data.data_list, //解析数据列表
+              'curr': res.data.page_index,
+            }
+          },
+        })
+
+        var maildelBox = table.render({
+          elem: '#maildelBox',
+          url: '/gateway/receive/list',//
+          contentType: 'application/json',
+          id: 'maildelBox',
+          method: 'post',
+          where: {
+            status: 2,
+          },
+          page: true, //开启分页
+          // limits:false,
+          limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 500, 1000, 5000],
+          toolbar: false,
+          loading: true,
+          text: {
+            none: '暂无数据', //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+          },
+          toolbar: '',
+          defaultToolbar: '',
+          cols: [
+            [ //标题栏
+              {
+                sort: true,
+                field: 'from_name',
+                title: '发件人',
+                minWidth: 120,
+              }, {
+              sort: true,
+              field: 'subject',
+              title: '主题',
+              width: 100,
+            }, {
+              sort: true,
+              field: 'apply_time',
+              title: '附件',
+              // width: 180,
+              templet: function (d)
+              {
+                var attachs = ''
+                if (d.attach && d.attach.length > 0)
+                {
+                  for (var k = 0; k < d.attach.length; k++)
+                  {
+                    attachs += '<p data-id="' + d.attach[k].attachId + '">' + d.attach[k].original_name + '</p>'
+                  }
                 }
-            })
-        
-            table.on('row(mailIsReadBox)', function(obj){
-                window.parent.isMassegOpen=true;//跳转后的页面 判断是否为外部打开
-                console.log(obj.tr) //得到当前行元素对象
-                console.log(obj.data) //得到当前行数据
-                //
-                obj.tr.attr( 'layadmin-event',"messageToPage");
-                obj.tr.attr( 'lay-href',"company/mail/index.html?widmailId="+obj.data.id+"?tabId=3");
-                obj.tr.attr( 'lay-text',"内部邮件");
-            });
-            table.on('row(mailNoReadBox)', function(obj){
-                window.parent.isMassegOpen=true;
-                
-                console.log(obj.tr) //得到当前行元素对象
-                console.log(obj.data) //得到当前行数据
-                //
-                obj.tr.attr( 'layadmin-event',"messageToPage");
-                obj.tr.attr( 'lay-href',"company/mail/index.html?widmailId="+obj.data.id+"?tabId=1");
-                obj.tr.attr( 'lay-text',"内部邮件");
-            });
-            table.on('row(maildelBox)', function(obj){
-                window.parent.isMassegOpen=true;
-                
-                console.log(obj.tr) //得到当前行元素对象
-                console.log(obj.data) //得到当前行数据
-                //
-                obj.tr.attr( 'layadmin-event',"messageToPage");
-                obj.tr.attr( 'lay-href',"company/mail/index.html?widmailId="+obj.data.id+"?tabId=5");
-                obj.tr.attr( 'lay-text',"内部邮件");
-            });
-            table.on('row(newNotice)', function(obj){
-    //            if(window.parent.isMassegOpen){//存在传入id则打开详情弹窗
-            //截取数字
-                var data =obj.data
-                    var nid =data.id;
-                        $.fetch({
-                            url:"/gateway/notice/readnotice",
-                            type: 'post',
-                            data:{
-                                NoticeId:nid,
-                            },
-                            cb:function(rs){
+                else
+                {
+                  attachs = '无附件'
+                }
+                return attachs
+              },
+            }, {
+              sort: true,
+              field: 'updated_at',
+              title: '发送时间',
+              minWidth: 100,
+            }, {
+              sort: true,
+              field: 'attachSize',
+              title: '附件大小',
+              minWidth: 100,
+            },
+            ],
+          ],
+          request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            ,
+            limitName: 'pageSize', //每页数据量的参数名，默认：limit
+          },
+          parseData: function (res)
+          { //res 即为原始返回的数据
+            return {
+              'status_code': res.status_code, //解析接口状态
+              'message': res.message, //解析提示文本
+              'count': res.data.total_count, //解析数据长度
+              'data': res.data.data_list, //解析数据列表
+              'curr': res.data.page_index,
+            }
+          },
+        })
+        var newNotice = table.render({
+          elem: '#newNotice',
+          url: '/gateway/notice/index',
+          // limit: 10,
+          method: 'post',
+          id: 'newNotice',
+          contentType: 'application/json',
+          page: true,
+          loading: true,
+          defaultToolbar: '',
+          limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 500, 1000, 5000],
+          text: {
+            none: '暂无公告',
+          },
+          cols: [
+            [
+              {sort: true, field: 'creater', title: '发布人'},
+              {
+                sort: true, field: 'title',
+                title: '标题',
+                templet: function (d)
+                {
+                  return '<a class = "toTitle" lay-event="show">' + d.title + '</a>'
+                },
+              },
+              {sort: true, field: 'to_users', title: '发布范围'},
+              {sort: true, field: 'created_at', title: '发布时间'},
+            ],
+          ]
+          , request: {
+            pageName: 'currentIndex' //页码的参数名称，默认：page
+            , limitName: 'pageSize', //每页数据量的参数名，默认：limit
+          }
+          , parseData: function (res)
+          { //res 即为原始返回的数据
+            return {
+              'status_code': res.status_code, //解析接口状态
+              'message': res.message, //解析提示文本
+              'count': res.data.total_count, //解析数据长度
+              'data': res.data.data_list, //解析数据列表
+              'curr': res.data.page_index,
+            }
+          },
+        })
 
-                                var atta='';
-                                if(rs.attaches&&rs.attaches!=''){
-                                    for(var i=0; i<rs.attaches.length; i++){      
-                                        atta+='<a title="点击下载" class="seeXqOutIn" target="_blank" href="/gateway/notice/download/'+rs.attaches[i].id+'" >'+rs.attaches[i].original_name+'</a>'
-                                    }
-                                }else{
-                                    atta='<span>无附件</span>'
-                                }
+        table.on('row(mailIsReadBox)', function (obj)
+        {
+          window.parent.isMassegOpen = true//跳转后的页面 判断是否为外部打开
+          console.log(obj.tr) //得到当前行元素对象
+          console.log(obj.data) //得到当前行数据
+          //
+          obj.tr.attr('layadmin-event', 'messageToPage')
+          obj.tr.attr('lay-href', 'company/mail/index.html?widmailId=' + obj.data.id + '?tabId=3')
+          obj.tr.attr('lay-text', '内部邮件')
+        })
+        table.on('row(mailNoReadBox)', function (obj)
+        {
+          window.parent.isMassegOpen = true
 
-                                var htmls ='<div class="layui-card" style="min-height:300px">'
-                                            +'<div class="reviewCont layui-card-body">'
-                                                +' <div class="layui-form-item">'
-                                                    +' <p style="margin-bottom: 3px;"><label class="fl">发布部门：</label><u class="hideCont">'+obj.data.to_users+'<i class="iconfont icon-triangle-left"></i></u></p>'
-                                                    +'<div class="layui-elem-quote" style="padding: 15px 0px;">'
-                                                        +' <p><label class="fl">发布人：</label><u class="fr-width">'+obj.data.creater+'</u></p>'
-                                                        +' <p><label class="fl">发布于：</label><u class="fr-width">'+obj.data.validity_starttime+'</u></p>'
-                                                        +' <p><label class="fl">标题：</label><u class="fr-width">'+obj.data.title+'</u></p>'                                    
-                                                        +' <p><label class="fl">附件：</label><u class="fr-width">'+atta+'</u></p>'
-                                                    +'</div>'
-                                                +' </div>'
-                                                +'<fieldset class="layui-elem-field"><legend>公告内容</legend><div class="layui-field-box pageCont"><div class="w-e-text" style=" overflow-y: auto;">'+rs.notice.content+'</div></div></fieldset>'
-                                            +'</div>'
-                                        +'</div>'
-                                var noticeDetail= layer.open({
-                                    title:'查看公告详情',
-                                    content:htmls,
-                                    type:1,
-                                    id:'noticeDetail',
-                                    area:['60%','auto'],
-                                
-                                });
-                                $(".reviewCont i").click(function(){
-                                    if(!$(this).parent("u").hasClass('showCont')){
-                                        $(this).parent(".hideCont").addClass("showCont");
-                                        $(this).parent(".hideCont").removeClass("hideCont"); 
-                                    }else {
-                                        $(this).parent(".showCont").removeClass("showCont"); 
-                                        $(this).parent("u").addClass("hideCont");
-                                    }
-                                })
-                            }
-                        });
-                // window.parent.isMassegOpen=false//刷新后 详情页不打开
-                    // $(.document).find('div.layadmin-tabsbody-item.layui-show iframe').reload(false);
-            //  }
+          console.log(obj.tr) //得到当前行元素对象
+          console.log(obj.data) //得到当前行数据
+          //
+          obj.tr.attr('layadmin-event', 'messageToPage')
+          obj.tr.attr('lay-href', 'company/mail/index.html?widmailId=' + obj.data.id + '?tabId=1')
+          obj.tr.attr('lay-text', '内部邮件')
+        })
+        table.on('row(maildelBox)', function (obj)
+        {
+          window.parent.isMassegOpen = true
 
-            });
-            // clearInterval(indexInter)
-        
-        }
-    });
-})
-  </script>
+          console.log(obj.tr) //得到当前行元素对象
+          console.log(obj.data) //得到当前行数据
+          //
+          obj.tr.attr('layadmin-event', 'messageToPage')
+          obj.tr.attr('lay-href', 'company/mail/index.html?widmailId=' + obj.data.id + '?tabId=5')
+          obj.tr.attr('lay-text', '内部邮件')
+        })
+        table.on('row(newNotice)', function (obj)
+        {
+          //            if(window.parent.isMassegOpen){//存在传入id则打开详情弹窗
+          //截取数字
+          var data = obj.data
+          var nid = data.id
+          $.fetch({
+            url: '/gateway/notice/readnotice',
+            type: 'post',
+            data: {
+              NoticeId: nid,
+            },
+            cb: function (rs)
+            {
+
+              var atta = ''
+              if (rs.attaches && rs.attaches != '')
+              {
+                for (var i = 0; i < rs.attaches.length; i++)
+                {
+                  atta += '<a title="点击下载" class="seeXqOutIn" target="_blank" href="/gateway/notice/download/'
+                    + rs.attaches[i].id
+                    + '" >'
+                    + rs.attaches[i].original_name
+                    + '</a>'
+                }
+              }
+              else
+              {
+                atta = '<span>无附件</span>'
+              }
+
+              var htmls = '<div class="layui-card" style="min-height:300px">'
+                + '<div class="reviewCont layui-card-body">'
+                + ' <div class="layui-form-item">'
+                + ' <p style="margin-bottom: 3px;"><label class="fl">发布部门：</label><u class="hideCont">'
+                + obj.data.to_users
+                + '<i class="iconfont icon-triangle-left"></i></u></p>'
+                + '<div class="layui-elem-quote" style="padding: 15px 0px;">'
+                + ' <p><label class="fl">发布人：</label><u class="fr-width">'
+                + obj.data.creater
+                + '</u></p>'
+                + ' <p><label class="fl">发布于：</label><u class="fr-width">'
+                + obj.data.validity_starttime
+                + '</u></p>'
+                + ' <p><label class="fl">标题：</label><u class="fr-width">'
+                + obj.data.title
+                + '</u></p>'
+                + ' <p><label class="fl">附件：</label><u class="fr-width">'
+                + atta
+                + '</u></p>'
+                + '</div>'
+                + ' </div>'
+                + '<fieldset class="layui-elem-field"><legend>公告内容</legend><div class="layui-field-box pageCont"><div class="w-e-text" style=" overflow-y: auto;">'
+                + rs.notice.content
+                + '</div></div></fieldset>'
+                + '</div>'
+                + '</div>'
+              var noticeDetail = layer.open({
+                title: '查看公告详情',
+                content: htmls,
+                type: 1,
+                id: 'noticeDetail',
+                area: ['60%', 'auto'],
+
+              })
+              $('.reviewCont i').click(function ()
+              {
+                if (!$(this).parent('u').hasClass('showCont'))
+                {
+                  $(this).parent('.hideCont').addClass('showCont')
+                  $(this).parent('.hideCont').removeClass('hideCont')
+                }
+                else
+                {
+                  $(this).parent('.showCont').removeClass('showCont')
+                  $(this).parent('u').addClass('hideCont')
+                }
+              })
+            },
+          })
+          // window.parent.isMassegOpen=false//刷新后 详情页不打开
+          // $(.document).find('div.layadmin-tabsbody-item.layui-show iframe').reload(false);
+          //  }
+
+        })
+        // clearInterval(indexInter)
+
+      }
+    })
+  })
+</script>
 </html>

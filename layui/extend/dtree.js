@@ -144,6 +144,9 @@ layui.define(['jquery','layer','element','form'], function(exports) {
 			$.ajax({
 				type : config.type ? config.type : "POST",
 				headers : config.headers,
+        xhrFields: {
+          withCredentials: true,
+        },
 				url : config.url,
 				dataType : config.dataType ? config.dataType : "json",
 				data : data,

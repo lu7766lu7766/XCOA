@@ -433,6 +433,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			type: ajaxConfig.type,
 			headers: ajaxConfig.header,
 			url: searchUrl,
+      xhrFields: {
+        withCredentials: true,
+      },
 			data: ajaxConfig.dataType == 'json' ? JSON.stringify(ajaxData) : ajaxData,
 			success: function success(res) {
 				if (typeof res == 'string') {

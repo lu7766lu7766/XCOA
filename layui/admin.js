@@ -186,6 +186,9 @@ layui.define("view", function (e) {
                     url: ""+urls+"/gateway/notifyMessage/list",
                     dataType: 'json',
                     type: 'post',
+                  xhrFields: {
+                    withCredentials: true,
+                  },
                     data:{
                         status:1,
                     },
@@ -341,6 +344,9 @@ layui.define("view", function (e) {
                     url: ""+urls+"/gateway/notifyMessage/readed",
                     dataType: 'json',
                     type: 'post',
+                  xhrFields: {
+                    withCredentials: true,
+                  },
                     data:{
                         notifyMessageId:id,
                     },
@@ -350,6 +356,9 @@ layui.define("view", function (e) {
                                 url: ""+urls+"/gateway/notifyMessage/list",
                                 dataType: 'json',
                                 type: 'post',
+                              xhrFields: {
+                                withCredentials: true,
+                              },
                                 data:{
                                     status:1,
                                 },
