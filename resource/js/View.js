@@ -9,7 +9,6 @@ Vue.use(JacPlugin, {
   _, moment,
 })
 Vue.use(MyPlugin)
-console.log(Vue)
 new Vue({
   el: '#app',
   components: {
