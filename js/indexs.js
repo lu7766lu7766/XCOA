@@ -188,7 +188,7 @@ $(function ()
               //获取cookie中 语言变量
               // $.menuInit(data.data,language);
               alert('登录已失效，请重新登录！')
-              // window.location.href = 'login.html';
+              window.location.href = 'login.html';
             }
             else if (data.status_code != 200)
             {
@@ -456,7 +456,7 @@ $(function ()
         {
           // 登陆错误
           alert('登录已失效，请重新登录。')
-          // window.location.href = "login.html"
+          window.location.href = "login.html"
         }
         else
         {
