@@ -16,6 +16,12 @@ yarn dev
 yarn build
 ```
 
-[開發預設網址：http://localhost:3000/](http://localhost:3000/)
+###[開發預設網址：http://localhost:3000/](http://localhost:3000/)
 
-[vue開發範例請參考:vue_template.html](http://localhost:3000/vue_template.html)
+### vue template位置
+>##### /template/vue.html
+>###### 需使用rewrite
+
+### vue 測試component
+>##### http://localhost:3000/vue/test.html
+>###### 使用vue-router偵測路由

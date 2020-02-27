@@ -1,0 +1,22 @@
+{
+  "list": {
+    "uri": "",
+    "method": "get"
+  },
+  "company": {
+    "uri": "company",
+    "method": "get"
+  },
+  "currency": {
+    "uri": "currency",
+    "method": "get"
+  },
+  "payout": {
+    "uri": "payout",
+    "method": "get"
+  },
+  "detail": {
+    "uri": "info",
+    "method": "get"
+  }
+}

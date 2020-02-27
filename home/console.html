@@ -236,7 +236,7 @@
         var mailNoReadBox = table.render({
           elem: '#mailNoReadBox',
           id: 'mailNoReadBox',
-          url: '/gateway/receive/list',//
+          url: window.urls + '/gateway/receive/list',//
           contentType: 'application/json',
           method: 'post',
           where: {
@@ -321,7 +321,7 @@
 
         var mailIsReadBox = table.render({
           elem: '#mailIsReadBox',
-          url: '/gateway/receive/list',//
+          url: window.urls + '/gateway/receive/list',//
           id: 'mailIsReadBox',
           contentType: 'application/json',
           method: 'post',
@@ -403,7 +403,7 @@
 
         var maildelBox = table.render({
           elem: '#maildelBox',
-          url: '/gateway/receive/list',//
+          url: window.urls + '/gateway/receive/list',//
           contentType: 'application/json',
           id: 'maildelBox',
           method: 'post',
@@ -484,7 +484,7 @@
         })
         var newNotice = table.render({
           elem: '#newNotice',
-          url: '/gateway/notice/index',
+          url: window.urls + '/gateway/notice/index',
           // limit: 10,
           method: 'post',
           id: 'newNotice',

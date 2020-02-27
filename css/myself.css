@@ -1,0 +1,120 @@
+
+.text-left{
+    text-align: left !important;
+}
+.text-center{
+    text-align: center !important;
+}
+.text-right{
+    text-align: right !important;
+}
+.search-box{
+    display: flex;
+}
+.form-box{
+    margin-left: auto;
+}
+.layui-form-label{
+    width: auto;
+}
+.layui-form-item .layui-input-inline{
+    /* width: 160px; */
+}
+.month-btn{
+    background-color: #09558e;
+}
+.layui-day-btn .layui-btn{
+    padding: 0 6px;
+}
+.layui-day-btn .layui-btn+.layui-btn{
+    margin-left: 5px;
+}
+.layui-form-item .layui-inline{
+    margin-right: 0;
+}
+.multiple-box .layui-unselect{
+    display: none;
+}
+.multiple-box .select2{
+    width: 100% !important;
+}
+.multiple-box .select2 ul{
+    display: flex !important;
+    align-items: center;
+    overflow: auto !important;
+}
+.select2-container .select2-selection--multiple{
+    min-height: 38px;
+}
+.select2-container--default.select2-container--focus .select2-selection--multiple,
+.select2-container--default .select2-selection--multiple{
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+}
+.text-green{
+    color: #4caf50;
+}
+/* table */
+.rwd-table{
+    width: 100%;
+    overflow: scroll;
+    /* overflow: hidden; */
+}
+.statisics-table tfoot td{
+    background-color: #ccc;
+}
+.statisics-table tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.02);
+}
+.statisics-table a{
+    color: #337ab7;
+}
+.statisics-table .text-green{
+    color: #4caf50;
+}
+.statisics-table tbody td{
+    min-width: 180px;
+}
+.statisics-table tbody .tr-main{
+    cursor: pointer;
+}
+.statisics-table tbody .tr-sub{
+    /* display: none; */
+}
+.statisics-table tbody .tr-main td:first-child{
+    font-weight: bold;
+    width: 200px;
+}
+.btn-change{
+    background-color: #f59c1a;
+    min-width: 106px;
+}
+.toggle-btn{
+    vertical-align: bottom;
+}
+.toggle-btn span{
+    cursor: pointer;
+    color: #09558e;
+}
+.multiple-box ::-webkit-scrollbar {
+    width: 4px;
+    height:4px;
+}
+/* Track */
+.multiple-box ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+/* Handle */
+.multiple-box ::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+/* Handle on hover */
+.multiple-box ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+/* statistics-deatil */
+.statisticsDetail-table thead th,
+.statisticsDetail-table tbody td{
+    padding: 9px 5px;
+}
