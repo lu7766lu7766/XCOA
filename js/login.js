@@ -1,4 +1,4 @@
-window.urls = 'http://www.oa.video88.cc'
+window.urls = 'http://api.oa.video88.cc'
 // window.urls = "http://10.20.11.152";
 //
 // window.urls = "http://oa-company.com"
@@ -43,7 +43,7 @@ try
           data: param,
           async: async_,
           xhrFields: {
-            withCredentials: true
+            withCredentials: true,
           },
           beforeSend: function ()
           {

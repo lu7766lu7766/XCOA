@@ -29,7 +29,7 @@ $(function ()
   // window.urls = "http://oa-company.com";
   // window.urls = "http://oa-group.com";
   // window.urls = "http://oa-company-699.com";
-  window.urls = 'http://www.oa.video88.cc'
+  window.urls = 'http://api.oa.video88.cc'
   // window.urls =   window.location.host; //
   $.ajaxSetup({
     xhrFields: {
@@ -188,7 +188,7 @@ $(function ()
               //获取cookie中 语言变量
               // $.menuInit(data.data,language);
               alert('登录已失效，请重新登录！')
-              window.location.href = 'login.html';
+              window.location.href = 'login.html'
             }
             else if (data.status_code != 200)
             {
@@ -456,7 +456,7 @@ $(function ()
         {
           // 登陆错误
           alert('登录已失效，请重新登录。')
-          window.location.href = "login.html"
+          window.location.href = 'login.html'
         }
         else
         {
