@@ -1,7 +1,6 @@
 export default {
   components: {
     Detail: require('@/Container/Detail').default,
-    Switcher: require('@/Form/Switcher').default,
   },
   data: () => ({
     data: {},
@@ -9,8 +8,13 @@ export default {
   methods: {
     show()
     {
+      console.log(this.$children[0])
       this.$modal.show()
       // this.$refs.modal.show()
+    },
+    hide()
+    {
+      this.$modal.hide()
     },
     createSuccess()
     {

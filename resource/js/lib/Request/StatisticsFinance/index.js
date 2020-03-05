@@ -18,4 +18,9 @@ export default class Request extends BaseRequest
   {
     return await this.request('list', data, options)
   }
+
+  async getDetail(data, options)
+  {
+    return await this.request('detail', data, options)
+  }
 }

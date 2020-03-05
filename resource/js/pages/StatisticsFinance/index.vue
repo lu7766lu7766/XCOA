@@ -1,8 +1,19 @@
 <template>
   <div class="layui-fluid">
     <div class="layui-card">
-      <div class="layui-card-header">
-        财务统计
+      <div class="layui-row layui-col-space10 layui-card-body">
+        <div class="layui-form layuiadmin-card-header-auto">
+          <div class="layui-form-item search-box">
+            <div class="layui-inline">
+              财务统计
+            </div>
+            <div class="form-box">
+              <div class="layui-inline">
+                <button id="toCompanyList" class="layui-btn fr" @click="$router.back()">返回</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="layui-card-body">
         <div class="rwd-table">
@@ -71,6 +82,9 @@
                   class=" layui-table-col-special">
                 <div class="layui-table-cell laytable-cell-group" align="center"><span>金额</span></div>
               </th>
+              <th rowspan="2">
+                <div class="layui-table-cell"><span>操作</span></div>
+              </th>
             </tr>
             <tr>
               <th data-field="oneCateName" data-key="4-1-0" data-parentkey="0-2" class="">
@@ -102,6 +116,7 @@
                     <i class="layui-edge layui-table-sort-desc" title="降序" @click="setOrder('rmb_amount', 1)"></i>
                   </span></div>
               </th>
+
             </tr>
             </thead>
             <tbody>
@@ -171,14 +186,94 @@
                   {{ data.rmb_amount | money }}
                 </div>
               </td>
+              <td>
+                <div class="layui-table-cell">
+                  <button class="layui-btn layui-btn-sm" @click="$bus.emit('detail.show', data)">详情</button>
+                </div>
+              </td>
             </tr>
             </tbody>
+            <tfoot>
+            <tr>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+                <div class="layui-table-cell">本页合计金额：</div>
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+                <div class="layui-table-cell">
+                  {{ _.jSumBy(datas, 'rmb_amount') | money }}
+                </div>
+              </td>
+              <td class=" layui-unselect">
+              </td>
+            </tr>
+            <tr>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+                <div class="layui-table-cell">总合计金额：</div>
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+              </td>
+              <td class=" layui-unselect">
+                <div class="layui-table-cell">
+                  {{ total.amount | money }}
+                </div>
+              </td>
+              <td class=" layui-unselect">
+              </td>
+            </tr>
+            </tfoot>
           </table>
+          <paginate :page="paginate.page"
+                    :lastPage="lastPage"
+                    :total="paginate.total"
+                    :perpage="paginate.perpage"
+                    @pageChange="pageChange"></paginate>
         </div>
         <!-- <div id="SurveyLietPage"></div> -->
       </div>
     </div>
-
+    <detail />
   </div>
 </template>
 
@@ -187,20 +282,32 @@
 
   export default {
     mixins: [ListMixins],
+    components: {
+      Detail: require('./modal/Detail').default,
+    },
     data: () => ({
       search: {},
       order: {
         key: '',
         type: 'asc',
       },
+      total: {
+        amount: 0,
+      },
     }),
     api: 'statistics_finance',
     methods: {
       async getList()
       {
+        this.search = {
+          ...this.search,
+          currentIndex: this.paginate.page,
+          pageSize: this.paginate.perpage,
+        }
         const res = await this.$thisApi.getList(this.reqBody)
         this.datas = res.data.data_list
         this.paginate.total = res.data.total_count
+        this.total.amount = res.data.total_rmb_amount
       },
       setOrder(key, type)
       {
@@ -236,5 +343,10 @@
   }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
+  .layui-table tfoot
+    tr
+      background-color: #f2f2f2;
+    td
+      padding 9px 5px
 </style>

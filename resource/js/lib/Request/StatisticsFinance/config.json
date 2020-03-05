@@ -2,5 +2,9 @@
   "list": {
     "uri": "groupreportdetail",
     "method": "post"
+  },
+  "detail": {
+    "uri": "detail",
+    "method": "post"
   }
 }

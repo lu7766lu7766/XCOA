@@ -1,8 +1,19 @@
 <template>
   <div class="layui-fluid">
     <div class="layui-card">
-      <div class="layui-card-header">
-        詳細數據({{ currentCompany.name }})
+      <div class="layui-row layui-col-space10 layui-card-body">
+        <div class="layui-form layuiadmin-card-header-auto">
+          <div class="layui-form-item search-box">
+            <div class="layui-inline">
+              詳細數據({{ currentCompany.name }})
+            </div>
+            <div class="form-box">
+              <div class="layui-inline">
+                <button id="toCompanyList" class="layui-btn fr" @click="$router.back()">返回</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="layui-card-body">
         <table class="layui-table statisics-table" id="SurveyLiet" lay-filter="SurveyLiet">
@@ -10,20 +21,20 @@
           <tr>
             <th></th>
             <th class="text-center"
-                v-for="id in processIDList" :key="id">
-              {{ idPayout[id].name }}
+                v-for="name in _.keys(getGroupByProcess())" :key="name">
+              {{ name }}
             </th>
             <th class="text-center">总计</th>
           </tr>
           </thead>
           <tbody
-              v-for="(baoxiaoDatas, baoxiao_id) in list"
-              :key="baoxiao_id">
+              v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
+              :key="baoxiaoName">
           <tr>
-            <td><b>{{ _.getVal(idPayout[baoxiao_id], 'name', baoxiao_id) }}</b></td>
+            <td><b>{{ baoxiaoName }}</b></td>
             <td class="text-right"
-                v-for="processID in processIDList" :key="processID">
-              <span v-for="money in [_.chain(baoxiaoDatas).filter(x => x.process_type == processID).jSumBy('total_amount')]">
+                v-for="(processIDList, name) in getGroupByProcess()" :key="name">
+              <span v-for="money in [getSumByListFilter(baoxiaoDatas, processIDList, 'process_type')]">
                 <router-link class="text-green"
                              v-if="money > 0 && $route.query.company_id"
                              :to="{
@@ -33,8 +44,8 @@
                                   currency_id: $route.query.currency_id,
                                   end: $route.query.end,
                                   start: $route.query.start,
-                                  level1: processID,
-                                  level2: baoxiao_id,
+                                  level1: processIDList.join(','),
+                                  level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
                                   level3: '',
                                 }
                              }">
@@ -44,18 +55,16 @@
             </td>
             <td class="text-right">
               <span v-for="money in [_.jSumBy(baoxiaoDatas, 'total_amount')]">
-                <a :class="money > 0 ? 'text-green' : ''">
-                  {{ money | money }}
-                </a>
+                <span :class="money > 0 ? 'text-green': ''">{{ money | money }}</span>
               </span>
             </td>
           </tr>
-          <tr v-for="(feeDatas, fee_id) in _.groupBy(baoxiaoDatas, 'fee_type')"
-              :key="fee_id">
-            <td> - {{ _.getVal(idPayout[fee_id], 'name', fee_id) }}</td>
+          <tr v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)"
+              :key="feeName">
+            <td> - {{ feeName }}</td>
             <td class="text-right"
-                v-for="processID in processIDList" :key="processID">
-              <span v-for="money in [_.chain(feeDatas).filter(x => x.process_type == processID).jSumBy('total_amount')]">
+                v-for="(processIDList, name) in getGroupByProcess()" :key="name">
+              <span v-for="money in [getSumByListFilter(feeDatas, processIDList, 'process_type')]">
                 <router-link class="text-green"
                              v-if="money > 0 && $route.query.company_id"
                              :to="{
@@ -65,9 +74,9 @@
                                 currency_id: $route.query.currency_id,
                                 end: $route.query.end,
                                 start: $route.query.start,
-                                level1: processID,
-                                level2: baoxiao_id,
-                                level3: fee_id,
+                                level1: processIDList.join(','),
+                                level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
+                                level3: _.map(groupByNamePayout[feeName], 'id').join(','),
                               }
                            }">
                 {{ money | money }}</router-link>
@@ -76,8 +85,7 @@
             </td>
             <td class="text-right">
               <span v-for="money in [_.jSumBy(feeDatas, 'total_amount')]">
-                <a class="text-green" v-if="money > 0">{{ money | money }}</a>
-                <span v-else>{{ money | money }}</span>
+                <span :class="money > 0 ? 'text-green': ''">{{ money | money }}</span>
               </span>
             </td>
           </tr>
@@ -85,8 +93,8 @@
           <tfoot>
           <tr>
             <td class="text-center">总计</td>
-            <td class="text-right" v-for="processID in processIDList" :key="processID">
-              <span v-for="money in [_.chain(datas).filter(x => x.process_type == processID).jSumBy('total_amount')]">
+            <td class="text-right" v-for="(processIDList, name) in getGroupByProcess()" :key="name">
+              <span v-for="money in [_.chain(datas).filter(x => processIDList.indexOf(x.process_type) > -1).jSumBy('total_amount')]">
                 {{ money | money }}
               </span>
             </td>

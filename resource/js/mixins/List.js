@@ -54,9 +54,12 @@ export default {
     {
       this.doSuccess('删除')
     },
-    pageChange(page)
+    pageChange(page, perpage)
     {
       this.paginate.page = page
+      this.paginate.perpage = perpage
+        ? perpage
+        : this.paginate.perpage
       this.getList()
     },
     async doDelete(id)
@@ -69,6 +72,16 @@ export default {
     {
       const res = await this.$swal(this.config.swal.delete)
       if (!res.value) throw 'delete cancel'
+    },
+    onQueryChange(query)
+    {
+      this.$router.replace({
+        name: this.$route.name,
+        query: {
+          ...this.$route.query,
+          ...query,
+        },
+      })
     },
   },
   computed: {

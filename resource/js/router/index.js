@@ -18,3 +18,9 @@ export default new Router({
   },
   routes: require('./routes').default,
 })
+
+const routerReplace = Router.prototype.replace
+Router.prototype.replace = function replace(location)
+{
+  return routerReplace.call(this, location).catch(error => error)
+}

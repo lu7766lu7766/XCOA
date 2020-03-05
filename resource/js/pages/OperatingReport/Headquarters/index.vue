@@ -5,7 +5,7 @@
         <div class="layui-form layuiadmin-card-header-auto">
           <div class="layui-form-item search-box">
             <div class="layui-inline">
-              <a id="addSurvey" class="layui-btn btn-change" @click="doSwitch">{{ switchTxt }}</a>
+              <a id="addSurvey" class="layui-btn btn-change" @click="switchType">{{ txt.type }}</a>
             </div>
             <div class="form-box">
               <date-range-picker :start.sync="search.start" :end.sync="search.end"></date-range-picker>
@@ -39,7 +39,7 @@
           <thead>
           <tr>
             <th class="toggle-btn">
-              <span class="btn-plus" @click="showAll"><i class="fa fa-plus"></i> 全部展开</span>
+              <span class="btn-plus" @click="toggleAll"><i class="fa fa-plus"></i> {{ txt.switch }}</span>
               <!-- <span class="btn-minus"><i class="fa fa-minus"></i> 全部收合</span> -->
             </th>
             <th class="text-center">
@@ -52,7 +52,7 @@
                 }
               }">总公司
               </router-link>
-              <br />{{ currencyTxt }}
+              <br />{{ txt.currency }}
             </th>
             <th class="text-center" v-for="(company, index) in showCompany" :key="index">
               <router-link :to="{
@@ -63,7 +63,7 @@
                   start: search.start,
                   end: search.end
                 }
-              }">{{ company.name }}<br />{{ currencyTxt }}
+              }">{{ company.name }}<br />{{ txt.currency }}
               </router-link>
             </th>
           </tr>
@@ -71,29 +71,67 @@
           <!--number-->
           <template v-if="showNumber">
             <tbody
-                v-for="(baoxiaoDatas, baoxiao_id) in list"
-                :key="baoxiao_id">
+                v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
+                :key="baoxiaoName">
             <tr class="tr-main"
-                @click="collapse[baoxiao_id] = !collapse[baoxiao_id]">
-              <td>{{ _.getVal(idPayout[baoxiao_id], 'name', baoxiao_id) }}</td>
+                @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
+              <td>{{ baoxiaoName }}</td>
               <td class="text-right">
                 {{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
               </td>
               <td class="text-right" v-for="(company, index) in showCompany" :key="index">
-                {{ _.chain(baoxiaoDatas).filter(x => x.company_id == company.id).jSumBy('total_amount') | money }}
+                <span v-for="(money, index) in [getSumByListFilter(baoxiaoDatas, [company.id], 'company_id')]"
+                      :key="index">
+                  <router-link class="text-green"
+                               v-if="money > 0"
+                               :to="{
+                      name: 'statistics-finance',
+                      query: {
+                        company_id: company.id,
+                        currency_id: search.currency_id,
+                        end: search.end,
+                        start: search.start,
+                        level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, company.id).join(','),
+                        level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
+                        level3: '',
+                      }
+                    }">
+                    {{ money | money }}
+                  </router-link>
+                  <span v-else>{{ money | money }}</span>
+                </span>
               </td>
             </tr>
             <!-- collapse -->
             <tr class="tr-sub"
-                v-show="collapse[baoxiao_id]"
-                v-for="(feeDatas, fee_id) in _.groupBy(baoxiaoDatas, 'fee_type')"
-                :key="fee_id">
-              <td> - {{ _.getVal(idPayout[fee_id], 'name', fee_id) }}</td>
+                v-show="collapse[baoxiaoName]"
+                v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)"
+                :key="feeName">
+              <td> - {{ feeName }}</td>
               <td class="text-right">
                 {{ _.jSumBy(feeDatas, 'total_amount') | money }}
               </td>
               <td class="text-right" v-for="(company, index) in showCompany" :key="index">
-                {{ _.chain(feeDatas).filter(x => x.company_id == company.id).jSumBy('total_amount') | money }}
+                <span v-for="(money, index) in [getSumByListFilter(feeDatas, [company.id], 'company_id')]"
+                      :key="index">
+                  <router-link class="text-green"
+                               v-if="money > 0"
+                               :to="{
+                      name: 'statistics-finance',
+                      query: {
+                        company_id: company.id,
+                        currency_id: search.currency_id,
+                        end: search.end,
+                        start: search.start,
+                        level1: getUnionProcessByFilterCompanyID(feeDatas, company.id).join(','),
+                        level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
+                        level3: _.map(groupByNamePayout[feeName], 'id').join(','),
+                      }
+                    }">
+                    {{ money | money }}
+                  </router-link>
+                  <span v-else>{{ money | money }}</span>
+                </span>
               </td>
             </tr>
             </tbody>
@@ -104,7 +142,7 @@
               <td class="text-right"
                   v-for="(company, index) in showCompany"
                   :key="index">
-                {{ _.chain(datas).filter(x => x.company_id == company.id).jSumBy('total_amount') | money }}
+                {{ getSumByListFilter(datas, [company.id], 'company_id') | money }}
               </td>
             </tr>
             </tfoot>
@@ -112,35 +150,35 @@
           <!--percent-->
           <template v-else>
             <tbody
-                v-for="(baoxiaoDatas, baoxiao_id) in list"
-                :key="baoxiao_id">
+                v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
+                :key="baoxiaoName">
             <tr class="tr-main"
                 role="button"
                 data-toggle="collapse"
-                @click="collapse[baoxiao_id] = !collapse[baoxiao_id]">
-              <td>{{ _.getVal(idPayout[baoxiao_id], 'name', baoxiao_id) }}</td>
+                @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
+              <td>{{ baoxiaoName }}</td>
               <td class="text-right">
                 100.00%
               </td>
               <td class="text-right" v-for="(company, index) in showCompany" :key="index">
                 {{
-                $decimal(_.chain(baoxiaoDatas).filter(x => x.company_id == company.id).jSumBy('total_amount').value())
+                $decimal(getSumByListFilter(baoxiaoDatas, [company.id], 'company_id'))
                 .div(_.jSumBy(baoxiaoDatas, 'total_amount')) | percent
                 }}%
               </td>
             </tr>
             <!-- collapse -->
             <tr class="tr-sub"
-                v-show="collapse[baoxiao_id]"
-                v-for="(feeDatas, fee_id) in _.groupBy(baoxiaoDatas, 'fee_type')"
-                :key="fee_id">
-              <td> - {{ _.getVal(idPayout[fee_id], 'name', fee_id) }}</td>
+                v-show="collapse[baoxiaoName]"
+                v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)"
+                :key="feeName">
+              <td> - {{ feeName }}</td>
               <td class="text-right">
-                100%
+                100.00%
               </td>
               <td class="text-right" v-for="(company, index) in showCompany" :key="index">
                 {{
-                $decimal(_.chain(feeDatas).filter(x => x.company_id == company.id).jSumBy('total_amount').value())
+                $decimal(getSumByListFilter(feeDatas, [company.id], 'company_id'))
                 .div(_.jSumBy(feeDatas, 'total_amount')) | percent
                 }}%
               </td>
@@ -149,12 +187,12 @@
             <tfoot>
             <tr>
               <td class="text-center">总计</td>
-              <td class="text-right">100%</td>
+              <td class="text-right">100.00%</td>
               <td class="text-right"
                   v-for="(company, index) in showCompany"
                   :key="index">
                 {{
-                $decimal(_.chain(datas).filter(x => x.company_id == company.id).jSumBy('total_amount').value())
+                $decimal(getSumByListFilter(datas, [company.id], 'company_id'))
                 .div(_.jSumBy(datas, 'total_amount')) | percent
                 }}%
               </td>

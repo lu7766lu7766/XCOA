@@ -1,3 +1,5 @@
+import VueBus from 'vue-bus'
+import VModal from 'vue-js-modal'
 import API from 'lib/API'
 import numFormat from 'vue-filter-number-format'
 import numeral from 'numeral'
@@ -5,6 +7,8 @@ import numeral from 'numeral'
 export default {
   install: Vue =>
   {
+    Vue.use(VueBus)
+    Vue.use(VModal)
     Vue.prototype.$api = new API()
 
     Vue.filter('numFormat', numFormat(numeral))
@@ -16,4 +20,9 @@ export default {
 
     Vue.component('JSelect', require('@/Form/Select').default)
   },
+}
+
+Number.prototype.split = function (str)
+{
+  return ('' + this).split(str)
 }

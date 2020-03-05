@@ -7,25 +7,35 @@ export default {
     DateRangePicker: require('@/DateRangePicker').default,
     DateButton: require('@/DateButton').default,
   },
-  data: () => ({
-    search: {
-      start: moment().startOf('month').getDate(), // moment().subtract(365, 'days').startOf('month').getDate(),//
-      end: moment().endOf('day').getDate(),
-      company_id: [],
-      currency_id: '',
-    },
-    switch: {
-      type: 'number',
-    },
-    collapse: {},
-    options: {
-      company: [],
-      currency: [],
-      payout: [],
-    },
-    showCompany: [],
-    currencyTxt: '',
-  }),
+  data()
+  {
+    return {
+      search: {
+        start: this.$route.query.start || moment().startOf('month').getDate(), //moment().subtract(365, 'days').startOf('month').getDate(),//moment().startOf('month').getDate(), //
+        end: this.$route.query.end || moment().endOf('day').getDate(),
+        company_id: this.$route.query.company_id
+          ? this.$route.query.company_id.split(',')
+          : [],
+        currency_id: this.$route.query.currency_id || '',
+      },
+      switch: {
+        type: 'number',
+        collapse: false,
+      },
+      collapse: {},
+      options: {
+        company: [],
+        currency: [],
+        payout: [],
+      },
+      showCompany: [],
+      txt: {
+        switch: '全部展开',
+        currency: '',
+        type: '总公司比例',
+      },
+    }
+  },
   methods: {
     async getOptions()
     {
@@ -38,24 +48,31 @@ export default {
       this.options.currency = res[1].data
       this.options.payout = res[2].data
     },
-    doSwitch()
+    switchType()
     {
       this.switch.type = this.showNumber
         ? 'percent'
         : 'number'
+      this.txt.type = this.showNumber
+        ? '总公司比例'
+        : '总公司数值'
     },
-    showAll()
+    toggleAll()
     {
-      _.forEach(this.collapse, (res, id) =>
+      this.switch.collapse = !this.switch.collapse
+      _.forEach(this.collapse, (res, baoxiaoName) =>
       {
-        this.collapse[id] = true
+        this.collapse[baoxiaoName] = this.switch.collapse
       })
+      this.txt.switch = this.switch.collapse
+        ? '全部收合'
+        : '全部展开'
     },
     setCollapse()
     {
-      this.collapse = _.reduce(this.list, (result, d, baoxiao_type) =>
+      this.collapse = _.reduce(this.getGroupByBaoxiao(), (result, d, baoxiaoName) =>
       {
-        result[baoxiao_type] = false
+        result[baoxiaoName] = false
         return result
       }, {})
     },
@@ -67,8 +84,8 @@ export default {
     },
     setCurrency()
     {
-      this.currencyTxt = this.search.currency_id
-        ? ('(' + _.find(this.options.currency, {id: this.search.currency_id}).zh_name + ')')
+      this.txt.currency = this.search.currency_id
+        ? ('(' + _.find(this.options.currency, x => '' + x.id === this.search.currency_id)['zh_name'] + ')')
         : ''
     },
     async doSearch()
@@ -77,29 +94,46 @@ export default {
       this.setCollapse()
       this.setShowCompany()
       this.setCurrency()
+      this.onQueryChange({
+        ...this.search,
+        company_id: this.search.company_id.join(','),
+      })
+    },
+    getGroupByBaoxiao()
+    {
+      return this.getGroupByNameDatas(this.datas, 'baoxiao_type')
+    },
+    getGroupByFee(datas)
+    {
+      return this.getGroupByNameDatas(datas, 'fee_type')
+    },
+    getGroupByNameDatas(datas, prop, unionProp)
+    {
+      return _.pickBy(_.mapValues(this.groupByNamePayout, payouts =>
+      {
+        const ids = _.map(payouts, 'id')
+        return !unionProp
+          ? _.filter(datas, x => ids.indexOf(x[prop]) > -1)
+          : _.chain(this.datas).filter(x => ids.indexOf(x[prop]) > -1).map(unionProp).union().value()
+      }), x => x.length > 0)
+    },
+    getSumByListFilter(datas, list, prop, amountProp = 'total_amount')
+    {
+      return _.chain(datas).filter(x => list.indexOf(x[prop]) > -1).jSumBy(amountProp).value()
+    },
+    getUnionProcessByFilterCompanyID(datas, companyID)
+    {
+      return _.chain(datas).filter(x => x.company_id === companyID).map('process_type').union().value()
     },
   },
   computed: {
-    idPayout()
+    groupByNamePayout()
     {
-      return _.keyBy(this.options.payout, 'id')
-    },
-    list()
-    {
-      return _.chain(this.datas)
-        .orderBy('baoxiao_type')
-        .groupBy('baoxiao_type')
-        .value()
+      return _.groupBy(this.options.payout, 'name')
     },
     showNumber()
     {
       return this.switch.type === 'number'
-    },
-    switchTxt()
-    {
-      return this.showNumber
-        ? '总公司比例'
-        : '总公司数值'
     },
   },
 }
