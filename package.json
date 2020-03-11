@@ -1,44 +1,44 @@
 {
-  "name": "oa-backend",
-  "version": "1.0.0",
-  "description": "辦公室系統 (前端)",
-  "main": "index.js",
-  "scripts": {
-    "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "build": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/i2xc/OA-BackEnd.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/i2xc/OA-BackEnd/issues"
-  },
-  "homepage": "https://github.com/i2xc/OA-BackEnd#readme",
-  "dependencies": {
-    "decimal.js": "^10.2.0",
-    "jactools": "^3.3.0",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0",
-    "numeral": "^2.0.6",
-    "vue": "^2.6.11",
-    "vue-bus": "^1.2.1",
-    "vue-filter-number-format": "^2.0.0",
-    "vue-js-modal": "^1.3.33",
-    "vue-router": "^3.1.5"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.8.3",
-    "cross-env": "^7.0.0",
-    "jac-serve": "^1.0.0",
-    "laravel-mix": "^5.0.1",
-    "rimraf": "^3.0.2",
-    "stylus": "^0.54.7",
-    "stylus-loader": "^3.0.2",
-    "vue-template-compiler": "^2.6.11"
-  }
+	"name": "oa-backend",
+	"version": "1.0.0",
+	"description": "辦公室系統 (前端)",
+	"main": "index.js",
+	"scripts": {
+		"dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+		"build": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/i2xc/OA-BackEnd.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/i2xc/OA-BackEnd/issues"
+	},
+	"homepage": "https://github.com/i2xc/OA-BackEnd#readme",
+	"dependencies": {
+		"decimal.js": "^10.2.0",
+		"jactools": "^3.3.0",
+		"lodash": "^4.17.15",
+		"moment": "^2.24.0",
+		"numeral": "^2.0.6",
+		"vue": "^2.6.11",
+		"vue-bus": "^1.2.1",
+		"vue-filter-number-format": "^2.0.0",
+		"vue-js-modal": "^1.3.33",
+		"vue-router": "^3.1.5"
+	},
+	"devDependencies": {
+		"@babel/plugin-proposal-class-properties": "^7.8.3",
+		"@babel/plugin-proposal-optional-chaining": "^7.8.3",
+		"@babel/plugin-transform-runtime": "^7.8.3",
+		"cross-env": "^7.0.0",
+		"jac-serve": "^1.0.0",
+		"laravel-mix": "^5.0.1",
+		"rimraf": "^3.0.2",
+		"stylus": "^0.54.7",
+		"stylus-loader": "^3.0.2",
+		"vue-template-compiler": "^2.6.11"
+	}
 }

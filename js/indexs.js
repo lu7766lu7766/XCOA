@@ -30,7 +30,7 @@ $(function ()
   // window.urls = "http://oa-group.com";
   // window.urls = "http://oa-company-699.com";
   // window.urls = 'http://api.oa.video88.cc'
-  window.urls = 'http://' + location.hostname.replace('www', 'api')
+  window.urls = 'http://' + location.hostname.replace(/^(www|site)/, 'api')
   // window.urls =   window.location.host; //
   $.ajaxSetup({
     xhrFields: {
