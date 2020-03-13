@@ -11,6 +11,10 @@ export default {
 			const res = await this.$thisApi.getDetail(body)
 			this.datas = res.data
 		},
+		async getList() {
+			const res = await this.$thisApi.getList({ ..._.pickBy({ ...this.$route.query }), company_id: [] })
+			this.datas = res.data
+		},
 		getGroupByProcess() {
 			return this.getGroupByNameDatas(this.datas, 'process_type', 'process_type')
 		},

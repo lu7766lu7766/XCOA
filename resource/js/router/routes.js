@@ -41,6 +41,22 @@ export default [
 				],
 			},
 			{
+				path: 'Finance/Group/CompanyTotalFeePercentage.html',
+				component: () => import('pages/OperatingReport'),
+				children: [
+					{
+						path: '',
+						name: 'operating-report-company-percentage',
+						component: () => import('pages/OperatingReport/CompanyPercentage/Headquarters'),
+					},
+					{
+						path: 'detail',
+						name: 'operating-report-company-percentage-detail',
+						component: () => import('pages/OperatingReport/CompanyPercentage/Headquarters/Detail'),
+					},
+				],
+			},
+			{
 				path: 'StatisticsFinance',
 				component: () => import('pages/StatisticsFinance'),
 				name: 'statistics-finance',
