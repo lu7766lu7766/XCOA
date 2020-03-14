@@ -287,8 +287,7 @@ import ListMixins from '../../List'
 export default {
   mixins: [ListMixins],
   api: 'operating_report.headquarters',
-  async mounted()
-  {
+  async mounted() {
     await this.getOptions()
     this.doSearch()
   },

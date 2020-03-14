@@ -38,7 +38,20 @@
             v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
             :key="baoxiaoName"
           >
-            <tr class="tr-main">
+            <tr class="tr-main" v-if="!$route.query.company_id">
+              <td class="text-right">
+                {{ _.jSumBy(baoxiaoDatas, "total_amount") | money }}
+              </td>
+              <td class="text-right">100.00%</td>
+              <td class="text-right">
+                {{
+                  (_.jSumBy(baoxiaoDatas, "total_amount") / allDatasTotalFee)
+                    | percent
+                }}%
+              </td>
+              <td>100.00%</td>
+            </tr>
+            <tr class="tr-main" v-else>
               <td>
                 {{ baoxiaoName }}
               </td>
@@ -92,69 +105,6 @@
                 </td>
               </template>
             </tr>
-            <!-- collapse -->
-            <tr
-              class="tr-sub"
-              v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)"
-              :key="feeName"
-            >
-              <td>- {{ feeName }}</td>
-              <template
-                v-for="totalFee in [
-                  getSumByListFilter(
-                    feeDatas,
-                    [+$route.query.company_id],
-                    'company_id'
-                  )
-                ]"
-              >
-                <td class="text-right">
-                  <router-link
-                    class="text-green"
-                    v-if="totalFee > 0 && $route.query.company_id"
-                    :to="{
-                      name: 'statistics-finance',
-                      query: {
-                        company_id: $route.query.company_id,
-                        currency_id: search.currency_id,
-                        end: search.end,
-                        start: search.start,
-                        level1: getUnionProcessByFilterCompanyID(
-                          feeDatas,
-                          $route.query.company_id
-                        ).join(','),
-                        level2: _.map(
-                          groupByNamePayout[baoxiaoName],
-                          'id'
-                        ).join(','),
-                        level3: _.map(groupByNamePayout[feeName], 'id').join(
-                          ','
-                        )
-                      }
-                    }"
-                  >
-                    {{ totalFee | money }}
-                  </router-link>
-                  <span v-else :class="totalFee > 0 ? 'text-green' : ''">
-                    {{ totalFee | money }}
-                  </span>
-                </td>
-                <td class="text-right">
-                  {{
-                    (totalFee / _.jSumBy(baoxiaoDatas, "total_amount"))
-                      | percent
-                  }}%
-                </td>
-                <td class="text-right">
-                  {{ (totalFee / allDatasTotalFee) | percent }}%
-                </td>
-                <td class="text-right">
-                  {{
-                    (totalFee / _.jSumBy(feeDatas, "total_amount")) | percent
-                  }}%
-                </td>
-              </template>
-            </tr>
           </tbody>
           <tfoot>
             <tr>
@@ -175,12 +125,17 @@
 </template>
 
 <script>
-import DetailMixins from '../../Detail'
+import ListMixins from '../../List'
 
 export default {
-  mixins: [DetailMixins],
+  mixins: [ListMixins],
   api: 'operating_report.headquarters',
-  async mounted()  {
+  computed: {
+    currentCompany() {
+      return _.find(this.options.company, x => x.id === +this.$route.query.company_id) || { name: '总公司' }
+    },
+  },
+  async mounted() {
     await this.getOptions()
     this.getList()
   },
