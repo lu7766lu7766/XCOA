@@ -15,12 +15,12 @@ export default [
 					{
 						path: '',
 						name: 'operating-report-headquarters',
-						component: () => import('pages/OperatingReport/Headquarters'),
+						component: () => import('pages/OperatingReport/CompanyTotalFeeRate/Headquarters'),
 					},
 					{
 						path: 'detail',
 						name: 'operating-report-detail',
-						component: () => import('pages/OperatingReport/Headquarters/Detail'),
+						component: () => import('pages/OperatingReport/CompanyTotalFeeRate/Headquarters/Detail'),
 					},
 				],
 			},
@@ -31,12 +31,12 @@ export default [
 					{
 						path: '',
 						name: 'operating-report-branch-headquarters',
-						component: () => import('pages/OperatingReport/Branch'),
+						component: () => import('pages/OperatingReport/CompanyTotalFeeRate/Branch'),
 					},
 					{
 						path: 'detail',
 						name: 'operating-report-branch-detail',
-						component: () => import('pages/OperatingReport/Branch/Detail'),
+						component: () => import('pages/OperatingReport/CompanyTotalFeeRate/Branch/Detail'),
 					},
 				],
 			},

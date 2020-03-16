@@ -19,6 +19,8 @@ export default {
     Vue.filter('percent', val => numFormat(numeral)(val * 100, '0,0.00'))
 
     Vue.component('JSelect', require('@/Form/Select').default)
+
+    Vue.prototype.$getScript = src => new Promise(resolve => $.getScript(src, () => resolve(1)) )
   },
 }
 
