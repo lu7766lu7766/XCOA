@@ -1,7 +1,8 @@
-import ListMixins from '../List'
+import ListMixins from './List'
 
 export default {
 	mixins: [ListMixins],
+	components: { JPie: require('@/Chart/Pie').default },
 	methods: {
 		async getDetail() {
 			let body = _.pickBy({ ...this.$route.query })

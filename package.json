@@ -19,10 +19,12 @@
 	"homepage": "https://github.com/i2xc/OA-BackEnd#readme",
 	"dependencies": {
 		"decimal.js": "^10.2.0",
+		"echarts": "^4.6.0",
 		"jactools": "^3.3.0",
 		"lodash": "^4.17.15",
 		"moment": "^2.24.0",
 		"numeral": "^2.0.6",
+		"v-charts": "^1.19.0",
 		"vue": "^2.6.11",
 		"vue-bus": "^1.2.1",
 		"vue-filter-number-format": "^2.0.0",
