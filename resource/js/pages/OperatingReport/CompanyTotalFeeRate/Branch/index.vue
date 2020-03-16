@@ -47,7 +47,7 @@
 					</thead>
 					<!--number-->
 
-					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao()" :key="baoxiaoName">
+					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 						<tr class="tr-main" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
 							<td>{{ baoxiaoName }}</td>
 							<td class="text-right" v-for="(company, index) in showCompany" :key="index">

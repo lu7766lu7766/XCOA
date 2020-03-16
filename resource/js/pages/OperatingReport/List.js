@@ -61,7 +61,7 @@ export default {
 		},
 		setCollapse() {
 			this.collapse = _.reduce(
-				this.groupByBaoxiao(),
+				this.groupByBaoxiao,
 				(result, d, baoxiaoName) => {
 					result[baoxiaoName] = false
 					return result
@@ -89,7 +89,7 @@ export default {
 				company_id: this.search.company_id.join(','),
 			})
 		},
-		getGroupByBaoxiao() {
+		getgroupByBaoxiao {
 			return this.getGroupByNameDatas(this.datas, 'baoxiao_type')
 		},
 		getGroupByFee(datas) {
@@ -134,8 +134,8 @@ export default {
 		allDatasTotalFee() {
 			return _.jSumBy(this.datas, 'total_amount')
 		},
-		groupByBaoxiao() {
-			return this.getGroupByBaoxiao()
+		groupByBaoxiao {
+			return this.getgroupByBaoxiao
 		},
 	},
 }
