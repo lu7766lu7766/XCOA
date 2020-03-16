@@ -57,6 +57,22 @@ export default [
 				],
 			},
 			{
+				path: 'Finance/Group/RegionCompanyFeeRate.html',
+				component: () => import('pages/OperatingReport'),
+				children: [
+					{
+						path: '',
+						name: 'operating-report-company-percentage',
+						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Headquarters'),
+					},
+					{
+						path: 'detail',
+						name: 'operating-report-company-percentage-detail',
+						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Headquarters/Detail'),
+					},
+				],
+			},
+			{
 				path: 'StatisticsFinance',
 				component: () => import('pages/StatisticsFinance'),
 				name: 'statistics-finance',
