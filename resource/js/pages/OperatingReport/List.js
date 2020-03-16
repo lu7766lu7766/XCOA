@@ -89,7 +89,7 @@ export default {
 				company_id: this.search.company_id.join(','),
 			})
 		},
-		getgroupByBaoxiao {
+		getGroupByBaoxiao() {
 			return this.getGroupByNameDatas(this.datas, 'baoxiao_type')
 		},
 		getGroupByFee(datas) {
@@ -134,8 +134,8 @@ export default {
 		allDatasTotalFee() {
 			return _.jSumBy(this.datas, 'total_amount')
 		},
-		groupByBaoxiao {
-			return this.getgroupByBaoxiao
+		groupByBaoxiao() {
+			return this.getGroupByBaoxiao()
 		},
 	},
 }
