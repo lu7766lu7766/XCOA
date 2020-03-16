@@ -61,7 +61,7 @@ export default {
 		},
 		setCollapse() {
 			this.collapse = _.reduce(
-				this.getGroupByBaoxiao(),
+				this.groupByBaoxiao(),
 				(result, d, baoxiaoName) => {
 					result[baoxiaoName] = false
 					return result
@@ -134,9 +134,8 @@ export default {
 		allDatasTotalFee() {
 			return _.jSumBy(this.datas, 'total_amount')
 		},
-    groupByBaoxiao()
-    {
-      return this.getGroupByNameDatas(this.datas, 'baoxiao_type')
-    }
+		groupByBaoxiao() {
+			return this.getGroupByBaoxiao()
+		},
 	},
 }

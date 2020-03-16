@@ -26,7 +26,7 @@
 							<th>总公司类型百分点</th>
 						</tr>
 					</thead>
-					<tbody v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()" :key="baoxiaoName">
+					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao()" :key="baoxiaoName">
 						<tr class="tr-main" v-if="!$route.query.company_id">
 							<td class="text-right">{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}</td>
 							<td class="text-right">100.00%</td>

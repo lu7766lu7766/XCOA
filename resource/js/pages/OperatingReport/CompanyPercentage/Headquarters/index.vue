@@ -118,7 +118,7 @@
           </thead>
 
           <tbody
-            v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
+            v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao()"
             :key="baoxiaoName"
           >
             <tr

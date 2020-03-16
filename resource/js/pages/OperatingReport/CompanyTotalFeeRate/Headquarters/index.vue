@@ -71,7 +71,7 @@
           <!--number-->
           <template v-if="showNumber">
             <tbody
-                v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
+                v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao()"
                 :key="baoxiaoName">
             <tr class="tr-main"
                 @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
@@ -150,7 +150,7 @@
           <!--percent-->
           <template v-else>
             <tbody
-                v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()"
+                v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao()"
                 :key="baoxiaoName">
             <tr class="tr-main"
                 role="button"

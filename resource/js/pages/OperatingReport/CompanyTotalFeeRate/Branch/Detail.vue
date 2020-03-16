@@ -24,7 +24,7 @@
 							<th class="text-center">总计</th>
 						</tr>
 					</thead>
-					<tbody v-for="(baoxiaoDatas, baoxiaoName) in getGroupByBaoxiao()" :key="baoxiaoName">
+					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao()" :key="baoxiaoName">
 						<tr>
 							<td>
 								<b>{{ baoxiaoName }}</b>
