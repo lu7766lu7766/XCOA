@@ -8,7 +8,7 @@ export default {
 			const res = await this.$thisApi.getList(this.reqBody)
 			_.forEach(res.data, data => {
 				const company = _.find(this.options.company, x => x.id === +data.company_id)
-				const region = _.find(RegionConstant, x => x.list.indexOf(company.name) > -1) || { id: 1, name: '其他' }
+				const region = _.find(this.options.region, x => x.list.indexOf(company.name) > -1) || { id: 1, name: '其他' }
 				data.region_type = region.id
 			})
 			this.datas = res.data

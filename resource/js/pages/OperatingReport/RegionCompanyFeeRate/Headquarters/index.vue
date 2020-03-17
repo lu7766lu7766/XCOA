@@ -5,23 +5,11 @@
 				<div class="layui-form layuiadmin-card-header-auto">
 					<div class="layui-form-item search-box">
 						<div class="layui-inline">
-							<a id="addSurvey" class="layui-btn btn-change" @click="switchType">{{ txt.type }}</a>
+							<a id="addSurvey" class="layui-btn btn-change" @click="switchType">{{ txt.typeRegion }}</a>
 						</div>
 						<div class="form-box">
 							<date-range-picker :start.sync="search.start" :end.sync="search.end"></date-range-picker>
 							<date-button :start.sync="search.start" :end.sync="search.end"></date-button>
-							<div class="layui-inline multiple-box">
-								<label class="layui-form-label">币值：</label>
-								<div class="layui-input-inline">
-									<j-select title="币值" :datas="options.currency" valueKey="id" displayKey="zh_name" v-model="search.currency_id" />
-								</div>
-							</div>
-							<div class="layui-inline multiple-box">
-								<label class="layui-form-label">公司：</label>
-								<div class="layui-input-inline">
-									<multi-select :datas="options.company" valueKey="id" v-model="search.company_id"></multi-select>
-								</div>
-							</div>
 							<div class="layui-inline">
 								<button id="InquireSur" class="layui-btn" title="查询" @click="doSearch">
 									<i class="iconfont icon-sousuo"></i>
@@ -51,19 +39,19 @@
 								</router-link>
 								<br />{{ txt.currency }}
 							</th>
-							<th class="text-center" v-for="(companies, region_type) in groupByRegion" :key="region_type">
+							<th class="text-center" v-for="region in options.region" :key="region.id">
 								<router-link
 									:to="{
 										name: 'operating-report-region-fee-detail',
 										query: {
-											company_id: getUnionCompanyID(companies).join(','),
+											company_id: getUnionCompanyID(groupByRegion[region.id]).join(','),
 											currency_id: search.currency_id,
-											region_type,
+											region_type: region.id,
 											start: search.start,
 											end: search.end,
 										},
 									}"
-									>{{ indexByRegionID[region_type].name }}<br />{{ txt.currency }}
+									>{{ indexByRegionID[region.id].name }}<br />{{ txt.currency }}
 								</router-link>
 							</th>
 						</tr>
@@ -75,18 +63,18 @@
 								<td class="text-right">
 									{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
 								</td>
-								<template v-for="(companies, region_type) in groupByRegion">
-									<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, getUnionCompanyID(companies), 'company_id')]">
+								<template v-for="region in options.region">
+									<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, getUnionCompanyID(groupByRegion[region.id]), 'company_id')]">
 										<td class="text-right">
 											<router-link
 												:to="{
 													name: 'statistics-finance',
 													query: {
-														company_id: getUnionCompanyID(companies).join(','),
+														company_id: getUnionCompanyID(groupByRegion[region.id]).join(','),
 														currency_id: search.currency_id,
 														end: search.end,
 														start: search.start,
-														level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, getUnionCompanyID(companies)).join(','),
+														level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, getUnionCompanyID(groupByRegion[region.id])).join(','),
 														level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
 														level3: '',
 													},
@@ -104,18 +92,18 @@
 								<td class="text-right">
 									{{ _.jSumBy(feeDatas, 'total_amount') | money }}
 								</td>
-								<template v-for="(companies, region_type) in groupByRegion">
-									<template v-for="totalFee in [getSumByListFilter(feeDatas, getUnionCompanyID(companies), 'company_id')]">
+								<template v-for="region in options.region">
+									<template v-for="totalFee in [getSumByListFilter(feeDatas, getUnionCompanyID(groupByRegion[region.id]), 'company_id')]">
 										<td class="text-right">
 											<router-link
 												:to="{
 													name: 'statistics-finance',
 													query: {
-														company_id: getUnionCompanyID(companies),
+														company_id: getUnionCompanyID(groupByRegion[region.id]),
 														currency_id: search.currency_id,
 														end: search.end,
 														start: search.start,
-														level1: getUnionProcessByFilterCompanyID(feeDatas, getUnionCompanyID(companies)).join(','),
+														level1: getUnionProcessByFilterCompanyID(feeDatas, getUnionCompanyID(groupByRegion[region.id])).join(','),
 														level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
 														level3: _.map(groupByNamePayout[feeName], 'id').join(','),
 													},
@@ -134,10 +122,10 @@
 							<tr class="tr-main" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
 								<td>{{ baoxiaoName }}</td>
 								<td class="text-right">
-									100%
+									100.00%
 								</td>
-								<template v-for="(companies, region_type) in groupByRegion">
-									<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, getUnionCompanyID(companies), 'company_id')]">
+								<template v-for="region in options.region">
+									<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, getUnionCompanyID(groupByRegion[region.id]), 'company_id')]">
 										<td class="text-right">
 											<span>{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</span>
 										</td>
@@ -148,10 +136,10 @@
 							<tr class="tr-sub" v-show="collapse[baoxiaoName]" v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
 								<td>- {{ feeName }}</td>
 								<td class="text-right">
-									100%
+									100.00%
 								</td>
-								<template v-for="(companies, region_type) in groupByRegion">
-									<template v-for="totalFee in [getSumByListFilter(feeDatas, getUnionCompanyID(companies), 'company_id')]">
+								<template v-for="region in options.region">
+									<template v-for="totalFee in [getSumByListFilter(feeDatas, getUnionCompanyID(groupByRegion[region.id]), 'company_id')]">
 										<td class="text-right">
 											<span> {{ (totalFee / _.jSumBy(feeDatas, 'total_amount')) | percent }}% </span>
 										</td>
@@ -167,9 +155,9 @@
 							<td class="text-right">
 								{{ allDatasTotalFee | money }}
 							</td>
-							<template v-for="(companies, region_type) in groupByRegion">
+							<template v-for="region in options.region">
 								<td class="text-right">
-									{{ getSumByListFilter(datas, getUnionCompanyID(companies), 'company_id') | money }}
+									{{ getSumByListFilter(datas, getUnionCompanyID(groupByRegion[region.id]), 'company_id') | money }}
 								</td>
 							</template>
 						</tr>

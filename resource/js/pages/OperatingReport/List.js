@@ -40,6 +40,7 @@ export default {
 				switch: '全部展开',
 				currency: '',
 				type: '总公司比例',
+				typeRegion: '百分比切换',
 			},
 		}
 	},
@@ -53,6 +54,7 @@ export default {
 		switchType() {
 			this.switch.type = this.showNumber ? 'percent' : 'number'
 			this.txt.type = this.showNumber ? '总公司比例' : '总公司数值'
+			this.txt.typeRegion = this.showNumber ? '百分比切换' : '数值切换'
 		},
 		toggleAll() {
 			this.switch.collapse = !this.switch.collapse

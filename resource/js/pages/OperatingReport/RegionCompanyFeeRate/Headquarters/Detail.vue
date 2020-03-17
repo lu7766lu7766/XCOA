@@ -20,7 +20,9 @@
 					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 						<tr class="tr-main" v-if="!$route.query.company_id">
 							<td>{{ baoxiaoName }}</td>
-							<td class="text-right">{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}</td>
+							<td class="text-right" :class="_.jSumBy(baoxiaoDatas, 'total_amount') > 0 ? 'text-green' : ''">
+								{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
+							</td>
 						</tr>
 						<tr class="tr-main" v-else>
 							<td>{{ baoxiaoName }}</td>
