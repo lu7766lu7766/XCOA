@@ -118,7 +118,7 @@ export default {
 		},
 		getUnionProcessByFilterCompanyID(datas, companyID) {
 			return _.chain(datas)
-				.filter(x => x.company_id === companyID)
+				.filter(x => (_.isArray(companyID) ? companyID.indexOf(x.company_id) > -1 : x.company_id === companyID))
 				.map('process_type')
 				.union()
 				.value()

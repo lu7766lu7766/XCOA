@@ -62,12 +62,12 @@ export default [
 				children: [
 					{
 						path: '',
-						name: 'operating-report-company-percentage',
+						name: 'operating-report-region-fee',
 						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Headquarters'),
 					},
 					{
 						path: 'detail',
-						name: 'operating-report-company-percentage-detail',
+						name: 'operating-report-region-fee-detail',
 						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Headquarters/Detail'),
 					},
 				],

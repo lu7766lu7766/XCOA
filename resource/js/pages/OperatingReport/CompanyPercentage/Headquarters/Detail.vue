@@ -84,7 +84,7 @@
 			<div class="chart-box">
 				<div class="chart-box">
 					<!-- <div ref="chart-container" style="min-height:350px;height: 100%"></div> -->
-					<j-pie :datas="groupByBaoxiao"></j-pie>
+					<j-pie :datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => x.company_id === +$route.query.company_id))"></j-pie>
 				</div>
 			</div>
 		</div>
