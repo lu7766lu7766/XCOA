@@ -1,4 +1,5 @@
 import ListMixins from 'mixins/List'
+import RegionConstant from 'constants/Region'
 
 export default {
 	mixins: [ListMixins],
@@ -32,6 +33,7 @@ export default {
 				company: [],
 				currency: [],
 				payout: [],
+				region: RegionConstant,
 			},
 			showCompany: [],
 			txt: {
@@ -123,6 +125,9 @@ export default {
 				.union()
 				.value()
 		},
+		findRegion(companyName) {
+			return _.find(this.options.region, x => x.list.indexOf(companyName) > -1) || _.find(this.options.region, x => x.id == 1)
+		},
 	},
 	computed: {
 		groupByNamePayout() {
@@ -136,6 +141,9 @@ export default {
 		},
 		groupByBaoxiao() {
 			return this.getGroupByBaoxiao()
+		},
+		companyIDs() {
+			return this.$route.query.company_id.split(',').map(x => +x)
 		},
 	},
 }

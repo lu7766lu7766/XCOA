@@ -55,7 +55,7 @@
 						<tr>
 							<td class="text-center">总计</td>
 							<td class="text-right">
-								<span v-if="!$route.query.company_id">{{ allDatasTotalFee | money }}</span>
+								<span v-if="!$route.query.region_type">{{ allDatasTotalFee | money }}</span>
 								<span v-else>{{ getSumByListFilter(datas, this.companyIDs, 'company_id') | money }}</span>
 							</td>
 						</tr>
@@ -65,7 +65,9 @@
 			</div>
 			<div class="chart-box">
 				<div class="chart-box">
-					<j-pie :datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => currentRegion.id === 0 || currentRegion.id === x.region_type))"></j-pie>
+					<j-pie
+						:datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => currentRegion.id === 0 || currentRegion.id === x.region_type))"
+					></j-pie>
 				</div>
 			</div>
 		</div>

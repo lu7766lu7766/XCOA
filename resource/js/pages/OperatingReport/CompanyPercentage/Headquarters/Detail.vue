@@ -23,20 +23,19 @@
 							<th>费用</th>
 							<th>类型百分点</th>
 							<th>公司总费用百分点</th>
-							<th>总公司类型百分点</th>
+							<th>总公司子类型类别</th>
 						</tr>
 					</thead>
 					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 						<tr class="tr-main" v-if="!$route.query.company_id">
+							<td>{{ baoxiaoName }}</td>
 							<td class="text-right">{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}</td>
 							<td class="text-right">100.00%</td>
 							<td class="text-right">{{ (_.jSumBy(baoxiaoDatas, 'total_amount') / allDatasTotalFee) | percent }}%</td>
 							<td>100.00%</td>
 						</tr>
 						<tr class="tr-main" v-else>
-							<td>
-								{{ baoxiaoName }}
-							</td>
+							<td>{{ baoxiaoName }}</td>
 							<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, [+$route.query.company_id], 'company_id')]">
 								<td class="text-right">
 									<router-link
@@ -61,7 +60,7 @@
 										{{ totalFee | money }}
 									</span>
 								</td>
-								<td class="text-right">100.00%</td>
+								<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
 								<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
 								<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 							</template>
@@ -71,7 +70,8 @@
 						<tr>
 							<td class="text-center">总计</td>
 							<td class="text-right">
-								{{ allDatasTotalFee | money }}
+								<span v-if="!$route.query.company_id">{{ allDatasTotalFee | money }}</span>
+								<span v-else>{{ getSumByListFilter(datas, this.companyIDs, 'company_id') | money }}</span>
 							</td>
 							<td class="text-right"></td>
 							<td class="text-right"></td>
@@ -84,7 +84,9 @@
 			<div class="chart-box">
 				<div class="chart-box">
 					<!-- <div ref="chart-container" style="min-height:350px;height: 100%"></div> -->
-					<j-pie :datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => x.company_id === +$route.query.company_id))"></j-pie>
+					<j-pie
+						:datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => !$route.query.company_id || x.company_id === +$route.query.company_id))"
+					></j-pie>
 				</div>
 			</div>
 		</div>

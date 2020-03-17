@@ -47,7 +47,8 @@
 											end: search.end,
 										},
 									}"
-									>总公司
+									>总公司<br />
+									总公司
 								</router-link>
 								<br />{{ txt.currency }}
 							</th>
@@ -62,7 +63,7 @@
 											end: search.end,
 										},
 									}"
-									>{{ company.name }}<br />{{ txt.currency }}
+									>{{ findRegion(company.name).name }}<br />{{ company.name }}<br />{{ txt.currency }}
 								</router-link>
 							</th>
 						</tr>

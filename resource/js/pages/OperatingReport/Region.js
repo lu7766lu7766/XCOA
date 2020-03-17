@@ -1,14 +1,8 @@
 import ListMixins from './List'
-import RegionConstant from 'constants/Region'
 
 export default {
 	mixins: [ListMixins],
 	components: { JPie: require('@/Chart/Pie').default },
-	data: () => ({
-		options: {
-			region: RegionConstant,
-		},
-	}),
 	methods: {
 		async getList() {
 			const res = await this.$thisApi.getList(this.reqBody)
@@ -41,9 +35,6 @@ export default {
 		},
 		currentRegion() {
 			return this.$route.query.region_type ? _.find(this.options.region, x => x.id === +this.$route.query.region_type) : { id: 0, name: '总公司' }
-		},
-		companyIDs() {
-			return this.$route.query.company_id.split(',').map(x => +x)
 		},
 	},
 }

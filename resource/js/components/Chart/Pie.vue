@@ -1,5 +1,5 @@
 <template>
-	<ve-pie v-if="Object.keys(datas).length" :afterConfig="getConfig"></ve-pie>
+	<ve-pie v-if="Object.keys(datas).length" height="500px" :afterConfig="getConfig"></ve-pie>
 </template>
 
 <script>

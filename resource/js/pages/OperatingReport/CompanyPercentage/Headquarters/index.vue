@@ -4,9 +4,6 @@
 			<div class="layui-row layui-col-space10 layui-card-body">
 				<div class="layui-form layuiadmin-card-header-auto">
 					<div class="layui-form-item search-box">
-						<div class="layui-inline">
-							<a id="addSurvey" class="layui-btn btn-change" @click="switchType">{{ txt.type }}</a>
-						</div>
 						<div class="form-box">
 							<date-range-picker :start.sync="search.start" :end.sync="search.end"></date-range-picker>
 							<date-button :start.sync="search.start" :end.sync="search.end"></date-button>
@@ -47,7 +44,8 @@
 											end: search.end,
 										},
 									}"
-									>总公司
+									>总公司<br />
+									总公司
 								</router-link>
 								<br />{{ txt.currency }}
 							</th>
@@ -62,7 +60,7 @@
 											end: search.end,
 										},
 									}"
-									>{{ company.name }}<br />{{ txt.currency }}
+									>{{ findRegion(company.name).name }}<br />{{ company.name }}<br />{{ txt.currency }}
 								</router-link>
 							</th>
 						</tr>
@@ -75,7 +73,7 @@
 								<th>费用</th>
 								<th>类型百分点</th>
 								<th>公司总费用百分点</th>
-								<th>总公司类型百分点</th>
+								<th>总公司子类型类别</th>
 							</template>
 						</tr>
 					</thead>
@@ -108,7 +106,7 @@
 											{{ totalFee | money }}
 										</router-link>
 									</td>
-									<td class="text-right">100.00%</td>
+									<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 								</template>
