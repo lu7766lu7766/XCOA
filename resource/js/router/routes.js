@@ -73,6 +73,22 @@ export default [
 				],
 			},
 			{
+				path: 'Finance/Group/CrossCompanyAnalysis.html',
+				component: () => import('pages/OperatingReport'),
+				children: [
+					{
+						path: '',
+						name: 'operating-report-cross-company',
+						component: () => import('pages/OperatingReport/CrossCompanyAnalysis/Headquarters'),
+					},
+					{
+						path: 'detail',
+						name: 'operating-report-cross-company-detail',
+						component: () => import('pages/OperatingReport/CrossCompanyAnalysis/Headquarters/Detail'),
+					},
+				],
+			},
+			{
 				path: 'StatisticsFinance',
 				component: () => import('pages/StatisticsFinance'),
 				name: 'statistics-finance',

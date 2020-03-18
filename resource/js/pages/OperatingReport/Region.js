@@ -16,6 +16,9 @@ export default {
 		getUnionCompanyID(datas) {
 			return _.union(_.map(datas, 'company_id'))
 		},
+		getUnionBaoxiaoType(datas) {
+			return _.union(_.map(datas, 'baoxiao_type'))
+		},
 	},
 	computed: {
 		showCompanyID() {
@@ -24,8 +27,11 @@ export default {
 		filterCompany() {
 			return _.filter(this.datas, x => this.showCompanyID.indexOf(x.company_id) > -1)
 		},
-		groupByRegion() {
+		groupByRegionID() {
 			return _.groupBy(this.filterCompany, 'region_type')
+		},
+		groupByRegionName() {
+			return _.mapKeys(this.groupByRegionID, (v, id) => this.indexByRegionID[id].name)
 		},
 		indexByRegionID() {
 			return _.keyBy(this.options.region, 'id')
@@ -35,6 +41,18 @@ export default {
 		},
 		currentRegion() {
 			return this.$route.query.region_type ? _.find(this.options.region, x => x.id === +this.$route.query.region_type) : { id: 0, name: '总公司' }
+		},
+		groupByRegionDatas() {
+			return _.mapValues(_.groupBy(this.options.region, 'name'), region => {
+				const ids = _.map(region, 'id')
+				return _.filter(this.datas, x => ids.indexOf(x['region_type']) > -1)
+			})
+		},
+		groupByCompanyDatas() {
+			return _.mapValues(_.groupBy(this.options.company, 'name'), company => {
+				const ids = _.map(company, 'id')
+				return _.filter(this.datas, x => ids.indexOf(x['company_id']) > -1)
+			})
 		},
 	},
 }
