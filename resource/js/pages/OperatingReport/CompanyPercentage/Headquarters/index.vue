@@ -73,7 +73,7 @@
 								<th>费用</th>
 								<th>类型百分点</th>
 								<th>公司总费用百分点</th>
-								<th>总公司子类型类别</th>
+								<th>总公司子类型百分点</th>
 							</template>
 						</tr>
 					</thead>
@@ -82,7 +82,9 @@
 						<tr class="tr-main" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
 							<td>{{ baoxiaoName }}</td>
 							<td class="text-right">
-								{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
+								<span :class="_.jSumBy(baoxiaoDatas, 'total_amount') > 0 ? 'text-green' : ''">
+									{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
+								</span>
 							</td>
 							<td class="text-right">100.00%</td>
 							<td class="text-right">{{ (_.jSumBy(baoxiaoDatas, 'total_amount') / allDatasTotalFee) | percent }}%</td>
@@ -90,6 +92,8 @@
 								<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, [company.id], 'company_id')]">
 									<td class="text-right">
 										<router-link
+											class="text-green"
+											v-if="totalFee > 0"
 											:to="{
 												name: 'statistics-finance',
 												query: {
@@ -105,6 +109,7 @@
 										>
 											{{ totalFee | money }}
 										</router-link>
+										<span v-else>{{ totalFee | money }}</span>
 									</td>
 									<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
@@ -116,7 +121,9 @@
 						<tr class="tr-sub" v-show="collapse[baoxiaoName]" v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
 							<td>- {{ feeName }}</td>
 							<td class="text-right">
-								{{ _.jSumBy(feeDatas, 'total_amount') | money }}
+								<span :class="_.jSumBy(feeDatas, 'total_amount') > 0 ? 'text-green' : ''">
+									{{ _.jSumBy(feeDatas, 'total_amount') | money }}
+								</span>
 							</td>
 							<td class="text-right">{{ (_.jSumBy(feeDatas, 'total_amount') / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 							<td class="text-right">{{ (_.jSumBy(feeDatas, 'total_amount') / allDatasTotalFee) | percent }}%</td>
@@ -124,6 +131,8 @@
 								<template v-for="totalFee in [getSumByListFilter(feeDatas, [company.id], 'company_id')]">
 									<td class="text-right">
 										<router-link
+											class="text-green"
+											v-if="totalFee > 0"
 											:to="{
 												name: 'statistics-finance',
 												query: {
@@ -139,6 +148,7 @@
 										>
 											{{ totalFee | money }}
 										</router-link>
+										<span v-else>{{ totalFee | money }}</span>
 									</td>
 									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
