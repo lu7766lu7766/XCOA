@@ -4,7 +4,9 @@
 			<div class="layui-row layui-col-space10 layui-card-body">
 				<div class="layui-form layuiadmin-card-header-auto">
 					<div class="layui-form-item search-box">
-						<div class="layui-inline">詳細數據({{ currentRegion.name }})</div>
+						<div class="layui-card-header">
+							{{ detailTxt.title }}
+						</div>
 						<div class="form-box">
 							<div class="layui-inline">
 								<button id="toCompanyList" class="layui-btn fr" @click="$router.back()">
@@ -15,60 +17,17 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="layui-card-body">
-				<table class="layui-table statisics-table" id="SurveyLiet" lay-filter="SurveyLiet">
-					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
-						<tr class="tr-main" v-if="!$route.query.company_id">
-							<td>{{ baoxiaoName }}</td>
-							<td class="text-right" :class="_.jSumBy(baoxiaoDatas, 'total_amount') > 0 ? 'text-green' : ''">
-								{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
-							</td>
-						</tr>
-						<tr class="tr-main" v-else>
-							<td>{{ baoxiaoName }}</td>
-							<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, companyIDs, 'company_id')]">
-								<td class="text-right">
-									<router-link
-										class="text-green"
-										v-if="totalFee > 0 && $route.query.region_type"
-										:to="{
-											name: 'statistics-finance',
-											query: {
-												company_id: companyIDs.join(','),
-												currency_id: search.currency_id,
-												end: search.end,
-												start: search.start,
-												level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, companyIDs).join(','),
-												level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
-												level3: '',
-											},
-										}"
-									>
-										{{ totalFee | money }}
-									</router-link>
-									<span v-else :class="totalFee > 0 ? 'text-green' : ''">
-										{{ totalFee | money }}
-									</span>
-								</td>
-							</template>
-						</tr>
-					</tbody>
-					<tfoot>
-						<tr>
-							<td class="text-center">总计</td>
-							<td class="text-right">
-								<span v-if="!$route.query.region_type">{{ allDatasTotalFee | money }}</span>
-								<span v-else>{{ getSumByListFilter(datas, this.companyIDs, 'company_id') | money }}</span>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-				<!-- <div id="SurveyLietPage"></div> -->
-			</div>
-			<div class="chart-box">
 				<div class="chart-box">
 					<j-pie
-						:datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => currentRegion.id === 0 || currentRegion.id === x.region_type))"
+						height="800"
+						:title="detailTxt.pie"
+						:datas="
+							isRegion
+								? _.mapKeys(_.groupBy(groupByBaoxiao[baoxiaoName], 'region_type'), (x, id) => indexByRegionID[id].name)
+								: _.mapKeys(_.groupBy(groupByBaoxiao[baoxiaoName], 'company_id'), (x, id) => indexByCompanyID[id].name)
+						"
 					></j-pie>
 				</div>
 			</div>
@@ -82,6 +41,26 @@
 	export default {
 		mixins: [RegionMixins],
 		api: 'operating_report.headquarters',
+		computed: {
+			type() {
+				return this.$route.query.type
+			},
+			baoxiaoName() {
+				return this.$route.query.baoxiaoName
+			},
+			isRegion() {
+				return this.type === 'region'
+			},
+			isCompany() {
+				return this.type === 'company'
+			},
+			detailTxt() {
+				return {
+					title: this.isRegion ? `依照地区分析(${this.baoxiaoName})` : `依照各公司分析(${this.baoxiaoName})`,
+					pie: this.isRegion ? `各地区总费用百分比` : `总公司${this.baoxiaoName}分析`,
+				}
+			},
+		},
 		async mounted() {
 			await this.getOptions()
 			this.getList()

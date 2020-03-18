@@ -1,9 +1,11 @@
 <template>
-	<ve-pie v-if="Object.keys(datas).length" height="500px" :afterConfig="getConfig"></ve-pie>
+	<ve-pie v-if="Object.keys(datas).length" :height="height + 'px'" :afterConfig="getConfig"></ve-pie>
 </template>
 
 <script>
 	import VePie from 'v-charts/lib/pie.common'
+	import 'echarts/lib/component/title'
+
 	export default {
 		props: {
 			datas: {
@@ -14,6 +16,13 @@
 				type: String,
 				default: 'total_amount',
 			},
+			height: {
+				type: String | Number,
+				default: 500,
+			},
+			title: {
+				type: String,
+			},
 		},
 		components: {
 			VePie,
@@ -22,7 +31,7 @@
 			getConfig(options) {
 				options = Object.assign({}, options, {
 					title: {
-						text: '',
+						text: this.title,
 						left: 'center',
 					},
 					tooltip: {

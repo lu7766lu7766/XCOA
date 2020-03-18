@@ -36,6 +36,9 @@ export default {
 		indexByRegionID() {
 			return _.keyBy(this.options.region, 'id')
 		},
+		indexByCompanyID() {
+			return _.keyBy(this.options.company, 'id')
+		},
 		currentCompanies() {
 			return this.$route.query.region_type ? this.options.company : this.options.company.filter(x => this.companyIDs.indexOf(x.company_id) > -1)
 		},
