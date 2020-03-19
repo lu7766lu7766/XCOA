@@ -4,7 +4,11 @@
 			<div class="layui-row layui-col-space10 layui-card-body">
 				<div class="layui-form layuiadmin-card-header-auto">
 					<div class="layui-form-item search-box">
-						<div class="layui-inline">詳細數據({{ findRegion(currentCompany.name).name }}-{{ currentCompany.name }})</div>
+						<div class="layui-inline">
+							詳細數據(
+							{{ $route.query.company_id ? findRegion(currentCompany.name).name : currentCompany.name }}- {{ currentCompany.name }}
+							)
+						</div>
 						<div class="form-box">
 							<div class="layui-inline">
 								<button id="toCompanyList" class="layui-btn fr" @click="$router.back()">
@@ -29,7 +33,11 @@
 					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 						<tr class="tr-main" v-if="!$route.query.company_id">
 							<td>{{ baoxiaoName }}</td>
-							<td class="text-right">{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}</td>
+							<td class="text-right">
+								<span :class="_.jSumBy(baoxiaoDatas, 'total_amount') > 0 ? 'text-green' : ''">
+									{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
+								</span>
+							</td>
 							<td class="text-right">100.00%</td>
 							<td class="text-right">{{ (_.jSumBy(baoxiaoDatas, 'total_amount') / allDatasTotalFee) | percent }}%</td>
 						</tr>

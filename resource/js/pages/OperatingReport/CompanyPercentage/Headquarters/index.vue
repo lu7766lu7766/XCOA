@@ -82,9 +82,7 @@
 						<tr class="tr-main" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
 							<td>{{ baoxiaoName }}</td>
 							<td class="text-right">
-								<span :class="_.jSumBy(baoxiaoDatas, 'total_amount') > 0 ? 'text-green' : ''">
-									{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
-								</span>
+								{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
 							</td>
 							<td class="text-right">100.00%</td>
 							<td class="text-right">{{ (_.jSumBy(baoxiaoDatas, 'total_amount') / allDatasTotalFee) | percent }}%</td>
