@@ -55,10 +55,25 @@
     color: #4caf50;
 }
 /* table */
+.table-title{
+    background: #c8e9f3;
+    color: #255b6c;
+    padding: 5px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 .rwd-table{
     width: 100%;
     overflow: scroll;
+    margin-bottom: 15px;
     /* overflow: hidden; */
+}
+.statisics-table th{
+    text-align: center;
+}
+.statisics-table th.toggle-btn{
+    text-align: left;
 }
 .statisics-table tfoot td{
     background-color: #ccc;
@@ -91,6 +106,7 @@
 }
 .toggle-btn{
     vertical-align: bottom;
+    
 }
 .toggle-btn span{
     cursor: pointer;
@@ -117,4 +133,21 @@
 .statisticsDetail-table thead th,
 .statisticsDetail-table tbody td{
     padding: 9px 5px;
+}
+/* chart-box */
+.chart-box{
+    text-align: left;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 30px;
+}
+#chart-container{
+    min-height: 767px;
+}
+@media(max-width:767px){
+    .chart-box{
+        max-width 100%;
+        overflow: scroll;
+        overflow-x: hidden;
+    }
 }

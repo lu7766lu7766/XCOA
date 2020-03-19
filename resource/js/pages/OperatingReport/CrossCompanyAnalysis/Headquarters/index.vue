@@ -21,7 +21,20 @@
 						<thead>
 							<tr>
 								<th class=""></th>
-								<th>总费用</th>
+								<th>
+									<router-link
+										:to="{
+											name: 'operating-report-cross-company-detail',
+											query: {
+												type: 'region',
+												start: search.start,
+												end: search.end,
+											},
+										}"
+									>
+										总费用
+									</router-link>
+								</th>
 								<th v-for="(d, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 									<router-link
 										:to="{
@@ -33,8 +46,9 @@
 												end: search.end,
 											},
 										}"
-										>{{ baoxiaoName }}</router-link
 									>
+										{{ baoxiaoName }}
+									</router-link>
 								</th>
 							</tr>
 						</thead>
@@ -43,6 +57,8 @@
 								<td>{{ regionName }}</td>
 								<td class="text-right">
 									<router-link
+										class="text-green"
+										v-if="_.jSumBy(regionDatas, 'total_amount') > 0"
 										:to="{
 											name: 'statistics-finance',
 											query: {
@@ -57,10 +73,13 @@
 									>
 										{{ _.jSumBy(regionDatas, 'total_amount') | money }}
 									</router-link>
+									<span v-else>{{ _.jSumBy(regionDatas, 'total_amount') | money }}</span>
 								</td>
 								<td class="text-right" v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 									<template v-for="totalFee in [getSumByListFilter(regionDatas, getUnionBaoxiaoType(baoxiaoDatas), 'baoxiao_type')]">
 										<router-link
+											class="text-green"
+											v-if="totalFee > 0"
 											:to="{
 												name: 'statistics-finance',
 												query: {
@@ -76,6 +95,7 @@
 										>
 											{{ totalFee | money }}
 										</router-link>
+										<span v-else>{{ totalFee | money }}</span>
 									</template>
 								</td>
 							</tr>
@@ -83,6 +103,8 @@
 								<td>总公司</td>
 								<td class="text-right">
 									<router-link
+										class="text-green"
+										v-if="allDatasTotalFee > 0"
 										:to="{
 											name: 'statistics-finance',
 											query: {
@@ -97,9 +119,12 @@
 									>
 										{{ allDatasTotalFee | money }}
 									</router-link>
+									<span v-else>{{ allDatasTotalFee | money }}</span>
 								</td>
 								<td class="text-right" v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 									<router-link
+										class="text-green"
+										v-if="_.jSumBy(baoxiaoDatas, 'total_amount') > 0"
 										:to="{
 											name: 'statistics-finance',
 											query: {
@@ -115,6 +140,7 @@
 									>
 										{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
 									</router-link>
+									<span v-else>{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}</span>
 								</td>
 							</tr>
 						</tbody>
@@ -127,7 +153,20 @@
 						<thead>
 							<tr>
 								<th class=""></th>
-								<th class="">总费用</th>
+								<th class="">
+									<router-link
+										:to="{
+											name: 'operating-report-cross-company-detail',
+											query: {
+												type: 'company',
+												start: search.start,
+												end: search.end,
+											},
+										}"
+									>
+										总费用
+									</router-link>
+								</th>
 								<th v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 									<router-link
 										:to="{
@@ -139,8 +178,9 @@
 												end: search.end,
 											},
 										}"
-										>{{ baoxiaoName }}</router-link
 									>
+										{{ baoxiaoName }}
+									</router-link>
 								</th>
 							</tr>
 						</thead>
@@ -149,6 +189,8 @@
 								<td>{{ companyName }}</td>
 								<td class="text-right">
 									<router-link
+										class="text-green"
+										v-if="_.jSumBy(companyDatas, 'total_amount') > 0"
 										:to="{
 											name: 'statistics-finance',
 											query: {
@@ -163,10 +205,13 @@
 									>
 										{{ _.jSumBy(companyDatas, 'total_amount') | money }}
 									</router-link>
+									<span v-else>{{ _.jSumBy(companyDatas, 'total_amount') | money }}</span>
 								</td>
 								<td class="text-right" v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 									<template v-for="totalFee in [getSumByListFilter(companyDatas, getUnionBaoxiaoType(baoxiaoDatas), 'baoxiao_type')]">
 										<router-link
+											class="text-green"
+											v-if="totalFee > 0"
 											:to="{
 												name: 'statistics-finance',
 												query: {
@@ -182,6 +227,7 @@
 										>
 											{{ totalFee | money }}
 										</router-link>
+										<span v-else>{{ totalFee | money }}</span>
 									</template>
 								</td>
 							</tr>
@@ -189,6 +235,8 @@
 								<td>总公司</td>
 								<td class="text-right">
 									<router-link
+										class="text-green"
+										v-if="allDatasTotalFee > 0"
 										:to="{
 											name: 'statistics-finance',
 											query: {
@@ -203,9 +251,12 @@
 									>
 										{{ allDatasTotalFee | money }}
 									</router-link>
+									<span v-else>{{ allDatasTotalFee | money }}</span>
 								</td>
 								<td class="text-right" v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
 									<router-link
+										class="text-green"
+										v-if="_.jSumBy(baoxiaoDatas, 'total_amount') > 0"
 										:to="{
 											name: 'statistics-finance',
 											query: {
@@ -221,6 +272,7 @@
 									>
 										{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
 									</router-link>
+									<span v-else>{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}</span>
 								</td>
 							</tr>
 						</tbody>
