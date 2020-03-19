@@ -18,7 +18,7 @@
 			<div class="layui-card-body">
 				<table class="layui-table statisics-table" id="SurveyLiet" lay-filter="SurveyLiet">
 					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
-						<tr class="tr-main" v-if="!$route.query.company_id">
+						<tr class="tr-main" v-if="!$route.query.region_type">
 							<td>{{ baoxiaoName }}</td>
 							<td class="text-right" :class="_.jSumBy(baoxiaoDatas, 'total_amount') > 0 ? 'text-green' : ''">
 								{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}

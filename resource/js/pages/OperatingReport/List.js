@@ -115,6 +115,7 @@ export default {
 			)
 		},
 		getSumByListFilter(datas, list, prop, amountProp = 'total_amount') {
+			console.log(datas, list, prop)
 			return _.chain(datas)
 				.filter(x => list.indexOf(x[prop]) > -1)
 				.jSumBy(amountProp)
@@ -145,7 +146,10 @@ export default {
 			return this.getGroupByBaoxiao()
 		},
 		companyIDs() {
-			return this.$route.query.company_id.split(',').map(x => +x)
+			return this.$route.query.company_id
+				.split(',')
+				.filter(x => x !== '')
+				.map(x => +x)
 		},
 	},
 }

@@ -67,6 +67,8 @@
 									<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, getUnionCompanyID(groupByRegionID[region.id]), 'company_id')]">
 										<td class="text-right">
 											<router-link
+												class="text-green"
+												v-if="totalFee > 0"
 												:to="{
 													name: 'statistics-finance',
 													query: {
@@ -82,6 +84,7 @@
 											>
 												{{ totalFee | money }}
 											</router-link>
+											<span v-else>{{ totalFee | money }}</span>
 										</td>
 									</template>
 								</template>
@@ -96,6 +99,8 @@
 									<template v-for="totalFee in [getSumByListFilter(feeDatas, getUnionCompanyID(groupByRegionID[region.id]), 'company_id')]">
 										<td class="text-right">
 											<router-link
+												class="text-green"
+												v-if="totalFee > 0"
 												:to="{
 													name: 'statistics-finance',
 													query: {
@@ -111,6 +116,7 @@
 											>
 												{{ totalFee | money }}
 											</router-link>
+											<span v-else>{{ totalFee | money }}</span>
 										</td>
 									</template>
 								</template>
@@ -150,7 +156,7 @@
 					</template>
 
 					<tfoot>
-						<tr>
+						<tr v-if="showNumber">
 							<td class="text-center">总计</td>
 							<td class="text-right">
 								{{ allDatasTotalFee | money }}
@@ -158,6 +164,17 @@
 							<template v-for="region in options.region">
 								<td class="text-right">
 									{{ getSumByListFilter(datas, getUnionCompanyID(groupByRegionID[region.id]), 'company_id') | money }}
+								</td>
+							</template>
+						</tr>
+						<tr v-else>
+							<td class="text-center">总计</td>
+							<td class="text-right">
+								100.00%
+							</td>
+							<template v-for="region in options.region">
+								<td class="text-right">
+									{{ (getSumByListFilter(datas, getUnionCompanyID(groupByRegionID[region.id]), 'company_id') / allDatasTotalFee) | percent }}%
 								</td>
 							</template>
 						</tr>
