@@ -10,24 +10,51 @@ $.ajaxSetup({
 		withCredentials: true,
 	},
 })
-$(document).ajaxComplete(function(event, xhr, settings) {
-	$(
-		"a[href*='/download']," +
-			"a:contains('.jpg')," +
-			"a:contains('.jpeg')," +
-			"a:contains('.png')," +
-			"a:contains('.svg')," +
-			"a:contains('.bmp')," +
-			"a:contains('.pdf')"
-	).attr('target', '_blank')
-	// $('a[href*="/download"], a:contains(".jpg")').fancybox({
-	// 	width: 800,
-	// 	height: 700,
-	// 	type: 'iframe',
-	// })
-	// var el = document.querySelector("a[name$='jpg']")
-	// console.log(el)
+var findATag = function($el) {
+	return $el.is('a') ? $el : !$el.is('body') ? $el.parent() : false
+}
+// 利用冒泡偵聽點擊的內容，向上找到a
+$(document).ready(function() {
+	$('body').on('click', function(e) {
+		var $target = $(e.target)
+		if (
+			$target.is(
+				":contains('.jpg')," +
+					":contains('.jpeg')," +
+					":contains('.png')," +
+					":contains('.svg')," +
+					":contains('.bmp')," +
+					":contains('.pdf')"
+			)
+		) {
+			var $a = findATag($target)
+			if ($a) {
+				$a.attr('target', '_blank')
+				// window.open($a.attr('href'), $target.text())
+				// e.stopPropagation()
+				// e.preventDefault()
+			}
+		}
+	})
 })
+// $(document).ajaxComplete(function(event, xhr, settings) {
+// 	$(
+// 		"a[href*='/download']," +
+// 			"a:contains('.jpg')," +
+// 			"a:contains('.jpeg')," +
+// 			"a:contains('.png')," +
+// 			"a:contains('.svg')," +
+// 			"a:contains('.bmp')," +
+// 			"a:contains('.pdf')"
+// 	).attr('target', '_blank')
+// 	// $('a[href*="/download"], a:contains(".jpg")').fancybox({
+// 	// 	width: 800,
+// 	// 	height: 700,
+// 	// 	type: 'iframe',
+// 	// })
+// 	// var el = document.querySelector("a[name$='jpg']")
+// 	// console.log(el)
+// })
 $.fetch = function(o = {}) {
 	if (ajaxSenquce.findIndex(v => v === o.url) != -1) {
 		return
@@ -443,7 +470,11 @@ var selMemberFun = function(el) {
 		$('#userPage').show()
 		var pageHtml = ''
 		pageHtml +=
-			'<p class="nowPage">第' + page.page_index + '页(共' + page.last_page + '页)</p><p class="prevPage">上一页</p><p class="nextPage">下一页</p>'
+			'<p class="nowPage">第' +
+			page.page_index +
+			'页(共' +
+			page.last_page +
+			'页)</p><p class="prevPage">上一页</p><p class="nextPage">下一页</p>'
 		$('#userPage').html(pageHtml)
 		if (page.page_index > 1) {
 			$('#userPage>.prevPage').on('click', function() {
@@ -975,8 +1006,7 @@ $.pageFun = function(o = {}) {
 			getList(index, o)
 		}
 	})
-	elem
-		.children('.pag')
+	elem.children('.pag')
 		.off('click')
 		.on('click', 'li', function() {
 			var n = $(this).text()
