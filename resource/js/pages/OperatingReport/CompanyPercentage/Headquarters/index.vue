@@ -119,9 +119,7 @@
 						<tr class="tr-sub" v-show="collapse[baoxiaoName]" v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
 							<td>- {{ feeName }}</td>
 							<td class="text-right">
-								<span :class="_.jSumBy(feeDatas, 'total_amount') > 0 ? 'text-green' : ''">
-									{{ _.jSumBy(feeDatas, 'total_amount') | money }}
-								</span>
+								{{ _.jSumBy(feeDatas, 'total_amount') | money }}
 							</td>
 							<td class="text-right">{{ (_.jSumBy(feeDatas, 'total_amount') / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 							<td class="text-right">{{ (_.jSumBy(feeDatas, 'total_amount') / allDatasTotalFee) | percent }}%</td>
