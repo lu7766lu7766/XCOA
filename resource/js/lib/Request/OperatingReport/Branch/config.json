@@ -18,5 +18,13 @@
   "detail": {
     "uri": "info",
     "method": "get"
+  },
+  "headquarters": {
+    "uri": "headquarters",
+    "method": "get"
+  },
+  "headquartersPayout": {
+    "uri": "headquarters/payout",
+    "method": "get"
   }
 }

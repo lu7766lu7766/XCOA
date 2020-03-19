@@ -16,12 +16,6 @@
 									<j-select title="币值" :datas="options.currency" valueKey="id" displayKey="zh_name" v-model="search.currency_id" />
 								</div>
 							</div>
-							<div class="layui-inline multiple-box">
-								<label class="layui-form-label">公司：</label>
-								<div class="layui-input-inline">
-									<multi-select :datas="options.company" valueKey="id" v-model="search.company_id"></multi-select>
-								</div>
-							</div>
 							<div class="layui-inline">
 								<button id="InquireSur" class="layui-btn" title="查询" @click="doSearch">
 									<i class="iconfont icon-sousuo"></i>
@@ -37,24 +31,10 @@
 								<span class="btn-plus" @click="toggleAll"><i class="fa fa-plus"></i> {{ txt.switch }}</span>
 								<!-- <span class="btn-minus"><i class="fa fa-minus"></i> 全部收合</span> -->
 							</th>
-							<th class="text-center">
+							<th class="text-center" colspan="4" v-for="(company, index) in showCompany" :key="index">
 								<router-link
 									:to="{
-										name: 'operating-report-detail',
-										query: {
-											currency_id: search.currency_id,
-											start: search.start,
-											end: search.end,
-										},
-									}"
-									>总公司
-								</router-link>
-								<br />{{ txt.currency }}
-							</th>
-							<th class="text-center" v-for="(company, index) in showCompany" :key="index">
-								<router-link
-									:to="{
-										name: 'operating-report-detail',
+										name: 'operating-report-company-percentage-detail',
 										query: {
 											company_id: company.id,
 											currency_id: search.currency_id,
@@ -62,24 +42,30 @@
 											end: search.end,
 										},
 									}"
-									>{{ company.name }}<br />{{ txt.currency }}
+									>{{ findRegion(company.name).name }}<br />{{ company.name }}<br />{{ txt.currency }}
 								</router-link>
 							</th>
 						</tr>
+						<tr>
+							<th></th>
+							<template v-for="company in showCompany">
+								<th>费用</th>
+								<th>类型百分点</th>
+								<th>公司总费用百分点</th>
+								<th>总公司子类型百分点</th>
+							</template>
+						</tr>
 					</thead>
 					<!--number-->
-					<template v-if="showNumber">
-						<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
-							<tr class="tr-main" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
-								<td>{{ baoxiaoName }}</td>
-								<td class="text-right">
-									{{ _.jSumBy(baoxiaoDatas, 'total_amount') | money }}
-								</td>
-								<td class="text-right" v-for="(company, index) in showCompany" :key="index">
-									<span v-for="(money, index) in [getSumByListFilter(baoxiaoDatas, [company.id], 'company_id')]" :key="index">
+					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
+						<tr class="tr-main" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
+							<td>{{ baoxiaoName }}</td>
+							<template v-for="company in showCompany">
+								<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, [company.id], 'company_id')]">
+									<td class="text-right">
 										<router-link
 											class="text-green"
-											v-if="money > 0"
+											v-if="totalFee > 0"
 											:to="{
 												name: 'statistics-finance',
 												query: {
@@ -93,23 +79,25 @@
 												},
 											}"
 										>
-											{{ money | money }}
+											{{ totalFee | money }}
 										</router-link>
-										<span v-else>{{ money | money }}</span>
-									</span>
-								</td>
-							</tr>
-							<!-- collapse -->
-							<tr class="tr-sub" v-show="collapse[baoxiaoName]" v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
-								<td>- {{ feeName }}</td>
-								<td class="text-right">
-									{{ _.jSumBy(feeDatas, 'total_amount') | money }}
-								</td>
-								<td class="text-right" v-for="(company, index) in showCompany" :key="index">
-									<span v-for="(money, index) in [getSumByListFilter(feeDatas, [company.id], 'company_id')]" :key="index">
+										<span v-else>{{ totalFee | money }}</span>
+									</td>
+									<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
+									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
+									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
+								</template>
+							</template>
+						</tr>
+						<!-- collapse -->
+						<tr class="tr-sub" v-show="collapse[baoxiaoName]" v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
+							<td>- {{ feeName }}</td>
+							<template v-for="company in showCompany">
+								<template v-for="totalFee in [getSumByListFilter(feeDatas, [company.id], 'company_id')]">
+									<td class="text-right">
 										<router-link
 											class="text-green"
-											v-if="money > 0"
+											v-if="totalFee > 0"
 											:to="{
 												name: 'statistics-finance',
 												query: {
@@ -123,58 +111,30 @@
 												},
 											}"
 										>
-											{{ money | money }}
+											{{ totalFee | money }}
 										</router-link>
-										<span v-else>{{ money | money }}</span>
-									</span>
-								</td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td class="text-center">总计</td>
+										<span v-else>{{ totalFee | money }}</span>
+									</td>
+									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
+									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
+									<td class="text-right">{{ (totalFee / _.jSumBy(feeDatas, 'total_amount')) | percent }}%</td>
+								</template>
+							</template>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td class="text-center">总计</td>
+							<template v-for="company in showCompany">
 								<td class="text-right">
-									{{ _.jSumBy(datas, 'total_amount') | money }}
-								</td>
-								<td class="text-right" v-for="(company, index) in showCompany" :key="index">
 									{{ getSumByListFilter(datas, [company.id], 'company_id') | money }}
 								</td>
-							</tr>
-						</tfoot>
-					</template>
-					<!--percent-->
-					<template v-else>
-						<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
-							<tr class="tr-main" role="button" data-toggle="collapse" @click="collapse[baoxiaoName] = !collapse[baoxiaoName]">
-								<td>{{ baoxiaoName }}</td>
-								<td class="text-right">
-									100.00%
-								</td>
-								<td class="text-right" v-for="(company, index) in showCompany" :key="index">
-									{{ $decimal(getSumByListFilter(baoxiaoDatas, [company.id], 'company_id')).div(_.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%
-								</td>
-							</tr>
-							<!-- collapse -->
-							<tr class="tr-sub" v-show="collapse[baoxiaoName]" v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
-								<td>- {{ feeName }}</td>
-								<td class="text-right">
-									100.00%
-								</td>
-								<td class="text-right" v-for="(company, index) in showCompany" :key="index">
-									{{ $decimal(getSumByListFilter(feeDatas, [company.id], 'company_id')).div(_.jSumBy(feeDatas, 'total_amount')) | percent }}%
-								</td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td class="text-center">总计</td>
-								<td class="text-right">100.00%</td>
-								<td class="text-right" v-for="(company, index) in showCompany" :key="index">
-									{{ $decimal(getSumByListFilter(datas, [company.id], 'company_id')).div(_.jSumBy(datas, 'total_amount')) | percent }}%
-								</td>
-							</tr>
-						</tfoot>
-					</template>
+								<td></td>
+								<td></td>
+								<td></td>
+							</template>
+						</tr>
+					</tfoot>
 				</table>
 				<!-- <div id="SurveyLietPage"></div> -->
 			</div>
@@ -187,9 +147,23 @@
 
 	export default {
 		mixins: [ListMixins],
-		api: 'operating_report.headquarters',
+		api: 'operating_report.branch',
+		methods: {
+			async getOptions() {
+				const res = await axios.all([this.$thisApi.getCompany(), this.$thisApi.getCurrency(), this.$thisApi.getHeadquartersPayout()])
+				this.options.company = res[0].data
+				this.options.currency = res[1].data
+				this.options.payout = res[2].data
+			},
+			async getList() {
+				const res = await this.$thisApi.getHeadquarters(this.reqBody)
+				this.datas = res.data
+			},
+		},
 		async mounted() {
 			await this.getOptions()
+			// const res = await this.$api.operating_report.branch.getCompany()
+			this.options.company = [this.options.company] //[res.data]
 			this.doSearch()
 		},
 	}

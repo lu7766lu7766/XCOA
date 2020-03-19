@@ -26,7 +26,7 @@
 					<thead>
 						<tr>
 							<th class="toggle-btn">
-								<span class="btn-plus" @click="toggleAll"><i class="fa fa-plus"></i> 全部展开</span>
+								<span class="btn-plus" @click="toggleAll"><i class="fa fa-plus"></i> {{ txt.switch }}</span>
 								<!-- <span class="btn-minus"><i class="fa fa-minus"></i> 全部收合</span> -->
 							</th>
 							<th class="text-center" v-for="(company, index) in showCompany" :key="index">

@@ -115,7 +115,6 @@ export default {
 			)
 		},
 		getSumByListFilter(datas, list, prop, amountProp = 'total_amount') {
-			console.log(datas, list, prop)
 			return _.chain(datas)
 				.filter(x => list.indexOf(x[prop]) > -1)
 				.jSumBy(amountProp)

@@ -57,6 +57,22 @@ export default [
 				],
 			},
 			{
+				path: 'Finance/CompanyTotalFeePercentage.html',
+				component: () => import('pages/OperatingReport'),
+				children: [
+					{
+						path: '',
+						name: 'operating-report-branch-company-percentage',
+						component: () => import('pages/OperatingReport/CompanyPercentage/Branch'),
+					},
+					{
+						path: 'detail',
+						name: 'operating-report-branch-company-percentage-detail',
+						component: () => import('pages/OperatingReport/CompanyPercentage/Branch/Detail'),
+					},
+				],
+			},
+			{
 				path: 'Finance/Group/RegionCompanyFeeRate.html',
 				component: () => import('pages/OperatingReport'),
 				children: [
@@ -69,6 +85,22 @@ export default [
 						path: 'detail',
 						name: 'operating-report-region-fee-detail',
 						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Headquarters/Detail'),
+					},
+				],
+			},
+			{
+				path: 'Finance/RegionCompanyFeeRate.html',
+				component: () => import('pages/OperatingReport'),
+				children: [
+					{
+						path: '',
+						name: 'operating-report-branch-region-fee',
+						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Branch'),
+					},
+					{
+						path: 'detail',
+						name: 'operating-report-branch-region-fee-detail',
+						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Branch/Detail'),
 					},
 				],
 			},
