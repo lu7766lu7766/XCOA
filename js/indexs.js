@@ -35,18 +35,18 @@ $(function() {
 			withCredentials: true,
 		},
 	})
-	setInterval(function() {
-		var containerHeight = $('#LAY_app_body').height()
-		$.each($('.layadmin-iframe'), function(i) {
-			if (!i) return
-			var $iframe = $(this)
-			var height = $iframe
-				.contents()
-				.find('body')
-				.height()
-			$iframe.css('height', height >= containerHeight ? '100%' : height)
-		})
-	}, 300)
+	// setInterval(function() {
+	// 	var containerHeight = $('#LAY_app_body').height()
+	// 	$.each($('.layadmin-iframe'), function(i) {
+	// 		if (!i) return
+	// 		var $iframe = $(this)
+	// 		var height = $iframe
+	// 			.contents()
+	// 			.find('body')
+	// 			.height()
+	// 		$iframe.css('height', height >= containerHeight ? '100%' : height)
+	// 	})
+	// }, 300)
 
 	layui
 		.config({
