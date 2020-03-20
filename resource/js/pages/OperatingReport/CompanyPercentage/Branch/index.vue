@@ -4,9 +4,6 @@
 			<div class="layui-row layui-col-space10 layui-card-body">
 				<div class="layui-form layuiadmin-card-header-auto">
 					<div class="layui-form-item search-box">
-						<div class="layui-inline">
-							<a id="addSurvey" class="layui-btn btn-change" @click="switchType">{{ txt.type }}</a>
-						</div>
 						<div class="form-box">
 							<date-range-picker :start.sync="search.start" :end.sync="search.end"></date-range-picker>
 							<date-button :start.sync="search.start" :end.sync="search.end"></date-button>
@@ -34,7 +31,7 @@
 							<th class="text-center" colspan="4" v-for="(company, index) in showCompany" :key="index">
 								<router-link
 									:to="{
-										name: 'operating-report-company-percentage-detail',
+										name: 'operating-report-branch-company-percentage-detail',
 										query: {
 											company_id: company.id,
 											currency_id: search.currency_id,
@@ -116,7 +113,7 @@
 										<span v-else>{{ totalFee | money }}</span>
 									</td>
 									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
-									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
+									<td class="text-right">{{ (totalFee / getSumByListFilter(datas, [company.id], 'company_id')) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / _.jSumBy(feeDatas, 'total_amount')) | percent }}%</td>
 								</template>
 							</template>

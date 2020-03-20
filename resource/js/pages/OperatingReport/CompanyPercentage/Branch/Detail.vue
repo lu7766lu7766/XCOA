@@ -4,7 +4,11 @@
 			<div class="layui-row layui-col-space10 layui-card-body">
 				<div class="layui-form layuiadmin-card-header-auto">
 					<div class="layui-form-item search-box">
-						<div class="layui-inline">詳細數據({{ currentCompany.name }})</div>
+						<div class="layui-inline">
+							詳細數據(
+							{{ $route.query.company_id ? findRegion(currentCompany.name).name : currentCompany.name }}- {{ currentCompany.name }}
+							)
+						</div>
 						<div class="form-box">
 							<div class="layui-inline">
 								<button id="toCompanyList" class="layui-btn fr" @click="$router.back()">
@@ -20,102 +24,66 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th class="text-center" v-for="name in _.keys(getGroupByProcess())" :key="name">
-								{{ name }}
-							</th>
-							<th class="text-center">总计</th>
+							<th>费用</th>
+							<th>类型百分点</th>
+							<th>公司总费用百分点</th>
+							<th>总公司子类型百分点</th>
 						</tr>
 					</thead>
 					<tbody v-for="(baoxiaoDatas, baoxiaoName) in groupByBaoxiao" :key="baoxiaoName">
-						<tr>
-							<td>
-								<b>{{ baoxiaoName }}</b>
-							</td>
-							<td class="text-right" v-for="(processIDList, name) in getGroupByProcess()" :key="name">
-								<span v-for="money in [getSumByListFilter(baoxiaoDatas, processIDList, 'process_type')]" :key="money">
+						<tr class="tr-main">
+							<td>{{ baoxiaoName }}</td>
+							<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, [+$route.query.company_id], 'company_id')]">
+								<td class="text-right">
 									<router-link
 										class="text-green"
-										v-if="money > 0 && $route.query.company_id"
+										v-if="totalFee > 0 && $route.query.company_id"
 										:to="{
 											name: 'statistics-finance',
 											query: {
 												company_id: $route.query.company_id,
-												currency_id: $route.query.currency_id,
-												end: $route.query.end,
-												start: $route.query.start,
-												level1: processIDList.join(','),
+												currency_id: search.currency_id,
+												end: search.end,
+												start: search.start,
+												level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, $route.query.company_id).join(','),
 												level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
 												level3: '',
 											},
 										}"
 									>
-										{{ money | money }}</router-link
-									>
-									<span v-else :class="money > 0 ? 'text-green' : ''">{{ money | money }}</span>
-								</span>
-							</td>
-							<td class="text-right">
-								<span v-for="money in [_.jSumBy(baoxiaoDatas, 'total_amount')]" :key="money">
-									<span :class="money > 0 ? 'text-green' : ''">{{ money | money }}</span>
-								</span>
-							</td>
-						</tr>
-						<tr v-for="(feeDatas, feeName) in getGroupByFee(baoxiaoDatas)" :key="feeName">
-							<td>- {{ feeName }}</td>
-							<td class="text-right" v-for="(processIDList, name) in getGroupByProcess()" :key="name">
-								<span v-for="money in [getSumByListFilter(feeDatas, processIDList, 'process_type')]" :key="money">
-									<router-link
-										class="text-green"
-										v-if="money > 0 && $route.query.company_id"
-										:to="{
-											name: 'statistics-finance',
-											query: {
-												company_id: $route.query.company_id,
-												currency_id: $route.query.currency_id,
-												end: $route.query.end,
-												start: $route.query.start,
-												level1: processIDList.join(','),
-												level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
-												level3: _.map(groupByNamePayout[feeName], 'id').join(','),
-											},
-										}"
-									>
-										{{ money | money }}</router-link
-									>
-									<span v-else :class="money > 0 ? 'text-green' : ''">{{ money | money }}</span>
-								</span>
-							</td>
-							<td class="text-right">
-								<span v-for="money in [_.jSumBy(feeDatas, 'total_amount')]" :key="money">
-									<span :class="money > 0 ? 'text-green' : ''">{{ money | money }}</span>
-								</span>
-							</td>
+										{{ totalFee | money }}
+									</router-link>
+									<span v-else :class="totalFee > 0 ? 'text-green' : ''">
+										{{ totalFee | money }}
+									</span>
+								</td>
+								<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
+								<td class="text-right">{{ (totalFee / getSumByListFilter(datas, companyIDs, 'company_id')) | percent }}%</td>
+								<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
+							</template>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<td class="text-center">总计</td>
-							<td class="text-right" v-for="(processIDList, name) in getGroupByProcess()" :key="name">
-								<span
-									v-for="money in [
-										_.chain(datas)
-											.filter(x => processIDList.indexOf(x.process_type) > -1)
-											.jSumBy('total_amount'),
-									]"
-									:key="money"
-								>
-									{{ money | money }}
-								</span>
-							</td>
 							<td class="text-right">
-								<span v-for="money in [_.jSumBy(datas, 'total_amount')]" :key="money">
-									{{ money | money }}
-								</span>
+								<span>{{ getSumByListFilter(datas, companyIDs, 'company_id') | money }}</span>
 							</td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
 						</tr>
 					</tfoot>
 				</table>
 				<!-- <div id="SurveyLietPage"></div> -->
+			</div>
+			<div class="chart-box">
+				<div class="chart-box">
+					<!-- <div ref="chart-container" style="min-height:350px;height: 100%"></div> -->
+					<j-pie
+						:datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => !$route.query.company_id || x.company_id === +$route.query.company_id))"
+					></j-pie>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -126,10 +94,24 @@
 
 	export default {
 		mixins: [DetailMixins],
-		api: 'operating_report.headquarters',
+		api: 'operating_report.branch',
+		methods: {
+			async getOptions() {
+				console.log(this.$thisApi)
+				const res = await axios.all([this.$thisApi.getCompany(), this.$thisApi.getCurrency(), this.$thisApi.getHeadquartersPayout()])
+				this.options.company = res[0].data
+				this.options.currency = res[1].data
+				this.options.payout = res[2].data
+			},
+			async getList() {
+				const res = await this.$thisApi.getHeadquarters(this.reqBody)
+				this.datas = res.data
+			},
+		},
 		async mounted() {
 			await this.getOptions()
-			this.getDetail()
+			this.options.company = [this.options.company]
+			this.getList()
 		},
 	}
 </script>
