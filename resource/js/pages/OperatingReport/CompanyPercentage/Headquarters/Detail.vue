@@ -68,7 +68,7 @@
 									</span>
 								</td>
 								<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
-								<td class="text-right">{{ (totalFee / getSumByListFilter(datas, this.companyIDs, 'company_id')) | percent }}%</td>
+								<td class="text-right">{{ (totalFee / getSumByListFilter(datas, companyIDs, 'company_id')) | percent }}%</td>
 								<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 							</template>
 						</tr>
@@ -78,7 +78,7 @@
 							<td class="text-center">总计</td>
 							<td class="text-right">
 								<span v-if="!$route.query.company_id">{{ allDatasTotalFee | money }}</span>
-								<span v-else>{{ getSumByListFilter(datas, this.companyIDs, 'company_id') | money }}</span>
+								<span v-else>{{ getSumByListFilter(datas, companyIDs, 'company_id') | money }}</span>
 							</td>
 							<td class="text-right"></td>
 							<td class="text-right"></td>
@@ -92,11 +92,7 @@
 				<div class="chart-box">
 					<!-- <div ref="chart-container" style="min-height:350px;height: 100%"></div> -->
 					<j-pie
-						:datas="
-							_.mapValues(groupByBaoxiao, datas =>
-								datas.filter(x => !$route.query.company_id || x.company_id === +$route.query.company_id)
-							)
-						"
+						:datas="_.mapValues(groupByBaoxiao, datas => datas.filter(x => !$route.query.company_id || x.company_id === +$route.query.company_id))"
 					></j-pie>
 				</div>
 			</div>
@@ -105,14 +101,14 @@
 </template>
 
 <script>
-import DetailMixins from '../../Detail'
+	import DetailMixins from '../../Detail'
 
-export default {
-	mixins: [DetailMixins],
-	api: 'operating_report.headquarters',
-	async mounted() {
-		await this.getOptions()
-		this.getList()
-	},
-}
+	export default {
+		mixins: [DetailMixins],
+		api: 'operating_report.headquarters',
+		async mounted() {
+			await this.getOptions()
+			this.getList()
+		},
+	}
 </script>

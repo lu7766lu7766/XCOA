@@ -10,13 +10,7 @@
 							<div class="layui-inline multiple-box">
 								<label class="layui-form-label">币值：</label>
 								<div class="layui-input-inline">
-									<j-select
-										title="币值"
-										:datas="options.currency"
-										valueKey="id"
-										displayKey="zh_name"
-										v-model="search.currency_id"
-									/>
+									<j-select title="币值" :datas="options.currency" valueKey="id" displayKey="zh_name" v-model="search.currency_id" />
 								</div>
 							</div>
 							<div class="layui-inline multiple-box">
@@ -185,14 +179,14 @@
 </template>
 
 <script>
-import ListMixins from '../../List'
+	import ListMixins from '../../List'
 
-export default {
-	mixins: [ListMixins],
-	api: 'operating_report.headquarters',
-	async mounted() {
-		await this.getOptions()
-		this.doSearch()
-	},
-}
+	export default {
+		mixins: [ListMixins],
+		api: 'operating_report.headquarters',
+		async mounted() {
+			await this.getOptions()
+			this.doSearch()
+		},
+	}
 </script>

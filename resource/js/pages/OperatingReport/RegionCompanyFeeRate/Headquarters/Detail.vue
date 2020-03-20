@@ -58,7 +58,7 @@
 							<td class="text-center">总计</td>
 							<td class="text-right">
 								<span v-if="!$route.query.region_type">{{ allDatasTotalFee | money }}</span>
-								<span v-else>{{ getSumByListFilter(datas, this.companyIDs, 'company_id') | money }}</span>
+								<span v-else>{{ getSumByListFilter(datas, companyIDs, 'company_id') | money }}</span>
 							</td>
 						</tr>
 					</tfoot>
