@@ -35,27 +35,7 @@
 							<td>{{ baoxiaoName }}</td>
 							<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, [+$route.query.company_id], 'company_id')]">
 								<td class="text-right">
-									<router-link
-										class="text-green"
-										v-if="totalFee > 0 && $route.query.company_id"
-										:to="{
-											name: 'statistics-finance',
-											query: {
-												company_id: $route.query.company_id,
-												currency_id: search.currency_id,
-												end: search.end,
-												start: search.start,
-												level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, $route.query.company_id).join(','),
-												level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
-												level3: '',
-											},
-										}"
-									>
-										{{ totalFee | money }}
-									</router-link>
-									<span v-else :class="totalFee > 0 ? 'text-green' : ''">
-										{{ totalFee | money }}
-									</span>
+									<span :class="totalFee > 0 ? 'text-green' : ''">{{ totalFee | money }}</span>
 								</td>
 								<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
 								<td class="text-right">{{ (totalFee / getSumByListFilter(datas, companyIDs, 'company_id')) | percent }}%</td>
@@ -97,7 +77,6 @@
 		api: 'operating_report.branch',
 		methods: {
 			async getOptions() {
-				console.log(this.$thisApi)
 				const res = await axios.all([this.$thisApi.getCompany(), this.$thisApi.getCurrency(), this.$thisApi.getHeadquartersPayout()])
 				this.options.company = res[0].data
 				this.options.currency = res[1].data

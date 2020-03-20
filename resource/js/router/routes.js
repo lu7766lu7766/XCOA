@@ -89,22 +89,6 @@ export default [
 				],
 			},
 			{
-				path: 'Finance/RegionCompanyFeeRate.html',
-				component: () => import('pages/OperatingReport'),
-				children: [
-					{
-						path: '',
-						name: 'operating-report-branch-region-fee',
-						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Branch'),
-					},
-					{
-						path: 'detail',
-						name: 'operating-report-branch-region-fee-detail',
-						component: () => import('pages/OperatingReport/RegionCompanyFeeRate/Branch/Detail'),
-					},
-				],
-			},
-			{
 				path: 'Finance/Group/CrossCompanyAnalysis.html',
 				component: () => import('pages/OperatingReport'),
 				children: [

@@ -60,28 +60,10 @@
 							<template v-for="company in showCompany">
 								<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, [company.id], 'company_id')]">
 									<td class="text-right">
-										<router-link
-											class="text-green"
-											v-if="totalFee > 0"
-											:to="{
-												name: 'statistics-finance',
-												query: {
-													company_id: company.id,
-													currency_id: search.currency_id,
-													end: search.end,
-													start: search.start,
-													level1: getUnionProcessByFilterCompanyID(baoxiaoDatas, company.id).join(','),
-													level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
-													level3: '',
-												},
-											}"
-										>
-											{{ totalFee | money }}
-										</router-link>
-										<span v-else>{{ totalFee | money }}</span>
+										<span :class="totalFee > 0 ? 'text-green' : ''">{{ totalFee | money }}</span>
 									</td>
 									<td class="text-right">{{ (totalFee / totalFee) | percent }}%</td>
-									<td class="text-right">{{ (totalFee / allDatasTotalFee) | percent }}%</td>
+									<td class="text-right">{{ (totalFee / getSumByListFilter(datas, [company.id], 'company_id')) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 								</template>
 							</template>
@@ -92,25 +74,7 @@
 							<template v-for="company in showCompany">
 								<template v-for="totalFee in [getSumByListFilter(feeDatas, [company.id], 'company_id')]">
 									<td class="text-right">
-										<router-link
-											class="text-green"
-											v-if="totalFee > 0"
-											:to="{
-												name: 'statistics-finance',
-												query: {
-													company_id: company.id,
-													currency_id: search.currency_id,
-													end: search.end,
-													start: search.start,
-													level1: getUnionProcessByFilterCompanyID(feeDatas, company.id).join(','),
-													level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
-													level3: _.map(groupByNamePayout[feeName], 'id').join(','),
-												},
-											}"
-										>
-											{{ totalFee | money }}
-										</router-link>
-										<span v-else>{{ totalFee | money }}</span>
+										<span :class="totalFee > 0 ? 'text-green' : ''">{{ totalFee | money }}</span>
 									</td>
 									<td class="text-right">{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</td>
 									<td class="text-right">{{ (totalFee / getSumByListFilter(datas, [company.id], 'company_id')) | percent }}%</td>
