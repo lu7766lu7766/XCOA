@@ -134,7 +134,25 @@
 									<template v-for="region in options.region">
 										<template v-for="totalFee in [getSumByListFilter(baoxiaoDatas, getUnionCompanyID(groupByRegionID[region.id]), 'company_id')]">
 											<td class="text-right">
-												<span>{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</span>
+												<router-link
+													class="text-green"
+													v-if="totalFee > 0"
+													:to="{
+														name: 'statistics-finance',
+														query: {
+															company_id: getUnionCompanyID(groupByRegionID[region.id]),
+															currency_id: search.currency_id,
+															end: search.end,
+															start: search.start,
+															level1: getUnionProcessByFilterCompanyID(feeDatas, getUnionCompanyID(groupByRegionID[region.id])).join(','),
+															level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
+															level3: _.map(groupByNamePayout[feeName], 'id').join(','),
+														},
+													}"
+												>
+													{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%
+												</router-link>
+												<span v-else>{{ (totalFee / _.jSumBy(baoxiaoDatas, 'total_amount')) | percent }}%</span>
 											</td>
 										</template>
 									</template>
@@ -148,7 +166,25 @@
 									<template v-for="region in options.region">
 										<template v-for="totalFee in [getSumByListFilter(feeDatas, getUnionCompanyID(groupByRegionID[region.id]), 'company_id')]">
 											<td class="text-right">
-												<span> {{ (totalFee / _.jSumBy(feeDatas, 'total_amount')) | percent }}% </span>
+												<router-link
+													class="text-green"
+													v-if="totalFee > 0"
+													:to="{
+														name: 'statistics-finance',
+														query: {
+															company_id: getUnionCompanyID(groupByRegionID[region.id]),
+															currency_id: search.currency_id,
+															end: search.end,
+															start: search.start,
+															level1: getUnionProcessByFilterCompanyID(feeDatas, getUnionCompanyID(groupByRegionID[region.id])).join(','),
+															level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
+															level3: _.map(groupByNamePayout[feeName], 'id').join(','),
+														},
+													}"
+												>
+													{{ (totalFee / _.jSumBy(feeDatas, 'total_amount')) | percent }}%
+												</router-link>
+												<span v-else>{{ (totalFee / _.jSumBy(feeDatas, 'total_amount')) | percent }}%</span>
 											</td>
 										</template>
 									</template>
