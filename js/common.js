@@ -22,7 +22,9 @@ $(document).ready(function() {
 			"a:contains('.bmp')," +
 			"a:contains('.pdf')",
 		function(e) {
-			$(e.target).attr('target', '_blank')
+			var $a = $(e.target)
+			// $(e.target).attr('target', '_blank')
+			window.open($a.attr('href'), '预览', (config = 'height=600,width=800'))
 		}
 	)
 })

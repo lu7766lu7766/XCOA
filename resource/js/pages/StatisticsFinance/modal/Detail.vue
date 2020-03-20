@@ -169,11 +169,13 @@
           <div class="layui-input-block layui-input-lineHeight UploadNames-box">
             <span v-if="data.attaches.length">
               <a title="点击下载"
-                 target="_blank"
                  v-for="(attache, index) in data.attaches" :key="index"
-                 :href="(data.is_fixed_costs == 1 ? '/gateway/financial/downloadfixedcost/' : '/gateway/financial/download/') + attache.id">
+                 href="javascript:;"
+                 @click="previewOpen((data.is_fixed_costs == 1 ? '/gateway/financial/downloadfixedcost/' : '/gateway/financial/download/') + attache.id)">
                 {{ attache.original_name }}
               </a>
+              <!-- target="_blank" -->
+              <!-- :href="(data.is_fixed_costs == 1 ? '/gateway/financial/downloadfixedcost/' : '/gateway/financial/download/') + attache.id" -->
             </span>
             <span v-else>无附件</span>
           </div>
@@ -234,9 +236,10 @@
 
 <script>
   import DetailMixins from 'mixins/Detail'
+  import WindowMiins from 'mixins/Window'
 
   export default {
-    mixins: [DetailMixins],
+    mixins: [DetailMixins, WindowMiins],
     methods: {
       async getDetail(ID)
       {
