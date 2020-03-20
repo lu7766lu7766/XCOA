@@ -105,7 +105,7 @@
 													:to="{
 														name: 'statistics-finance',
 														query: {
-															company_id: getUnionCompanyID(groupByRegionID[region.id]),
+															company_id: getUnionCompanyID(groupByRegionID[region.id]).join(','),
 															currency_id: search.currency_id,
 															end: search.end,
 															start: search.start,
@@ -140,13 +140,13 @@
 													:to="{
 														name: 'statistics-finance',
 														query: {
-															company_id: getUnionCompanyID(groupByRegionID[region.id]),
+															company_id: getUnionCompanyID(groupByRegionID[region.id]).join(','),
 															currency_id: search.currency_id,
 															end: search.end,
 															start: search.start,
 															level1: getUnionProcessByFilterCompanyID(feeDatas, getUnionCompanyID(groupByRegionID[region.id])).join(','),
 															level2: _.map(groupByNamePayout[baoxiaoName], 'id').join(','),
-															level3: _.map(groupByNamePayout[feeName], 'id').join(','),
+															level3: '',
 														},
 													}"
 												>
@@ -172,7 +172,7 @@
 													:to="{
 														name: 'statistics-finance',
 														query: {
-															company_id: getUnionCompanyID(groupByRegionID[region.id]),
+															company_id: getUnionCompanyID(groupByRegionID[region.id]).join(','),
 															currency_id: search.currency_id,
 															end: search.end,
 															start: search.start,
