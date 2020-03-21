@@ -22,9 +22,11 @@ $(document).ready(function() {
 			"a:contains('.bmp')," +
 			"a:contains('.pdf')",
 		function(e) {
-			var $a = $(e.target)
+			// var $a = $(e.target)
 			// $(e.target).attr('target', '_blank')
-			window.open($a.attr('href'), '预览', (config = 'height=600,width=800'))
+			var url = e.target.getAttribute('href')
+			window.open(url, '预览', 'height=600,width=800')
+			e.preventDefault()
 		}
 	)
 })
@@ -444,7 +446,11 @@ var selMemberFun = function(el) {
 		$('#userPage').show()
 		var pageHtml = ''
 		pageHtml +=
-			'<p class="nowPage">第' + page.page_index + '页(共' + page.last_page + '页)</p><p class="prevPage">上一页</p><p class="nextPage">下一页</p>'
+			'<p class="nowPage">第' +
+			page.page_index +
+			'页(共' +
+			page.last_page +
+			'页)</p><p class="prevPage">上一页</p><p class="nextPage">下一页</p>'
 		$('#userPage').html(pageHtml)
 		if (page.page_index > 1) {
 			$('#userPage>.prevPage').on('click', function() {
@@ -976,8 +982,7 @@ $.pageFun = function(o = {}) {
 			getList(index, o)
 		}
 	})
-	elem
-		.children('.pag')
+	elem.children('.pag')
 		.off('click')
 		.on('click', 'li', function() {
 			var n = $(this).text()
