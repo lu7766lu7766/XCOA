@@ -25,7 +25,7 @@ $(document).ready(function() {
 		function(e) {
 			// var $a = $(e.target)
 			// $(e.target).attr('target', '_blank')
-			e.currentTarget.getAttribute('href')
+			var url = e.currentTarget.getAttribute('href')
 			window.open(url, '预览', 'height=600,width=800')
 			e.preventDefault()
 		}

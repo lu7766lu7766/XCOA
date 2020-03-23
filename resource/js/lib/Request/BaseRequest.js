@@ -5,7 +5,7 @@ import axios from 'axios'
 
 export default class BaseRequest extends iBaseRequest {
 	get host() {
-		return parent.urls ? parent.urls : 'http://' + location.hostname.replace(/^(www|site)/, 'api') //require('../../../../env.json').api
+		return window.urls //require('../../../../env.json').api
 	}
 
 	axiosInit() {

@@ -8,11 +8,19 @@ import App from './App.vue'
 import './css/my.styl'
 
 Vue.use(JacPlugin, {
-  _, moment,
+	_,
+	moment,
 })
 Vue.use(MyPlugin)
 
 new Vue({
-  router,
-  render: h => h(App),
+	router,
+	render: h => h(App),
+	mounted() {
+		setTimeout(() => {
+			if (!$('#app').children().length) {
+				location.href = location.href.replace(location.origin, window.urls)
+			}
+		}, 300)
+	},
 }).$mount('#app')
