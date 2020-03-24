@@ -16,11 +16,4 @@ Vue.use(MyPlugin)
 new Vue({
 	router,
 	render: h => h(App),
-	mounted() {
-		setTimeout(() => {
-			if (!$('#app').children().length) {
-				location.href = location.href.replace(location.origin, window.urls)
-			}
-		}, 300)
-	},
 }).$mount('#app')

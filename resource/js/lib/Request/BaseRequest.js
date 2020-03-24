@@ -5,7 +5,7 @@ import axios from 'axios'
 
 export default class BaseRequest extends iBaseRequest {
 	get host() {
-		return window.urls //require('../../../../env.json').api
+		return window.apiHost //require('../../../../env.json').api
 	}
 
 	axiosInit() {

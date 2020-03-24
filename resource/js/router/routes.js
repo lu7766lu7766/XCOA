@@ -111,4 +111,10 @@ export default [
 			},
 		],
 	},
+	{
+		path: '*',
+		beforeEnter: (to, from, next) => {
+			location.href = location.href.replace(location.origin, window.apiHost)
+		},
+	},
 ]
