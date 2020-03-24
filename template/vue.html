@@ -29,7 +29,8 @@
 		<div id="app"></div>
 	</body>
 	<script>
-		window.apiHost = parent.urls || location.protocol + '//' + location.hostname.replace(/^(www|site)/, 'api')
+		// window.apiHost = parent.urls || location.protocol + '//' + location.hostname.replace(/^(www|site)/, 'api')
+		window.apiHost = parent.urls || location.protocol + '//' + location.hostname
 	</script>
 	<script src="/public/vue/manifest.js"></script>
 	<script src="/public/vue/vendor/vendor.js"></script>

@@ -5,7 +5,7 @@ export default class Request extends BaseRequest
 {
   get baseUrls()
   {
-    return super.baseUrls.concat('gateway/financial')
+    return super.baseUrls.concat('financial')
   }
 
   constructor()

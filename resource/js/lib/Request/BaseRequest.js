@@ -8,6 +8,10 @@ export default class BaseRequest extends iBaseRequest {
 		return window.apiHost //require('../../../../env.json').api
 	}
 
+	get baseUrls() {
+		return super.baseUrls.concat('gateway')
+	}
+
 	axiosInit() {
 		super.axiosInit()
 		axios.default.withCredentials = true

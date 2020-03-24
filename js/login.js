@@ -1,5 +1,6 @@
 // window.urls = 'http://api.oa.video88.cc'
-window.urls = 'http://' + location.hostname.replace(/^(www|site)/, 'api')
+// window.urls = 'http://' + location.hostname.replace(/^(www|site)/, 'api')
+window.urls = location.protocol + '//' + location.hostname
 // window.urls = "http://10.20.11.152";
 //
 // window.urls = "http://oa-company.com"
