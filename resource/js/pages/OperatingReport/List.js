@@ -25,7 +25,7 @@ export default {
 				currency_id: this.$route.query.currency_id || '',
 			},
 			switch: {
-				type: 'number',
+				type: this.$route.query.type || 'number',
 				collapse: false,
 			},
 			collapse: {},
@@ -36,12 +36,6 @@ export default {
 				region: RegionConstant,
 			},
 			showCompany: [],
-			txt: {
-				switch: '全部展开',
-				currency: '',
-				type: '总公司比例',
-				typeRegion: '百分比切换',
-			},
 		}
 	},
 	methods: {
@@ -53,15 +47,15 @@ export default {
 		},
 		switchType() {
 			this.switch.type = this.showNumber ? 'percent' : 'number'
-			this.txt.type = this.showNumber ? '总公司比例' : '总公司数值'
-			this.txt.typeRegion = this.showNumber ? '百分比切换' : '数值切换'
+			this.onQueryChange({
+				type: this.switch.type,
+			})
 		},
 		toggleAll() {
 			this.switch.collapse = !this.switch.collapse
 			_.forEach(this.collapse, (res, baoxiaoName) => {
 				this.collapse[baoxiaoName] = this.switch.collapse
 			})
-			this.txt.switch = this.switch.collapse ? '全部收合' : '全部展开'
 		},
 		setCollapse() {
 			this.collapse = _.reduce(
@@ -149,6 +143,21 @@ export default {
 				.split(',')
 				.filter(x => x !== '')
 				.map(x => +x)
+		},
+		txt() {
+			return {
+				type: this.showNumber ? '总公司比例' : '总公司数值',
+				typeRegion: this.showNumber ? '百分比切换' : '数值切换',
+				switch: this.switch.collapse ? '全部收合' : '全部展开',
+				currency: this.search.currency_id
+					? '(' +
+					  _.getVal(
+							_.find(this.options.currency, x => '' + x.id === this.search.currency_id),
+							'zh_name'
+					  ) +
+					  ')'
+					: '',
+			}
 		},
 	},
 }
