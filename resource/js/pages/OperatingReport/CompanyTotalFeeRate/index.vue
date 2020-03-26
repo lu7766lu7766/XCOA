@@ -187,7 +187,7 @@
 </template>
 
 <script>
-	import ListMixins from '../../List'
+	import ListMixins from '../List'
 
 	export default {
 		mixins: [ListMixins],

@@ -77,7 +77,7 @@
 </template>
 
 <script>
-	import RegionMixins from '../../Region'
+	import RegionMixins from '../Region'
 
 	export default {
 		mixins: [RegionMixins],

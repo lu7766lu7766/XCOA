@@ -163,7 +163,7 @@
 </template>
 
 <script>
-	import DetailMixins from '../../Detail'
+	import DetailMixins from '../Detail'
 
 	export default {
 		mixins: [DetailMixins],
