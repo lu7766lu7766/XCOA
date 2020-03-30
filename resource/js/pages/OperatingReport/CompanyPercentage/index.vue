@@ -8,9 +8,9 @@
 							<date-range-picker :start.sync="search.start" :end.sync="search.end"></date-range-picker>
 							<date-button :start.sync="search.start" :end.sync="search.end"></date-button>
 							<div class="layui-inline multiple-box">
-								<label class="layui-form-label">币值：</label>
+								<label class="layui-form-label">币种：</label>
 								<div class="layui-input-inline">
-									<j-select title="币值" :datas="options.currency" valueKey="id" displayKey="zh_name" v-model="search.currency_id" />
+									<j-select title="币种" :datas="options.currency" valueKey="id" displayKey="zh_name" v-model="search.currency_id" />
 								</div>
 							</div>
 							<div class="layui-inline multiple-box">

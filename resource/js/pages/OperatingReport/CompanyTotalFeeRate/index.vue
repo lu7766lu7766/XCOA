@@ -22,10 +22,10 @@
                 :end.sync="search.end"
               ></date-button>
               <div class="layui-inline multiple-box">
-                <label class="layui-form-label">币值：</label>
+                <label class="layui-form-label">币种：</label>
                 <div class="layui-input-inline">
                   <j-select
-                    title="币值"
+                    title="币种"
                     :datas="options.currency"
                     valueKey="id"
                     displayKey="zh_name"
